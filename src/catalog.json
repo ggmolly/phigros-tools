@@ -1,0 +1,3058 @@
+{
+  "manifest": {
+    "schemaVersion": 1,
+    "gameVersion": 154,
+    "source": "Phigros APK: level0 GameInformation (extract/export_game_info.py)",
+    "sourceRevision": "2661a749e59fc915230fcc5285c8ba3169cff4fc10c136b47af16db88fff406c",
+    "sourceHash": "2661a749e59fc915230fcc5285c8ba3169cff4fc10c136b47af16db88fff406c"
+  },
+  "aliases": {},
+  "songs": [
+    {
+      "id": "000AinSophAur.Yumeji",
+      "title": "000 -Ain Soph Aur-",
+      "artist": "Yumeji",
+      "illustrator": "NerSAN",
+      "chapter": "Single 单曲精选集",
+      "constants": [2.5, 8.4, 14.4, null],
+      "charters": ["Magazet", "Magazet", "啊0哒0咔0哟 & Dilated", null]
+    },
+    {
+      "id": "70MinutesFighters.かたぎり",
+      "title": "70 Minutes Fighters",
+      "artist": "かたぎり",
+      "illustrator": "青鸟",
+      "chapter": "Single 单曲精选集",
+      "constants": [7.5, 12.5, 16.5, null],
+      "charters": ["ADKY", "ADKY", "XMT小咩兔 >w<", null]
+    },
+    {
+      "id": "996.李化禹",
+      "title": "996",
+      "artist": "李化禹",
+      "illustrator": "笔记RE",
+      "chapter": "Single 单曲精选集",
+      "constants": [4, 9.4, 14.7, null],
+      "charters": ["RTH", "Likey", "Barbarianerman & NerSAN in the ICU", null]
+    },
+    {
+      "id": "AbsoluTedisoRdeR.AcuteDisarray",
+      "title": "AbsoluTe disoRdeR",
+      "artist": "Acute Disarray",
+      "illustrator": "Kyuare & Wsx",
+      "chapter": "Chapter EX-EGTS 精选集",
+      "constants": [6.5, 12.4, 16.3, 17.2],
+      "charters": ["Su1fuR", "騎士 vs. Knight ", "Executor-X", "Apocalyptic Dissonance"]
+    },
+    {
+      "id": "ABYSSMOTION192333.ariiolTSAR奏Sou",
+      "title": "ABYSS MOTION 192.333",
+      "artist": "ariiol & 奏Sou",
+      "illustrator": "kkmfd",
+      "chapter": "Single 单曲精选集",
+      "constants": [4, 9.7, 14.7, null],
+      "charters": ["ABYSS 543.320", "ABYSS 543.320", "MOTION 464.237", null]
+    },
+    {
+      "id": "Adastraperaspera.RabbitHouse",
+      "title": "Ad astra per aspera",
+      "artist": "Rabbit House",
+      "illustrator": "Lyrebird Ferdinant (青鸟&V17AMax Modified)",
+      "chapter": "Chapter EX-OverRapid 精选集",
+      "constants": [6.5, 12.1, 16.3, null],
+      "charters": ["Barbarianerman", "XMT小咩兔", "Hara小兔组", null]
+    },
+    {
+      "id": "AfterDawn.S9ryne",
+      "title": "After Dawn",
+      "artist": "S9ryne",
+      "illustrator": "月亮酱",
+      "chapter": "Side Story 2 弭刻日",
+      "constants": [3, 10.4, 15.3, null],
+      "charters": ["Barbarianerman", "NerSAN feat. Pcat", "BarbariaNerSAN feat. Snorkel", null]
+    },
+    {
+      "id": "AfterZABANIYAMUGEdit.Daily天利",
+      "title": "After ZABANIYA (MUG Edit)",
+      "artist": "Daily天利",
+      "illustrator": "Nakaiankow feat. Daily天利",
+      "chapter": "Single 单曲精选集",
+      "constants": [5, 10.6, 15.8, null],
+      "charters": ["After CHARTER", "After CHARTER", "After CHARTERS", null]
+    },
+    {
+      "id": "Ajourneytothemoonlight.Yesod",
+      "title": "A journey to the moonlight",
+      "artist": "Yesod",
+      "illustrator": "汉堡",
+      "chapter": "Chapter EX-OverRapid 精选集",
+      "constants": [4.5, 10.7, 14.5, null],
+      "charters": [
+        "Rikko from「PHIGROS MOON」",
+        "Rikko from「PHIGROS MOON」",
+        "Ner & 198 from 「PHIGROS MOON」",
+        null
+      ]
+    },
+    {
+      "id": "Alb.Avans",
+      "title": "Alb",
+      "artist": "Avans",
+      "illustrator": "©2026 Rayark Inc. CYTUS II®",
+      "chapter": "Chapter EX-CYTUS II 精选集",
+      "constants": [3.5, 8.9, 14.7, null],
+      "charters": ["Likey", "Ary", "Ary", null]
+    },
+    {
+      "id": "Aleph0.LeaF",
+      "title": "Aleph-0",
+      "artist": "LeaF",
+      "illustrator": "Optie",
+      "chapter": "Single 单曲精选集",
+      "constants": [3.5, 12.2, 16, null],
+      "charters": ["Clutter", "Clutter", "Clutter", null]
+    },
+    {
+      "id": "Aliceinaxxxxxxxx.Nagiha",
+      "title": "Alice in a xxxxxxxx",
+      "artist": "Nagiha",
+      "illustrator": "神居冰绘 feat. 祈莲",
+      "chapter": "Single 单曲精选集",
+      "constants": [5, 9.5, 15.8, null],
+      "charters": ["XMT小咩兔", "XMT小咩兔", "□MT in a XXXXXXXX", null]
+    },
+    {
+      "id": "AnotherMe.DAAN",
+      "title": "Another Me",
+      "artist": "D_AAN",
+      "illustrator": "ZG",
+      "chapter": "Chapter EX-KALPA 精选集",
+      "constants": [5, 9.8, 15.6, null],
+      "charters": ["Pcat", "Another cat", "NerSAN vs. Ctymax as \"泥头鱼\"", null]
+    },
+    {
+      "id": "AnotherMe.NeutralMoon",
+      "title": "Another Me",
+      "artist": "Neutral Moon",
+      "illustrator": "IvyTowers",
+      "chapter": "Chapter EX-Rising Sun Traxx 精选集",
+      "constants": [5.5, 9.3, 13.6, null],
+      "charters": ["Another M3", "Another M3", "NerSAN", null]
+    },
+    {
+      "id": "AnotherRound.JustinDai",
+      "title": "Another Round",
+      "artist": "Justin Dai",
+      "illustrator": "艾是Abby",
+      "chapter": "Single 单曲精选集",
+      "constants": [2.5, 9.6, 13.3, null],
+      "charters": ["阿爽", "Another Stage", "TimiTini →\"X\"← 阿爽", null]
+    },
+    {
+      "id": "Antithese.Blacklolita",
+      "title": "Antithese",
+      "artist": "Blacklolita",
+      "illustrator": "釜飯轟々丸 + jht (Design: 祈莲)",
+      "chapter": "Single 单曲精选集",
+      "constants": [4.5, 10.8, 15.4, 16.4],
+      "charters": [
+        "SeveredEntity (BlindForest vs. rN) feat. Δ",
+        "Δ (M3d1uM vs. Salt)",
+        "StupiGGy -The Origin-",
+        "弧光"
+      ]
+    },
+    {
+      "id": "Aphasia.闫东炜",
+      "title": "Aphasia",
+      "artist": "闫东炜",
+      "illustrator": "笔记RE",
+      "chapter": "Single 单曲精选集",
+      "constants": [4, 8.8, 13.3, null],
+      "charters": ["百九十八", "百九十八", "百九十八", null]
+    },
+    {
+      "id": "AphroditesChildshortver.RUQOA",
+      "title": "Aphrodite's Child (short ver.)",
+      "artist": "RUQOA",
+      "illustrator": "cala for Immaculée Sekai",
+      "chapter": "Chapter EX-Immaculée Sekai 精选集",
+      "constants": [3.5, 8.1, 13.3, null],
+      "charters": ["StupiGGy", "StupiGGy", "StrayCat", null]
+    },
+    {
+      "id": "Apocalypse.アリスシャッハと魔法の楽団",
+      "title": "Apocalypse",
+      "artist": "アリスシャッハと魔法の楽団",
+      "illustrator": "Lanota © Noxy Games Inc. ",
+      "chapter": "Chapter EX-Lanota 精选集",
+      "constants": [4, 8.6, 13.5, null],
+      "charters": ["R.", "B.", "Rikko & 198", null]
+    },
+    {
+      "id": "Apocalyptic.ZClaxxSumaiLight",
+      "title": "Apocalyptic",
+      "artist": "Z ClaxX & SumaiLight",
+      "illustrator": "佑木いずみ & Ctymax",
+      "chapter": "Single 单曲精选集",
+      "constants": [3, 10.4, 14.1, null],
+      "charters": ["阿爽", "NerSAN", "NerSAN vs. 阿爽", null]
+    },
+    {
+      "id": "Archidoxen.Se_IRA",
+      "title": "Archidoxen",
+      "artist": "Se_IRA",
+      "illustrator": "n/a (Ctymax modified)",
+      "chapter": "Chapter EX-Liminality 精选集",
+      "constants": [4, 10, 15.6, 16.9],
+      "charters": ["Rft.", "Rft.", "Rft.", "artifact::<0x04, 0x53, 0x12>"]
+    },
+    {
+      "id": "Ark.kanoryo",
+      "title": "Ark",
+      "artist": "kanoryo",
+      "illustrator": "MOAI WORKS",
+      "chapter": "Side Story 2 弭刻日",
+      "constants": [3.5, 9.5, 15, 16.4],
+      "charters": ["TimiTini", "TimiTini", "阿爽 eat Ctymax", "StupiGGy"]
+    },
+    {
+      "id": "Arkhei.SeraAmagi",
+      "title": "-Arkhei-",
+      "artist": "Sera Amagi",
+      "illustrator": "Hachimitsu☆Boy",
+      "chapter": "Single 单曲精选集",
+      "constants": [7.5, 8.8, 12.6, null],
+      "charters": ["-JKy-", "-JKy-", "-JKy-", null]
+    },
+    {
+      "id": "ArtificialExistence.JunKuroda",
+      "title": "Artificial Existence",
+      "artist": "Jun Kuroda",
+      "illustrator": "2AI4wU4",
+      "chapter": "Chapter EX-Paradigm: Reboot 精选集",
+      "constants": [3.5, 9.4, 14.7, null],
+      "charters": ["Salt", "Salt", "Salt & _鉄 inspired by 存在証明 [X]", null]
+    },
+    {
+      "id": "ATHAZA.LeaF",
+      "title": "ATHAZA",
+      "artist": "LeaF",
+      "illustrator": "御坂果子",
+      "chapter": "Side Story 4 无相乡",
+      "constants": [8.6, 12.9, 15.7, 16.6],
+      "charters": [
+        "LDAJOY&PLEASANT ^V^ LDA",
+        "ANGER&SORROW >^< LDA",
+        "Affection&memories \\\\// Salt & Simon_Axis",
+        "FORGET :: CLUTTER"
+      ]
+    },
+    {
+      "id": "atruthseekerCommunicationwithUtopiawillbelost.kuro",
+      "title": "a truth seeker -Communication with Utopia will be lost-",
+      "artist": "kuro",
+      "illustrator": "rokopon",
+      "chapter": "Chapter EX-TAKUMI³ 精选集",
+      "constants": [6.5, 12.4, 15.7, null],
+      "charters": ["上班睡大觉_Sleepyhead", "上班睡大觉_Sleepyhead", "-Seek A Lnside Truth-", null]
+    },
+    {
+      "id": "AvataarReincarnationofKalpa.ScarletteakaCrYmson",
+      "title": "Avataar ~Reincarnation of Kalpa~",
+      "artist": "Scarlette a.k.a CrYmson",
+      "illustrator": "QueseraGames Co., Ltd.",
+      "chapter": "Chapter EX-KALPA 精选集",
+      "constants": [2, 8.2, 13.2, 16.6],
+      "charters": ["Su1fuR", "Su1fuR", "Salt", "XMT & Salt"]
+    },
+    {
+      "id": "Aventyr.GrandThawRigelTheatre",
+      "title": "Äventyr",
+      "artist": "Grand Thaw / Rigël Theatre",
+      "illustrator": "Grand Thaw / Rigël Theatre",
+      "chapter": "Single 单曲精选集",
+      "constants": [3.5, 9.9, 13.7, null],
+      "charters": ["Barbarianerman", "Snorkel", "Barbarianerman vs. Snorkel", null]
+    },
+    {
+      "id": "BANGINGSTRIKE.DewPleiades",
+      "title": "BANGING STRIKE",
+      "artist": "Dew Pleiades",
+      "illustrator": "Rutumn feat. 汉堡",
+      "chapter": "Single 单曲精选集",
+      "constants": [5, 10.2, 15.9, 16.8],
+      "charters": ["adky", "adky", "Salt & Uvernight", "魔王、大咩兔の兄 『大咩免』!!"]
+    },
+    {
+      "id": "BelieveLightfeat果丸哒呦.ScalerMestie果丸哒呦",
+      "title": "Believe Light (feat. 果丸哒呦)",
+      "artist": "Scaler & Mestie & 果丸哒呦",
+      "illustrator": "圆规compasses",
+      "chapter": "Single 单曲精选集",
+      "constants": [2.5, 8.9, 14.6, null],
+      "charters": ["Believe Ctymax", "Believe TimiTini", "Believe Ctymax & TimiTini", null]
+    },
+    {
+      "id": "BetterGraphicAnimation.ルゼ",
+      "title": "Better Graphic Animation",
+      "artist": "ルゼ",
+      "illustrator": "A-Zero Project",
+      "chapter": "Single 单曲精选集",
+      "constants": [6, 11.1, 15.3, null],
+      "charters": ["NerSAN", "NerSAN", "縱連打の信者☆無極", null]
+    },
+    {
+      "id": "Bitterblossom.imvi",
+      "title": "Bitterblossom",
+      "artist": "imvi",
+      "illustrator": "鲸弑",
+      "chapter": "Single 单曲精选集",
+      "constants": [2.5, 9.9, 13.5, null],
+      "charters": ["Su1fuR", "Barbarianerman", "百九十八", null]
+    },
+    {
+      "id": "Bloom.targ麻团qwq",
+      "title": "Bloom",
+      "artist": "targ & 麻团qwq",
+      "illustrator": "注射",
+      "chapter": "Single 单曲精选集",
+      "constants": [3.5, 11.2, 14.9, null],
+      "charters": ["Salt & Barbarianerman", "Salt & Barbarianerman", "SPΔDE & 倪尔qwq", null]
+    },
+    {
+      "id": "BonusTime.MegaloPaleWhite",
+      "title": "Bonus Time",
+      "artist": "Megalo_PaleWhite",
+      "illustrator": "笔记RE",
+      "chapter": "Chapter Legacy 过去的章节",
+      "constants": [3.5, 9.3, 13.8, null],
+      "charters": ["Clutter", "Clutter", "Uvernight fixed by 百九十八", null]
+    },
+    {
+      "id": "Bougainvillea.Jade",
+      "title": "Bougainvillea",
+      "artist": "Jade",
+      "illustrator": "TNiK",
+      "chapter": "Single 单曲精选集",
+      "constants": [4, 8.3, 13.2, null],
+      "charters": ["Barbarvillea", "Barbarvillea", "Barbarvillea", null]
+    },
+    {
+      "id": "BoundedQuietude.FiniteLimitvsSiLiS",
+      "title": "Bounded Quietude",
+      "artist": "Finite Limit vs SiLiS",
+      "illustrator": "Hiro vs Zeth",
+      "chapter": "Single 单曲精选集",
+      "constants": [7, 7.5, 16.2, null],
+      "charters": ["LonelyKnight", "LonelyKnight", "孤独な騎士 Against 魔王、大咩兔", null]
+    },
+    {
+      "id": "BRAINHACKER.SOMON",
+      "title": "BRAIN HACKER",
+      "artist": "SOMON",
+      "illustrator": "SOMON",
+      "chapter": "Single 单曲精选集",
+      "constants": [4.5, 9.3, 14.8, null],
+      "charters": ["BLACK CTYMAX", "COLORFUL CTYMAX", "COLORFUL BLACK GAUSBON", null]
+    },
+    {
+      "id": "BraveNotes.TurquoiseDRIVENota",
+      "title": "Brave Notes",
+      "artist": "Turquoise(DRIVE.+Nota)",
+      "illustrator": "林语",
+      "chapter": "Single 单曲精选集",
+      "constants": [5.5, 11.4, 14.6, null],
+      "charters": ["Brave Eaimo", "Brave Eaimo", "Brave Eaimo", null]
+    },
+    {
+      "id": "BreakOver.Kforest",
+      "title": "Break Over",
+      "artist": "K-forest",
+      "illustrator": "圆规compasses",
+      "chapter": "Single 单曲精选集",
+      "constants": [5, 11.5, 14.1, 14.9],
+      "charters": ["Barbarianerman", "Barbarianerman", "百九十八 vs. Barbarianerman", "百九十八"]
+    },
+    {
+      "id": "BreakThroughTheBarrier.lixound",
+      "title": "Break Through The Barrier",
+      "artist": "lixound",
+      "illustrator": "Xquid",
+      "chapter": "Chapter EX-Rising Sun Traxx 精选集",
+      "constants": [5.5, 9.5, 14.5, null],
+      "charters": ["Su1fuR", "Su1fuR", "百九十八", null]
+    },
+    {
+      "id": "BrokenSky.JungoMAX3feat刘佳宜Snow幻影刃shadow",
+      "title": "Broken Sky",
+      "artist": "Jungo & MAX 3 feat. 刘佳宜Snow & 幻影刃shadow",
+      "illustrator": "午苔veeee~",
+      "chapter": "Single 单曲精选集",
+      "constants": [3, 8.6, 13.3, null],
+      "charters": ["Clutter", "Clutter", "Su1fuR", null]
+    },
+    {
+      "id": "Burn.NceS",
+      "title": "Burn",
+      "artist": "NceS",
+      "illustrator": "knife美工刀",
+      "chapter": "Single 单曲精选集",
+      "constants": [7, 11.2, 15.2, null],
+      "charters": [
+        "Ctymatch Girl",
+        "Burn Full Catcats",
+        "Burn Full Catcats vs. Ctymatch Girl",
+        null
+      ]
+    },
+    {
+      "id": "bye.DingerBox",
+      "title": "bye",
+      "artist": "DingerBox",
+      "illustrator": "海产",
+      "chapter": "Single 单曲精选集",
+      "constants": [4, 9.1, 14.8, null],
+      "charters": ["Likey", "Likey", "Ner ~ See you next time ~", null]
+    },
+    {
+      "id": "Cereris.SunsetRayNceS",
+      "title": "Cereris",
+      "artist": "SunsetRay/NceS",
+      "illustrator": "IvyTowers",
+      "chapter": "Chapter Legacy 过去的章节",
+      "constants": [5.5, 10.9, 14.7, null],
+      "charters": ["Su1fuR", "Su1fuR", "StupiGGy", null]
+    },
+    {
+      "id": "CervelleConnexion.SCTL",
+      "title": "Cervelle Connexion",
+      "artist": "SCTL",
+      "illustrator": "SCTL",
+      "chapter": "Single 单曲精选集",
+      "constants": [5, 11.3, 14.5, null],
+      "charters": [
+        "Eastern Ailuropoda Gang",
+        "Eastern Ailuropoda Gang",
+        "Eastern Ailuropoda Gang",
+        null
+      ]
+    },
+    {
+      "id": "Chronologika.Hundotte",
+      "title": "Chronologika",
+      "artist": "Hundotte",
+      "illustrator": "幽灵星",
+      "chapter": "Chapter 7 时钟链接",
+      "constants": [3.5, 9.8, 13.9, null],
+      "charters": ["TimiTini", "XMT小咩兔", "Ctymax vs. Barbarianerman", null]
+    },
+    {
+      "id": "Chronomia.Lime",
+      "title": "Chronomia",
+      "artist": "Lime",
+      "illustrator": "inukoro",
+      "chapter": "Chapter 7 时钟链接",
+      "constants": [4.5, 11.1, 15.4, null],
+      "charters": ["Pcat", "Rikko", "時の希 & 百九十八", null]
+    },
+    {
+      "id": "ChronosCollapseLaCampanella.SunsetRay",
+      "title": "Chronos Collapse - La Campanella",
+      "artist": "SunsetRay",
+      "illustrator": "老张",
+      "chapter": "Chapter 7 时钟链接",
+      "constants": [4.5, 12.5, 16.3, null],
+      "charters": ["Pcat『Scatter』", "阿爽『Destroy』", "NerSAN vs. 阿爽 『Collapse』", null]
+    },
+    {
+      "id": "Chronostasis.黒皇帝",
+      "title": "Chronostasis",
+      "artist": "黒皇帝",
+      "illustrator": "Sand",
+      "chapter": "Chapter EX-Rising Sun Traxx 精选集",
+      "constants": [6, 10.7, 16, null],
+      "charters": ["Uvernight", "Uvernight", "Gausbon fixed by XMT", null]
+    },
+    {
+      "id": "Cipher20.TetrajectoryfeatCtymax",
+      "title": "Cipher : /2&//<|0",
+      "artist": "Tetrajectory feat. Ctymax",
+      "illustrator": "IvyTowers",
+      "chapter": "Chapter Legacy 过去的章节",
+      "constants": [5, 10.3, 14.4, null],
+      "charters": ["M3d1uM", "M3d1uM", "Barbarianerman feat. Gausbon", null]
+    },
+    {
+      "id": "ClassMemories.AntistarfeatCtymax",
+      "title": "Class Memories",
+      "artist": "Antistar feat. Ctymax",
+      "illustrator": "xperz",
+      "chapter": "Chapter Legacy 过去的章节",
+      "constants": [6, 10.8, 13.8, null],
+      "charters": ["M3d1uM", "M3d1uM", "JKy", null]
+    },
+    {
+      "id": "Cleyera.Riya",
+      "title": "Cleyera",
+      "artist": "Riya",
+      "illustrator": "神居冰绘",
+      "chapter": "Single 单曲精选集",
+      "constants": [5, 11, 15.4, null],
+      "charters": ["--The Last of Barbarianerman--", "Su2023fuR", "Salt", null]
+    },
+    {
+      "id": "ClockParadox.WyvernP",
+      "title": "Clock Paradox",
+      "artist": "WyvernP",
+      "illustrator": "汉堡",
+      "chapter": "Chapter 7 时钟链接",
+      "constants": [2, 6, 12.5, null],
+      "charters": [
+        "Barbarianerman vs. Alloces",
+        "Barbarianerman vs. Alloces",
+        "Barbarianerman vs. Alloces",
+        null
+      ]
+    },
+    {
+      "id": "ColorfulDays.P4koofeatつゆり花鈴",
+      "title": "Colorful Days♪",
+      "artist": "P4koo feat. つゆり花鈴",
+      "illustrator": "Doro-nyong & Ratif",
+      "chapter": "Chapter 6 方舟蜃景",
+      "constants": [5, 7, 12.6, null],
+      "charters": ["阿♪爽", "阿♪爽", "阿♪爽", null]
+    },
+    {
+      "id": "CometFeat符白牙.CNHKSS",
+      "title": "Comet",
+      "artist": "CNHKSS feat. 符白牙",
+      "illustrator": "小黄鸡叽叽叽叽叽叽修复中",
+      "chapter": "Single 单曲精选集",
+      "constants": [3, 10.5, 13.7, null],
+      "charters": ["StaR-1", "無彩色", "Likey & Barbarianerman", null]
+    },
+    {
+      "id": "ComputeItWithSomeDevilishAlcoholicSteampunkEngines.かめりあ",
+      "title": "Compute It With Some Devilish Alcoholic Steampunk Engines",
+      "artist": "かめりあ",
+      "illustrator": "山崎团",
+      "chapter": "Extra Story Chapter 极星卫",
+      "constants": [5.5, 10.6, 15.7, null],
+      "charters": ["Clutter", "Clutter", "Gausbon vs. XMT小咩兔", null]
+    },
+    {
+      "id": "Concvssion.Halv",
+      "title": "Concvssion",
+      "artist": "Halv",
+      "illustrator": "汉堡",
+      "chapter": "Single 单曲精选集",
+      "constants": [6, 11.3, 15.6, null],
+      "charters": ["J.R", "晨", "Phigros Charting Team", null]
+    },
+    {
+      "id": "CraveWave.LandRoot",
+      "title": "Crave Wave",
+      "artist": "LandRoot",
+      "illustrator": "笔记RE",
+      "chapter": "Chapter 8 凌日潮汐",
+      "constants": [2.5, 8, 13.7, null],
+      "charters": ["Likey", "Likey", "Likey feat. 198", null]
+    },
+    {
+      "id": "Credits.Frums",
+      "title": "Credits",
+      "artist": "Frums",
+      "illustrator": "Ctymax",
+      "chapter": "Chapter Legacy 过去的章节",
+      "constants": [4.5, 10.4, 13.6, 15.8],
+      "charters": ["Ctymax", "Ctymax", "Ctymax", "_鉄 (Isotope 59)"]
+    },
+    {
+      "id": "Cristalisia.onoken",
+      "title": "Cristalisia",
+      "artist": "onoken",
+      "illustrator": "©2025 Rayark Inc. CYTUS II®",
+      "chapter": "Chapter EX-CYTUS II 精选集",
+      "constants": [4, 10.4, 14.4, null],
+      "charters": ["Skuwo", "Skuwo", "Salt", null]
+    },
+    {
+      "id": "CROSSSOUL.HyuNfeatSyepias",
+      "title": "CROSS†SOUL",
+      "artist": "HyuN feat. Syepias",
+      "illustrator": "knife美工刀",
+      "chapter": "Chapter EX-HyuN 精选集",
+      "constants": [7.5, 12.6, 16.4, null],
+      "charters": ["無†極", "無†極 fixed by Rikko", "無†極", null]
+    },
+    {
+      "id": "CrushBETA.shadow_bling",
+      "title": "Crush BETA",
+      "artist": "shadow_bling",
+      "illustrator": "笔记RE",
+      "chapter": "Single 单曲精选集",
+      "constants": [4, 10.5, 15.1, null],
+      "charters": ["Clutter BETA", "Crush βETA", "Timi今天吃神马", null]
+    },
+    {
+      "id": "cryout.JuE",
+      "title": "cryout",
+      "artist": "Ju_E",
+      "illustrator": "Haight",
+      "chapter": "Chapter 5 霓虹灯牌",
+      "constants": [3.5, 9.9, 13.6, null],
+      "charters": ["Ctymax", "Ctymax", "Ctymax but 5 years later", null]
+    },
+    {
+      "id": "csqn.Aoi",
+      "title": "c.s.q.n.",
+      "artist": "Aoi",
+      "illustrator": "Ctymax vs. TNiK feat. 出前",
+      "chapter": "Single 单曲精选集",
+      "constants": [5, 12.2, 15.9, null],
+      "charters": ["b.b.n.m.", "h.o.m.e.e.e.", "s.t.p.g.", null]
+    },
+    {
+      "id": "Cthugha.USAO",
+      "title": "Cthugha",
+      "artist": "USAO",
+      "illustrator": "谷地（青鸟 modified）",
+      "chapter": "Chapter EX-Muse Dash 精选集",
+      "constants": [6, 10.4, 16, 16.1],
+      "charters": ["Barbarianerman", "Barbarianerman", "Gausbon", "百九十八 feat. NerSAN"]
+    },
+    {
+      "id": "Cuvism.Fl00tvsHalv",
+      "title": "Cuvism³",
+      "artist": "Fl00t vs Halv",
+      "illustrator": "sikkari",
+      "chapter": "Chapter EX-TAKUMI³ 精选集",
+      "constants": [3, 12.2, 13.9, 16.7],
+      "charters": ["Rikko", "Rikko³ [Normal]", "Rikko", "JKy vs StrayCat"]
+    },
+    {
+      "id": "DancewithSilence.かめりあ",
+      "title": "Dance with Silence",
+      "artist": "かめりあ",
+      "illustrator": "林语",
+      "chapter": "Extra Story Chapter 极星卫",
+      "constants": [7, 10.9, 15.2, null],
+      "charters": ["Su1fuR", "Su1fuR", "晨_鉄", null]
+    },
+    {
+      "id": "Dash.小红Akane李祥辉",
+      "title": "Dash",
+      "artist": "小红Akane，李祥晖",
+      "illustrator": "艾是Abby",
+      "chapter": "Single 单曲精选集",
+      "constants": [2.5, 5.5, 9.7, null],
+      "charters": ["阿爽 fixed by Barbarianerman", "阿爽 fixed by Barbarianerman", "JKy", null]
+    },
+    {
+      "id": "DataErr0r.Cosmograph",
+      "title": "DataErr0r",
+      "artist": "Cosmograph",
+      "illustrator": "Photonskyto",
+      "chapter": "Single 单曲精选集",
+      "constants": [6, 11.8, 14.5, null],
+      "charters": ["[!!12:l<l<ο!!]", "Rikko", "TangScend -Err0rederci-", null]
+    },
+    {
+      "id": "dBdoll.YUESTEVENuen",
+      "title": "dB doll",
+      "artist": "YUE.STEVEN/uen",
+      "illustrator": "何呵",
+      "chapter": "Single 单曲精选集",
+      "constants": [1.5, 3.5, 8.3, 13.4],
+      "charters": [
+        "阿爽 fixed by Barbarianerman",
+        "阿爽 fixed by Barbarianerman",
+        "阿爽",
+        "NerSAN & 百九十八"
+      ]
+    },
+    {
+      "id": "DeadSoul.SoundSouler",
+      "title": "Dead Soul",
+      "artist": "Sound Souler",
+      "illustrator": "Photonskyto",
+      "chapter": "Single 单曲精选集",
+      "constants": [4.5, 12.3, 14.4, null],
+      "charters": ["Phigros Charting Team", "Phigros Charting Team", "Phigros Charting Team", null]
+    },
+    {
+      "id": "Demiurge.Rabpit",
+      "title": "Demiurge",
+      "artist": "Rabpit",
+      "illustrator": "青鸟",
+      "chapter": "Side Story 2 弭刻日",
+      "constants": [1.5, 7.5, 11.8, null],
+      "charters": [
+        "\"Manufacturer\" ~ Rikko",
+        "\"Creator\" ~ StupiGGy",
+        "\"Demiurge\" ~ Dawn",
+        null
+      ]
+    },
+    {
+      "id": "Demonkin.ForgedReigns",
+      "title": "Demonkin",
+      "artist": "Forged Reigns",
+      "illustrator": "Jeffery",
+      "chapter": "Side Story 2 弭刻日",
+      "constants": [4.5, 9.2, 13.8, null],
+      "charters": ["Alloces", "Alloces", "Sillyp & Alloces", null]
+    },
+    {
+      "id": "DerRichter.Ωμεγα",
+      "title": "Der Richter",
+      "artist": "Ωμεγα",
+      "illustrator": "森灵",
+      "chapter": "Side Story 4 无相乡",
+      "constants": [5.5, 11.4, 15.6, 16.9],
+      "charters": ["Min(C,t,y)", "Max(C,t,y)", "Absolute(6)", "Concat(Ramification,Richter)"]
+    },
+    {
+      "id": "DerSchneid.Ωμεγα",
+      "title": "Der Schneid",
+      "artist": "Ωμεγα",
+      "illustrator": "群青kurara feat. 祈莲 & 夏宇Detristy",
+      "chapter": "Single 单曲精选集",
+      "constants": [7, 12, 16.1, 17.5],
+      "charters": [
+        "Der Mut und der Richter",
+        "Der Mut und der Richter",
+        "Der Mut und der Richter",
+        "Gegenmacht der Lords"
+      ]
+    },
+    {
+      "id": "DESTRUCTION321.Normal1zervsBrokenNerdz",
+      "title": "DESTRUCTION 3,2,1",
+      "artist": "Normal1zer vs. Broken Nerdz",
+      "illustrator": "rN",
+      "chapter": "Chapter 8 凌日潮汐",
+      "constants": [8.5, 13.1, 16.3, 17.3],
+      "charters": [
+        "{Demolition,Devastation,Destruction}",
+        "{Devastation,Destruction}",
+        "{Destruction}",
+        "∅"
+      ]
+    },
+    {
+      "id": "DevastatingHistory.NAMV",
+      "title": "Devastating History",
+      "artist": "NAMV",
+      "illustrator": "わせ (Ctymax modified)",
+      "chapter": "Chapter EX-Liminality 精选集",
+      "constants": [6, 11.8, 15.5, null],
+      "charters": ["Algax", "Algax", "T∆TIØN", null]
+    },
+    {
+      "id": "DevIAtiOnshortver.polysha",
+      "title": "DevIAtiOn (short ver.)",
+      "artist": "polysha",
+      "illustrator": "cala for Immaculée Sekai",
+      "chapter": "Chapter EX-Immaculée Sekai 精选集",
+      "constants": [5, 11.1, 15.8, null],
+      "charters": ["COC", "COC", "Nr3_Official", null]
+    },
+    {
+      "id": "Devotion.Connexio",
+      "title": "Devotion",
+      "artist": "Connexio",
+      "illustrator": "Shimoruchiko",
+      "chapter": "Single 单曲精选集",
+      "constants": [4.5, 9.6, 13.7, null],
+      "charters": ["StupiGGy", "StupiGGy", "Salt", null]
+    },
+    {
+      "id": "DiamondDust.MasahiroGodspeedAoki",
+      "title": "Diamond Dust",
+      "artist": "Masahiro “Godspeed” Aoki",
+      "illustrator": "SEGA (V17AMax modified)",
+      "chapter": "Chapter EX-オンゲキ 精选集",
+      "constants": [5, 10.8, 15.3, 16.7],
+      "charters": ["Salt", "Salt", "Gausbon", "StupiGGy"]
+    },
+    {
+      "id": "DiamondEyes.SYNTHETIC",
+      "title": "Diamond Eyes",
+      "artist": "SYNTHETIC",
+      "illustrator": "彗星 feat. 祈莲",
+      "chapter": "Single 单曲精选集",
+      "constants": [3.5, 6.5, 13.4, null],
+      "charters": ["Su1fuR", "Su1fuR", "Clutter", null]
+    },
+    {
+      "id": "Disorder.HyuNfeatYURI",
+      "title": "Disorder",
+      "artist": "HyuN feat. YURI",
+      "illustrator": "Nabom",
+      "chapter": "Chapter EX-HyuN 精选集",
+      "constants": [6, 10.3, 14.8, null],
+      "charters": ["Gausbon", "Gausbon", "Gausbon", null]
+    },
+    {
+      "id": "DistortedFate.Sakuzyo",
+      "title": "Distorted Fate",
+      "artist": "Sakuzyo",
+      "illustrator": "knife美工刀",
+      "chapter": "Chapter 8 凌日潮汐",
+      "constants": [8.1, 13.5, 16.3, 17.4],
+      "charters": ["De Fiance", "Doubt Ful", "Divination Fortune", "unDefined Future"]
+    },
+    {
+      "id": "Dlyrotz.Likey",
+      "title": "Dlyrotz",
+      "artist": "Likey",
+      "illustrator": "DoublePian",
+      "chapter": "Chapter Legacy 过去的章节",
+      "constants": [4, 9.1, 13.7, null],
+      "charters": ["Su1fuR", "Su1fuR", "XMT小咩兔 vs. Barbarianerman", null]
+    },
+    {
+      "id": "DontNeverAround.HAMA",
+      "title": "Don't Never Around",
+      "artist": "HAMA",
+      "illustrator": "Arahosi",
+      "chapter": "Chapter EX-KALPA 精选集",
+      "constants": [5, 11.3, 15.5, null],
+      "charters": ["XMT小咩兔", "XMT小咩兔", "XMT小咩兔", null]
+    },
+    {
+      "id": "Doppelganger.LeaF",
+      "title": "Doppelganger",
+      "artist": "LeaF",
+      "illustrator": "海产",
+      "chapter": "Single 单曲精选集",
+      "constants": [5, 9, 15.1, null],
+      "charters": ["Lumiere", "Lumiere", "Gausbon", null]
+    },
+    {
+      "id": "Dreamland.z1onkyrrin",
+      "title": "Dreamland",
+      "artist": "z1on & kyrrin",
+      "illustrator": "海产",
+      "chapter": "Single 单曲精选集",
+      "constants": [7, 10.3, 13.6, null],
+      "charters": ["Bear", "Bear", "XMT & 198", null]
+    },
+    {
+      "id": "DropIt.Asuka",
+      "title": "Drop It",
+      "artist": "Asuka",
+      "illustrator": "TNiK",
+      "chapter": "Single 单曲精选集",
+      "constants": [4, 9.2, 14.2, null],
+      "charters": ["Drop Catcats", "Drop Catcats", "NerSAN & 百九十八", null]
+    },
+    {
+      "id": "ElCondorPasaPhigrosEdit.PlasticFruits",
+      "title": "El Condor Pasa (Phigros Edit)",
+      "artist": "Plastic Fruits",
+      "illustrator": "青鸟",
+      "chapter": "Single 单曲精选集",
+      "constants": [6.5, 12.5, 15.6, null],
+      "charters": ["TimiTini", "TimiTini", "XMT小咩兔", null]
+    },
+    {
+      "id": "Electron.ElousFZ",
+      "title": "Electron",
+      "artist": "ElousΛ.-FZ",
+      "illustrator": "DoublePian",
+      "chapter": "Single 单曲精选集",
+      "constants": [3.5, 9.4, 13.2, null],
+      "charters": ["百九十八", "百九十八", "百九十八", null]
+    },
+    {
+      "id": "Eltaw.Fl00t",
+      "title": "Eltaw",
+      "artist": "Fl00t",
+      "illustrator": "xperz",
+      "chapter": "Single 单曲精选集",
+      "constants": [7, 10.6, 14.8, null],
+      "charters": ["JKy", "JKy", "BarbariaNERman vs. JKy", null]
+    },
+    {
+      "id": "Elúltimobaile.Θ",
+      "title": "El último baile",
+      "artist": "Θ",
+      "illustrator": "mology (青鸟&V17AMax Modified)",
+      "chapter": "Chapter EX-OverRapid 精选集",
+      "constants": [4.5, 9.5, 14.1, null],
+      "charters": ["Barbarianerman", "Barbarianerman", "百九十八 feat. Likey", null]
+    },
+    {
+      "id": "EndMe.ZxNXasDelaina",
+      "title": "End Me",
+      "artist": "ZxNX as \"Delaina\"",
+      "illustrator": "何呵",
+      "chapter": "Single 单曲精选集",
+      "constants": [5.5, 7.5, 14.2, null],
+      "charters": ["鲲", "鲲", "鲲 fixed by 百九十八", null]
+    },
+    {
+      "id": "ENERGYSYNERGYMATRIX.Tanchiky",
+      "title": "ENERGY SYNERGY MATRIX",
+      "artist": "Tanchiky",
+      "illustrator": "Karameru",
+      "chapter": "Chapter Legacy 过去的章节",
+      "constants": [5.5, 11.5, 14.4, null],
+      "charters": ["Su1fuR", "Su1fuR", "Ctymax vs. 阿爽  fixed by B B M pow", null]
+    },
+    {
+      "id": "energytrixxx.KAH",
+      "title": "energy trixxx",
+      "artist": "KAH",
+      "illustrator": "手鞠鈴 & 自動車 原付",
+      "chapter": "Single 单曲精选集",
+      "constants": [5, 10.4, 15.4, null],
+      "charters": ["NerSAN", "NerSANN", "NerSANNN", null]
+    },
+    {
+      "id": "EnginexStartmelodymix.CrossingSound",
+      "title": "Engine x Start!! (melody mix)",
+      "artist": "CrossingSound",
+      "illustrator": "赤芽",
+      "chapter": "Chapter Legacy 过去的章节",
+      "constants": [2.5, 8.3, 13.2, null],
+      "charters": ["Clutter", "Clutter", "阿爽", null]
+    },
+    {
+      "id": "ERABYECONNEC10N.かめりあ",
+      "title": "+ERABY+E CONNEC+10N",
+      "artist": "かめりあ",
+      "illustrator": "猫箱Catbox feat. 祈莲",
+      "chapter": "Extra Story Chapter 极星卫",
+      "constants": [5.5, 11.6, 16.3, 17.3],
+      "charters": ["4B314C3042592B45", "4D45474142592B45", "4731474142592B45", "2B45524142592B45"]
+    },
+    {
+      "id": "EradicationCatastrophe.NceS",
+      "title": "Eradication Catastrophe",
+      "artist": "NceS",
+      "illustrator": "海产",
+      "chapter": "Chapter Legacy 过去的章节",
+      "constants": [3.5, 7.5, 12.7, null],
+      "charters": ["Barbarianerman", "Barbarianerman fixed by Clutter", "Barbarianerman", null]
+    },
+    {
+      "id": "EternalSnow.AbyssIdols",
+      "title": "Eternal Snow",
+      "artist": "Abyss Idols",
+      "illustrator": "Sak",
+      "chapter": "Single 单曲精选集",
+      "constants": [4, 9.6, 13.5, null],
+      "charters": ["M3d1uM", "M3d1uM", "JKy", null]
+    },
+    {
+      "id": "Feast远东之宴.茶鸣拾贰律",
+      "title": "Feast远东之宴",
+      "artist": "茶鸣拾贰律",
+      "illustrator": "茶鸣拾贰律",
+      "chapter": "Chapter EX-茶鸣拾贰律 精选集",
+      "constants": [6.5, 12.1, 15.6, null],
+      "charters": ["Barbarianerman", "Barbarianerman", "Gino", null]
+    },
+    {
+      "id": "FinalStep.Lime",
+      "title": "Final Step!",
+      "artist": "Lime",
+      "illustrator": "谷地（青鸟 modified）",
+      "chapter": "Chapter EX-Muse Dash 精选集",
+      "constants": [5.5, 11, 14.1, null],
+      "charters": ["Barbarianerman", "Barbarianerman", "Barbarianerman vs. Uvernight", null]
+    },
+    {
+      "id": "FindMe.Kforest",
+      "title": "Find_Me",
+      "artist": "K-forest",
+      "illustrator": "YuKiMuMa",
+      "chapter": "Single 单曲精选集",
+      "constants": [5.5, 10.5, 14.3, null],
+      "charters": ["Find_Ctymax", "Find_Ctymax", "Find_Ctymax fixed by 百九十八", null]
+    },
+    {
+      "id": "FixationsTowardtheStars.Foodbot",
+      "title": "Fixations Toward the Stars",
+      "artist": "Foodbot",
+      "illustrator": "AriaL [edited by Stelli]",
+      "chapter": "Single 单曲精选集",
+      "constants": [3.5, 10.9, 14.5, null],
+      "charters": ["Salt", "OPENING/Level R", "Salt", null]
+    },
+    {
+      "id": "FlutterEcho.Cansol",
+      "title": "Flutter Echo",
+      "artist": "Cansol",
+      "illustrator": "Taurell",
+      "chapter": "Chapter EX-KALPA 精选集",
+      "constants": [3.5, 9.8, 14.9, null],
+      "charters": ["Rikko", "|R|I|K|K|O| NORMAL", "Clutter Echo", null]
+    },
+    {
+      "id": "FracturedAngel.DJRaisei",
+      "title": "Fractured Angel",
+      "artist": "DJ Raisei",
+      "illustrator": "OsuMe65",
+      "chapter": "Chapter EX-EGTS 精选集",
+      "constants": [4, 10.9, 16.3, null],
+      "charters": ["Su1fuR", "Su1fuR", "逆天使の悪魔 【Likey】", null]
+    },
+    {
+      "id": "FreakyUndulationsNobleKnightsofTune.JehezukielKURORAK",
+      "title": "Freaky Undulations ~Noble Knights of Tune~",
+      "artist": "Jehezukiel + KURORAK",
+      "illustrator": "PEZZ feat. 祈莲 & CattoHato",
+      "chapter": "Side Story 3 盗乐行",
+      "constants": [7, 10.9, 15.3, null],
+      "charters": [
+        "Ner ~Freaky Cat of Charting~",
+        "ARE YOU JEITIE!!!",
+        "<= Noblesse Jeitie =>",
+        null
+      ]
+    },
+    {
+      "id": "FrozenHeart.A39沙包P",
+      "title": "Frozen Heart",
+      "artist": "A-39 / 沙包P",
+      "illustrator": "山山奇",
+      "chapter": "Single 单曲精选集",
+      "constants": [5, 10.6, 14.6, null],
+      "charters": ["SantR", "SantR", "Likey & Gausbon", null]
+    },
+    {
+      "id": "FULiAUTOBUSTER.MYUKKE",
+      "title": "FULi AUTO BUSTER",
+      "artist": "MYUKKE.",
+      "illustrator": "cycats",
+      "chapter": "Single 单曲精选集",
+      "constants": [3.5, 9.7, 14.6, null],
+      "charters": ["M3d1uM & 百九十八", "M3d1uM & 百九十八", "百九十八 busting 阿爽", null]
+    },
+    {
+      "id": "FULiAUTOSHOOTER.MYUKKE",
+      "title": "FULi AUTO SHOOTER",
+      "artist": "MYUKKE.",
+      "illustrator": "ViscerA & Psycholine",
+      "chapter": "Chapter Legacy 过去的章节",
+      "constants": [3, 9, 14.9, null],
+      "charters": ["Knight", "Knight", "AUTO. SHOOTER. fixed by Ctymax", null]
+    },
+    {
+      "id": "FutureMind.RayNauticaRekuMochizuki",
+      "title": "Future Mind",
+      "artist": "Ray Nautica & Reku Mochizuki",
+      "illustrator": "Keiby.comics",
+      "chapter": "Single 单曲精选集",
+      "constants": [4.5, 11, 14.2, null],
+      "charters": ["Barbarianerman", "XMT小咩兔", "Future BarbarXMT", null]
+    },
+    {
+      "id": "GetBack.CAP3",
+      "title": "Get Back",
+      "artist": "CAP3",
+      "illustrator": "TNiK",
+      "chapter": "Single 单曲精选集",
+      "constants": [6.5, 10.7, 14.1, null],
+      "charters": ["JKy", "JKy", "JKy", null]
+    },
+    {
+      "id": "GetReady.iF",
+      "title": "Get Ready!! ",
+      "artist": "iF",
+      "illustrator": "あおお/A-ZERO, morph",
+      "chapter": "Chapter EX-WAVEAT 精选集",
+      "constants": [6, 10.7, 13.8, null],
+      "charters": ["StupiGGy", "StupiGGy", "StupiGGy", null]
+    },
+    {
+      "id": "Glaciaxion.SunsetRay",
+      "title": "Glaciaxion",
+      "artist": "SunsetRay",
+      "illustrator": "艾若拉",
+      "chapter": "Chapter Legacy 过去的章节",
+      "constants": [1, 6.5, 12.6, null],
+      "charters": ["Barbarianerman", "阿爽 fixed by Clutter", "Barbarianerman vs. NerSAN", null]
+    },
+    {
+      "id": "GOODBOUNCE.EBIMAYO",
+      "title": "GOODBOUNCE",
+      "artist": "EBIMAYO",
+      "illustrator": "EBIMAYO",
+      "chapter": "Chapter EX-GOOD 精选集",
+      "constants": [7.5, 11.9, 14.5, null],
+      "charters": ["Gausbounce & 晨", "Gausbounce", "Ctymax vs. Gausbounce", null]
+    },
+    {
+      "id": "GOODFORTUNE.EBIMAYO",
+      "title": "GOODFORTUNE",
+      "artist": "EBIMAYO",
+      "illustrator": "Ctymax",
+      "chapter": "Chapter EX-GOOD 精选集",
+      "constants": [7.5, 8.7, 15.7, null],
+      "charters": ["晨", "晨", "晨", null]
+    },
+    {
+      "id": "GOODRAGE.EBIMAYO",
+      "title": "GOODRAGE",
+      "artist": "EBIMAYO",
+      "illustrator": "Ctymax feat. EBIMAYO",
+      "chapter": "Chapter EX-GOOD 精选集",
+      "constants": [5, 8.5, 16, null],
+      "charters": ["阿爽", "阿爽", "Ctymax vs. 阿爽", null]
+    },
+    {
+      "id": "GOODTEK.EBIMAYO",
+      "title": "GOODTEK",
+      "artist": "EBIMAYO",
+      "illustrator": "Ctymax feat. EBIMAYO",
+      "chapter": "Chapter EX-GOOD 精选集",
+      "constants": [5, 10, 14.3, null],
+      "charters": ["百九十八", "百九十八", "百九十八", null]
+    },
+    {
+      "id": "GOODWORLD.EBIMAYO",
+      "title": "GOODWORLD",
+      "artist": "EBIMAYO",
+      "illustrator": "EBIMAYO",
+      "chapter": "Chapter EX-GOOD 精选集",
+      "constants": [3, 11.4, 14.9, null],
+      "charters": ["阿爽", "StupiGGy", "StupiGGy vs. 阿爽", null]
+    },
+    {
+      "id": "Grimheart.Puru",
+      "title": "Grimheart",
+      "artist": "Puru",
+      "illustrator": "临时工 & 倪尔",
+      "chapter": "Single 单曲精选集",
+      "constants": [3, 8.9, 13.8, null],
+      "charters": ["SimonAxis", "SimonAxis", "WhiteCat.", null]
+    },
+    {
+      "id": "GungnirFracture.Kryexe",
+      "title": "Gungnir Fracture",
+      "artist": "Kry.exe",
+      "illustrator": "PEZZ",
+      "chapter": "Single 单曲精选集",
+      "constants": [6, 11.5, 16.6, null],
+      "charters": ["Salt", "Akko", "「Barbarianerman AKA. Alloces」Revive", null]
+    },
+    {
+      "id": "GVNGlitterVomitusandNeon.SaltySaltUnfold33",
+      "title": "G.V.N. (Glitter,Vomitus and Neon)",
+      "artist": "Salty Salt & Unfold33",
+      "illustrator": "祈莲",
+      "chapter": "Single 单曲精选集",
+      "constants": [5, 9.9, 15.8, null],
+      "charters": ["B.B.M.", "B.B.M.", "A.S.H.", null]
+    },
+    {
+      "id": "HardcoreKwaya.EnFr",
+      "title": "Hardcore Kwaya",
+      "artist": "EnFr",
+      "illustrator": "EnFr",
+      "chapter": "Single 单曲精选集",
+      "constants": [4.5, 8.4, 14.6, null],
+      "charters": [
+        "One skunk (Ctymax) in Africa",
+        "Hardcore Barbaya",
+        "Two skunks (Ctymax and 晨) in Africa shouting WAHHHHHH!",
+        null
+      ]
+    },
+    {
+      "id": "HAZARD.Limpid",
+      "title": "HAZARD",
+      "artist": "Limpid",
+      "illustrator": "ZG",
+      "chapter": "Chapter EX-KALPA 精选集",
+      "constants": [4.5, 11, 14.8, null],
+      "charters": ["NerSAN", "NerSAN", "阿爽", null]
+    },
+    {
+      "id": "Helios.NOABotaNya",
+      "title": "Helios",
+      "artist": "NOA(Cortrix) & BotaNya",
+      "illustrator": "Spectro",
+      "chapter": "Single 单曲精选集",
+      "constants": [5.5, 9.1, 14.2, null],
+      "charters": [
+        "jeitie goes outside",
+        "jeitie touches grass",
+        "jeitie gets sent to the sun",
+        null
+      ]
+    },
+    {
+      "id": "HorizonBlue.NothingButRequiemfeatAikapinChiyoko",
+      "title": "Horizon Blue",
+      "artist": "Nothing But Requiem feat. Aikapin & Chiyoko",
+      "illustrator": "Lanota © Noxy Games Inc. ",
+      "chapter": "Chapter EX-Lanota 精选集",
+      "constants": [6.5, 11.6, 15.7, null],
+      "charters": ["Nothing But Uvernight", "Nothing But Likey", "Nothing But Ner & Pcat", null]
+    },
+    {
+      "id": "HumaN.SOTUI",
+      "title": "HumaN",
+      "artist": "SOTUI",
+      "illustrator": "CH",
+      "chapter": "Chapter Legacy 过去的章节",
+      "constants": [3, 8, 12.9, null],
+      "charters": ["Clutter", "Clutter", "CN_115+TangScend", null]
+    },
+    {
+      "id": "Hydra.JamesLandinoXAkiraComplex",
+      "title": "Hydra",
+      "artist": "James Landino X Akira Complex",
+      "illustrator": "©2025 Rayark Inc. CYTUS II®",
+      "chapter": "Chapter EX-CYTUS II 精选集",
+      "constants": [6, 11.6, 15.4, 17.1],
+      "charters": ["COC", "COC", "Su1fuR", "[该用户已被禁言]"]
+    },
+    {
+      "id": "Igallta.SeURa",
+      "title": "Igallta",
+      "artist": "Se-U-Ra",
+      "illustrator": "Se-U-Ra",
+      "chapter": "Chapter 6 方舟蜃景",
+      "constants": [7.5, 12.2, 16.1, 17.4],
+      "charters": ["信仰の剣『生』", "平川の剣『士』", "夜明の剣『靈』", "断罪の剣『神』"]
+    },
+    {
+      "id": "iLArtifact.Link0",
+      "title": "iL-Artifact",
+      "artist": "Link''0",
+      "illustrator": "Fl00t",
+      "chapter": "Chapter EX-TAKUMI³ 精选集",
+      "constants": [5.5, 10.5, 15.7, null],
+      "charters": ["IUIsauce", "IUIsauce", "XMT小咩兔 vs. 上班睡大觉_Sleepyhead", null]
+    },
+    {
+      "id": "IMustSayNo.TangJuan",
+      "title": "I Must Say No",
+      "artist": "TangJuan",
+      "illustrator": "cycats",
+      "chapter": "Single 单曲精选集",
+      "constants": [1.5, 9.2, 13.5, null],
+      "charters": ["Likey", "JKy", "Likey & 百九十八", null]
+    },
+    {
+      "id": "Incyde.YbeLL",
+      "title": "Incyde",
+      "artist": "YbeLL",
+      "illustrator": "©2026 Rayark Inc. CYTUS II®",
+      "chapter": "Chapter EX-CYTUS II 精选集",
+      "constants": [7, 12.1, 16.2, null],
+      "charters": ["【梦之起始】爬爬 vs. 盐", "E00200", "Magazet wanders within StR-1", null]
+    },
+    {
+      "id": "IndelibleScar.Noah",
+      "title": "Indelible Scar",
+      "artist": "Noah",
+      "illustrator": "兜",
+      "chapter": "Chapter EX-Paradigm: Reboot 精选集",
+      "constants": [7, 11.5, 15.3, 16.5],
+      "charters": [
+        "Clutter & Barbarianerman",
+        "Salt & Barbarianerman",
+        "Likey affected by Ancestral Xhronicle",
+        "上班睡大觉_Sleepyhead"
+      ]
+    },
+    {
+      "id": "inferior.姜米條",
+      "title": "inferior",
+      "artist": "姜米條",
+      "illustrator": "群青kurara",
+      "chapter": "Chapter EX-姜米條 精选集",
+      "constants": [7, 7.5, 14.6, null],
+      "charters": ["Ner, the inferior", "Ner, the inferior", "JKy, the inferior", null]
+    },
+    {
+      "id": "INFiNiTEENERZYOverdoze.RekuMochizuki",
+      "title": "INFiNiTE ENERZY -Overdoze-",
+      "artist": "Reku Mochizuki",
+      "illustrator": "knife美工刀",
+      "chapter": "Side Story 2 弭刻日",
+      "constants": [6.5, 12.3, 14.8, 16.9],
+      "charters": [
+        "while(TangScend<=TangScend);",
+        "while(TangScend>=TangScend);",
+        "while(TangScend==TangScend);",
+        "while(TangScend=TangScend);"
+      ]
+    },
+    {
+      "id": "InfinityHeaven.HyuN",
+      "title": "Infinity Heaven",
+      "artist": "HyuN",
+      "illustrator": "DoublePian",
+      "chapter": "Chapter EX-HyuN 精选集",
+      "constants": [3, 8.4, 13.9, null],
+      "charters": ["晨 vs. 阿爽", "晨 vs. 阿爽", "晨 vs. 阿爽", null]
+    },
+    {
+      "id": "Initialize.iF",
+      "title": "Initialize",
+      "artist": "iF",
+      "illustrator": "あおお/A-ZERO, morph",
+      "chapter": "Chapter EX-WAVEAT 精选集",
+      "constants": [2.5, 7, 11.6, null],
+      "charters": ["阿爽", "NerSAN", "Arenn Saki vs. NerSAN", null]
+    },
+    {
+      "id": "InvertedWorld.ARForest",
+      "title": "Inverted World",
+      "artist": "ARForest",
+      "illustrator": "Mechari (青鸟 modified)",
+      "chapter": "Chapter EX-Rotaeno 精选集",
+      "constants": [5.5, 11.2, 15.5, null],
+      "charters": ["Clutter", "ɹǝʇʇnlƆ", "ƃuɐnɥs∀ .sʌ uoqsnɐ⅁", null]
+    },
+    {
+      "id": "JourneywithYou.Iris",
+      "title": "Journey with You",
+      "artist": "Iris",
+      "illustrator": "BTKCyber (青鸟 modified)",
+      "chapter": "Chapter EX-Rotaeno 精选集",
+      "constants": [5, 10, 13.7, null],
+      "charters": [
+        "jouR.ney with hold",
+        "jouR.ney to the end【COVERED】",
+        "Su1fuR -All about YOU & ME-",
+        null
+      ]
+    },
+    {
+      "id": "JunXionBetweenLifeAndDeathVIPMix.1N6Fs",
+      "title": "JunXion Between Life And Death(VIP Mix)",
+      "artist": "1N6Fs",
+      "illustrator": "IvyTowers",
+      "chapter": "Chapter 5 霓虹灯牌",
+      "constants": [3, 8.7, 13.4, null],
+      "charters": ["鲲&百九十八", "鲲&百九十八", "鲲&百九十八", null]
+    },
+    {
+      "id": "Kerberos.Zris",
+      "title": "Kerberos",
+      "artist": "Zris",
+      "illustrator": "Eridani",
+      "chapter": "Single 单曲精选集",
+      "constants": [5.5, 12.4, 15.8, null],
+      "charters": ["Alloces", "NerSAN", "Snorkel vs. NerSAN", null]
+    },
+    {
+      "id": "Khalid.Dolphin",
+      "title": "Khalid",
+      "artist": "Dolphin",
+      "illustrator": "HAZUQU",
+      "chapter": "Side Story 3 盗乐行",
+      "constants": [4, 8.2, 13, null],
+      "charters": ["Barbarialid", "Barbarialid", "Ner＜Jazz for your soul .)", null]
+    },
+    {
+      "id": "KhronostasisKatharsis.Halv",
+      "title": "Khronostasis Katharsis",
+      "artist": "Halv",
+      "illustrator": "utosao",
+      "chapter": "Single 单曲精选集",
+      "constants": [6, 11.8, 14, null],
+      "charters": ["XMT小咩兔 & Myna", "XMT小咩兔 & Myna", "StupiGGy fixed by 百九十八", null]
+    },
+    {
+      "id": "KirakiraNoelStory.RekuMochizuki",
+      "title": "Kirakira Noel Story!!",
+      "artist": "Reku Mochizuki",
+      "illustrator": "ナナシ",
+      "chapter": "Single 单曲精选集",
+      "constants": [4, 10.2, 14.2, null],
+      "charters": ["村头村头 CTY Story!!", "头鱼头鱼 MAX Story!!", "N\\erry Xmas 2024", null]
+    },
+    {
+      "id": "KIZUNAResolution.TAG",
+      "title": "KIZUNA Resolution",
+      "artist": "TAG",
+      "illustrator": "Transendium",
+      "chapter": "Chapter EX-EGTS 精选集",
+      "constants": [8, 13.4, 16.4, null],
+      "charters": ["Likey underground", "HD R.esolution", "Sempiternal Fxxxxxx Resolution!", null]
+    },
+    {
+      "id": "KMoeVIP.ZxNX",
+      "title": "K.Moe (VIP)",
+      "artist": "ZxNX",
+      "illustrator": "BTKCyber (青鸟 modified)",
+      "chapter": "Chapter EX-Rotaeno 精选集",
+      "constants": [3, 8.4, 15.9, null],
+      "charters": ["R:kko (IMD)", "R:kko (IMD)", "C.Max (PBM)", null]
+    },
+    {
+      "id": "Komplexe.雄之助featSennzai",
+      "title": "Komplexe",
+      "artist": "雄之助 feat. Sennzai",
+      "illustrator": "SEGA (祈莲 modified)",
+      "chapter": "Chapter EX-maimai 精选集",
+      "constants": [4, 9.6, 14.3, null],
+      "charters": ["Helabot", "右果_Ary", "Likey", null]
+    },
+    {
+      "id": "LabyrinthinKowloonWalledWorld.かめりあ",
+      "title": "Labyrinth in Kowloon: Walled World",
+      "artist": "かめりあ",
+      "illustrator": "鲸弑",
+      "chapter": "Extra Story Chapter 极星卫",
+      "constants": [6, 11.4, 15.6, null],
+      "charters": ["VikingNexus", "VikingNexus", "198 in Kowloon", null]
+    },
+    {
+      "id": "LeaveAllBehind.rider",
+      "title": "Leave All Behind",
+      "artist": "rider",
+      "illustrator": "笔记RE",
+      "chapter": "Chapter 5 霓虹灯牌",
+      "constants": [3, 8.9, 12.7, null],
+      "charters": ["亚树见希子 & 百九十八", "亚树见希子 & 百九十八", "亚树见希子 & 百九十八", null]
+    },
+    {
+      "id": "Letempsperdu.Daison",
+      "title": "Le temps perdu",
+      "artist": "Daison",
+      "illustrator": "子狼",
+      "chapter": "Single 单曲精选集",
+      "constants": [4, 9, 12.3, null],
+      "charters": ["Salt", "Salt", "Likey -For an old friend-", null]
+    },
+    {
+      "id": "lifeflashesbeforeweebeyes.BilliumMoto",
+      "title": "life flashes before weeb eyes",
+      "artist": "BilliumMoto",
+      "illustrator": "百九十八",
+      "chapter": "Chapter EX-Rising Sun Traxx 精选集",
+      "constants": [6.5, 11.9, 14.9, null],
+      "charters": ["百九十八", "百九十八", "百九十八", null]
+    },
+    {
+      "id": "Locomotive.K",
+      "title": "Locomotive",
+      "artist": "♠K",
+      "illustrator": "Otaku_宅",
+      "chapter": "Single 单曲精选集",
+      "constants": [4, 9.7, 13.5, null],
+      "charters": ["Minibus", "Motorcoach", "Monorail", null]
+    },
+    {
+      "id": "Luminescence.米虾Fomiki初云CLoudie",
+      "title": "Luminescence",
+      "artist": "米虾Fomiki & 初云CLoudie",
+      "illustrator": "子狼",
+      "chapter": "Chapter 8 凌日潮汐",
+      "constants": [5.5, 11, 14.5, null],
+      "charters": ["XMT小咩兔", "XMT小咩兔", "Pcat & 百九十八", null]
+    },
+    {
+      "id": "Luminescent.Daison",
+      "title": "Luminescent",
+      "artist": "Daison",
+      "illustrator": "鲸弑",
+      "chapter": "Single 单曲精选集",
+      "constants": [5.5, 10.5, 14.4, null],
+      "charters": ["Uvernight", "Uvernight", "百九十八", null]
+    },
+    {
+      "id": "LuminousEntitiesLostHeart.NormalMfeatUsagiDenki",
+      "title": "Luminous Entities Lost Heart",
+      "artist": "NormalM feat. Usagi Denki",
+      "illustrator": "Transendium",
+      "chapter": "Chapter EX-EGTS 精选集",
+      "constants": [5, 10.7, 15.2, null],
+      "charters": ["1uminous StaR", "1uminous StaR", "光る星", null]
+    },
+    {
+      "id": "Lyrith迷宮リリス.ユメミド",
+      "title": "Lyrith -迷宮リリス-",
+      "artist": "ユメミド",
+      "illustrator": "何呵",
+      "chapter": "Side Story 1 忘忧宫",
+      "constants": [5, 11.1, 16.1, 16.5],
+      "charters": [
+        "Arenn Saki as \"mAze\"",
+        "Arenn Saki as \"myStery\"",
+        "XMT as \"eX-MentalisT\"",
+        "CN_115 as \"prediCameNt\""
+      ]
+    },
+    {
+      "id": "MagentaPotion.EmoCo",
+      "title": "Magenta Potion",
+      "artist": "EmoCo.",
+      "illustrator": "NOISER",
+      "chapter": "Single 单曲精选集",
+      "constants": [6.5, 11.3, 14.4, null],
+      "charters": ["Ctymax vs. 晨", "Ctymax vs. 晨", "Ctymax vs. 晨", null]
+    },
+    {
+      "id": "ManifoldHypothesis.cybermisofeattigerlily",
+      "title": "Manifold Hypothesis",
+      "artist": "cybermiso feat. tigerlily",
+      "illustrator": "阿清 (青鸟 modified)",
+      "chapter": "Chapter EX-Rotaeno 精选集",
+      "constants": [4, 9.1, 14.6, null],
+      "charters": ["Likey", "Likey", "Gausbon feat. 迟戈&野从", null]
+    },
+    {
+      "id": "MARENOL.LeaF",
+      "title": "MARENOL",
+      "artist": "LeaF",
+      "illustrator": "喵n葵",
+      "chapter": "Single 单曲精选集",
+      "constants": [2, 10.3, 13.9, null],
+      "charters": [
+        "H.C.C. fixed by Barbarinerman",
+        "H.C.C. fixed by Barbarinerman",
+        "百九十八",
+        null
+      ]
+    },
+    {
+      "id": "mechanted.rareguy",
+      "title": "mechanted",
+      "artist": "rareguy",
+      "illustrator": "IvyTowers",
+      "chapter": "Chapter EX-Rising Sun Traxx 精选集",
+      "constants": [3, 11.3, 14.9, null],
+      "charters": ["Ctymax", "Ctymax", "Ctymax", null]
+    },
+    {
+      "id": "microwav.dandeless",
+      "title": "micro.wav",
+      "artist": "dandeless",
+      "illustrator": "snake.ribs",
+      "chapter": "Chapter 6 方舟蜃景",
+      "constants": [6, 10.5, 14.7, null],
+      "charters": ["百九十八", "百九十八", "百九十八", null]
+    },
+    {
+      "id": "MiracleForestVIPMix.Rinthlive",
+      "title": "Miracle Forest (VIP Mix)",
+      "artist": "Rinth_live",
+      "illustrator": "L-sp4",
+      "chapter": "Side Story 1 忘忧宫",
+      "constants": [3, 7.5, 13.1, null],
+      "charters": ["奇跡の希", "奇跡の希", "奇跡の希 feat. 奇跡の従", null]
+    },
+    {
+      "id": "MOBILYS.Dachs",
+      "title": "MOBILYS",
+      "artist": "Dachs",
+      "illustrator": "わっふゑ",
+      "chapter": "Side Story 1 忘忧宫",
+      "constants": [5.5, 9.3, 14.3, null],
+      "charters": ["百九十八", "百九十八", "StupiGGy vs. 百九十八 ft. 野从", null]
+    },
+    {
+      "id": "modulus.PTB10",
+      "title": "modulus",
+      "artist": "PTB10",
+      "illustrator": "geralt",
+      "chapter": "Single 单曲精选集",
+      "constants": [4.5, 10.4, 14.9, null],
+      "charters": ["Cty moyules", "Cty moyules", "Pat Brick Man Mr.C", null]
+    },
+    {
+      "id": "NextTime.SaMZIng",
+      "title": "Next Time",
+      "artist": "SaMZIng",
+      "illustrator": "叶藤",
+      "chapter": "Single 单曲精选集",
+      "constants": [6, 8.7, 12.4, null],
+      "charters": [
+        "Gausbon ~ See you next time ~ ",
+        "Gausbon ~ See you next time ~ ",
+        "Gausbon ~ See you next time ~ ",
+        null
+      ]
+    },
+    {
+      "id": "Nhelv.Silentroom",
+      "title": "Nhelv",
+      "artist": "Silentroom",
+      "illustrator": "駿",
+      "chapter": "Single 单曲精选集",
+      "constants": [1.5, 12, 15.6, null],
+      "charters": ["野从", "StupiGGy", "森德雷斯 vs. 百九十八", null]
+    },
+    {
+      "id": "NickofTime.P4koo",
+      "title": "Nick of Time",
+      "artist": "P4koo",
+      "illustrator": "青鸟",
+      "chapter": "Chapter 7 时钟链接",
+      "constants": [6, 9.3, 14.7, null],
+      "charters": ["晨 vs. XMT小咩兔", "晨 vs. XMT小咩兔", "NerSAN", null]
+    },
+    {
+      "id": "NightTheater.わかどり",
+      "title": "NightTheater",
+      "artist": "わかどり",
+      "illustrator": "青鸟",
+      "chapter": "Side Story 4 无相乡",
+      "constants": [4, 10.6, 14.3, null],
+      "charters": ["StR-1 watches Ctyfilm", "StR-1 watches Ctyfilm", "LuminousGausbon", null]
+    },
+    {
+      "id": "NonMelodicRagezMUGEdit.Normal1zer",
+      "title": "Non-Melodic Ragez (MUG Edit)",
+      "artist": "Normal1zer",
+      "illustrator": "cycats",
+      "chapter": "Chapter Legacy 过去的章节",
+      "constants": [5.5, 11.6, 16.1, null],
+      "charters": ["Clutter", "Clutter", "分化者 fixed by Barbarianerman", null]
+    },
+    {
+      "id": "NOONEYESMAN.MYUKKE",
+      "title": "NO ONE YES MAN",
+      "artist": "MYUKKE.",
+      "illustrator": "青鸟",
+      "chapter": "Chapter 6 方舟蜃景",
+      "constants": [7, 10.9, 15.5, null],
+      "charters": ["Ctymax", "晨", "晨 vs. Ctymax", null]
+    },
+    {
+      "id": "NowIsTheTimeDoIt.RoyMikelate",
+      "title": "Now Is The Time, Do It",
+      "artist": "Roy Mikelate",
+      "illustrator": "青鸟",
+      "chapter": "Single 单曲精选集",
+      "constants": [4.5, 11.2, 14.3, null],
+      "charters": ["M3d1uM", "M3d1uM", "Pat Brick Man Mr.N feat. Ner of Time", null]
+    },
+    {
+      "id": "NOx.Juggernaut",
+      "title": "NO x",
+      "artist": "Juggernaut.",
+      "illustrator": "cala for Immaculée Sekai",
+      "chapter": "Chapter EX-Immaculée Sekai 精选集",
+      "constants": [4.5, 10.1, 16.1, null],
+      "charters": ["Su1fuR", "IUIsauce", "StR-1", null]
+    },
+    {
+      "id": "NWAD.Knighthood",
+      "title": "[NWAD]",
+      "artist": "Knighthood",
+      "illustrator": "2Al4wU4",
+      "chapter": "Chapter EX-Paradigm: Reboot 精选集",
+      "constants": [5.5, 9.2, 15.6, null],
+      "charters": ["[RETTULC]", "[DETCETED]", "[RUFLUS]", null]
+    },
+    {
+      "id": "NYA.FLuoRiTe姜米條",
+      "title": "NYA!!! (Phigros ver.)",
+      "artist": "FLuoRiTe/姜米條",
+      "illustrator": "NEKO&海产",
+      "chapter": "Chapter 5 霓虹灯牌",
+      "constants": [2, 8.6, 13.1, null],
+      "charters": ["HCC!!!", "HCC!!!", "HCC!!!", null]
+    },
+    {
+      "id": "OnAndOn.ETIAfeatJenga",
+      "title": "On And On!!",
+      "artist": "ETIA. feat. Jenga",
+      "illustrator": "わっふゑ",
+      "chapter": "Single 单曲精选集",
+      "constants": [5, 9.6, 15.2, null],
+      "charters": ["Rikko", "Rikko", "NerSAN feat. Takanashi Rikko", null]
+    },
+    {
+      "id": "opia.rN",
+      "title": "opia",
+      "artist": "rN",
+      "illustrator": "rN @ 湯元画伯",
+      "chapter": "Single 单曲精选集",
+      "constants": [5.5, 10.6, 15.6, null],
+      "charters": [
+        "BlindForest",
+        "BlindForest 『Observing』",
+        "Jeitie & CorruptedEntity 『Hollow』",
+        null
+      ]
+    },
+    {
+      "id": "Originally.SNKSMizku",
+      "title": "Originally",
+      "artist": "SNKS & Mizku",
+      "illustrator": "Keiby.comics",
+      "chapter": "Single 单曲精选集",
+      "constants": [1, 9.3, 14.5, null],
+      "charters": ["StR-1", "StR-9", "StrayCat", null]
+    },
+    {
+      "id": "Orthodox.tokiwa",
+      "title": "Orthodox",
+      "artist": "tokiwa",
+      "illustrator": "cycats",
+      "chapter": "Single 单曲精选集",
+      "constants": [4.5, 8.5, 13.7, null],
+      "charters": ["StR-1", "StR-1", "Uvernight fixed by StR-1", null]
+    },
+    {
+      "id": "Palescreen.WyvernPfeatMadol",
+      "title": "Palescreen",
+      "artist": "WyvernP feat. Madol",
+      "illustrator": "GAMEBAKA",
+      "chapter": "Single 单曲精选集",
+      "constants": [5.5, 12.3, 15.9, null],
+      "charters": ["Jeitie", "Jeitie", "Jeitie", null]
+    },
+    {
+      "id": "PANICPARADISE.DJSHIONY",
+      "title": "PANIC PARADISE",
+      "artist": "DJ SHION.Y",
+      "illustrator": "百九十八",
+      "chapter": "Side Story 3 盗乐行",
+      "constants": [6.5, 11.5, 15.5, 16.6],
+      "charters": [
+        "Barianic Baradise",
+        "Barianic Baradise",
+        "Su1fuR -FAISEURS DE PANIQUE-",
+        "StR-1"
+      ]
+    },
+    {
+      "id": "ParallelRetrogressionGameVer.Tetrajectory",
+      "title": "Parallel Retrogression(Game Ver.)",
+      "artist": "Tetrajectory",
+      "illustrator": "青鸟",
+      "chapter": "Single 单曲精选集",
+      "constants": [7, 10.9, 14.2, null],
+      "charters": ["HaraKuma", "HaraKuma", "HaraKuma", null]
+    },
+    {
+      "id": "parsey.siqlo",
+      "title": "ρars/ey",
+      "artist": "siqlo",
+      "illustrator": "出前 x nekomiya",
+      "chapter": "Single 单曲精选集",
+      "constants": [4, 11.7, 14.6, null],
+      "charters": ["Rikko", "Rikko & TangScend", "TangScend", null]
+    },
+    {
+      "id": "PixelRebelz.Normal1zer",
+      "title": "Pixel Rebelz",
+      "artist": "Normal1zer",
+      "illustrator": "艾是Abby",
+      "chapter": "Chapter Legacy 过去的章节",
+      "constants": [4.5, 9.7, 15.3, null],
+      "charters": ["Knight", "Knight", "NerSAN", null]
+    },
+    {
+      "id": "PoisonANDORAffection.LeaF",
+      "title": "Poison AND÷OR Affection",
+      "artist": "LeaF",
+      "illustrator": "笔记RE/海产",
+      "chapter": "Single 单曲精选集",
+      "constants": [3.5, 9.9, 15.7, null],
+      "charters": ["R/kko", "&ikko", "1÷98", null]
+    },
+    {
+      "id": "Pontdessouvenirs.VeetaCrushvsitsufeatitsu",
+      "title": "Pont des souvenirs",
+      "artist": "VeetaCrush vs. [itsu(feat.itsu)]",
+      "illustrator": "林语",
+      "chapter": "Single 单曲精选集",
+      "constants": [5.5, 10.7, 15.3, null],
+      "charters": ["JKy", "JKy", "晨", null]
+    },
+    {
+      "id": "Poseidon.1112vsStar",
+      "title": "Ποσειδών",
+      "artist": "1112 vs. Star＊",
+      "illustrator": "老张",
+      "chapter": "Side Story 1 忘忧宫",
+      "constants": [6, 8.8, 12.8, 16.2],
+      "charters": [
+        "Jαckψ a.k.a JKy",
+        "Jαckψ",
+        "Jαckψ feat. Βαρβαροςαντρας",
+        "上班摸大鱼 a.k.a. 海洋咩兔"
+      ]
+    },
+    {
+      "id": "PRAGMATISMRESURRECTION.Laur",
+      "title": "PRAGMATISM -RESURRECTION-",
+      "artist": "Laur",
+      "illustrator": "シエラ (Design: 祈莲)",
+      "chapter": "Single 单曲精选集",
+      "constants": [7.5, 12.9, 16, 16.6],
+      "charters": [
+        "完璧 [WARNING: DRAG OVERLOAD]",
+        "完璧 × 北星",
+        "-NerSAN & Su1fuR-",
+        "THE LAST 198"
+      ]
+    },
+    {
+      "id": "PRAW.Bluewind",
+      "title": "[PRAW]",
+      "artist": "Bluewind",
+      "illustrator": "老张",
+      "chapter": "Chapter Legacy 过去的章节",
+      "constants": [6, 10.6, 15.1, null],
+      "charters": ["Likey", "Likey", "晨 vs. 阿爽", null]
+    },
+    {
+      "id": "Protoflicker.Silentroom",
+      "title": "Protoflicker",
+      "artist": "Silentroom",
+      "illustrator": "Lanota © Noxy Games Inc. ",
+      "chapter": "Chapter EX-Lanota 精选集",
+      "constants": [3.5, 9.7, 15.4, null],
+      "charters": ["Barbarianerman & J.R", "RTH", "Gausbon", null]
+    },
+    {
+      "id": "QuantumHyperspace.D_AAN",
+      "title": "Quantum Hyperspace",
+      "artist": "D_AAN",
+      "illustrator": "sa1t",
+      "chapter": "Side Story 3 盗乐行",
+      "constants": [6, 11.2, 15, null],
+      "charters": ["Bariantum Hyperianerman", "Bariantum Hyperianerman", "IMD_0b0110", null]
+    },
+    {
+      "id": "QZKagoRequiem.tpazolite",
+      "title": "QZKago Requiem",
+      "artist": "t+pazolite",
+      "illustrator": "SEGA (祈莲 modified)",
+      "chapter": "Chapter EX-maimai 精选集",
+      "constants": [7, 13.3, 16.3, 17.4],
+      "charters": ["-", "Rikko EXPERT Life:999", "Gausbon", "Salt feat. M3ow"]
+    },
+    {
+      "id": "Radiance.Nhato",
+      "title": "Radiance",
+      "artist": "Nhato",
+      "illustrator": "SEGA (V17AMax modified)",
+      "chapter": "Chapter EX-オンゲキ 精选集",
+      "constants": [3.5, 11.9, 14.1, 15.6],
+      "charters": ["Su1fuR", "Rikko EXPERT Lv.40", "XMT小咩兔", "Яadiance"]
+    },
+    {
+      "id": "RainyHeart.BelieverInYou阿卡姆巫师",
+      "title": "Rainy Heart",
+      "artist": "BelieverInYou(阿卡姆巫师)",
+      "illustrator": "Sodhelium",
+      "chapter": "Single 单曲精选集",
+      "constants": [4, 9.4, 12.9, null],
+      "charters": ["Su1fuR", "Barbarianerman", "HaraKuma", null]
+    },
+    {
+      "id": "RainySeason.AbyssIdols",
+      "title": "Rainy Season",
+      "artist": "Abyss Idols",
+      "illustrator": "Robin",
+      "chapter": "Single 单曲精选集",
+      "constants": [5.5, 10.7, 14.2, null],
+      "charters": ["StupiGGy", "StupiGGy", "Raiky Season", null]
+    },
+    {
+      "id": "Ramification.rareguyReina",
+      "title": "Ramification",
+      "artist": "rareguy & Reina",
+      "illustrator": "cokeAnut",
+      "chapter": "Side Story 4 无相乡",
+      "constants": [5, 10.4, 14.8, null],
+      "charters": ["inert COC", "totally ramified COC", "Simon_Axis•騎士•StR-1", null]
+    },
+    {
+      "id": "Random.SobremSilentroom",
+      "title": "Random",
+      "artist": "Sobrem × Silentroom",
+      "illustrator": "Harkiadel",
+      "chapter": "Single 单曲精选集",
+      "constants": [5.5, 12.2, 14.7, null],
+      "charters": ["Barbarianerman", "IMD_6", "_鉄", null]
+    },
+    {
+      "id": "Re_NascencePsystyleVer.Rinth_live",
+      "title": "Re_Nascence (Psystyle Ver.) ",
+      "artist": "Rinth_live",
+      "illustrator": "Tsuioku",
+      "chapter": "Side Story 2 弭刻日",
+      "constants": [5.5, 11.7, 14.4, null],
+      "charters": ["NerSAN", "NerSAN", "NerSAN & 百九十八", null]
+    },
+    {
+      "id": "Realms.HinkikAHimitsu",
+      "title": "Realms",
+      "artist": "Hinkik & A Himitsu",
+      "illustrator": "圆规compasses",
+      "chapter": "Single 单曲精选集",
+      "constants": [3.5, 10.2, 13.8, null],
+      "charters": ["Barbarianerman", "Barbarianerman", "NerSAN", null]
+    },
+    {
+      "id": "Rebirth.ああああ",
+      "title": "Re：birth",
+      "artist": "ああああ",
+      "illustrator": "QueseraGames Co., Ltd.",
+      "chapter": "Chapter EX-KALPA 精选集",
+      "constants": [6, 12, 15.4, null],
+      "charters": ["啊哒咔哟 & 小咩兔 & COC", "啊哒咔哟 & 小咩兔 & COC", "Gausbon & StupiGGy", null]
+    },
+    {
+      "id": "ReEndofaDream.umavsモリモリあつし",
+      "title": "Re：End of a Dream",
+      "artist": "uma vs. モリモリあつし",
+      "illustrator": "masiro vs. adaptor",
+      "chapter": "Side Story 3 盗乐行",
+      "constants": [7.5, 13, 15.9, 16.9],
+      "charters": [
+        "Barbarianerman, Overture before the story",
+        "Barbarianerman, Main theme within the somnium",
+        "Latency, Finale of the dream",
+        "XMT, Encore after the end"
+      ]
+    },
+    {
+      "id": "Reimei.影虎",
+      "title": "Reimei",
+      "artist": "影虎。",
+      "illustrator": "英英英",
+      "chapter": "Chapter 5 霓虹灯牌",
+      "constants": [6.5, 11.7, 15.1, null],
+      "charters": ["百九十八", "百九十八", "百九十八", null]
+    },
+    {
+      "id": "Resolver.Gomadare",
+      "title": "Resolver",
+      "artist": "Gomadare",
+      "illustrator": "Transendium",
+      "chapter": "Chapter EX-EGTS 精选集",
+      "constants": [3, 8.4, 14.4, null],
+      "charters": ["Salt", "Salt", "Clutter vs. Salt", null]
+    },
+    {
+      "id": "RESSiSTANCE.ぐるたみん",
+      "title": "RESSiSTANCE",
+      "artist": "ぐるたみん",
+      "illustrator": "LINUS",
+      "chapter": "Chapter EX-KALPA 精选集",
+      "constants": [6.5, 11.2, 16.1, null],
+      "charters": ["其一 呼吸尚存的标志", "其二 向前迈进的理由", "其三 我所存在的证明", null]
+    },
+    {
+      "id": "Retribution.nmyKryexe",
+      "title": "Retribution",
+      "artist": "nm-y & Kry.exe",
+      "illustrator": "NerSAN",
+      "chapter": "Chapter 8 凌日潮汐",
+      "constants": [6, 11.6, 16.2, null],
+      "charters": ["NerSAN", "NerSAN", "Ner as \"SPΔDE\"", null]
+    },
+    {
+      "id": "RetributionCycleofRedemption.ArdolfvsDaily天利",
+      "title": "Retribution ~ Cycle of Redemption ~ ",
+      "artist": "Ardolf vs. Daily天利",
+      "illustrator": "死と花の大祭司(ʌᴉoƨმᴉϝ);;",
+      "chapter": "Single 单曲精选集",
+      "constants": [6, 11.3, 16.2, null],
+      "charters": [
+        "StR-1 & 右果_Ary",
+        "StR-1 & 右果_Ary",
+        "Simon_Axis vs. Likey [Respect Ner as \"SP∆DE\"]",
+        null
+      ]
+    },
+    {
+      "id": "RIPPER.Friedwav",
+      "title": "RIPPER",
+      "artist": "Friedwav",
+      "illustrator": "何呵",
+      "chapter": "Single 单曲精选集",
+      "constants": [6.5, 11.7, 15.4, null],
+      "charters": [
+        "撕裂者『無極』 fixed by 晨",
+        "撕裂者『無極』 fixed by 晨",
+        "撕裂者『Alloces vs. Shin』",
+        null
+      ]
+    },
+    {
+      "id": "Rrharil.TeamGrimoire",
+      "title": "Rrhar'il",
+      "artist": "Team Grimoire",
+      "illustrator": "犀牛坨动画工坊",
+      "chapter": "Chapter 7 时钟链接",
+      "constants": [7, 12.7, 16.1, 17.6],
+      "charters": [
+        "RDRT -p 19:08:31",
+        "RDRT -p 20:02:21",
+        "RDRT -p 20:08:31",
+        "RWND -p 16493:62786:92551"
+      ]
+    },
+    {
+      "id": "RubbishSorting.CtymaxvsNceS",
+      "title": "Rubbish Sorting",
+      "artist": "Ctymax vs. NceS",
+      "illustrator": "knife美工刀",
+      "chapter": "Single 单曲精选集",
+      "constants": [3.5, 9.4, 13.1, null],
+      "charters": [
+        "阿爽 vs. Ctymax -Haose 垃圾-",
+        "阿爽 vs. Ctymax -Haose 垃圾-",
+        "阿爽 vs. Ctymax -Haose 垃圾-",
+        null
+      ]
+    },
+    {
+      "id": "SATELLITE.かめりあ",
+      "title": "S.A.T.E.L.L.I.T.E.",
+      "artist": "かめりあ",
+      "illustrator": "青鸟",
+      "chapter": "Extra Story Chapter 极星卫",
+      "constants": [5, 9.9, 14.3, 16.2],
+      "charters": [
+        "XMT wishing upon a satellite",
+        "B.A.R.B.A.R.I.A.N.E.R.M.A.N.",
+        "L.I.K.E.Y.",
+        "N.E.R.1.9.8."
+      ]
+    },
+    {
+      "id": "Schadenfreude.ZxNX",
+      "title": "Schadenfreude",
+      "artist": "ZxNX",
+      "illustrator": "验光蒸鱼",
+      "chapter": "Single 单曲精选集",
+      "constants": [4.5, 10.6, 15.1, null],
+      "charters": ["StuRmwind", "StuRmfeuer", "''-1''", null]
+    },
+    {
+      "id": "SecretIllumination.Yooh",
+      "title": "Secret Illumination",
+      "artist": "Yooh",
+      "illustrator": "Juice Black (青鸟 modified)",
+      "chapter": "Chapter EX-Rotaeno 精选集",
+      "constants": [5, 10.2, 14.7, null],
+      "charters": ["Likey ", "迟戈 vs. Likey", "NerSAN", null]
+    },
+    {
+      "id": "Sein.朔Apo11oprogramvsお月さま交響曲ftkuroa荒巻",
+      "title": "Sein",
+      "artist": "朔(Apo11o program vs. お月さま交響曲) ft. kuroa*×荒巻",
+      "illustrator": "hideo",
+      "chapter": "Single 单曲精选集",
+      "constants": [5, 10.1, 15.1, null],
+      "charters": ["A.S.H", "A.S.H", "A.S.H&晨", null]
+    },
+    {
+      "id": "Shadow.SumaiLightvs姜米條",
+      "title": "Shadow",
+      "artist": "姜米條&SumaiLight",
+      "illustrator": "御坂果子",
+      "chapter": "Chapter EX-姜米條 精选集",
+      "constants": [6.5, 10.5, 14.6, 16.2],
+      "charters": ["晨", "晨", "Sillyp vs. 晨", "J0(_)I2|\\|3y'5 3|\\||)"]
+    },
+    {
+      "id": "Shelter.MeatyRabbitNceS",
+      "title": "Shelter",
+      "artist": "MeatyRabbit & NceS",
+      "illustrator": "诡异童话",
+      "chapter": "Single 单曲精选集",
+      "constants": [3.5, 8.8, 13.2, null],
+      "charters": ["Cluttler with ShelteR", "Cluttler with ShelteR", "人外侵略地球计划", null]
+    },
+    {
+      "id": "ShineAfter.ADeanJocularACE",
+      "title": "Shine After",
+      "artist": "ADean & JocularACE",
+      "illustrator": "海里狄七 feat. 存艺",
+      "chapter": "Single 单曲精选集",
+      "constants": [4, 9.7, 14.6, null],
+      "charters": ["Su1fuR", "Su1fuR", "Salt & Uvernight", null]
+    },
+    {
+      "id": "SIGMA.Kryexe",
+      "title": "SIGMA",
+      "artist": "Kry.exe",
+      "illustrator": "塔塔",
+      "chapter": "Single 单曲精选集",
+      "constants": [5, 10.5, 15.8, null],
+      "charters": ["Barbarianerman.exe", "Bσrbσriσnermσn.exe", "Bσrbσriσn∑rmσn.∑x∑", null]
+    },
+    {
+      "id": "SilenceisGoldenSpeechisGolden.NIWASHI",
+      "title": "Silence is Golden, Speech is Golden",
+      "artist": "NIWASHI",
+      "illustrator": "Jerry & OsuMe65",
+      "chapter": "Chapter EX-EGTS 精选集",
+      "constants": [5, 9.3, 15.7, null],
+      "charters": [
+        "Clutter is coppery，Tumult is coppery",
+        "XMT is silvery, 小咩兔 is silvery",
+        "Hara is golden, Kuma is golden",
+        null
+      ]
+    },
+    {
+      "id": "slips.rintarosoma",
+      "title": "sølips",
+      "artist": "rintaro soma",
+      "illustrator": "SEGA (祈莲 modified)",
+      "chapter": "Chapter EX-maimai 精选集",
+      "constants": [7.5, 12.8, 16, 16.8],
+      "charters": ["Helabot", "Salt", "St2.1GHz -Før The Pigeons-", "ø"]
+    },
+    {
+      "id": "SnowDance.悠叶いのり",
+      "title": "Snow Dance",
+      "artist": "悠叶いのり",
+      "illustrator": "群青kurara",
+      "chapter": "Single 单曲精选集",
+      "constants": [4, 8.3, 12.4, null],
+      "charters": ["Akko", "爬爬", "The Waltz of Snow", null]
+    },
+    {
+      "id": "SnowDesert.WyvernP",
+      "title": "Snow Desert",
+      "artist": "WyvernP",
+      "illustrator": "knife美工刀",
+      "chapter": "Single 单曲精选集",
+      "constants": [5, 10.3, 13.4, null],
+      "charters": ["VikingNexus", "VikingNexus", "VikingNexus", null]
+    },
+    {
+      "id": "SolaggyfeatUzumaki.ShrimpCatsはぁち後藤涼輔",
+      "title": "So laggy! (feat. Uzumaki)",
+      "artist": "ShrimpCats. (はぁち×後藤涼輔)",
+      "illustrator": "塩焼とまと",
+      "chapter": "Single 单曲精选集",
+      "constants": [5, 9.5, 14.6, null],
+      "charters": ["Salt", "Salt", "Salt", null]
+    },
+    {
+      "id": "SparkleNewLife.rider",
+      "title": "Sparkle New Life",
+      "artist": "rider",
+      "illustrator": "1B",
+      "chapter": "Single 单曲精选集",
+      "constants": [4, 9.2, 12.8, null],
+      "charters": ["Sparkle Ctymax", "Sparkle Ctymax", "Sparkle Ctymax fixed by 百九十八", null]
+    },
+    {
+      "id": "Spasmodic.姜米條颶風元力上人",
+      "title": "Spasmodic",
+      "artist": "姜米條☆颶風 ~ ♫元力上人♫",
+      "illustrator": "昔璃☆暴雨 ~ ♫危難聖帝♫",
+      "chapter": "Chapter 5 霓虹灯牌",
+      "constants": [8.2, 12.9, 15.5, 16.7],
+      "charters": [
+        "無極☆雷鳴 ~ ♫死の序曲♫",
+        "無極☆雷鳴 ~ ♫死の序曲♫",
+        "無極☆雷鳴 ~ ♫死の序曲♫",
+        "無極☆雷鳴 ~ ♫死の序曲♫"
+      ]
+    },
+    {
+      "id": "SpeedUp.DarTokki",
+      "title": "Speed Up!",
+      "artist": "DarTokki",
+      "illustrator": "TNiK",
+      "chapter": "Single 单曲精选集",
+      "constants": [4.5, 10.3, 14, null],
+      "charters": ["Ctymax vs. 百九十八", "Ctymax vs. 百九十八", "Ctymax vs. 百九十八", null]
+    },
+    {
+      "id": "Spotlight.Ardolf",
+      "title": "Spotlight",
+      "artist": "Ardolf",
+      "illustrator": "NerSAN",
+      "chapter": "Side Story 4 无相乡",
+      "constants": [4.5, 9.9, 14.4, null],
+      "charters": [
+        "Debut under spotlights!< Simon_Axis",
+        "Simon_Axis >< Likey",
+        "Likey >IT'S SHOWTIME!",
+        null
+      ]
+    },
+    {
+      "id": "Starduster.Quree",
+      "title": "Starduster",
+      "artist": "Quree",
+      "illustrator": "IvyTowers",
+      "chapter": "Single 单曲精选集",
+      "constants": [5.5, 11.4, 15.2, null],
+      "charters": ["NerSAN", "NerSAN", "NerSAN", null]
+    },
+    {
+      "id": "StardustRAY.kanonevsBlackY",
+      "title": "Stardust:RAY",
+      "artist": "kanone vs. BlackY",
+      "illustrator": "SEGA (V17AMax modified)",
+      "chapter": "Chapter EX-オンゲキ 精选集",
+      "constants": [6, 12.3, 16.5, 17.2],
+      "charters": [
+        "Simon_Axis vs. Su1fuR",
+        "Su1fuR vs. Simon_Axis",
+        "曦枢 vs. 鎏光 -Lv.70 LEAF-",
+        "完璧 vs. 癒株 -Autumn Memory-"
+      ]
+    },
+    {
+      "id": "Stasis.Maozon",
+      "title": "Stasis",
+      "artist": "Maozon",
+      "illustrator": "Lanota © Noxy Games Inc. ",
+      "chapter": "Chapter EX-Lanota 精选集",
+      "constants": [5, 10.1, 15.3, 16.7],
+      "charters": ["空の希", "空の希", "ST AS is XMT", "百九十八"]
+    },
+    {
+      "id": "SultanRage.MonstDeath",
+      "title": "Sultan Rage",
+      "artist": "MonstDeath",
+      "illustrator": "笔记RE",
+      "chapter": "Chapter Legacy 过去的章节",
+      "constants": [4, 7, 12.2, null],
+      "charters": ["百九十八", "百九十八", "百九十八", null]
+    },
+    {
+      "id": "SURREALISM.Itsuki",
+      "title": "-SURREALISM-",
+      "artist": "Itsuki",
+      "illustrator": "喵n葵",
+      "chapter": "Chapter Legacy 过去的章节",
+      "constants": [5, 9.4, 13.4, null],
+      "charters": ["Su1fuR", "Su1fuR", "-StupiGGy- fixed by 晨", null]
+    },
+    {
+      "id": "SwingSkipDrop.ミハイル",
+      "title": "Swing Skip Drop",
+      "artist": "ミハイル",
+      "illustrator": "ディン",
+      "chapter": "Single 单曲精选集",
+      "constants": [4.5, 9.1, 15.5, null],
+      "charters": ["Helabot", "Helabot", "Swing Salt ♪", null]
+    },
+    {
+      "id": "TECHNOPOLIS2085.PRASTIKDANCEFLOOR",
+      "title": "TECHNOPOLIS 2085",
+      "artist": "PRASTIK DANCEFLOOR",
+      "illustrator": "SEGA (V17AMax modified)",
+      "chapter": "Chapter EX-CHUNITHM 精选集",
+      "constants": [5, 10.2, 14.1, 15.9],
+      "charters": [
+        "dancing\"L\"ine 2085",
+        "迟戈 vs. Likey",
+        "CTYMAX ????",
+        "TECHNOXMT vs. LATENCYPOLIS"
+      ]
+    },
+    {
+      "id": "TemporalShifting.LureRabbitVC",
+      "title": "Temporal Shifting",
+      "artist": "Lure Rabbit & V!C",
+      "illustrator": "mology (青鸟&V17AMax Modified)",
+      "chapter": "Chapter EX-OverRapid 精选集",
+      "constants": [4, 11.5, 15.2, null],
+      "charters": ["Su1fuR", "Su1fuR", "Gausbon vs. 阿爽", null]
+    },
+    {
+      "id": "TheChariotREVIIVAL.Attoclef",
+      "title": "The Chariot ~REVIIVAL~",
+      "artist": "Attoclef",
+      "illustrator": "翠冷兮",
+      "chapter": "Chapter 8 凌日潮汐",
+      "constants": [5, 9, 14, null],
+      "charters": ["M3d1uM", "Alloces", "Ctymax drives in BlindForest", null]
+    },
+    {
+      "id": "TheMountainEater.PaulBazooka",
+      "title": "The Mountain Eater",
+      "artist": "Paul Bazooka",
+      "illustrator": "START SEED",
+      "chapter": "Single 单曲精选集",
+      "constants": [5.5, 9.6, 14.8, null],
+      "charters": ["百九十八", "百九十八", "百九十八", null]
+    },
+    {
+      "id": "TheWholeRest.KIVΛ",
+      "title": "The Whole Rest",
+      "artist": "KIVΛ",
+      "illustrator": "©2025 Rayark Inc. CYTUS II®",
+      "chapter": "Chapter EX-CYTUS II 精选集",
+      "constants": [5, 9.9, 13.6, null],
+      "charters": ["Salt", "¯EASY", "Uvernight from CYTUS II", null]
+    },
+    {
+      "id": "Thrashforce.KAHvsE0ri4",
+      "title": "Thrash force",
+      "artist": "KAH vs. E0ri4",
+      "illustrator": "自動車 原付 vs. GAMEBAKA",
+      "chapter": "Single 单曲精选集",
+      "constants": [4.5, 10.7, 15.3, null],
+      "charters": ["thrAsh forSe", "thrAsh forSe", "Uvernight & Su1fuR", null]
+    },
+    {
+      "id": "TimetoNightSkyfeatLeeYuJin.HyuNKLYDIX",
+      "title": "Time to Night Sky (feat. Lee Yu Jin)",
+      "artist": "HyuN & KLYDIX",
+      "illustrator": "ZG",
+      "chapter": "Chapter EX-KALPA 精选集",
+      "constants": [3, 10.1, 13.6, null],
+      "charters": ["Rikko", "Barbarianerman", "Likey & 198ar", null]
+    },
+    {
+      "id": "Trane.MALVA",
+      "title": "Träne",
+      "artist": "MALVA.",
+      "illustrator": "しえろ",
+      "chapter": "Single 单曲精选集",
+      "constants": [1.5, 7, 14.2, null],
+      "charters": ["Barbarianerman", "Barbarianerman", "Barbarianerman", null]
+    },
+    {
+      "id": "TriumphRegret.typeMARS",
+      "title": "Triumph & Regret",
+      "artist": "typeMARS",
+      "illustrator": "何呵",
+      "chapter": "Single 单曲精选集",
+      "constants": [5, 10.3, 15, null],
+      "charters": [
+        "Barbarianerman & Regret",
+        "Barbarianerman & Regret",
+        "TimiTini & HaraKuma",
+        null
+      ]
+    },
+    {
+      "id": "Trojan.litmus",
+      "title": "Trojan",
+      "artist": "litmus*",
+      "illustrator": "Lapelristar (青鸟&V17AMax Modified)",
+      "chapter": "Chapter EX-OverRapid 精选集",
+      "constants": [5.5, 10.8, 15, null],
+      "charters": ["M3d1uM", "M3d1uM", "Warning: XMT is infected by Trojan!!", null]
+    },
+    {
+      "id": "UnorthodoxThoughts.Joulez",
+      "title": "Unorthodox Thoughts",
+      "artist": "Joulez",
+      "illustrator": "ASXX",
+      "chapter": "Single 单曲精选集",
+      "constants": [5.5, 12, 13.9, null],
+      "charters": ["Barbarianerman", "HaraKuma", "Barbarianerman vs. HaraKuma", null]
+    },
+    {
+      "id": "Upshift.Iriss-Frantzz",
+      "title": "Upshift",
+      "artist": "Iriss-Frantzz",
+      "illustrator": "Iriss=Frantzz=s-don",
+      "chapter": "Single 单曲精选集",
+      "constants": [6, 10.8, 15.5, null],
+      "charters": ["Lumiere", "CorruptedEntity & 野从", "_鉄", null]
+    },
+    {
+      "id": "valorstarcross.LundyvsWyvren",
+      "title": "valor/starcross",
+      "artist": "Lundy vs. Wyvren",
+      "illustrator": "AriaL & 57_dayo [edited by Stelli]",
+      "chapter": "Single 单曲精选集",
+      "constants": [6.5, 12.7, 15.8, null],
+      "charters": ["vacant/stupiggy", "vacant/stupiggy", "vesper/straycat", null]
+    },
+    {
+      "id": "Verruckt.Raimukun",
+      "title": "Verrückt",
+      "artist": "Raimukun",
+      "illustrator": "AiLANE",
+      "chapter": "Single 单曲精选集",
+      "constants": [7, 12.7, 16.5, null],
+      "charters": ["Magazet", "Magazet", "Salt", null]
+    },
+    {
+      "id": "volcanic.DETROakaルゼ",
+      "title": "volcanic",
+      "artist": "DETRO a.k.a. ルゼ",
+      "illustrator": "あおお/A-ZERO, morph",
+      "chapter": "Chapter EX-WAVEAT 精选集",
+      "constants": [7.5, 12.1, 14.7, 16.6],
+      "charters": ["Barbarianerman", "Rikko", "Ctymax in a volcano, very delicious", "Alloces"]
+    },
+    {
+      "id": "WATER.A39沙包P",
+      "title": "WATER",
+      "artist": "A-39/沙包P",
+      "illustrator": "knife美工刀",
+      "chapter": "Side Story 1 忘忧宫",
+      "constants": [4.5, 9.5, 13.6, null],
+      "charters": ["急流に巻き込まれ", "対流に巻き込まれ", "乱流に巻き込まれ", null]
+    },
+    {
+      "id": "Wavetapper.Frums",
+      "title": "Wavetapper",
+      "artist": "Frums",
+      "illustrator": "百九十八",
+      "chapter": "Single 单曲精选集",
+      "constants": [6, 9.4, 13.9, null],
+      "charters": ["Sillyp", "Sillyp", "百九十八 vs. Barbarianerman", null]
+    },
+    {
+      "id": "Wintercube.CtymaxfeatNceS",
+      "title": "Winter ↑cube↓",
+      "artist": "Ctymax feat. NceS",
+      "illustrator": "翠冷兮",
+      "chapter": "Chapter Legacy 过去的章节",
+      "constants": [3.5, 8.2, 13.3, null],
+      "charters": ["Ctymax after 7 years", "Salt", "百九十八", null]
+    },
+    {
+      "id": "WithYou.Cashew",
+      "title": "With You",
+      "artist": "Cashew",
+      "illustrator": "ADZUKI",
+      "chapter": "Single 单曲精选集",
+      "constants": [3.5, 9.1, 13.5, null],
+      "charters": ["with U", "with U", "with U", null]
+    },
+    {
+      "id": "Xenolith.Tatsh",
+      "title": "Xenolith",
+      "artist": "Tatsh",
+      "illustrator": "2AI4wU4",
+      "chapter": "Chapter EX-Paradigm: Reboot 精选集",
+      "constants": [4, 8.5, 14.2, null],
+      "charters": ["RXhuang", "RXhuang", "Xlutter guided by three Oaths", null]
+    },
+    {
+      "id": "Xenophobia.XinG",
+      "title": "Xenophobia",
+      "artist": "XinG",
+      "illustrator": "Ots-15",
+      "chapter": "Single 单曲精选集",
+      "constants": [6.5, 12.6, 14.9, null],
+      "charters": ["Skuwo", "Skuwo", "Skuwo", null]
+    },
+    {
+      "id": "Xepion.Acotto",
+      "title": "Xep+ion",
+      "artist": "Acotto",
+      "illustrator": "クルス (Ctymax modified)",
+      "chapter": "Chapter EX-Liminality 精选集",
+      "constants": [2.5, 9.8, 14.8, null],
+      "charters": ["Su1fuR", "professional Rikko", "Su1fuRikko", null]
+    },
+    {
+      "id": "XING.ginkiha",
+      "title": "XING",
+      "artist": "ginkiha",
+      "illustrator": "打雷打人（青鸟 modified）",
+      "chapter": "Chapter EX-Muse Dash 精选集",
+      "constants": [5.5, 10.8, 14, null],
+      "charters": ["StupiGGy", "StupiGGy", "Sillyp vs. 阿爽", null]
+    },
+    {
+      "id": "YouaretheMiserable.tpazolite",
+      "title": "You are the Miserable",
+      "artist": "t+pazolite",
+      "illustrator": "Lanota © Noxy Games Inc. ",
+      "chapter": "Chapter EX-Lanota 精选集",
+      "constants": [6, 11.7, 14.1, 15.8],
+      "charters": ["M3d1uM", "M3d1uM", "We are the Miserable", "Pat Brick Man Mr.C & Mr.B"]
+    },
+    {
+      "id": "アンビバレンス.すりぃ相沢",
+      "title": "アンビバレンス",
+      "artist": "すりぃ×相沢",
+      "illustrator": "SEGA (祈莲 modified)",
+      "chapter": "Chapter EX-maimai 精选集",
+      "constants": [3.5, 8.7, 14.2, null],
+      "charters": ["XMT小咩兔", "XMT小咩兔", "弧光 With Opposition", null]
+    },
+    {
+      "id": "いざ参ります.Uskefeat棗いつき",
+      "title": "いざ、参ります",
+      "artist": "U-ske feat. 棗いつき",
+      "illustrator": "緑風マルト",
+      "chapter": "Single 单曲精选集",
+      "constants": [3.5, 9.2, 15, null],
+      "charters": ["Clutter & Barbarianerman", "Clutter & Barbarianerman", "小咩兔、参上", null]
+    },
+    {
+      "id": "インフェルノシティ.Ponchifeatはぁち",
+      "title": "インフェルノシティ",
+      "artist": "Ponchi♪ feat. はぁち",
+      "illustrator": "LESYEF & 藍瀬 まなみ",
+      "chapter": "Single 单曲精选集",
+      "constants": [4.5, 11.5, 15.7, null],
+      "charters": ["Su1fuR", "Alloces feat. Uvernight", "Alloces", null]
+    },
+    {
+      "id": "インマイマインド.レシオP",
+      "title": "インマイマインド",
+      "artist": "レシオP",
+      "illustrator": "すずか爆弾",
+      "chapter": "Single 单曲精选集",
+      "constants": [1.5, 9.2, 12.5, null],
+      "charters": ["Salt", "Salt", "ネルサン (I make charts slowly)", null]
+    },
+    {
+      "id": "ジングルベルJingleBell.A39沙包P",
+      "title": "ジングルベル(Jingle Bell)",
+      "artist": "A-39/沙包P",
+      "illustrator": "爱39的Konya",
+      "chapter": "Single 单曲精选集",
+      "constants": [4.5, 8.5, 14.5, null],
+      "charters": ["merry CNrisTimas", "merry XM AS", "NerSANTA vs. BarbarianerSLEDGE", null]
+    },
+    {
+      "id": "ストレイソウルアラウンド.みーに",
+      "title": "ストレイソウル・アラウンド",
+      "artist": "みーに",
+      "illustrator": "伊恩 (青鸟 modified)",
+      "chapter": "Chapter EX-Rotaeno 精选集",
+      "constants": [6, 9.8, 14.3, null],
+      "charters": ["JKy as \"Stray Cat\"", "Stray Cat Around", "クラッタ・アナザー・ラウンド", null]
+    },
+    {
+      "id": "ニライカナイNiraicA_naiMix.roopfromSTR",
+      "title": "ニライカナイ (NiraicA_nai Mix)",
+      "artist": "roop from STR",
+      "illustrator": "3z",
+      "chapter": "Single 单曲精选集",
+      "constants": [3, 8.3, 13.5, null],
+      "charters": [
+        "Barbarianerman",
+        "Ctymax respect for STAR TRACK in 2008",
+        "Ctymax respect for STAR TRACK in 2008",
+        null
+      ]
+    },
+    {
+      "id": "ぱぴぷぴぷぴぱ.ころねぽちWith立秋",
+      "title": "ぱぴぷぴぷぴぱ",
+      "artist": "ころねぽち With 立秋",
+      "illustrator": "上倉エク",
+      "chapter": "Single 单曲精选集",
+      "constants": [5, 12.3, 15.9, null],
+      "charters": ["ParParianerman", "ParParianerman", "さるふるふるさ", null]
+    },
+    {
+      "id": "もぺもぺ.LeaF",
+      "title": "もぺもぺ",
+      "artist": "LeaF",
+      "illustrator": "cycat",
+      "chapter": "Single 单曲精选集",
+      "constants": [2, 6.5, 11.1, 15.4],
+      "charters": ["阿爽 fixed by Barbarinerman", "阿爽 fixed by Barbarinerman", "阿爽", "阿爽"]
+    },
+    {
+      "id": "万吨匿名信.闫东炜",
+      "title": "万吨匿名信",
+      "artist": "闫东炜",
+      "illustrator": "IvyTowers",
+      "chapter": "Single 单曲精选集",
+      "constants": [4.5, 9.5, 13, null],
+      "charters": ["猫の信 & 百九十八", "猫の信 & 百九十八", "猫の信 & 百九十八", null]
+    },
+    {
+      "id": "下一秒.BobHouSherlock卓智媛feat兰音Reine",
+      "title": "下一秒",
+      "artist": "Bob Hou & Sherlock卓智媛 feat. 兰音Reine",
+      "illustrator": "虚拟九点",
+      "chapter": "Single 单曲精选集",
+      "constants": [4, 8.5, 13.6, null],
+      "charters": ["Magazet", "Magazet", "Salt", null]
+    },
+    {
+      "id": "亂舞.NekockLK",
+      "title": "亂★舞",
+      "artist": "Nekock·LK",
+      "illustrator": "鲸弑",
+      "chapter": "Single 单曲精选集",
+      "constants": [2, 7.5, 13.2, null],
+      "charters": ["Magazet", "Magazet", "StR☆1", null]
+    },
+    {
+      "id": "云女孩.符白牙SiYFics",
+      "title": "云女孩",
+      "artist": "符白牙/SiYFics",
+      "illustrator": "御坂果子",
+      "chapter": "Single 单曲精选集",
+      "constants": [2, 8.9, 12.8, null],
+      "charters": ["Cloud Catcats", "Cloud Catcats", "云正太", null]
+    },
+    {
+      "id": "今天不是明天.PIKASONICfeat兰音Reine",
+      "title": "今天不是明天",
+      "artist": "PIKASONIC feat. 兰音Reine",
+      "illustrator": "KiTA & 一击即溃",
+      "chapter": "Single 单曲精选集",
+      "constants": [2.5, 8.3, 13.4, null],
+      "charters": ["扫佛不是嫂夫", "扫佛不是嫂夫", "杂波不是杂啵，野从不是野丛", null]
+    },
+    {
+      "id": "光.姜米條",
+      "title": "光",
+      "artist": "姜米條",
+      "illustrator": "winder",
+      "chapter": "Chapter Legacy 过去的章节",
+      "constants": [2, 7.5, 12.4, null],
+      "charters": [
+        "Catcats & 百九十八 fixed by Clutter",
+        "Catcats & 百九十八 fixed by Clutter",
+        "Catcats & 百九十八",
+        null
+      ]
+    },
+    {
+      "id": "最高傑作.PYKAMIA",
+      "title": "最高傑作",
+      "artist": "PYKAMIA",
+      "illustrator": "Nai Guozi",
+      "chapter": "Single 单曲精选集",
+      "constants": [4.5, 9.3, 13.9, null],
+      "charters": ["StR-1", "StR-1", "_鉄咩兔", null]
+    },
+    {
+      "id": "千紫万紅.r0yvsWABI",
+      "title": "千紫万紅",
+      "artist": "r0y vs. WABI",
+      "illustrator": "中本ひょうり",
+      "chapter": "Chapter EX-SHINOBI SLASH 精选集",
+      "constants": [4.5, 12.1, 15.5, null],
+      "charters": ["Rikko", "実戦 with Rikko", "Salt & Barbarianerman", null]
+    },
+    {
+      "id": "双重间谍DoubleAgent.WAVAV",
+      "title": "双重间谍 (Double Agent)",
+      "artist": "Wav.AV",
+      "illustrator": "RM Design Team (青鸟 modified)",
+      "chapter": "Chapter EX-节奏大师 精选集",
+      "constants": [4.5, 11.8, 15.7, null],
+      "charters": ["穿山甲-1", "StupiGGy", "Spy-Simon_Axis | Spy-騎士", null]
+    },
+    {
+      "id": "君往何处QuoVadis.M2U",
+      "title": "君往何处 (Quo Vadis)",
+      "artist": "M2U",
+      "illustrator": "LRAY (青鸟 modified)",
+      "chapter": "Chapter EX-节奏大师 精选集",
+      "constants": [4, 8.6, 14.1, null],
+      "charters": ["Where are Ctymax and 阿爽?", "Where are Ctymax and 阿爽?", "Salt", null]
+    },
+    {
+      "id": "夢の降る日に.seatrus",
+      "title": "夢の降る日に",
+      "artist": "seatrus",
+      "illustrator": "翠冷兮",
+      "chapter": "Single 单曲精选集",
+      "constants": [2.5, 9.8, 16.6, null],
+      "charters": ["初の赤る澪に", "初の赤る澪に", "浪の降る日に", null]
+    },
+    {
+      "id": "大和撫子WildDances.adapatorvsDRIVE",
+      "title": "大和撫子 -Wild Dances-",
+      "artist": "adaptor vs DRIVE.",
+      "illustrator": "りゅうら",
+      "chapter": "Single 单曲精选集",
+      "constants": [5.5, 11.8, 15.1, null],
+      "charters": [
+        "Eaimo fixed by NerSAN",
+        "Eaimo fixed by NerSAN",
+        "Eaimo vs. CtyNer dancing wildly",
+        null
+      ]
+    },
+    {
+      "id": "宇宙残骸少女CosmicDustyGirl.辻原一郎",
+      "title": "宇宙残骸少女 (Cosmic Dusty Girl)",
+      "artist": "辻原一郎",
+      "illustrator": "TOTOTO ",
+      "chapter": "Single 单曲精选集",
+      "constants": [6, 10.2, 13.7, null],
+      "charters": ["不喜欢键的COC", "不喜欢线的COC", "～漂泊者～凹酱", null]
+    },
+    {
+      "id": "尊師TheGuru.rider",
+      "title": "尊師 ～The Guru～",
+      "artist": "rider",
+      "illustrator": "1B",
+      "chapter": "Chapter 5 霓虹灯牌",
+      "constants": [6, 11.6, 15.4, null],
+      "charters": ["M3d1uM", "M3d1uM", "奥術 ~The Empery~", null]
+    },
+    {
+      "id": "幻影鬼魅PLEASE.R300K",
+      "title": "幻影鬼魅 (PLEASE)",
+      "artist": "R300K",
+      "illustrator": "RM Design Team (青鸟 modified)",
+      "chapter": "Chapter EX-节奏大师 精选集",
+      "constants": [5.5, 9.6, 15.2, 17],
+      "charters": ["COC", "COC", "M3d1uM", "imd visual charter \"Rikko\" since 2014"]
+    },
+    {
+      "id": "幽世桔梗.Capchiifeatまるもこ",
+      "title": "幽世桔梗",
+      "artist": "Capchii feat. まるもこ",
+      "illustrator": "瀬名",
+      "chapter": "Chapter EX-SHINOBI SLASH 精选集",
+      "constants": [4.5, 10.1, 14.8, null],
+      "charters": ["RipHall vs. Likey", "RipHall vs. Likey", "Su1fuR、快斬！", null]
+    },
+    {
+      "id": "开心病.闫东炜",
+      "title": "开心病",
+      "artist": "闫东炜",
+      "illustrator": "昔璃",
+      "chapter": "Single 单曲精选集",
+      "constants": [7, 11.9, 13.8, null],
+      "charters": ["HaraKuma", "HaraKuma", "Barbarianerman feat. 晨", null]
+    },
+    {
+      "id": "彩.MisoilePunch",
+      "title": "彩",
+      "artist": "MisoilePunch♪",
+      "illustrator": "©2026 Rayark Inc. CYTUS II®",
+      "chapter": "Chapter EX-CYTUS II 精选集",
+      "constants": [6, 12.5, 16.4, null],
+      "charters": ["爬爬", "凛", "OPCII_0584_X", null]
+    },
+    {
+      "id": "彼方へ名もなき海辺より.打打だいず&月乃",
+      "title": "彼方へ、名もなき海辺より",
+      "artist": "打打だいず&月乃",
+      "illustrator": "月乃",
+      "chapter": "Single 单曲精选集",
+      "constants": [3.5, 8.1, 14.5, null],
+      "charters": [
+        "打打だいずファンクラブ会長 -- Likey！！！",
+        "打打だいずファンクラブ会長 -- Likey！！！",
+        "打打だいずファンクラブ会長 -- Likey！！！",
+        null
+      ]
+    },
+    {
+      "id": "心の記憶.A39沙包P",
+      "title": "心の記憶",
+      "artist": "A-39/沙包P",
+      "illustrator": "爱39的Konya",
+      "chapter": "Side Story 4 无相乡",
+      "constants": [3.5, 9.1, 13.4, null],
+      "charters": ["Su1fuR", "Su1fuR", "N-23", null]
+    },
+    {
+      "id": "心之所向.姜米條",
+      "title": "心之所向",
+      "artist": "姜米條",
+      "illustrator": "笔记RE",
+      "chapter": "Chapter EX-姜米條 精选集",
+      "constants": [4, 8.2, 13.8, null],
+      "charters": ["波之所杂", "波之所杂", "倪之所爽", null]
+    },
+    {
+      "id": "明鏡烈火.MUEvsRekuMochizuki",
+      "title": "明鏡烈火",
+      "artist": "M-UE vs. Reku Mochizuki",
+      "illustrator": "中本ひょうり",
+      "chapter": "Chapter EX-SHINOBI SLASH 精选集",
+      "constants": [6, 11.1, 15.9, null],
+      "charters": ["COC  feat. Su1fuR", "COC  feat. Su1fuR", "Arenn Salty feat. LDA", null]
+    },
+    {
+      "id": "星拂云锦featkoi.S9ryne",
+      "title": "星拂云锦 feat. koi",
+      "artist": "S9ryne",
+      "illustrator": "青鸟",
+      "chapter": "Single 单曲精选集",
+      "constants": [4, 9, 15.5, null],
+      "charters": ["华星秋月", "帷畔托星", "灵琶弄月", null]
+    },
+    {
+      "id": "暗夜苏醒REANIMATE.Warak",
+      "title": "暗夜苏醒 (REANIMATE)",
+      "artist": "Warak",
+      "illustrator": "MHK (青鸟 modified)",
+      "chapter": "Chapter EX-节奏大师 精选集",
+      "constants": [5, 12.8, 15.3, null],
+      "charters": ["Deep Dark Ctymax", "reanimate_6k_nm.imd", "StupiGGy -The Startline-", null]
+    },
+    {
+      "id": "月下缭乱.月見静華vsLUNARiUM",
+      "title": "月下缭乱",
+      "artist": "月見静華 vs. LUNARiUM",
+      "illustrator": "TNiK",
+      "chapter": "Single 单曲精选集",
+      "constants": [4.5, 9.4, 14.9, null],
+      "charters": ["XMT小咩兔", "XMT小咩兔", "iv", null]
+    },
+    {
+      "id": "月詠に鳴る.Feryquitousfeat藍月なくる",
+      "title": "月詠に鳴る",
+      "artist": "Feryquitous feat.藍月なくる",
+      "illustrator": "SEGA (V17AMax modified)",
+      "chapter": "Chapter EX-CHUNITHM 精选集",
+      "constants": [6, 11.4, 14.5, 15.7],
+      "charters": ["IUIsauce", "Salt", "Myna feat.Sleepyhead", "StupiGGy"]
+    },
+    {
+      "id": "望影の方舟Six.SeURa",
+      "title": "望影の方舟Six",
+      "artist": "Se-U-Ra",
+      "illustrator": "鲸弑",
+      "chapter": "Chapter 6 方舟蜃景",
+      "constants": [6.5, 11.9, 15.9, null],
+      "charters": [
+        "六回目Traveler Scend",
+        "六回目Traveler Scend",
+        "六回目Traveler Scend as \"Knight of Arq\"",
+        null
+      ]
+    },
+    {
+      "id": "桜樹街道.kozatosnow",
+      "title": "桜樹街道",
+      "artist": "kozato snow",
+      "illustrator": "あおお/A-ZERO, morph",
+      "chapter": "Chapter EX-WAVEAT 精选集",
+      "constants": [3.5, 8.1, 13, null],
+      "charters": ["Barbarianerman", "Barbarianerman", "百九十八", null]
+    },
+    {
+      "id": "混乱Confusion.OnlyMyBlackScore",
+      "title": "混乱-Confusion",
+      "artist": "Only My Black Score",
+      "illustrator": "L-sp4",
+      "chapter": "Chapter Legacy 过去的章节",
+      "constants": [4, 10, 14.8, null],
+      "charters": ["StR-1", "StR-1", "XMT小咩兔", null]
+    },
+    {
+      "id": "游园地.椒盐菠萝",
+      "title": "游园地",
+      "artist": "椒盐菠萝",
+      "illustrator": "CEM",
+      "chapter": "Single 单曲精选集",
+      "constants": [2.5, 7.5, 13, null],
+      "charters": ["野从菠萝", "野从菠萝", "椒盐倪尔", null]
+    },
+    {
+      "id": "狂喜蘭舞.LeaF",
+      "title": "狂喜蘭舞",
+      "artist": "LeaF",
+      "illustrator": "DoublePian",
+      "chapter": "Single 单曲精选集",
+      "constants": [7, 11.7, 14.3, 16.4],
+      "charters": [
+        "Catcats a.k.a. 無極 vs. H.C.C. fixed by 晨",
+        "Catcats a.k.a. 無極 vs. H.C.C. fixed by Pcat",
+        "晨",
+        "Catcats a.k.a. 無極 vs. H.C.C. fixed by 野从&晨"
+      ]
+    },
+    {
+      "id": "玩具狂奏曲終焉.きくお",
+      "title": "玩具狂奏曲 -終焉-",
+      "artist": "きくお",
+      "illustrator": "SEGA (V17AMax modified)",
+      "chapter": "Chapter EX-CHUNITHM 精选集",
+      "constants": [8.4, 13.1, 16, 17],
+      "charters": [
+        "//TAP to StaRt//",
+        "Su1fuR: The Hanged Doll",
+        "Self -the pAtchwork-",
+        "XMT, the Abandoned Puppet"
+      ]
+    },
+    {
+      "id": "瓷岁.茶鸣拾贰律",
+      "title": "瓷岁",
+      "artist": "茶鸣拾贰律",
+      "illustrator": "茶鸣拾贰律",
+      "chapter": "Chapter EX-茶鸣拾贰律 精选集",
+      "constants": [2, 6.5, 7, null],
+      "charters": ["『流』年大顺", "『流』年大顺", "『兔』年大吉", null]
+    },
+    {
+      "id": "白と黒のバケモノ.テヅカ",
+      "title": "白と黒のバケモノ",
+      "artist": "テヅカ",
+      "illustrator": "久世",
+      "chapter": "Single 单曲精选集",
+      "constants": [4, 11.4, 15.9, null],
+      "charters": ["白", "monochrome ILLUSION", "Simon_Axis", null]
+    },
+    {
+      "id": "百鬼夜行.SaladSavior",
+      "title": "百鬼֎夜行",
+      "artist": "Salad Savior",
+      "illustrator": "軽目くお (Ctymax modified)",
+      "chapter": "Chapter EX-Liminality 精选集",
+      "constants": [4.5, 10.1, 15.8, null],
+      "charters": ["Magazet", "Magazet", "～Algax vs. RipHall～", null]
+    },
+    {
+      "id": "盏茗.茶鸣拾贰律",
+      "title": "盏茗",
+      "artist": "茶鸣拾贰律",
+      "illustrator": "茶鸣拾贰律",
+      "chapter": "Chapter EX-茶鸣拾贰律 精选集",
+      "constants": [1.5, 4.5, 13.4, null],
+      "charters": ["Barbarianerman", "Barbarianerman", "NerSAN sipping XMTea", null]
+    },
+    {
+      "id": "祈-我ら神祖と共に歩む者なり-.光吉猛修VS穴山大輔VSKaiVS水野健治VS大国奏音",
+      "title": "祈 -我ら神祖と共に歩む者なり-",
+      "artist": "光吉猛修 VS 穴山大輔 VS Kai VS 水野健治 VS 大国奏音",
+      "illustrator": "SEGA (V17AMax modified)",
+      "chapter": "Chapter EX-CHUNITHM 精选集",
+      "constants": [7, 13.2, 16.4, 17.3],
+      "charters": [
+        "Su1fuRikko \"SouRce of the metaveRse\"",
+        "Su1fuRikko × rN \"judgemeNt fRom the cataStRophy\"",
+        "兔咩小 VS 咩小兔 VS 小兔咩 VS 咩兔小 VS 兔小咩",
+        "フィグロス譜面チーム \"Rikko feat. Ner\" -Pray for \"PHI\"-"
+      ]
+    },
+    {
+      "id": "神話.PicaM2U",
+      "title": "神話",
+      "artist": "Pica & M2U",
+      "illustrator": "mology (青鸟&V17AMax Modified)",
+      "chapter": "Chapter EX-OverRapid 精选集",
+      "constants": [4, 8.7, 13.5, null],
+      "charters": ["雑", "波", "P & U", null]
+    },
+    {
+      "id": "聖夜讃歌.A39沙包P",
+      "title": "聖夜讃歌",
+      "artist": "A-39/沙包P",
+      "illustrator": "绀屋",
+      "chapter": "Single 单曲精选集",
+      "constants": [4.5, 10.1, 15.2, null],
+      "charters": ["爽夜讃歌", "爽夜讃歌", "NerSANTA & Gausbell", null]
+    },
+    {
+      "id": "華灯爱.闫东炜",
+      "title": "華灯爱",
+      "artist": "闫东炜",
+      "illustrator": "IvyTowers",
+      "chapter": "Single 单曲精选集",
+      "constants": [6, 10.6, 13.7, null],
+      "charters": ["HaraKuma", "HaraKuma", "Barbarianerman", null]
+    },
+    {
+      "id": "萤火虫の怨.闫东炜",
+      "title": "萤火虫の怨",
+      "artist": "闫东炜",
+      "illustrator": "L-sp4",
+      "chapter": "Single 单曲精选集",
+      "constants": [4, 9.8, 13.1, null],
+      "charters": ["阿爽 & 百九十八", "阿爽 & 百九十八", "阿爽 & 百九十八", null]
+    },
+    {
+      "id": "蝎虎天体Lacertid.CreamvsDaily天利",
+      "title": "蝎虎天体 -Lacertid-",
+      "artist": "Cream vs. Daily天利",
+      "illustrator": "白 & 小鹏xpeng",
+      "chapter": "Single 单曲精选集",
+      "constants": [4.5, 10.8, 15.5, null],
+      "charters": ["StR-1", "StR-1", "Ctymax vs. IUIsauce -村头烤鱼蘸凹酱-", null]
+    },
+    {
+      "id": "贝多芬祝福BeethovenBlessing.Nauts",
+      "title": "贝多芬祝福 (Beethoven Blessing)",
+      "artist": "Nauts",
+      "illustrator": "RM Design Team (青鸟 modified)",
+      "chapter": "Single 单曲精选集",
+      "constants": [4.5, 10.3, 15, null],
+      "charters": ["StupiGGy", "Blessing beyond myself.", "Salt feat. XMT小咩兔", null]
+    },
+    {
+      "id": "重生.姜米條",
+      "title": "重生",
+      "artist": "姜米條",
+      "illustrator": "昔璃&TNiK",
+      "chapter": "Chapter 6 方舟蜃景",
+      "constants": [4.5, 8.8, 14.3, null],
+      "charters": ["Barbarianerman", "Barbarianerman", "Barbarianerman", null]
+    },
+    {
+      "id": "雪降りメリクリ.A39",
+      "title": "雪降り、メリクリ",
+      "artist": "A-39",
+      "illustrator": "犀牛坨动画工坊",
+      "chapter": "Single 单曲精选集",
+      "constants": [4.5, 10.8, 15.4, null],
+      "charters": ["Merry xmAS", "Merry ChristymAxS", "N\\erry Xmas", null]
+    },
+    {
+      "id": "雪降り雪が降っている.AiSSw夜輪ft結月ゆかり",
+      "title": "雪降り ~雪が降っている~",
+      "artist": "AiSS w/ 夜輪 ft. 結月ゆかり",
+      "illustrator": "Vios.NoFurry.git",
+      "chapter": "Single 单曲精选集",
+      "constants": [1.5, 7.5, 12, 14],
+      "charters": ["Su1fuR", "Su1fuR", "XMT after BarbarNerSAN", "小咩兔的多指课堂 vs. 上课睡大觉"]
+    },
+    {
+      "id": "零號車輛.seatrus",
+      "title": "零號車輛",
+      "artist": "seatrus",
+      "illustrator": "2AI4wU4",
+      "chapter": "Chapter EX-Paradigm: Reboot 精选集",
+      "constants": [7.5, 12.1, 16.2, null],
+      "charters": ["零號宇夜", "壹號阿爽", "Pcat【零】198", null]
+    },
+    {
+      "id": "青丘.BLACK0",
+      "title": "青丘",
+      "artist": "BLACK 0",
+      "illustrator": "BLACK 0",
+      "chapter": "Single 单曲精选集",
+      "constants": [5.5, 10.5, 15.5, null],
+      "charters": ["Ctymax", "Su1fuR", "KillJoy", null]
+    },
+    {
+      "id": "青芽.茶鸣拾贰律",
+      "title": "青芽",
+      "artist": "茶鸣拾贰律",
+      "illustrator": "茶鸣拾贰律",
+      "chapter": "Chapter EX-茶鸣拾贰律 精选集",
+      "constants": [5, 10.4, 15.2, null],
+      "charters": ["生根发芽的小咩兔", "逆流而上的小咩兔", "Hook vs. _鉄", null]
+    },
+    {
+      "id": "风屿.闫东炜",
+      "title": "风屿",
+      "artist": "闫东炜",
+      "illustrator": "cycats",
+      "chapter": "Single 单曲精选集",
+      "constants": [5.5, 9.8, 14, 15.1],
+      "charters": [
+        "Arenn Saki vs. Catcats vs. 百九十八",
+        "Arenn Saki vs. Catcats vs. 百九十八",
+        "Arenn Saki vs. Catcats vs. 百九十八",
+        "JKy"
+      ]
+    },
+    {
+      "id": "黄金之城GOLDTOWN.Memme",
+      "title": "黄金之城 (GOLD TOWN)",
+      "artist": "MEMME",
+      "illustrator": "RM Design Team (青鸟 modified)",
+      "chapter": "Chapter EX-节奏大师 精选集",
+      "constants": [2, 10.2, 14.7, null],
+      "charters": ["Passport:Visitor", "Passport:Constructor", "Passport:Governor", null]
+    }
+  ]
+}
