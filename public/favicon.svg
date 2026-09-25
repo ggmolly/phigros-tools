@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- phigros.tools: black square, 14deg slanted bar (matches var skew), glowing brand dot -->
+  <rect width="64" height="64" fill="#000"/>
+  <!-- parallelogram: 12px lean over 48px height = 48 * tan(14deg) -->
+  <path d="M28 8h20L36 56H16z" fill="#fff"/>
+  <radialGradient id="halo">
+    <stop offset="0" stop-color="#8fdcff" stop-opacity=".85"/>
+    <stop offset=".55" stop-color="#8fdcff" stop-opacity=".35"/>
+    <stop offset="1" stop-color="#8fdcff" stop-opacity="0"/>
+  </radialGradient>
+  <circle cx="48" cy="46" r="12" fill="url(#halo)"/>
+  <circle cx="48" cy="46" r="6" fill="#8fdcff"/>
+</svg>
