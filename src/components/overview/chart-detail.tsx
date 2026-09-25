@@ -105,7 +105,11 @@ export function ChartDetail({
           {chart.title}
         </Link>
       </h2>
-      <p className="detail-artist">{chart.artist}</p>
+      <p className="detail-artist">
+        <Link to="/charts" search={{ q: chart.artist }} className="artist-link" title={`Show songs by ${chart.artist}`}>
+          {chart.artist}
+        </Link>
+      </p>
       <div className="score-bar">
         {/* biome-ignore lint/a11y/useSemanticElements: a fieldset's default browser styling (border/padding) would need a reset; role="group" is valid ARIA for a button group. */}
         <div className="level-picker" role="group" aria-label="Difficulty">
