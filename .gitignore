@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.output/
+.tanstack/
+
+# Local-only: deploys happen from this machine, which keeps these (see scripts/build-cover-og.ts)
+public/covers/*.og.jpg
+scripts/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
