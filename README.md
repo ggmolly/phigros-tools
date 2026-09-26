@@ -14,7 +14,7 @@ Connect an Android phone over USB, paste a session token, or open a ZIP/JSON sav
 
 ### Overview
 
-Your RKS, played / Full Combo / All Perfect counts per difficulty, and your Best 27 + 3 Phi slots. Pick a chart and drag its target accuracy to see how it would move your ranking score; **Next Target** lists the charts closest to raising it.
+Your RKS, played / Full Combo / All Perfect counts per difficulty, Challenge Mode rank, Data and self-intro, and your Best 27 + 3 Phi slots. Pick a chart and drag its target accuracy to see how it would move your ranking score; **Next Target** lists the charts closest to raising it.
 
 ![Best chart detail with the accuracy simulator and next targets](docs/screenshots/03-simulator.png)
 
@@ -30,7 +30,7 @@ A summary image of your RKS, counts and best charts, to download as PNG or copy.
 
 ### Records
 
-Every chart you've played, searchable, filterable by difficulty and sortable.
+Every chart you've played, searchable, filterable by difficulty and clear status (not FC, FC but not φ, φ), and sortable, including by how much an All Perfect would raise your RKS.
 
 ![Chart records table filtered to IN](docs/screenshots/04-records.png)
 
@@ -52,7 +52,7 @@ The full chart list with difficulty constants, filterable by title, artist, illu
 
 ![Chart list filtered by artist](docs/screenshots/10-charts-artist-filter.png)
 
-Each song has its own page with charters, per-difficulty chart stats (note counts, density, BPM, scroll speed, judge lines…) and related songs.
+Each song has its own page with your records on it when a save is loaded, charters, per-difficulty chart stats (note counts, density, BPM, scroll speed, judge lines…) and related songs.
 
 <img src="docs/screenshots/11-chart-page.png" alt="Song page with chart stats" width="600">
 
@@ -76,7 +76,7 @@ cd ../extract && .venv/bin/python export_game_info.py   # song database -> game_
 cd ../web && bun scripts/build-catalog.ts ../extract/game_info.json
 ```
 
-The export reads the APKs' `assets/bin/Data` unzipped into `../extract/game_data/` (see the script's header). The other `scripts/build-*.ts` regenerate chart stats, covers, palettes, accent colours and the sitemap; each file's header says what it reads.
+The export reads the APKs' `assets/bin/Data` unzipped into `../extract/game_data/` (see the script's header). The other `scripts/build-*.ts` regenerate chart stats, covers, avatars, palettes, accent colours and the sitemap; each file's header says what it reads.
 
 ## Credits
 
