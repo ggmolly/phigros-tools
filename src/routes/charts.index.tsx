@@ -12,7 +12,10 @@ const DESCRIPTION = `Every Phigros chart and its difficulty constant: ${catalogC
 
 export const Route = createFileRoute("/charts/")({
   // Filters live in the URL, so song pages and artist names can link straight to a filtered list.
-  validateSearch: (search: Record<string, unknown>): { q?: string; chapter?: string } => ({
+  validateSearch: (
+    search: Record<string, unknown>,
+  ): { q?: string; chapter?: string; view?: "gallery" } => ({
+    ...(search.view === "gallery" ? { view: "gallery" as const } : {}),
     ...(typeof search.q === "string" && search.q ? { q: search.q.slice(0, 100) } : {}),
     ...(typeof search.chapter === "string" && CHAPTERS.includes(search.chapter)
       ? { chapter: search.chapter }
@@ -51,9 +54,9 @@ export const Route = createFileRoute("/charts/")({
 });
 
 function ChartsPage() {
-  const { q: search = "", chapter = "" } = Route.useSearch();
+  const { q: search = "", chapter = "", view } = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
-  const setFilter = (key: "q" | "chapter", value: string) =>
+  const setFilter = (key: "q" | "chapter" | "view", value: string) =>
     void navigate({ search: (prev) => ({ ...prev, [key]: value || undefined }), replace: true });
   const [difficulty, setDifficulty] = useState("");
   const query = search.trim().toLocaleLowerCase();
@@ -103,87 +106,142 @@ function ChartsPage() {
               </select>
             </label>
             <DifficultyFilter value={difficulty} onChange={setDifficulty} />
+            {/* biome-ignore lint/a11y/useSemanticElements: same button group as DifficultyFilter. */}
+            <div className="seg" role="group" aria-label="View">
+              {(["", "gallery"] as const).map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  className="seg-option"
+                  aria-pressed={(view ?? "") === option}
+                  onClick={() => setFilter("view", option)}
+                >
+                  {option ? "Gallery" : "List"}
+                </button>
+              ))}
+            </div>
           </div>
-          {/* biome-ignore lint/a11y/noNoninteractiveTabindex: keyboard users need to focus this region to scroll it. */}
-          <section className="table-scroll" tabIndex={0} aria-label="Scrollable chart list">
-            <table>
-              <caption className="sr-only">
-                {rows.length} of {catalogSongs.length} songs
-              </caption>
-              <thead>
-                <tr>
-                  {["", "Song", "Chapter", "EZ", "HD", "IN", "AT"].map((name) => (
-                    <th key={name} scope="col">
-                      {name}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((song) => (
-                  <tr key={song.id}>
-                    <td>
-                      <img
-                        className="song-thumb"
-                        src={`/covers/${song.id}.thumb.avif`}
-                        width={48}
-                        height={27}
-                        loading="lazy"
-                        decoding="async"
-                        alt=""
-                      />
-                    </td>
-                    <td>
-                      <div className="record-song">
-                        <Link
-                          to="/charts/$id"
-                          params={{ id: song.id }}
-                          className="record-title record-pick"
-                        >
-                          {song.title}
-                        </Link>
-                        <Link
-                          to="/charts"
-                          search={{ q: song.artist }}
-                          className="record-artist artist-link"
-                          title={`Show songs by ${song.artist}`}
-                        >
-                          {song.artist}
-                        </Link>
-                      </div>
-                    </td>
-                    <td className="meta">
-                      <Link
-                        to="/charts"
-                        search={{ chapter: song.chapter }}
-                        className="chapter-link"
-                      >
-                        {song.chapter}
-                      </Link>
-                    </td>
-                    {LEVELS.map((level, index) => (
-                      <td key={level} className="num">
-                        {song.constants[index] != null ? (
-                          <>
-                            <Difficulty level={level} /> {song.constants[index]!.toFixed(1)}
-                          </>
-                        ) : (
-                          "-"
-                        )}
-                      </td>
+          {view === "gallery" ? (
+            <ul className="gallery" aria-label="Song covers">
+              {rows.map((song) => (
+                <li key={song.id}>
+                  <Link to="/charts/$id" params={{ id: song.id }} className="gallery-card">
+                    <img
+                      src={`/covers/${song.id}.thumb.avif`}
+                      srcSet={`/covers/${song.id}.thumb.avif 256w, /covers/${song.id}.avif 1024w`}
+                      sizes="(max-width: 640px) 50vw, 240px"
+                      width={256}
+                      height={135}
+                      loading="lazy"
+                      decoding="async"
+                      alt=""
+                    />
+                    <span className="gallery-info">
+                      <span className="gallery-title">{song.title}</span>
+                      <span className="gallery-line">{song.artist}</span>
+                      {song.illustrator && (
+                        <span className="gallery-line">Illustration: {song.illustrator}</span>
+                      )}
+                      {LEVELS.map(
+                        (level, index) =>
+                          song.charters[index] && (
+                            <span key={level} className="gallery-line">
+                              <Difficulty level={level} /> {song.charters[index]}
+                            </span>
+                          ),
+                      )}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+              {rows.length === 0 && (
+                <li className="meta empty-row">No songs match these filters.</li>
+              )}
+            </ul>
+          ) : (
+            <>
+              {/* biome-ignore lint/a11y/noNoninteractiveTabindex: keyboard users need to focus this region to scroll it. */}
+              <section className="table-scroll" tabIndex={0} aria-label="Scrollable chart list">
+                <table>
+                  <caption className="sr-only">
+                    {rows.length} of {catalogSongs.length} songs
+                  </caption>
+                  <thead>
+                    <tr>
+                      {["", "Song", "Chapter", "EZ", "HD", "IN", "AT"].map((name) => (
+                        <th key={name} scope="col">
+                          {name}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rows.map((song) => (
+                      <tr key={song.id}>
+                        <td>
+                          <img
+                            className="song-thumb"
+                            src={`/covers/${song.id}.thumb.avif`}
+                            width={48}
+                            height={27}
+                            loading="lazy"
+                            decoding="async"
+                            alt=""
+                          />
+                        </td>
+                        <td>
+                          <div className="record-song">
+                            <Link
+                              to="/charts/$id"
+                              params={{ id: song.id }}
+                              className="record-title record-pick"
+                            >
+                              {song.title}
+                            </Link>
+                            <Link
+                              to="/charts"
+                              search={{ q: song.artist }}
+                              className="record-artist artist-link"
+                              title={`Show songs by ${song.artist}`}
+                            >
+                              {song.artist}
+                            </Link>
+                          </div>
+                        </td>
+                        <td className="meta">
+                          <Link
+                            to="/charts"
+                            search={{ chapter: song.chapter }}
+                            className="chapter-link"
+                          >
+                            {song.chapter}
+                          </Link>
+                        </td>
+                        {LEVELS.map((level, index) => (
+                          <td key={level} className="num">
+                            {song.constants[index] != null ? (
+                              <>
+                                <Difficulty level={level} /> {song.constants[index]!.toFixed(1)}
+                              </>
+                            ) : (
+                              "-"
+                            )}
+                          </td>
+                        ))}
+                      </tr>
                     ))}
-                  </tr>
-                ))}
-                {rows.length === 0 && (
-                  <tr>
-                    <td colSpan={7} className="meta empty-row">
-                      No songs match these filters.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </section>
+                    {rows.length === 0 && (
+                      <tr>
+                        <td colSpan={7} className="meta empty-row">
+                          No songs match these filters.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </section>
+            </>
+          )}
         </section>
       </main>
     </>

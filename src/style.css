@@ -2455,6 +2455,73 @@ dialog > .meta {
     grid-template-columns: 1fr;
   }
 }
+/* ---------- Charts gallery ---------- */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.gallery-card {
+  position: relative;
+  display: block;
+  aspect-ratio: 256 / 135;
+  overflow: hidden;
+  background: var(--glass);
+  color: var(--white);
+  text-decoration: none;
+}
+.gallery-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.gallery-info {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 8px 12px;
+  background: var(--glass-strong);
+  font-size: 13px;
+  line-height: 17px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.gallery-card:hover .gallery-info,
+.gallery-card:focus-visible .gallery-info {
+  opacity: 1;
+}
+.gallery-card:focus-visible {
+  outline: 2px solid var(--glow);
+  outline-offset: 2px;
+}
+.gallery-title {
+  font-size: 15px;
+  line-height: 21px;
+  font-weight: 600;
+}
+.gallery-title,
+.gallery-line {
+  flex-shrink: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.gallery-line {
+  color: var(--dim);
+}
+.gallery-line .difficulty {
+  min-width: 30px;
+  margin-right: 2px;
+  font-size: 11px;
+  line-height: 15px;
+}
+
 @media (max-width: 720px) {
   body {
     font-size: 15px;
@@ -2739,6 +2806,14 @@ dialog > .meta {
     margin: 0 -8px;
     max-height: 480px;
   }
+  .gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  /* Too small for the overlay, and touch has no hover: a tap opens the song page instead. */
+  .gallery-info {
+    display: none;
+  }
   .panel-actions {
     margin-left: 0;
   }
@@ -2755,3 +2830,4 @@ dialog > .meta {
     animation: none !important;
   }
 }
+
