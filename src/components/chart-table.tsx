@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { catalogSong } from "../catalog";
 import type { SaveDocumentV1 } from "../document";
-import { calculateRanking, chartRks } from "../metrics";
+import { calculateRanking, chartRks, projectAccuracy } from "../metrics";
 import { LEVELS } from "../modules";
 import { Difficulty, DifficultyFilter, Rank, score7 } from "./primitives";
 
@@ -33,23 +33,43 @@ export function ChartTable({ document }: { document: SaveDocumentV1 }) {
   const [search, setSearch] = useState("");
   const [difficulty, setDifficulty] = useState("");
   const [sort, setSort] = useState("rks");
+  const [status, setStatus] = useState("");
   const ranking = calculateRanking(document);
   const inBest = new Set(ranking.best.map((record) => record.key));
   const inPhi = new Set(ranking.phi.map((record) => record.key));
-  const unfiltered = sort === "rks" && !search.trim() && difficulty === "";
+  const unfiltered = sort === "rks" && !search.trim() && difficulty === "" && status === "";
   const all = rowsFor(document);
   const query = search.trim().toLocaleLowerCase();
   const rows = all.filter(
     (row) =>
       (!query || `${row.title} ${row.artist} ${row.songId}`.toLocaleLowerCase().includes(query)) &&
-      (difficulty === "" || row.levelIndex === Number(difficulty)),
+      (difficulty === "" || row.levelIndex === Number(difficulty)) &&
+      (status === "" ||
+        (status === "no-fc" && !row.fc) ||
+        (status === "fc" && row.fc && row.accuracy < 100) ||
+        (status === "phi" && row.accuracy >= 100)),
   );
+  // How much the overall RKS would rise if this chart were All Perfect; only computed while sorting by it.
+  const gain = new Map(
+    sort === "gain"
+      ? rows.map((row) => {
+          const key = `${row.songId}:${LEVELS[row.levelIndex]}`;
+          const known = row.constant != null && row.accuracy < 100;
+          return [
+            key,
+            known ? projectAccuracy(ranking, key, 100).rankingScore - ranking.rankingScore : 0,
+          ];
+        })
+      : [],
+  );
+  const value = (row: (typeof rows)[number]) =>
+    sort === "gain"
+      ? gain.get(`${row.songId}:${LEVELS[row.levelIndex]}`)
+      : row[sort as "accuracy" | "score" | "rks" | "constant"];
   rows.sort(
     sort === "title"
       ? (a, b) => a.title.localeCompare(b.title) || a.levelIndex - b.levelIndex
-      : (a, b) =>
-          Number(b[sort as "accuracy" | "score" | "rks"] ?? -1) -
-            Number(a[sort as "accuracy" | "score" | "rks"] ?? -1) || a.title.localeCompare(b.title),
+      : (a, b) => Number(value(b) ?? -1) - Number(value(a) ?? -1) || a.title.localeCompare(b.title),
   );
   return (
     <section id="charts" className="panel records min-w-0" aria-labelledby="records-heading">
@@ -70,6 +90,20 @@ export function ChartTable({ document }: { document: SaveDocumentV1 }) {
         />
         <DifficultyFilter value={difficulty} onChange={setDifficulty} />
         <label className="select">
+          <span className="select-label">Status</span>
+          <select
+            className="select-field"
+            aria-label="Filter by clear status"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+          >
+            <option value="">Any</option>
+            <option value="no-fc">Not Full Combo</option>
+            <option value="fc">Full Combo, not φ</option>
+            <option value="phi">All Perfect (φ)</option>
+          </select>
+        </label>
+        <label className="select">
           <span className="select-label">Sort by</span>
           <select
             className="select-field"
@@ -81,6 +115,8 @@ export function ChartTable({ document }: { document: SaveDocumentV1 }) {
             <option value="accuracy">Accuracy</option>
             <option value="score">Score</option>
             <option value="rks">RKS</option>
+            <option value="constant">Constant</option>
+            <option value="gain">RKS gain if φ</option>
           </select>
         </label>
       </div>
@@ -144,7 +180,14 @@ export function ChartTable({ document }: { document: SaveDocumentV1 }) {
                       )}
                     </span>
                   </td>
-                  <td className="num record-rks">{record.rks?.toFixed(4) ?? "—"}</td>
+                  <td className="num record-rks">
+                    {record.rks?.toFixed(4) ?? "—"}
+                    {sort === "gain" && (
+                      <span className="record-gain" title="Overall RKS gained by an All Perfect">
+                        +{(gain.get(key) ?? 0).toFixed(4)}
+                      </span>
+                    )}
+                  </td>
                 </tr>
               );
             })}

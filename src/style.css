@@ -1999,6 +1999,11 @@ tr.b27-edge td {
 .record-rks {
   font-size: 18px;
 }
+.record-gain {
+  display: block;
+  color: var(--glow);
+  font-size: 13px;
+}
 .empty-row {
   padding: 22px 14px;
 }
