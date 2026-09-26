@@ -1146,7 +1146,8 @@ a.btn[aria-disabled="true"] {
   grid-row: 2;
   align-self: start;
   display: flex;
-  gap: 40px;
+  flex-wrap: wrap;
+  gap: 12px 32px;
   margin-left: 32px;
 }
 .hero-stats .stat {
@@ -1162,6 +1163,33 @@ a.btn[aria-disabled="true"] {
 .hero-stats .stat-label {
   color: var(--dim);
   font-size: 13px;
+}
+/* Challenge Mode level, coloured like its in-game badge */
+.challenge-green .stat-value {
+  color: var(--ez);
+}
+.challenge-blue .stat-value {
+  color: var(--fc);
+}
+.challenge-red .stat-value {
+  color: var(--negative);
+}
+.challenge-gold .stat-value {
+  color: #f2c65a;
+}
+.challenge-rainbow .stat-value {
+  background: linear-gradient(90deg, #ff8a8a, #ffd36e, #8cf29a, #8fdcff, #c79bff);
+  background-clip: text;
+  color: transparent;
+}
+.hero-intro {
+  grid-column: 1;
+  grid-row: 3;
+  max-width: 60ch;
+  margin-left: 32px;
+  color: var(--dim);
+  font-size: 15px;
+  white-space: pre-line;
 }
 .stat-bar {
   position: relative;
@@ -2405,7 +2433,8 @@ dialog > .meta {
     grid-column: 1;
     grid-row: auto;
   }
-  .hero-stats {
+  .hero-stats,
+  .hero-intro {
     grid-row: auto;
   }
 }
@@ -2632,7 +2661,10 @@ dialog > .meta {
     font-size: 22px;
   }
   .hero-stats {
-    gap: 26px;
+    gap: 12px 26px;
+    margin-left: 12px;
+  }
+  .hero-intro {
     margin-left: 12px;
   }
   .ranking-number {

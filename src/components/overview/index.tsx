@@ -57,7 +57,7 @@ export function Overview({
         </p>
       )}
 
-      <Hero ranking={ranking} songs={document.songs} playerName={playerName} />
+      <Hero ranking={ranking} document={document} playerName={playerName} />
 
       {chart ? (
         <div className="select-screen">
