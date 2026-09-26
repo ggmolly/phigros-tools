@@ -76,10 +76,10 @@ cd ../extract && .venv/bin/python export_game_info.py   # song database -> game_
 cd ../web && bun scripts/build-catalog.ts ../extract/game_info.json
 ```
 
-The export reads the APKs' `assets/bin/Data` unzipped into `../extract/game_data/` (see the script's header). The other `scripts/build-*.ts` regenerate chart stats, covers, avatars, palettes, accent colours and the sitemap; each file's header says what it reads.
+The export reads the APKs' `assets/bin/Data` unzipped into `../extract/game_data/` (see the script's header). The other `scripts/build-*.ts` regenerate chart stats, covers, avatars, share-card fonts, palettes, accent colours and the sitemap; each file's header says what it reads.
 
 ## Credits
 
-Saira font under the OFL and the φ glyph from DejaVu Sans under its license, see `LICENSES/`.
+Saira, Noto Sans SC and Noto Sans Armenian fonts under the OFL, DejaVu Sans under its own license, see `LICENSES/`. The share card uses subsets of all four.
 
 Unofficial third-party tool · Not affiliated with Pigeon Games.
