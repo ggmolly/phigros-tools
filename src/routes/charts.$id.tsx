@@ -1,10 +1,12 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { type CatalogSong, catalogSong, catalogSongs } from "../catalog";
+import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
+import { type CatalogSong, canonicalSongId, catalogSong, catalogSongs } from "../catalog";
 import { type ChartStats, getSongDetails } from "../chartStats";
 import { Arrow } from "../components/arrow";
 import { SiteHeader } from "../components/chrome";
-import { Difficulty } from "../components/primitives";
+import { Difficulty, Rank, score7 } from "../components/primitives";
+import { calculateRanking } from "../metrics";
 import { LEVELS } from "../modules";
+import { useSave } from "../save-context";
 import { breadcrumbs, jsonLd, pageMeta, SITE } from "../seo";
 
 function mmss(totalSeconds: number) {
@@ -238,6 +240,77 @@ function SongLinks({ heading, songs }: { heading: string; songs: CatalogSong[] }
   );
 }
 
+/** With a save loaded: the player's record on each of this song's charts, and a way into the Overview's simulator. */
+function YourRecords({ song }: { song: CatalogSong }) {
+  const { loaded, setChartKey } = useSave();
+  const navigate = useNavigate();
+  if (!loaded) return null;
+  const ranking = calculateRanking(loaded.document);
+  const bestIndex = new Map(ranking.best.map((chart, index) => [chart.key, index + 1]));
+  const records = ranking.charts.filter((chart) => canonicalSongId(chart.songId) === song.id);
+  return (
+    <section className="panel your-records">
+      <div className="panel-head">
+        <h2 className="panel-title">Your Records</h2>
+      </div>
+      <table className="song-diff-table">
+        <thead>
+          <tr>
+            {["Difficulty", "Score", "Acc", "Rank", "RKS", ""].map((name) => (
+              <th key={name} scope="col">
+                {name || <span className="sr-only">Simulate</span>}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {LEVELS.map((level, levelIndex) => {
+            if (song.constants[levelIndex] == null) return null;
+            const record = records.find((chart) => chart.levelIndex === levelIndex);
+            const best = record && bestIndex.get(record.key);
+            return (
+              <tr key={level}>
+                <td>
+                  <Difficulty level={level} />
+                </td>
+                {record ? (
+                  <>
+                    <td className="num record-score">{score7(record.score)}</td>
+                    <td className="num">{record.accuracy.toFixed(2)}%</td>
+                    <td>
+                      <Rank score={record.score} fc={record.fc} />
+                    </td>
+                    <td className="num">
+                      {record.rks.toFixed(2)}
+                      {best && <span className="meta"> · Best #{best}</span>}
+                    </td>
+                  </>
+                ) : (
+                  <td className="meta" colSpan={4}>
+                    Not played
+                  </td>
+                )}
+                <td>
+                  <button
+                    type="button"
+                    className="link-button"
+                    onClick={() => {
+                      setChartKey(record?.key ?? `${song.id}:${level}`);
+                      void navigate({ to: "/" });
+                    }}
+                  >
+                    Simulate
+                  </button>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </section>
+  );
+}
+
 function SongPage() {
   const { id } = Route.useParams();
   const song = catalogSong(id)!; // the loader 404s unknown IDs
@@ -305,6 +378,7 @@ function SongPage() {
             </table>
           </div>
         </section>
+        <YourRecords song={song} />
         {stats && (
           <section className="panel chart-stats">
             <div className="panel-head">

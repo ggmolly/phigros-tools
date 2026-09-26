@@ -840,8 +840,14 @@
 .breadcrumb a:hover,
 .chapter-link:hover,
 .artist-link:hover,
-.song-links a:hover {
+.song-links a:hover,
+.link-button:hover {
   color: var(--glow);
+}
+.link-button {
+  color: var(--dim);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 .song-thumb {
   display: block;
@@ -2883,4 +2889,3 @@ dialog > .meta {
     animation: none !important;
   }
 }
-
