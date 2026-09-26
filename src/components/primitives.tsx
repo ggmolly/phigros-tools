@@ -72,12 +72,24 @@ export function DifficultyFilter({
   );
 }
 
-export function Stat({ label, value, total }: { label: string; value: number; total?: number }) {
+export function Stat({
+  label,
+  value,
+  total,
+  className,
+}: {
+  label: string;
+  value: React.ReactNode;
+  total?: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <div className="stat">
+    <div className={className ? `stat ${className}` : "stat"}>
       <p>
         <span className="stat-value">{value}</span>
-        {total !== undefined && <span className="stat-total">/{total}</span>}
+        {total !== undefined && (
+          <span className="stat-total">{typeof total === "number" ? `/${total}` : total}</span>
+        )}
       </p>
       <span className="stat-label">{label}</span>
     </div>
@@ -98,5 +110,47 @@ export function LevelStats({
       <Stat label="Full Combo" value={count.fc} total={total} />
       <Stat label="Phi" value={count.phi} total={total} />
     </div>
+  );
+}
+
+const CHALLENGE_COLOURS = ["White", "Green", "Blue", "Red", "Gold", "Rainbow"];
+
+/** Challenge Mode rank as stored in saves: hundreds = colour, rest = level (548 → Rainbow 48). Undefined if never played. */
+export function challengeRank(value: number) {
+  const colour = CHALLENGE_COLOURS[Math.floor(value / 100)];
+  const level = value % 100;
+  return colour && level > 0 ? { colour, level } : undefined;
+}
+
+const DATA_UNITS = ["KB", "MB", "GB", "TB", "PB"];
+
+/** The in-game "Data" currency: `money` is [KB, MB, GB, TB, PB]; show the two largest units, like the game. */
+export function dataAmount(money: readonly number[]) {
+  const top = money.findLastIndex((amount) => amount > 0);
+  if (top < 0) return { value: "0 KB" };
+  return {
+    value: `${money[top]} ${DATA_UNITS[top]}`,
+    rest: top > 0 && money[top - 1] ? ` ${money[top - 1]} ${DATA_UNITS[top - 1]}` : undefined,
+  };
+}
+
+/** URL of an in-game avatar (see scripts/build-avatars.ts); an empty name is the game's default. */
+export function avatarUrl(name: string) {
+  return `/avatars/${encodeURIComponent(name || "Introduction")}.avif`;
+}
+
+/** The player's in-game avatar. */
+export function Avatar({ name, className }: { name: string; className?: string }) {
+  return (
+    <img
+      className={className}
+      src={avatarUrl(name)}
+      alt=""
+      width={128}
+      height={128}
+      onError={(event) => {
+        event.currentTarget.hidden = true;
+      }}
+    />
   );
 }
