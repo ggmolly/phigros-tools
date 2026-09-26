@@ -80,6 +80,6 @@ The export reads the APKs' `assets/bin/Data` unzipped into `../extract/game_data
 
 ## Credits
 
-Saira font under the OFL, see `LICENSES/`.
+Saira font under the OFL and the φ glyph from DejaVu Sans under its license, see `LICENSES/`.
 
 Unofficial third-party tool · Not affiliated with Pigeon Games.
