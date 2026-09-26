@@ -2,6 +2,7 @@ import { createFileRoute, Outlet, useNavigate, useRouterState } from "@tanstack/
 import { useEffect } from "react";
 import { Arrow, SyncIcon } from "../components/arrow";
 import { SiteHeader, TAB_LABEL, type TabId, toolTabs } from "../components/chrome";
+import { Avatar } from "../components/primitives";
 import { calculateRanking } from "../metrics";
 import { message, useSave } from "../save-context";
 import { SITE } from "../seo";
@@ -106,6 +107,10 @@ function ToolLayout() {
               className="player-tag"
               title={loaded.playerId ? `Player ${loaded.playerId}` : undefined}
             >
+              <Avatar
+                className="player-avatar"
+                name={loaded.document.profile?.avatar || loaded.document.summary?.avatar || ""}
+              />
               <span className="player-name">{playerName || "Local save"}</span>
               <span className="player-rks">
                 <span className="sr-only">RKS </span>

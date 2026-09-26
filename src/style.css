@@ -715,6 +715,16 @@
     transform: rotate(-360deg);
   }
 }
+/* Avatar tile cut on the same slant as the name band it sits against, like the in-game profile */
+.player-avatar {
+  position: relative;
+  z-index: 1;
+  width: 58px;
+  height: 46px;
+  margin-right: -14px;
+  object-fit: cover;
+  clip-path: polygon(11px 0, 100% 0, calc(100% - 11px) 100%, 0 100%);
+}
 .player-name {
   overflow: hidden;
   max-width: 260px;
@@ -2567,6 +2577,12 @@ dialog > .meta {
   }
   .brand-name {
     font-size: 21px;
+  }
+  .player-avatar {
+    width: 48px;
+    height: 38px;
+    margin-right: -12px;
+    clip-path: polygon(9px 0, 100% 0, calc(100% - 9px) 100%, 0 100%);
   }
   .player-name {
     max-width: 130px;
