@@ -3,7 +3,7 @@ import { catalogChartTotals } from "../catalog";
 import type { ChartMetric, RankingResult } from "../metrics";
 import { countLevels, LEVELS, type SongRecord } from "../modules";
 import { currentPalette, FOG_LAYOUT } from "../palettes";
-import { rankOf } from "./primitives";
+import { avatarUrl, rankOf } from "./primitives";
 
 const SITE_URL = "https://phigros.tools";
 const DEFAULT_NAME = "Unnamed Pigeon";
@@ -24,11 +24,12 @@ type CardData = {
   songs: SongRecord[];
   date: Date;
   palette: string[];
+  avatar?: HTMLImageElement;
 };
 type Ctx = CanvasRenderingContext2D;
 
 /** Parallelogram whose top edge leans right, matching skewX(--skew) around the centre. */
-function para(ctx: Ctx, x: number, y: number, w: number, h: number, fill: string) {
+function paraPath(ctx: Ctx, x: number, y: number, w: number, h: number) {
   const o = (h * TAN) / 2;
   ctx.beginPath();
   ctx.moveTo(x + o, y);
@@ -36,6 +37,9 @@ function para(ctx: Ctx, x: number, y: number, w: number, h: number, fill: string
   ctx.lineTo(x + w - o, y + h);
   ctx.lineTo(x - o, y + h);
   ctx.closePath();
+}
+function para(ctx: Ctx, x: number, y: number, w: number, h: number, fill: string) {
+  paraPath(ctx, x, y, w, h);
   ctx.fillStyle = fill;
   ctx.fill();
 }
@@ -125,7 +129,7 @@ function rankGlyph(ctx: Ctx, chart: ChartMetric, x: number, y: number, size: num
   });
 }
 
-function drawShareCard(ctx: Ctx, { name, ranking, songs, date, palette }: CardData) {
+function drawShareCard(ctx: Ctx, { name, ranking, songs, date, palette, avatar }: CardData) {
   const counts = countLevels(songs);
   const played = songs.reduce((sum, song) => sum + song.levels.filter(Boolean).length, 0);
   const fc = counts.reduce((sum, count) => sum + count.fc, 0);
@@ -149,8 +153,16 @@ function drawShareCard(ctx: Ctx, { name, ranking, songs, date, palette }: CardDa
   );
 
   // Profile ribbon + ranking score.
+  // Avatar tile on the ribbon's left end, cut on the same slant, like the in-game profile.
   para(ctx, 40, 150, 740, 104, "#000");
-  text(ctx, name || DEFAULT_NAME, 104, 222, 56, { max: 600 });
+  if (avatar) {
+    ctx.save();
+    paraPath(ctx, 40, 150, 132, 104);
+    ctx.clip();
+    ctx.drawImage(avatar, 40, 136, 132, 132);
+    ctx.restore();
+  }
+  text(ctx, name || DEFAULT_NAME, avatar ? 204 : 104, 222, 56, { max: avatar ? 520 : 600 });
   para(ctx, 52, 282, 730, 176, "rgba(8,4,12,.55)");
   para(ctx, 76, 282, 170, 176, "#fff");
   text(ctx, "RKS", 162, 390, 52, { weight: 500, color: "#000", align: "center" });
@@ -273,10 +285,13 @@ export function ShareCard({
   ranking,
   songs,
   playerName,
+  avatar,
 }: {
   ranking: RankingResult;
   songs: SongRecord[];
   playerName?: string;
+  /** In-game avatar name. */
+  avatar: string;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);
@@ -293,10 +308,16 @@ export function ShareCard({
     let cancelled = false;
     let url: string | undefined;
     const timer = setTimeout(async () => {
-      await Promise.all([
+      const avatarImage = new Image();
+      avatarImage.src = avatarUrl(avatar);
+      const [avatarLoaded] = await Promise.all([
+        avatarImage.decode().then(
+          () => true,
+          () => false, // missing avatar: draw the card without it
+        ),
         document.fonts.load(`300 100px Saira`),
         document.fonts.load(`600 40px Saira`),
-      ]).catch(() => undefined);
+      ]).catch(() => [false]);
       const canvas = document.createElement("canvas");
       canvas.width = W;
       canvas.height = H;
@@ -306,6 +327,7 @@ export function ShareCard({
         songs,
         date: new Date(),
         palette: currentPalette(),
+        avatar: avatarLoaded ? avatarImage : undefined,
       });
       canvas.toBlob((blob) => {
         if (cancelled || !blob) return;
@@ -322,7 +344,7 @@ export function ShareCard({
       clearTimeout(timer);
       if (url) URL.revokeObjectURL(url);
     };
-  }, [open, name, ranking, songs]);
+  }, [open, name, ranking, songs, avatar]);
 
   async function copy() {
     if (!image) return;
