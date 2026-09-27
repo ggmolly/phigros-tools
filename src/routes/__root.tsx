@@ -1,5 +1,13 @@
-import { createRootRoute, HeadContent, Link, Outlet, Scripts } from "@tanstack/react-router";
+import {
+  createRootRoute,
+  HeadContent,
+  Link,
+  Outlet,
+  Scripts,
+  useRouterState,
+} from "@tanstack/react-router";
 import type { CSSProperties } from "react";
+import { useEffect } from "react";
 import { Backdrop, SiteFooter, SiteHeader } from "../components/chrome";
 import { fogStyle } from "../palettes";
 import { SaveProvider } from "../save-context";
@@ -7,12 +15,32 @@ import { pageMeta, SITE_DESCRIPTION, SITE_NAME } from "../seo";
 import { getStars } from "../stars";
 import stylesheet from "../style.css?url";
 
+// our goal is just to know if we have users, we don't want to track them
+function Analytics() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  useEffect(() => {
+    const ref = document.referrer;
+    let referrer: string | null = null;
+    try {
+      if (ref && new URL(ref).hostname !== location.hostname) referrer = new URL(ref).hostname;
+    } catch {}
+    fetch("/api/beacon", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      keepalive: true,
+      body: JSON.stringify({ path: pathname, referrer }),
+    }).catch(() => {});
+  }, [pathname]);
+  return null;
+}
+
 // Shared by every page (the save-analyzer tabs and the /charts reference pages): the fog backdrop, the
 // footer, and the loaded save, so following a song link and coming back keeps it. The tool's layout is in routes/_tool.tsx.
 function Root() {
   return (
     <SaveProvider>
       <Backdrop />
+      <Analytics />
       <Outlet />
       <SiteFooter />
     </SaveProvider>

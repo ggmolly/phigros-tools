@@ -10,6 +10,9 @@ dist/
 public/covers/*.og.jpg
 scripts/
 
+# local SQLite DB + secret config
+data/
+
 # OS / editor
 .DS_Store
 Thumbs.db
