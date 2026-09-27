@@ -3412,19 +3412,53 @@ dialog strong {
 .chart-player-share:focus-visible {
   color: var(--text);
 }
-.chart-player-copied:empty {
-  display: none;
-}
 .chart-player-copied {
   position: absolute;
   bottom: calc(100% + 6px);
   left: 50%;
   translate: -50% 0;
-  padding: 2px 10px;
+  pointer-events: none;
+}
+/* A slanted white note that rises in, holds, then drifts up as it fades (one animation, as long as the timer). */
+.chart-player-copied > span {
+  display: block;
+  padding: 2px 14px;
   background: var(--white);
   color: var(--ink);
   font-size: 13px;
   white-space: nowrap;
+  clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+  animation: copied-note 1.8s ease both;
+}
+@keyframes copied-note {
+  0% {
+    opacity: 0;
+    translate: 0 6px;
+  }
+  12%,
+  80% {
+    opacity: 1;
+    translate: 0 0;
+  }
+  100% {
+    opacity: 0;
+    translate: 0 -4px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chart-player-copied > span {
+    animation-name: copied-note-fade;
+  }
+}
+@keyframes copied-note-fade {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  12%,
+  80% {
+    opacity: 1;
+  }
 }
 .chart-player-settings {
   display: grid;

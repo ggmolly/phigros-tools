@@ -34,7 +34,6 @@ export function ChartPlayer({
   background: string;
   title: string;
   level: string;
-  /** Where the chart opens, in seconds (links to a moment use ?t=). */
   startAt?: number;
 }) {
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -57,7 +56,9 @@ export function ChartPlayer({
   const [rate, setRate] = useState(1);
   const [songName, setSongName] = useState<string>();
   const [hitSoundsOn, setHitSoundsOn] = useState(true);
-  const [copied, setCopied] = useState(false);
+  /** When the last link was copied (0: no note showing); keys the note so each copy replays its animation. */
+  const [copied, setCopied] = useState(0);
+  const copiedTimer = useRef(0);
   const duration = Math.max(chart.duration, audioDuration - chart.offset);
 
   useEffect(() => {
@@ -68,6 +69,7 @@ export function ChartPlayer({
     () => () => {
       audio.current?.pause();
       hitSounds.close();
+      window.clearTimeout(copiedTimer.current);
     },
     [hitSounds],
   );
@@ -151,20 +153,20 @@ export function ChartPlayer({
     } catch {}
   };
 
-  /** Copies a link that opens the chart at the current second. */
   const copyLink = () => {
     const url = new URL(window.location.href);
     url.search = "";
     url.searchParams.set("t", String(Math.max(0, Math.floor(now()))));
     void navigator.clipboard.writeText(url.toString()).then(() => {
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1800);
+      setCopied(performance.now());
+      window.clearTimeout(copiedTimer.current);
+      copiedTimer.current = window.setTimeout(() => setCopied(0), 1800); // the note's animation length
     });
   };
 
   const loadSong = (file: File | undefined) => {
     if (!file) return;
-    const at = now(); // keep the position (e.g. a ?t= link) when the song takes over the clock
+    const at = now();
     const previous = audio.current;
     if (previous) {
       previous.pause();
@@ -199,7 +201,7 @@ export function ChartPlayer({
         >
           <span ref={elapsed}>0:00</span>
           <span className="chart-player-copied" role="status">
-            {copied ? "Link copied" : ""}
+            {copied > 0 && <span key={copied}>Link copied</span>}
           </span>
         </button>
         <Slider

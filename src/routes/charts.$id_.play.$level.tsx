@@ -17,8 +17,6 @@ const songLevels = (id: string) =>
 
 const isLevel = (level: string): level is LevelName => LEVELS.includes(level as LevelName);
 
-// ?t=61 opens the chart 61 seconds in (the player's timestamp copies such links); anything invalid opens at the
-// start. The fallback keeps t in the output, since the router merges it over the raw query (?t=abc would survive).
 const PlaySearch = v.object({
   t: v.fallback(
     v.optional(
@@ -64,7 +62,6 @@ export const Route = createFileRoute("/charts/$id_/play/$level")({
             .join(" "),
           path,
           themeColor: loaderData?.themeColor,
-          // the chart's card (scripts/build-chart-og.tsx) with a seek bar at the shared moment (server/routes/og)
           image: {
             url: `${SITE}/og/chart/${encodeURIComponent(song.id)}/${params.level}.jpg${match.search.t ? `?t=${match.search.t}` : ""}`,
             width: 1200,
