@@ -12,9 +12,25 @@ import {
   parseSettings,
 } from "./modules";
 
-export const API = "https://kviehlel.cloud.ap-sg.tapapis.com/1.1";
-const LC_ID = "kviehleldgxsagpozb";
-const LC_KEY = "tG9CTm0LDD736k9HMM9lBZrbeBGRmUkjSfNLDNib";
+/** The game's LeanCloud apps: the global release and the China (TapTap CN) release keep separate accounts and saves. */
+export type Region = "global" | "china";
+export const CLOUD: Record<Region, { api: string; id: string; key: string }> = {
+  global: {
+    api: "https://kviehlel.cloud.ap-sg.tapapis.com/1.1",
+    id: "kviehleldgxsagpozb",
+    key: "tG9CTm0LDD736k9HMM9lBZrbeBGRmUkjSfNLDNib",
+  },
+  china: {
+    api: "https://rak3ffdi.cloud.tds1.tapapis.cn/1.1",
+    id: "rAK3FfdieFob2Nn8Am",
+    key: "Qr9AEqtuoSVS3zeD6iVbM4ZC0AtkJcQ89tywVyi0",
+  },
+};
+const lcHeaders = (region: Region, token: string) => ({
+  "X-LC-Id": CLOUD[region].id,
+  "X-LC-Key": CLOUD[region].key,
+  "X-LC-Session": token,
+});
 const SAVE_KEY = "6Jaa0qVAJZuXkZCLiOa/Ax5tIZVu+taKUN1V1nqwkks=";
 const SAVE_IV = "Kk/wisgNYwcAV8WVGMgyUw==";
 const MB = 1_000_000;
@@ -170,24 +186,35 @@ const player = v.object({
   nickname: v.fallback(v.optional(v.string()), undefined),
 });
 
+/** Who a session token belongs to. With no region given, tries the global app, then the China one. */
 export async function identifyPlayer(
   token: string,
+  region?: Region,
   signal?: AbortSignal,
-): Promise<{ objectId: string; nickname?: string }> {
-  const response = await fetch(`${API}/users/me`, {
-    signal,
-    headers: { "X-LC-Id": LC_ID, "X-LC-Key": LC_KEY, "X-LC-Session": token },
-  });
-  if (!response.ok) throw new Error(`TapTap account verification failed: HTTP ${response.status}`);
-  const user = v.safeParse(player, await response.json());
-  if (!user.success) throw new Error("TapTap did not return a player ID");
-  return user.output;
+): Promise<{ objectId: string; nickname?: string; region: Region }> {
+  let status = 0;
+  for (const candidate of region ? [region] : (["global", "china"] as const)) {
+    const response = await fetch(`${CLOUD[candidate].api}/users/me`, {
+      signal,
+      headers: lcHeaders(candidate, token),
+    });
+    status = response.status;
+    if (!response.ok) continue;
+    const user = v.safeParse(player, await response.json());
+    if (!user.success) throw new Error("TapTap did not return a player ID");
+    return { ...user.output, region: candidate };
+  }
+  throw new Error(`TapTap account verification failed: HTTP ${status}`);
 }
 
-export async function listSaves(token: string, signal?: AbortSignal): Promise<CloudSave[]> {
-  const response = await fetch(`${API}/gamesaves?limit=100`, {
+export async function listSaves(
+  token: string,
+  region: Region,
+  signal?: AbortSignal,
+): Promise<CloudSave[]> {
+  const response = await fetch(`${CLOUD[region].api}/gamesaves?limit=100`, {
     signal,
-    headers: { "X-LC-Id": LC_ID, "X-LC-Key": LC_KEY, "X-LC-Session": token },
+    headers: lcHeaders(region, token),
   });
   if (!response.ok) throw new Error(`TapTap API: HTTP ${response.status} ${await response.text()}`);
   const body = (await response.json()) as { results?: unknown };

@@ -1,5 +1,5 @@
 import type { SaveDocumentV1 } from "./document";
-import type { SaveArchive } from "./save";
+import type { Region, SaveArchive } from "./save";
 
 export interface SnapshotV1 {
   schemaVersion: 1;
@@ -15,6 +15,7 @@ export interface Credential {
   playerId: string;
   nickname?: string;
   token: string;
+  region?: Region; // absent on credentials saved before China support: those are global
 }
 
 const DATABASE = "phigros-web-save";

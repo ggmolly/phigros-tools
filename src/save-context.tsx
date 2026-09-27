@@ -5,7 +5,7 @@ import { catalogRevision } from "./catalog";
 import { MAX_JSON_SIZE, parseJsonDocument, type SaveDocumentV1 } from "./document";
 import { calculateRanking } from "./metrics";
 import { applyPalette } from "./palettes";
-import type { SaveArchive } from "./save";
+import type { Region, SaveArchive } from "./save";
 import {
   type Credential,
   listCredentials,
@@ -48,7 +48,7 @@ interface SaveContextValue {
   refresh: () => Promise<void>;
   storeSave: (next: Loaded) => Promise<boolean>;
   cloudImport: (
-    getSession: () => Promise<{ token: string; account?: Account }>,
+    getSession: () => Promise<{ token: string; account?: Account; region?: Region }>,
     report?: (text: string) => void,
     signal?: AbortSignal,
   ) => Promise<boolean>;
@@ -207,7 +207,7 @@ export function SaveProvider({ children }: { children: React.ReactNode }) {
       );
   }
   async function cloudImport(
-    getSession: () => Promise<{ token: string; account?: Account }>,
+    getSession: () => Promise<{ token: string; account?: Account; region?: Region }>,
     report = say,
     signal?: AbortSignal,
   ): Promise<boolean> {
@@ -217,7 +217,7 @@ export function SaveProvider({ children }: { children: React.ReactNode }) {
       signal?.throwIfAborted();
       const api = await import("./save");
       signal?.throwIfAborted();
-      const identity = await api.identifyPlayer(session.token, signal);
+      const identity = await api.identifyPlayer(session.token, session.region, signal);
       signal?.throwIfAborted();
       if (session.account?.objectId && session.account.objectId !== identity.objectId)
         throw new Error("The device account does not match this token");
@@ -225,10 +225,11 @@ export function SaveProvider({ children }: { children: React.ReactNode }) {
         playerId: identity.objectId,
         nickname: identity.nickname ?? session.account?.nickname,
         token: session.token,
+        region: identity.region,
       });
       await refresh();
       report("Checking cloud saves …");
-      const saves = await api.listSaves(session.token, signal);
+      const saves = await api.listSaves(session.token, identity.region, signal);
       if (!saves.length) throw new Error("That account has no cloud saves yet");
       const save = saves[0]!;
       report(`Fetching “${save.name}” from ${new URL(save.gameFile.url).host}…`);
