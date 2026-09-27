@@ -2351,6 +2351,26 @@ dialog > .meta {
 .dialog-row .select-field {
   flex: 1 1 200px;
 }
+.guide-steps {
+  list-style: revert;
+  margin: 18px 0 14px;
+  padding-left: 22px;
+  display: grid;
+  gap: 10px;
+}
+.guide-note {
+  margin-top: 18px;
+}
+#guideDialog {
+  text-align: left;
+}
+#guideDialog strong {
+  color: var(--text);
+  font-weight: 500;
+}
+#guideDialog .seg {
+  padding: 0;
+}
 .dialog-actions {
   display: flex;
   justify-content: flex-end;
