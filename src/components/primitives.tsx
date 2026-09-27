@@ -1,3 +1,4 @@
+import type { CSSProperties, Ref } from "react";
 import { LEVELS, type LevelName } from "../modules";
 
 export const LEVEL_NAMES: Record<LevelName, string> = {
@@ -152,5 +153,73 @@ export function Avatar({ name, className }: { name: string; className?: string }
         event.currentTarget.hidden = true;
       }}
     />
+  );
+}
+
+export function Slider({
+  value,
+  min,
+  max,
+  step,
+  label,
+  onChange,
+  className = "",
+  boxRef,
+  inputRef,
+}: {
+  value?: number;
+  min: number;
+  max: number;
+  step: number | "any";
+  label: string;
+  onChange: (value: number) => void;
+  className?: string;
+  boxRef?: Ref<HTMLDivElement>;
+  inputRef?: Ref<HTMLInputElement>;
+}) {
+  const style =
+    value === undefined ? undefined : ({ "--p": (value - min) / (max - min) } as CSSProperties);
+  return (
+    <div ref={boxRef} className={`slider ${className}`} style={style}>
+      <input
+        ref={inputRef}
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        defaultValue={value === undefined ? min : undefined}
+        aria-label={label}
+        onChange={(event) => onChange(Number(event.currentTarget.value))}
+      />
+      <span className="slider-fill" aria-hidden="true" />
+      <span className="slider-thumb" aria-hidden="true" />
+    </div>
+  );
+}
+
+export function Switch({
+  checked,
+  label,
+  onChange,
+}: {
+  checked: boolean;
+  label: string;
+  onChange: (checked: boolean) => void;
+}) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      aria-label={label}
+      className="switch"
+      onClick={() => onChange(!checked)}
+    >
+      <svg className="switch-check" viewBox="0 0 40 27" aria-hidden="true">
+        <path d="M2 11.5 15.5 25 38 2" />
+      </svg>
+      <span className="switch-thumb" aria-hidden="true" />
+    </button>
   );
 }

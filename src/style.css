@@ -4,6 +4,13 @@
   font-weight: 100 900;
   font-display: swap;
 }
+/* The chart player's HUD lettering: Saira at a condensed width, like the game's (scripts/build-player-font.ts). */
+@font-face {
+  font-family: "Saira HUD";
+  src: url("/fonts/SairaHud.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
 /* Saira has no Greek: φ comes from DejaVu Sans (scripts/build-card-fonts.ts), the same glyph on every system. */
 @font-face {
   font-family: Saira;
@@ -1968,6 +1975,82 @@ a.btn[aria-disabled="true"] {
   outline: 2px solid var(--glow);
   outline-offset: 3px;
 }
+/* A slimmer slider for the seek bar. */
+.slider-thin {
+  --thumb: 34px;
+  height: 30px;
+}
+.slider-thin input::-webkit-slider-thumb {
+  width: 34px;
+  height: 30px;
+}
+.slider-thin input::-moz-range-thumb {
+  width: 34px;
+  height: 30px;
+}
+/* The game's on/off switch (its "Enable Hitsound" setting): a dark slanted track, a ✓ when on, and a white thumb that slides over. */
+.switch {
+  --w: 124px;
+  --thumb: 54px;
+  position: relative;
+  isolation: isolate;
+  flex: none;
+  width: var(--w);
+  height: 48px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text);
+  cursor: pointer;
+}
+.switch::before {
+  content: "";
+  position: absolute;
+  inset: 4px 0;
+  z-index: -1;
+  background: rgb(0 0 0 / 0.42);
+  transform: skewX(var(--skew));
+}
+.switch-thumb {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: var(--thumb);
+  background: var(--white);
+  transform: skewX(var(--skew));
+  transition:
+    left 0.18s ease,
+    box-shadow 0.15s ease;
+}
+.switch[aria-checked="true"] .switch-thumb {
+  left: calc(var(--w) - var(--thumb));
+}
+.switch-check {
+  position: absolute;
+  top: 50%;
+  left: calc((var(--w) - var(--thumb)) / 2);
+  width: 26px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  opacity: 0;
+  translate: -50% -50%;
+  transition: opacity 0.15s ease;
+}
+.switch[aria-checked="true"] .switch-check {
+  opacity: 1;
+}
+.switch:hover .switch-thumb {
+  box-shadow: 0 0 18px rgb(255 255 255 / 0.55);
+}
+.switch:focus-visible {
+  outline: 0;
+}
+.switch:focus-visible .switch-thumb {
+  outline: 2px solid var(--glow);
+  outline-offset: 3px;
+}
 .projection-result {
   position: relative;
   isolation: isolate;
@@ -3232,5 +3315,159 @@ dialog strong {
     scroll-behavior: auto !important;
     transition: none !important;
     animation: none !important;
+  }
+}
+
+/* ---------- Chart player (/charts/<id>/play/<level>) ---------- */
+/* Rows start at the shell's clipped edge: pad them so skewed backgrounds keep their slant. */
+.chart-player-bar,
+.chart-player-transport {
+  padding-inline: 10px;
+}
+.chart-player-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 22px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.chart-player-heading {
+  min-width: 0;
+}
+.chart-player-heading .panel-title {
+  margin: 0;
+}
+.chart-player-heading .meta {
+  margin: 2px 0 0;
+  font-size: 15px;
+}
+.chart-player-back {
+  display: inline-flex;
+  transform: scaleX(-1);
+}
+.chart-player-levels {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+.chart-player-levels a:not([aria-current]) {
+  opacity: 0.45;
+  transition: opacity 0.15s ease;
+}
+.chart-player-levels a:hover {
+  opacity: 1;
+}
+.chart-player-stage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  width: min(100%, (100vh - 250px) * 16 / 9);
+  margin-inline: auto;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 18px 50px rgb(0 0 0 / 0.45);
+}
+.chart-player-stage img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(10px) brightness(0.3);
+  transform: scale(1.05);
+}
+.chart-player-stage canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+.chart-player-transport {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: min(100%, (100vh - 250px) * 16 / 9);
+  margin: 16px auto 0;
+}
+.chart-player-play {
+  min-width: 104px;
+}
+.chart-player-time {
+  min-width: 3.2em;
+  color: var(--dim);
+  text-align: center;
+}
+.chart-player-settings {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+  gap: 26px 56px;
+  width: min(100%, (100vh - 250px) * 16 / 9);
+  margin: 22px auto 0;
+  padding: 22px 30px 26px;
+}
+.player-setting {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+.player-setting-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 20px;
+}
+.player-setting .stepper .step:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+/* The game's volume slider: thin slanted caps at both ends of the track. */
+.slider-caps {
+  position: relative;
+  display: flex;
+  padding-inline: 12px;
+}
+.slider-caps::before,
+.slider-caps::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--white);
+  transform: skewX(var(--skew));
+}
+.slider-caps::before {
+  left: 2px;
+}
+.slider-caps::after {
+  right: 2px;
+}
+.player-song {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+}
+.player-song .meta {
+  min-width: 0;
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 640px) {
+  .chart-player-transport {
+    flex-wrap: wrap;
+    gap: 10px 12px;
+  }
+  .chart-player-transport .slider {
+    flex: 1 1 100%;
+    order: 1;
+  }
+  .chart-player-transport .chart-player-time:last-child {
+    margin-left: auto;
+  }
+  .chart-player-settings {
+    padding: 18px 16px 20px;
   }
 }

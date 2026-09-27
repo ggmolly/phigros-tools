@@ -384,6 +384,9 @@ function SongPage() {
                     <th scope="col">Difficulty</th>
                     <th scope="col">Constant</th>
                     <th scope="col">Charter</th>
+                    <th scope="col">
+                      <span className="sr-only">Preview</span>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -396,6 +399,15 @@ function SongPage() {
                           </td>
                           <td className="num">{song.constants[levelIndex]!.toFixed(1)}</td>
                           <td className="meta">{song.charters[levelIndex] ?? "-"}</td>
+                          <td>
+                            <Link
+                              to="/charts/$id/play/$level"
+                              params={{ id: song.id, level }}
+                              className="link-button"
+                            >
+                              Preview
+                            </Link>
+                          </td>
                         </tr>
                       ),
                   )}

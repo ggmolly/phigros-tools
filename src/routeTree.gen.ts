@@ -16,6 +16,7 @@ import { Route as ToolHistoryRouteImport } from './routes/_tool.history'
 import { Route as ToolRecordsRouteImport } from './routes/_tool.records'
 import { Route as ChartsIndexRouteImport } from './routes/charts.index'
 import { Route as ChartsIdRouteImport } from './routes/charts.$id'
+import { Route as ChartsIdPlayLevelRouteImport } from './routes/charts.$id_.play.$level'
 
 const ToolRoute = ToolRouteImport.update({
   id: '/_tool',
@@ -51,6 +52,11 @@ const ChartsIdRoute = ChartsIdRouteImport.update({
   path: '/charts/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChartsIdPlayLevelRoute = ChartsIdPlayLevelRouteImport.update({
+  id: '/charts/$id_/play/$level',
+  path: '/charts/$id/play/$level',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof ToolIndexRoute
@@ -59,6 +65,7 @@ export interface FileRoutesByFullPath {
   '/records': typeof ToolRecordsRoute
   '/charts/$id': typeof ChartsIdRoute
   '/charts/': typeof ChartsIndexRoute
+  '/charts/$id/play/$level': typeof ChartsIdPlayLevelRoute
 }
 export interface FileRoutesByTo {
   '/collection': typeof ToolCollectionRoute
@@ -67,6 +74,7 @@ export interface FileRoutesByTo {
   '/charts/$id': typeof ChartsIdRoute
   '/': typeof ToolIndexRoute
   '/charts': typeof ChartsIndexRoute
+  '/charts/$id/play/$level': typeof ChartsIdPlayLevelRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -77,13 +85,27 @@ export interface FileRoutesById {
   '/charts/$id': typeof ChartsIdRoute
   '/_tool/': typeof ToolIndexRoute
   '/charts/': typeof ChartsIndexRoute
+  '/charts/$id_/play/$level': typeof ChartsIdPlayLevelRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/collection' | '/history' | '/records' | '/charts/$id' | '/charts/'
+    | '/'
+    | '/collection'
+    | '/history'
+    | '/records'
+    | '/charts/$id'
+    | '/charts/'
+    | '/charts/$id/play/$level'
   fileRoutesByTo: FileRoutesByTo
-  to: '/collection' | '/history' | '/records' | '/charts/$id' | '/' | '/charts'
+  to:
+    | '/collection'
+    | '/history'
+    | '/records'
+    | '/charts/$id'
+    | '/'
+    | '/charts'
+    | '/charts/$id/play/$level'
   id:
     | '__root__'
     | '/_tool'
@@ -93,12 +115,14 @@ export interface FileRouteTypes {
     | '/charts/$id'
     | '/_tool/'
     | '/charts/'
+    | '/charts/$id_/play/$level'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   ToolRoute: typeof ToolRouteWithChildren
   ChartsIdRoute: typeof ChartsIdRoute
   ChartsIndexRoute: typeof ChartsIndexRoute
+  ChartsIdPlayLevelRoute: typeof ChartsIdPlayLevelRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -152,6 +176,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChartsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/charts/$id_/play/$level': {
+      id: '/charts/$id_/play/$level'
+      path: '/charts/$id/play/$level'
+      fullPath: '/charts/$id/play/$level'
+      preLoaderRoute: typeof ChartsIdPlayLevelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -175,6 +206,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolRoute: ToolRouteWithChildren,
   ChartsIdRoute: ChartsIdRoute,
   ChartsIndexRoute: ChartsIndexRoute,
+  ChartsIdPlayLevelRoute: ChartsIdPlayLevelRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

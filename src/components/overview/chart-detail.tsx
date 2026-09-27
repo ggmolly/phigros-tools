@@ -1,9 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import type { CSSProperties } from "react";
 import { catalogSong } from "../../catalog";
 import { type ChartMetric, projectAccuracy, type RankingResult } from "../../metrics";
 import { LEVELS } from "../../modules";
-import { Rank, score7, signed } from "../primitives";
+import { Rank, Slider, score7, signed } from "../primitives";
 
 const MIN_ACCURACY = 70; // chart RKS is zero below this
 
@@ -21,22 +20,14 @@ function AccuracySlider({ value, onChange }: { value: number; onChange: (value: 
       >
         −
       </button>
-      <div
-        className="slider"
-        style={{ "--p": (clamped - MIN_ACCURACY) / (100 - MIN_ACCURACY) } as CSSProperties}
-      >
-        <input
-          type="range"
-          min={MIN_ACCURACY}
-          max={100}
-          step={0.01}
-          value={clamped}
-          aria-label="Target accuracy slider"
-          onChange={(e) => set(Number(e.target.value))}
-        />
-        <span className="slider-fill" aria-hidden="true" />
-        <span className="slider-thumb" aria-hidden="true" />
-      </div>
+      <Slider
+        value={clamped}
+        min={MIN_ACCURACY}
+        max={100}
+        step={0.01}
+        label="Target accuracy slider"
+        onChange={set}
+      />
       <button
         type="button"
         className="step"
@@ -106,7 +97,12 @@ export function ChartDetail({
         </Link>
       </h2>
       <p className="detail-artist">
-        <Link to="/charts" search={{ q: chart.artist }} className="artist-link" title={`Show songs by ${chart.artist}`}>
+        <Link
+          to="/charts"
+          search={{ q: chart.artist }}
+          className="artist-link"
+          title={`Show songs by ${chart.artist}`}
+        >
           {chart.artist}
         </Link>
       </p>
