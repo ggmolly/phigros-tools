@@ -68,7 +68,7 @@ export function toolTabs(hasSave: boolean, hasSnapshots: boolean): TabId[] {
   return hasSnapshots ? ["/", "/history"] : ["/"];
 }
 
-/** Every page's header: brand mark, GitHub link and the tabs (the tool's sections plus Charts), then the page's own actions. */
+/** Every page's header: brand mark, the tabs (the tool's sections plus Charts), the page's own actions, then the GitHub link at the far right. */
 export function SiteHeader({ children }: { children?: React.ReactNode }) {
   const { loaded, snapshots } = useSave();
   const navigate = useNavigate();
@@ -92,7 +92,6 @@ export function SiteHeader({ children }: { children?: React.ReactNode }) {
           <span className="brand-sub">tools</span>
         </span>
       </Link>
-      <GithubLink />
       <div className="tabs" role="tablist" aria-label="Sections" onKeyDown={tabKeys}>
         {tabIds.map((id) => (
           <Link
@@ -110,6 +109,7 @@ export function SiteHeader({ children }: { children?: React.ReactNode }) {
         ))}
       </div>
       {children}
+      <GithubLink />
     </header>
   );
 }

@@ -616,9 +616,13 @@
   align-items: center;
   gap: 7px;
   flex: none;
+  margin-left: auto;
   color: var(--dim);
   font-size: 14px;
   transition: color 0.15s ease;
+}
+.player-area ~ .github-link {
+  margin-left: 0;
 }
 .github-link:hover {
   color: var(--text);
@@ -2526,10 +2530,13 @@ dialog > .meta {
   .corner {
     height: 56px;
   }
-  .github-link {
+  .github-link,
+  .player-area ~ .github-link {
+    order: 1;
     margin-left: auto;
   }
   .player-area {
+    order: 2;
     margin-left: 0;
   }
   .tabs {
