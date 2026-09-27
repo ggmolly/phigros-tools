@@ -42,6 +42,8 @@ interface SaveContextValue {
   sync?: { playerId: string; state: "syncing" | "fresh" | "same" | "error" };
   dialog: RefObject<HTMLDialogElement | null>;
   usbDialog: RefObject<HTMLDialogElement | null>;
+  /** Opens the TapTap QR login (set by <TapTapDialog>, which owns that flow's state). */
+  openTapTap: RefObject<(() => void) | undefined>;
   usbLog: RefObject<HTMLDivElement | null>;
   fileInput: RefObject<HTMLInputElement | null>;
   say: (text: string) => void;
@@ -94,6 +96,7 @@ export function SaveProvider({ children }: { children: React.ReactNode }) {
   const lastStored = useRef(false);
   const dialog = useRef<HTMLDialogElement>(null);
   const usbDialog = useRef<HTMLDialogElement>(null);
+  const openTapTap = useRef<() => void>(undefined);
   const usbLog = useRef<HTMLDivElement>(null);
   const usbCloseTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const usbController = useRef<AbortController>(undefined);
@@ -362,6 +365,7 @@ export function SaveProvider({ children }: { children: React.ReactNode }) {
     sync,
     dialog,
     usbDialog,
+    openTapTap,
     usbLog,
     fileInput,
     say,

@@ -2,7 +2,7 @@ import { createFileRoute, Outlet, useNavigate, useRouterState } from "@tanstack/
 import { useEffect } from "react";
 import { Arrow, SyncIcon } from "../components/arrow";
 import { SiteHeader, TAB_LABEL, type TabId, toolTabs } from "../components/chrome";
-import { ImportOptions } from "../components/import";
+import { ImportOptions, TapTapDialog } from "../components/import";
 import { Avatar } from "../components/primitives";
 import { calculateRanking } from "../metrics";
 import { message, useSave } from "../save-context";
@@ -180,6 +180,7 @@ function ToolLayout() {
             </button>
           </div>
         </dialog>
+        <TapTapDialog />
         <dialog ref={dialog} id="tokenDialog">
           <form method="dialog" className="dialog-head">
             <h2>Session Token</h2>

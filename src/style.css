@@ -2542,13 +2542,58 @@ dialog > .meta {
   display: grid;
   gap: 10px;
 }
-.guide-note {
-  margin-top: 18px;
+.guide-more {
+  margin-top: 4px;
+  color: var(--dim);
+}
+.guide-more summary {
+  cursor: pointer;
+}
+.guide-more summary:hover {
+  color: var(--text);
+}
+.guide-more .guide-steps {
+  margin-top: 10px;
+  color: var(--text);
+}
+#taptapDialog .seg {
+  padding: 0;
+}
+.taptap-login {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px 26px;
+  margin: 18px 0 14px;
+}
+.qr-slot {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 200px;
+  aspect-ratio: 1;
+  background: rgb(255 255 255 / 0.06);
+}
+.qr-code {
+  display: block;
+  width: 100%;
+}
+.taptap-side {
+  display: flex;
+  flex: 1 1 200px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+.taptap-code strong {
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
 }
 #guideDialog {
   text-align: left;
 }
-#guideDialog strong {
+dialog strong {
   color: var(--text);
   font-weight: 500;
 }
@@ -2892,6 +2937,13 @@ dialog > .meta {
     margin-bottom: 6px;
   }
   /* Phones: the carousel turns vertical, retracted entries become bands */
+  /* On the phone itself the link is what matters: it comes first, the QR code (for another screen) after. */
+  .taptap-side {
+    order: -1;
+  }
+  .qr-slot {
+    width: 150px;
+  }
   .menu {
     --slant: 0px;
     flex-direction: column;

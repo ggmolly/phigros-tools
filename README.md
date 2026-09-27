@@ -8,7 +8,7 @@ Analyze your Phigros save (ranking score, Best charts, records, progress) privat
 
 ### Import a save
 
-Connect an Android phone over USB, paste a session token, or open a ZIP/JSON save file.
+Log in with TapTap by scanning a QR code (any device, global or China version), connect an Android phone over USB, paste a session token, or open a ZIP/JSON save file.
 
 ![Start page with the three import methods](docs/screenshots/01-start.png)
 
