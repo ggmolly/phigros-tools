@@ -2,6 +2,7 @@ import { createFileRoute, Outlet, useNavigate, useRouterState } from "@tanstack/
 import { useEffect } from "react";
 import { Arrow, SyncIcon } from "../components/arrow";
 import { SiteHeader, TAB_LABEL, type TabId, toolTabs } from "../components/chrome";
+import { ImportOptions } from "../components/import";
 import { Avatar } from "../components/primitives";
 import { calculateRanking } from "../metrics";
 import { message, useSave } from "../save-context";
@@ -48,7 +49,6 @@ function ToolLayout() {
     syncLabel,
     closeUsb,
     resetUsbDialog,
-    connectAndroid,
     openFile,
     selectedPlayer,
     setSelectedPlayer,
@@ -121,66 +121,34 @@ function ToolLayout() {
         )}
       </SiteHeader>
       <main id="overview" className="app-shell">
-        <section
-          id="import"
-          className={`import-band${loaded ? " compact" : ""}`}
-          aria-labelledby="import-heading"
-        >
-          <div className="import-heading">
-            <h2 id="import-heading">Import Save</h2>
-            <p>Load your Phigros progress</p>
-          </div>
-          <button
-            id="connect"
-            className="arrow-row import-option"
-            type="button"
-            disabled={busy}
-            onClick={() => void connectAndroid()}
+        {/* With no save open, the main menu's Import entry offers these instead. */}
+        {(loaded || unsupportedZip) && (
+          <section
+            id="import"
+            className={`import-band${loaded ? " compact" : ""}`}
+            aria-labelledby="import-heading"
           >
-            <span>
-              <strong>Android (USB)</strong>
-              <span className="import-description">Connect phone and fetch cloud save</span>
-            </span>
-            <span className="arrow-chip">
-              <Arrow />
-            </span>
-          </button>
-          <button
-            id="openToken"
-            className="arrow-row import-option"
-            type="button"
-            onClick={() => dialog.current?.showModal()}
-          >
-            <span>
-              <strong>Session token</strong>
-              <span className="import-description">Paste Phigros session token</span>
-            </span>
-            <span className="arrow-chip">
-              <Arrow />
-            </span>
-          </button>
-          <label className="arrow-row import-option file">
-            <span>
-              <strong>Local file</strong>
-              <span className="import-description">Select ZIP or JSON file</span>
-            </span>
-            <span className="arrow-chip">
-              <Arrow />
-            </span>
-            <input
-              ref={fileInput}
-              id="file"
-              aria-label="Open local ZIP or JSON"
-              type="file"
-              accept=".zip,.json,application/zip,application/json"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                e.target.value = "";
-                if (file) void openFile(file);
-              }}
-            />
-          </label>
-        </section>
+            <div className="import-heading">
+              <h2 id="import-heading">Import Save</h2>
+              <p>Load your Phigros progress</p>
+            </div>
+            <ImportOptions />
+          </section>
+        )}
+        <input
+          ref={fileInput}
+          id="file"
+          className="file-input"
+          tabIndex={-1}
+          aria-hidden="true"
+          type="file"
+          accept=".zip,.json,application/zip,application/json"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            e.target.value = "";
+            if (file) void openFile(file);
+          }}
+        />
         <dialog
           ref={usbDialog}
           id="usbDialog"

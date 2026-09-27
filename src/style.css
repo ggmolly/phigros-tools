@@ -699,16 +699,13 @@
   width: 20px;
   height: 20px;
 }
-.sync-row:hover .sync-label,
-.welcome-player:hover strong {
+.sync-row:hover .sync-label {
   color: var(--glow);
 }
-.sync-fresh .sync-label,
-.welcome-player.sync-fresh .import-description {
+.sync-fresh .sync-label {
   text-shadow: 0 0 10px rgb(255 255 255 / 0.6);
 }
-.sync-error .sync-label,
-.welcome-player.sync-error .import-description {
+.sync-error .sync-label {
   color: var(--negative);
 }
 .sync-error .arrow-chip::before {
@@ -1013,70 +1010,230 @@
   color: var(--dim);
   font-size: 14px;
 }
-.file {
-  position: relative;
-}
-.file input {
+.file-input {
   position: absolute;
   width: 1px;
   height: 1px;
   overflow: hidden;
   clip-path: inset(50%);
 }
-.file:focus-within {
-  outline: 2px solid var(--glow);
-  outline-offset: 2px;
-}
 
-/* ---------- Empty state (title screen) ---------- */
-.welcome {
+/* ---------- Empty state (the game's main menu) ---------- */
+/* A horizontal carousel of slanted entries. Frames are clipped by a skewed box and their art counter-skewed back
+ * upright; upright content is inset by the slant's horizontal travel (--slant = tan × height / 2) at the top and
+ * bottom edges. The open entry is a size container, so its layout follows its own width, not the viewport's. */
+.menu {
+  --menu-h: clamp(260px, min(100svh - 240px, 62vw), 600px);
+  --slant: calc(var(--menu-h) * var(--tan) / 2);
+  --sliver: clamp(64px, 9vw, 136px);
+  --menu-gap: 22px;
+  position: relative;
+  display: flex;
+  gap: var(--menu-gap);
+  margin: 12px 0 8px;
+  padding: 18px var(--slant) 44px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.menu-entry {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex: 0 0 var(--sliver);
+  flex-direction: column;
+  min-width: 0;
+  min-height: var(--menu-h);
+  transition:
+    flex-basis 0.35s ease,
+    flex-grow 0.35s ease,
+    min-width 0.35s ease;
+}
+/* Fills what the slivers leave, down to room for two slivers beside it; past that the carousel scrolls. */
+.menu-entry.is-open {
+  flex: 1 1 960px;
+  min-width: min(560px, calc(100% - 2 * (var(--sliver) + var(--menu-gap))));
+  padding: 26px 34px;
+  container-type: inline-size;
+  outline: 0;
+}
+.menu-art {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  transform: skewX(var(--skew));
+  background: var(--glass-strong);
+  box-shadow: 0 12px 28px rgb(0 0 0 / 0.3);
+  transition: box-shadow 0.15s ease;
+}
+.menu-art img {
+  position: absolute;
+  top: 0;
+  left: calc(-1 * var(--slant));
+  width: calc(100% + 2 * var(--slant));
+  max-width: none;
+  height: 100%;
+  object-fit: cover;
+  transform: skewX(calc(-1 * var(--skew)));
+  transition: filter 0.35s ease;
+  animation: menu-fade-in 0.5s ease-out;
+}
+.menu-entry:not(.is-open) .menu-art img {
+  filter: blur(6px) brightness(0.45);
+}
+/* Top scrim so the kicker and title read on any cover */
+.is-open .menu-art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgb(0 0 0 / 0.55), transparent 32%);
+}
+@keyframes menu-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+/* Retracted entry: the whole sliver is a button; its text sits in a box skewed like the frame, so the
+ * bottom-up label leans with the card as in the game. */
+.menu-sliver {
+  position: absolute;
+  inset: 0;
+  color: var(--text);
+  cursor: pointer;
+}
+.menu-sliver:hover + .menu-art,
+.menu-entry:has(.menu-sliver:hover) .menu-art,
+.menu-entry:has(.menu-sliver:focus-visible) .menu-art {
+  box-shadow:
+    0 12px 28px rgb(0 0 0 / 0.3),
+    0 0 0 2px var(--white);
+}
+.menu-sliver:focus-visible {
+  outline: 0;
+}
+.menu-sliver-text {
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
   align-items: center;
-  gap: 22px;
-  padding: 70px 24px 90px;
-  text-align: center;
+  gap: 6px;
+  padding: 22px 8px;
+  transform: skewX(var(--skew));
 }
-.welcome-logo {
-  font-size: clamp(54px, 9vw, 112px);
-  font-weight: 600;
+.menu-sliver-label {
+  writing-mode: vertical-rl;
+  rotate: 180deg;
+  font-size: clamp(30px, 3.4vw, 48px);
+  font-weight: 300;
   line-height: 1;
-  letter-spacing: 0.01em;
-  text-shadow:
-    0 0 6px rgb(143 220 255 / 0.9),
-    0 0 22px rgb(80 180 255 / 0.75),
-    0 0 48px rgb(80 180 255 / 0.35);
+  white-space: nowrap;
 }
-.welcome-logo span {
-  color: var(--glow);
+.menu-sliver-sub {
+  color: var(--dim);
+  font-size: 13px;
+  white-space: nowrap;
 }
-.welcome-title {
-  font-size: clamp(17px, 2.2vw, 24px);
+.is-open > .menu-head,
+.is-open > .menu-strip {
+  animation: menu-fade-in 0.3s 0.12s ease-out both;
+}
+.menu-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0 24px;
+  margin-left: var(--slant);
+}
+.menu-kicker {
+  font-size: 18px;
+}
+.menu-title {
+  min-width: 0;
+  margin-left: auto;
+  overflow-wrap: anywhere;
+  font-size: clamp(32px, 4.2vw, 56px);
   font-weight: 400;
-  letter-spacing: 0.32em;
+  line-height: 1.1;
+  text-align: right;
 }
-.welcome-text {
-  max-width: 520px;
+.menu-strip {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin: auto var(--slant) 0 0;
+  padding: 10px 10px 10px 28px;
+}
+.menu-strip::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: rgb(12 8 14 / 0.9);
+  transform: skewX(var(--skew));
+}
+.menu-strip .stat-row,
+.menu-import {
+  flex: 1;
+}
+.menu-import {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.menu-text {
+  flex: 1;
+  max-width: 440px;
   color: var(--dim);
 }
-.welcome-back {
-  width: min(460px, 100%);
-  margin-top: 26px;
-  text-align: left;
+.menu-play {
+  margin-left: auto;
+  min-height: 60px;
+  padding: 0 34px;
+  font-size: 22px;
+  letter-spacing: 0.08em;
 }
-.welcome-back-title {
-  margin-bottom: 6px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid var(--hairline);
-  color: var(--dim);
-  font-size: 15px;
-  font-weight: 400;
+.menu-play .sync-icon {
+  width: 24px;
+  height: 24px;
 }
-.welcome-player strong {
-  display: block;
-  font-size: 20px;
-  font-weight: 400;
-  transition: color 0.15s ease;
+@container (max-width: 640px) {
+  .menu-head {
+    flex-direction: column;
+    gap: 2px;
+  }
+  .menu-title {
+    margin-left: 0;
+    text-align: left;
+  }
+  .menu-strip {
+    flex-wrap: wrap;
+    padding: 10px 14px;
+  }
+  .menu-strip .stat-row,
+  .menu-import,
+  .menu-text {
+    flex-basis: 100%;
+  }
+  .menu-play {
+    flex: 1;
+  }
+}
+@container (max-width: 520px) {
+  .menu-strip .stat {
+    padding-inline: 4px;
+  }
+  .menu-strip .stat-value {
+    font-size: 26px;
+  }
+  .menu-strip .stat-label {
+    font-size: 12px;
+  }
 }
 
 /* ---------- Hero: profile card with ribbon + stat bar ---------- */
@@ -2669,7 +2826,7 @@ dialog > .meta {
   .player-area {
     gap: 12px;
   }
-  .sync-label,
+  .sync-row .sync-label,
   .sync-fix {
     display: none;
   }
@@ -2716,11 +2873,45 @@ dialog > .meta {
     display: block;
     margin-bottom: 6px;
   }
-  .welcome {
-    padding: 44px 8px 60px;
+  /* Phones: the carousel turns vertical, retracted entries become bands */
+  .menu {
+    --slant: 0px;
+    flex-direction: column;
+    gap: 12px;
+    margin: 12px 0 0;
+    padding: 0;
+    overflow: visible;
   }
-  .welcome-title {
-    letter-spacing: 0.18em;
+  .menu-entry {
+    flex: none;
+    min-height: 76px;
+    transition: none;
+  }
+  .menu-entry.is-open {
+    flex: none;
+    min-height: 440px;
+    padding: 20px;
+  }
+  .menu-art,
+  .menu-art img,
+  .menu-sliver-text,
+  .menu-strip::before {
+    transform: none;
+  }
+  .menu-sliver-text {
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 20px;
+  }
+  .menu-sliver-label {
+    writing-mode: horizontal-tb;
+    rotate: none;
+    font-size: 30px;
+  }
+  .menu-strip {
+    padding: 10px;
   }
   .hero {
     padding: 24px 20px 20px;
