@@ -638,8 +638,8 @@
   position: relative;
   isolation: isolate;
   display: flex;
+  flex: none;
   align-self: stretch;
-  min-width: 0;
   padding: 0 22px;
 }
 .tabs::before {
@@ -2676,7 +2676,23 @@ dialog > .meta {
     grid-row: auto;
   }
 }
-@media (max-width: 1100px) {
+/* Header: a loaded save needs ~1250px for one row (brand, five tabs, sync, player tag, GitHub), so it tightens
+ * first, then puts the tabs on their own row. */
+@media (max-width: 1600px) {
+  .topbar {
+    gap: 24px;
+  }
+  .tabs {
+    padding: 0 14px;
+  }
+  .tab {
+    padding: 0 20px;
+  }
+  .sync-row .sync-label {
+    display: none;
+  }
+}
+@media (max-width: 1250px) {
   .topbar {
     flex-wrap: wrap;
     height: auto;
@@ -2704,6 +2720,8 @@ dialog > .meta {
     overflow-x: auto;
     scrollbar-width: none;
   }
+}
+@media (max-width: 1100px) {
   .import-band {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px 28px;
