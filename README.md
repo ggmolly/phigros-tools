@@ -8,9 +8,9 @@ Analyze your Phigros save (ranking score, Best charts, records, progress) privat
 
 ### Import a save
 
-Log in with TapTap by scanning a QR code (any device, global or China version), connect an Android phone over USB, paste a session token, or open a ZIP/JSON save file.
+Log in with TapTap by scanning a QR code (any device, global or China version), connect an Android phone over USB, paste a session token, or open a ZIP/JSON save file. The main menu remembers every player you've synced before, laid out as a carousel like the game's own.
 
-![Start page with the three import methods](docs/screenshots/01-start.png)
+![Main menu carousel with the four import methods open](docs/screenshots/01-start.png)
 
 ### Overview
 
@@ -55,6 +55,12 @@ The full chart list with difficulty constants, filterable by title, artist, illu
 Each song has its own page with your records on it when a save is loaded, charters, per-difficulty chart stats (note counts, density, BPM, scroll speed, judge lines…) and related songs.
 
 <img src="docs/screenshots/11-chart-page.png" alt="Song page with chart stats" width="600">
+
+### Play a chart
+
+Watch any chart play out right in the browser from its **Preview** link, no save needed: adjustable speed and hitsound volume, and an optional local audio file to sync against. Share a link to a specific moment and it opens right there.
+
+![A dense IN chart mid-playback, with judge lines, combo and score](docs/screenshots/12-play.png)
 
 Screenshots use a fictional demo save; regenerate them with `scripts/screenshots.ts` (see its header).
 
