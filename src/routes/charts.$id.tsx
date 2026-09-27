@@ -380,58 +380,61 @@ function SongPage() {
               </table>
             </div>
           </section>
-          <section className="song-scroll" aria-label="Records, chart stats and related songs">
-            <YourRecords song={song} />
-            {stats && (
-              <section className="panel chart-stats">
-                <div className="panel-head">
-                  <h2 className="panel-title">Chart Stats</h2>
-                </div>
-                <div className="chart-stats-scroll">
-                  <table className="song-diff-table">
-                    <thead>
-                      <tr>
-                        <th scope="col">
-                          <span className="sr-only">Metric</span>
-                        </th>
-                        {LEVELS.map(
-                          (level, levelIndex) =>
-                            song.constants[levelIndex] != null && (
-                              <th key={level} scope="col">
-                                <Difficulty level={level} />
-                              </th>
-                            ),
-                        )}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {STAT_ROWS.map(([label, format, help]) => (
-                        <tr key={label}>
-                          <td className="meta">
-                            {label}
-                            {help && (
-                              <abbr className="stat-help" title={help}>
-                                ?
-                              </abbr>
-                            )}
-                          </td>
+          <div className="song-side">
+            <section className="song-scroll" aria-label="Records, chart stats and related songs">
+              <YourRecords song={song} />
+              {stats && (
+                <section className="panel chart-stats">
+                  <div className="panel-head">
+                    <h2 className="panel-title">Chart Stats</h2>
+                  </div>
+                  <div className="chart-stats-scroll">
+                    <table className="song-diff-table">
+                      <thead>
+                        <tr>
+                          <th scope="col">
+                            <span className="sr-only">Metric</span>
+                          </th>
                           {LEVELS.map(
                             (level, levelIndex) =>
                               song.constants[levelIndex] != null && (
-                                <td key={level} className="num">
-                                  {stats[levelIndex] ? format(stats[levelIndex]!) : "-"}
-                                </td>
+                                <th key={level} scope="col">
+                                  <Difficulty level={level} />
+                                </th>
                               ),
                           )}
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </section>
-            )}
-            <SongLinks heading={`More From ${song.chapter}`} songs={sameChapter} />
-            <SongLinks heading={`More By ${song.artist}`} songs={sameArtist} />
+                      </thead>
+                      <tbody>
+                        {STAT_ROWS.map(([label, format, help]) => (
+                          <tr key={label}>
+                            <td className="meta">
+                              {label}
+                              {help && (
+                                <abbr className="stat-help" title={help}>
+                                  ?
+                                </abbr>
+                              )}
+                            </td>
+                            {LEVELS.map(
+                              (level, levelIndex) =>
+                                song.constants[levelIndex] != null && (
+                                  <td key={level} className="num">
+                                    {stats[levelIndex] ? format(stats[levelIndex]!) : "-"}
+                                  </td>
+                                ),
+                            )}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </section>
+              )}
+              <SongLinks heading={`More From ${song.chapter}`} songs={sameChapter} />
+              <SongLinks heading={`More By ${song.artist}`} songs={sameArtist} />
+            </section>
+            {/* Outside the scroll area so it stays put from one song to the next (← and → follow it too). */}
             <nav className="song-pager" aria-label="Adjacent songs">
               <Link
                 to="/charts/$id"
@@ -460,7 +463,7 @@ function SongPage() {
                 </span>
               </Link>
             </nav>
-          </section>
+          </div>
         </div>
       </main>
     </>

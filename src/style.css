@@ -920,6 +920,17 @@
 }
 .song-pager .import-option {
   width: auto;
+  max-width: 50%;
+}
+/* One line per title, so a long neighbour never changes the pager's height (and shifts it). */
+.song-pager .import-option > span:not(.arrow-chip) {
+  min-width: 0;
+}
+.song-pager strong {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .song-pager-prev .button-arrow {
   transform: scaleX(-1);
@@ -950,6 +961,15 @@
     grid-template-columns: 1fr;
     align-content: start;
   }
+  .song-side {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .song-scroll {
+    flex: 1;
+    min-height: 0;
+  }
   .song-layout .song-detail,
   .song-scroll {
     overflow-y: auto;
@@ -957,7 +977,7 @@
     scrollbar-width: thin;
     scrollbar-color: rgb(255 255 255 / 0.35) transparent;
   }
-  .song-scroll .song-pager {
+  .song-side .song-pager {
     margin-bottom: 4px;
   }
 }
