@@ -157,6 +157,11 @@ export function ChartPlayer({
     const url = new URL(window.location.href);
     url.search = "";
     url.searchParams.set("t", String(Math.max(0, Math.floor(now()))));
+    // phones get the share sheet; desktop ones (Windows, macOS) are clunkier than a copied link
+    if (navigator.share && matchMedia("(pointer: coarse)").matches) {
+      void navigator.share({ title: document.title, url: url.toString() }).catch(() => {});
+      return;
+    }
     void navigator.clipboard.writeText(url.toString()).then(() => {
       setCopied(performance.now());
       window.clearTimeout(copiedTimer.current);
@@ -196,7 +201,7 @@ export function ChartPlayer({
         <button
           type="button"
           className="num chart-player-time chart-player-share"
-          title="Copy a link to this moment"
+          title="Share a link to this moment"
           onClick={copyLink}
         >
           <span ref={elapsed}>0:00</span>

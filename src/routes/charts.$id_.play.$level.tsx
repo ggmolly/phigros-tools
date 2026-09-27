@@ -48,14 +48,16 @@ export const Route = createFileRoute("/charts/$id_/play/$level")({
         ],
       };
     const stats = loaderData?.stats?.[LEVELS.indexOf(params.level as LevelName)];
+    const { t } = match.search;
+    const at = t ? ` at ${Math.floor(t / 60)}:${String(t % 60).padStart(2, "0")}` : "";
     const bpm =
       stats && (stats.bpmMin === stats.bpmMax ? `${stats.bpm}` : `${stats.bpmMin}–${stats.bpmMax}`);
     return {
       meta: [
         ...pageMeta({
-          title: `${song.title} (${params.level}) Chart Preview`,
+          title: `${song.title} (${params.level}) Chart Preview${at}`,
           description: [
-            `Watch the ${params.level} chart of ${song.title} by ${song.artist} play out.`,
+            `Watch the ${params.level} chart of ${song.title} by ${song.artist} play out${at}.`,
             stats && `${stats.notes.toLocaleString("en")} notes at ${bpm} BPM.`,
           ]
             .filter(Boolean)
@@ -63,7 +65,7 @@ export const Route = createFileRoute("/charts/$id_/play/$level")({
           path,
           themeColor: loaderData?.themeColor,
           image: {
-            url: `${SITE}/og/chart/${encodeURIComponent(song.id)}/${params.level}.jpg${match.search.t ? `?t=${match.search.t}` : ""}`,
+            url: `${SITE}/og/chart/${encodeURIComponent(song.id)}/${params.level}.jpg${t ? `?t=${t}` : ""}`,
             width: 1200,
             height: 630,
             alt: `${song.title} (${params.level} ${song.constants[LEVELS.indexOf(params.level as LevelName)]?.toFixed(1)}) by ${song.artist}${stats ? `: ${stats.notes} notes at ${bpm} BPM` : ""}`,
