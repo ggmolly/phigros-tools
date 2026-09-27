@@ -5,7 +5,9 @@ const SHARE = 0.65; // here i took 65% (of the music's volume) because we can st
 
 // Opus is ~10× smaller and starts sample-accurately (unlike MP3's encoder delay); Safari before 18.4 can't decode it, so those get the WAVs.
 const FORMAT =
-  typeof Audio !== "undefined" && new Audio().canPlayType('audio/ogg; codecs="opus"') ? "opus" : "wav";
+  typeof Audio !== "undefined" && new Audio().canPlayType('audio/ogg; codecs="opus"')
+    ? "opus"
+    : "wav";
 
 export class HitSounds {
   enabled = true;
