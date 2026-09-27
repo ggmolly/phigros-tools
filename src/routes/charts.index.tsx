@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { catalogChartTotals, catalogManifest, catalogSongs } from "../catalog";
+import { canonicalChapter, catalogChartTotals, catalogManifest, catalogSongs } from "../catalog";
 import { SiteHeader } from "../components/chrome";
 import { Difficulty, DifficultyFilter } from "../components/primitives";
 import { LEVELS } from "../modules";
@@ -17,8 +17,8 @@ export const Route = createFileRoute("/charts/")({
   ): { q?: string; chapter?: string; view?: "gallery" } => ({
     ...(search.view === "gallery" ? { view: "gallery" as const } : {}),
     ...(typeof search.q === "string" && search.q ? { q: search.q.slice(0, 100) } : {}),
-    ...(typeof search.chapter === "string" && CHAPTERS.includes(search.chapter)
-      ? { chapter: search.chapter }
+    ...(typeof search.chapter === "string" && CHAPTERS.includes(canonicalChapter(search.chapter))
+      ? { chapter: canonicalChapter(search.chapter) }
       : {}),
   }),
   head: () => ({

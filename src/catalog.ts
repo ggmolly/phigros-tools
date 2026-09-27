@@ -16,6 +16,12 @@ export const catalogRevision = `${data.manifest.gameVersion}-${data.manifest.sou
 const aliases = data.aliases as Record<string, string>;
 const songs = new Map((data.songs as CatalogSong[]).map((song) => [song.id, song]));
 
+/** Chapter labels as they were before a rename (e.g. the Chinese subtitles of builds ≤ 154), mapped to today's. */
+const chapterAliases = (data as { chapterAliases?: Record<string, string> }).chapterAliases ?? {};
+export function canonicalChapter(label: string): string {
+  return chapterAliases[label] ?? label;
+}
+
 export function canonicalSongId(id: string): string {
   return aliases[id] ?? id;
 }
