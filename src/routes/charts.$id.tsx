@@ -1,4 +1,5 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { type CatalogSong, canonicalSongId, catalogSong, catalogSongs } from "../catalog";
 import { type ChartStats, getSongDetails } from "../chartStats";
 import { Arrow } from "../components/arrow";
@@ -320,6 +321,28 @@ function SongPage() {
   const next = catalogSongs[(index + 1) % catalogSongs.length]!;
   const sameChapter = related(song, (other) => other.chapter === song.chapter);
   const sameArtist = related(song, (other) => other.artist === song.artist);
+  const navigate = useNavigate();
+  // ← / → step through the catalog like the pager below, unless a field or a modified shortcut wants the key.
+  useEffect(() => {
+    function onKey(event: KeyboardEvent) {
+      const step = { ArrowLeft: previous, ArrowRight: next }[event.key];
+      const target = event.target as HTMLElement;
+      if (
+        !step ||
+        event.defaultPrevented ||
+        event.altKey ||
+        event.ctrlKey ||
+        event.metaKey ||
+        event.shiftKey
+      )
+        return;
+      if (target.closest("input, textarea, select, [contenteditable], dialog[open]")) return;
+      event.preventDefault();
+      void navigate({ to: "/charts/$id", params: { id: step.id } });
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [navigate, previous, next]);
   return (
     <>
       <SiteHeader />
