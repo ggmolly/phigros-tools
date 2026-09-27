@@ -1,6 +1,12 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { canonicalChapter, catalogChartTotals, catalogManifest, catalogSongs } from "../catalog";
+import {
+  canonicalChapter,
+  catalogChartTotals,
+  catalogManifest,
+  catalogSongs,
+  chapterSearchText,
+} from "../catalog";
 import { SiteHeader } from "../components/chrome";
 import { Difficulty, DifficultyFilter } from "../components/primitives";
 import { LEVELS } from "../modules";
@@ -63,7 +69,7 @@ function ChartsPage() {
   const rows = catalogSongs.filter(
     (song) =>
       (!query ||
-        `${song.title} ${song.artist} ${song.illustrator ?? ""}`
+        `${song.title} ${song.artist} ${song.illustrator ?? ""} ${chapterSearchText(song.chapter)}`
           .toLocaleLowerCase()
           .includes(query)) &&
       (!chapter || song.chapter === chapter) &&
@@ -84,7 +90,7 @@ function ChartsPage() {
             <input
               className="field search-field"
               type="search"
-              placeholder="Search title, artist or illustrator"
+              placeholder="Search title, artist, illustrator or chapter"
               aria-label="Search songs"
               value={search}
               onChange={(e) => setFilter("q", e.target.value)}

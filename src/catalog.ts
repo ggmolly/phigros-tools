@@ -21,6 +21,13 @@ const chapterAliases = (data as { chapterAliases?: Record<string, string> }).cha
 export function canonicalChapter(label: string): string {
   return chapterAliases[label] ?? label;
 }
+/** A chapter's label and every label it had before, so text search still finds it by its old name. */
+const chapterSearch = new Map<string, string>();
+for (const [old, label] of Object.entries(chapterAliases))
+  chapterSearch.set(label, `${chapterSearch.get(label) ?? label} ${old}`);
+export function chapterSearchText(label: string): string {
+  return chapterSearch.get(label) ?? label;
+}
 
 export function canonicalSongId(id: string): string {
   return aliases[id] ?? id;
