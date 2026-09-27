@@ -7,6 +7,7 @@ import { SiteHeader } from "../components/chrome";
 import { Difficulty } from "../components/primitives";
 import { LEVELS, type LevelName } from "../modules";
 import { type Chart, parseChart } from "../player/chart";
+import { decodePhc } from "../player/phc";
 import { pageMeta } from "../seo";
 
 const songLevels = (id: string) =>
@@ -47,9 +48,9 @@ function PlayPage() {
 
   useEffect(() => {
     setError(undefined);
-    fetch(`/chart-data/${encodeURIComponent(song.id)}/${level}.json`)
-      .then((res) => (res.ok ? res.json() : Promise.reject(new Error(`HTTP ${res.status}`))))
-      .then((raw) => setChart(parseChart(raw)))
+    fetch(`/chart-data/${encodeURIComponent(song.id)}/${level}.phc`)
+      .then((res) => (res.ok ? res.arrayBuffer() : Promise.reject(new Error(`HTTP ${res.status}`))))
+      .then((data) => setChart(parseChart(decodePhc(new Uint8Array(data)))))
       .catch((reason: Error) => setError(`Couldn't load the chart: ${reason.message}`));
   }, [song.id, level]);
 
