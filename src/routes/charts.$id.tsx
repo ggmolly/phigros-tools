@@ -331,132 +331,137 @@ function SongPage() {
           </Link>{" "}
           / {song.title}
         </p>
-        <section className="panel song-detail">
-          <div className="song-detail-media">
-            <img
-              src={`/covers/${song.id}.avif`}
-              width={1024}
-              height={540}
-              alt={`Cover art for ${song.title}${song.illustrator ? `, illustrated by ${song.illustrator}` : ""}`}
-              decoding="async"
-            />
-          </div>
-          <div className="song-detail-body">
-            <h1 className="panel-title">{song.title}</h1>
-            <p className="meta">
-              <Link to="/charts" search={{ q: song.artist }} className="artist-link">
-                {song.artist}
-              </Link>{" "}
-              ·{" "}
-              <Link to="/charts" search={{ chapter: song.chapter }} className="chapter-link">
-                {song.chapter}
-              </Link>
-            </p>
-            {song.illustrator && <p className="meta">Illustrated by {song.illustrator}</p>}
-            <table className="song-diff-table">
-              <thead>
-                <tr>
-                  <th scope="col">Difficulty</th>
-                  <th scope="col">Constant</th>
-                  <th scope="col">Charter</th>
-                </tr>
-              </thead>
-              <tbody>
-                {LEVELS.map(
-                  (level, levelIndex) =>
-                    song.constants[levelIndex] != null && (
-                      <tr key={level}>
-                        <td>
-                          <Difficulty level={level} />
-                        </td>
-                        <td className="num">{song.constants[levelIndex]!.toFixed(1)}</td>
-                        <td className="meta">{song.charters[levelIndex] ?? "-"}</td>
-                      </tr>
-                    ),
-                )}
-              </tbody>
-            </table>
-          </div>
-        </section>
-        <YourRecords song={song} />
-        {stats && (
-          <section className="panel chart-stats">
-            <div className="panel-head">
-              <h2 className="panel-title">Chart Stats</h2>
+        {/* On wide screens the song stays put on the left and everything else scrolls on the right, like the /charts table. */}
+        <div className="song-layout">
+          <section className="panel song-detail">
+            <div className="song-detail-media">
+              <img
+                src={`/covers/${song.id}.avif`}
+                width={1024}
+                height={540}
+                alt={`Cover art for ${song.title}${song.illustrator ? `, illustrated by ${song.illustrator}` : ""}`}
+                decoding="async"
+              />
             </div>
-            <div className="chart-stats-scroll">
+            <div className="song-detail-body">
+              <h1 className="panel-title">{song.title}</h1>
+              <p className="meta">
+                <Link to="/charts" search={{ q: song.artist }} className="artist-link">
+                  {song.artist}
+                </Link>{" "}
+                ·{" "}
+                <Link to="/charts" search={{ chapter: song.chapter }} className="chapter-link">
+                  {song.chapter}
+                </Link>
+              </p>
+              {song.illustrator && <p className="meta">Illustrated by {song.illustrator}</p>}
               <table className="song-diff-table">
                 <thead>
                   <tr>
-                    <th scope="col">
-                      <span className="sr-only">Metric</span>
-                    </th>
-                    {LEVELS.map(
-                      (level, levelIndex) =>
-                        song.constants[levelIndex] != null && (
-                          <th key={level} scope="col">
-                            <Difficulty level={level} />
-                          </th>
-                        ),
-                    )}
+                    <th scope="col">Difficulty</th>
+                    <th scope="col">Constant</th>
+                    <th scope="col">Charter</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {STAT_ROWS.map(([label, format, help]) => (
-                    <tr key={label}>
-                      <td className="meta">
-                        {label}
-                        {help && (
-                          <abbr className="stat-help" title={help}>
-                            ?
-                          </abbr>
-                        )}
-                      </td>
-                      {LEVELS.map(
-                        (level, levelIndex) =>
-                          song.constants[levelIndex] != null && (
-                            <td key={level} className="num">
-                              {stats[levelIndex] ? format(stats[levelIndex]!) : "-"}
-                            </td>
-                          ),
-                      )}
-                    </tr>
-                  ))}
+                  {LEVELS.map(
+                    (level, levelIndex) =>
+                      song.constants[levelIndex] != null && (
+                        <tr key={level}>
+                          <td>
+                            <Difficulty level={level} />
+                          </td>
+                          <td className="num">{song.constants[levelIndex]!.toFixed(1)}</td>
+                          <td className="meta">{song.charters[levelIndex] ?? "-"}</td>
+                        </tr>
+                      ),
+                  )}
                 </tbody>
               </table>
             </div>
           </section>
-        )}
-        <SongLinks heading={`More From ${song.chapter}`} songs={sameChapter} />
-        <SongLinks heading={`More By ${song.artist}`} songs={sameArtist} />
-        <nav className="song-pager" aria-label="Adjacent songs">
-          <Link
-            to="/charts/$id"
-            params={{ id: previous.id }}
-            className="arrow-row import-option song-pager-prev"
-          >
-            <span className="arrow-chip">
-              <Arrow />
-            </span>
-            <span>
-              <span className="import-description">Previous</span>
-              <strong>{previous.title}</strong>
-            </span>
-          </Link>
-          <Link
-            to="/charts/$id"
-            params={{ id: next.id }}
-            className="arrow-row import-option song-pager-next"
-          >
-            <span>
-              <span className="import-description">Next</span>
-              <strong>{next.title}</strong>
-            </span>
-            <span className="arrow-chip">
-              <Arrow />
-            </span>
-          </Link>
-        </nav>
+          <section className="song-scroll" aria-label="Records, chart stats and related songs">
+            <YourRecords song={song} />
+            {stats && (
+              <section className="panel chart-stats">
+                <div className="panel-head">
+                  <h2 className="panel-title">Chart Stats</h2>
+                </div>
+                <div className="chart-stats-scroll">
+                  <table className="song-diff-table">
+                    <thead>
+                      <tr>
+                        <th scope="col">
+                          <span className="sr-only">Metric</span>
+                        </th>
+                        {LEVELS.map(
+                          (level, levelIndex) =>
+                            song.constants[levelIndex] != null && (
+                              <th key={level} scope="col">
+                                <Difficulty level={level} />
+                              </th>
+                            ),
+                        )}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {STAT_ROWS.map(([label, format, help]) => (
+                        <tr key={label}>
+                          <td className="meta">
+                            {label}
+                            {help && (
+                              <abbr className="stat-help" title={help}>
+                                ?
+                              </abbr>
+                            )}
+                          </td>
+                          {LEVELS.map(
+                            (level, levelIndex) =>
+                              song.constants[levelIndex] != null && (
+                                <td key={level} className="num">
+                                  {stats[levelIndex] ? format(stats[levelIndex]!) : "-"}
+                                </td>
+                              ),
+                          )}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            )}
+            <SongLinks heading={`More From ${song.chapter}`} songs={sameChapter} />
+            <SongLinks heading={`More By ${song.artist}`} songs={sameArtist} />
+            <nav className="song-pager" aria-label="Adjacent songs">
+              <Link
+                to="/charts/$id"
+                params={{ id: previous.id }}
+                className="arrow-row import-option song-pager-prev"
+              >
+                <span className="arrow-chip">
+                  <Arrow />
+                </span>
+                <span>
+                  <span className="import-description">Previous</span>
+                  <strong>{previous.title}</strong>
+                </span>
+              </Link>
+              <Link
+                to="/charts/$id"
+                params={{ id: next.id }}
+                className="arrow-row import-option song-pager-next"
+              >
+                <span>
+                  <span className="import-description">Next</span>
+                  <strong>{next.title}</strong>
+                </span>
+                <span className="arrow-chip">
+                  <Arrow />
+                </span>
+              </Link>
+            </nav>
+          </section>
+        </div>
       </main>
     </>
   );

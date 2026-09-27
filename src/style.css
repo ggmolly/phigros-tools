@@ -937,6 +937,29 @@
   text-decoration: none;
   cursor: help;
 }
+/* Wide screens: two columns sized to the window, each scrolling on its own (the page itself doesn't). */
+@media (min-width: 1101px) and (min-height: 560px) {
+  .song-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: 18px;
+    height: calc(100svh - 196px);
+  }
+  .song-layout .song-detail {
+    grid-template-columns: 1fr;
+    align-content: start;
+  }
+  .song-layout .song-detail,
+  .song-scroll {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: rgb(255 255 255 / 0.35) transparent;
+  }
+  .song-scroll .song-pager {
+    margin-bottom: 4px;
+  }
+}
 @media (max-width: 760px) {
   .song-detail {
     grid-template-columns: 1fr;
