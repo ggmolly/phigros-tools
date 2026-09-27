@@ -3397,6 +3397,35 @@ dialog strong {
   color: var(--dim);
   text-align: center;
 }
+/* The elapsed time copies a link to that moment (?t=). */
+.chart-player-share {
+  position: relative;
+  padding: 4px 2px;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline dotted rgb(255 255 255 / 0.35);
+  text-underline-offset: 4px;
+}
+.chart-player-share:hover,
+.chart-player-share:focus-visible {
+  color: var(--text);
+}
+.chart-player-copied:empty {
+  display: none;
+}
+.chart-player-copied {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  translate: -50% 0;
+  padding: 2px 10px;
+  background: var(--white);
+  color: var(--ink);
+  font-size: 13px;
+  white-space: nowrap;
+}
 .chart-player-settings {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));

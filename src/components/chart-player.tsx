@@ -28,11 +28,14 @@ export function ChartPlayer({
   background,
   title,
   level,
+  startAt = 0,
 }: {
   chart: Chart;
   background: string;
   title: string;
   level: string;
+  /** Where the chart opens, in seconds (links to a moment use ?t=). */
+  startAt?: number;
 }) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const scrub = useRef<HTMLInputElement>(null);
@@ -54,6 +57,7 @@ export function ChartPlayer({
   const [rate, setRate] = useState(1);
   const [songName, setSongName] = useState<string>();
   const [hitSoundsOn, setHitSoundsOn] = useState(true);
+  const [copied, setCopied] = useState(false);
   const duration = Math.max(chart.duration, audioDuration - chart.offset);
 
   useEffect(() => {
@@ -86,7 +90,7 @@ export function ChartPlayer({
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: now/seek only read refs; restart the loop per chart.
   useEffect(() => {
-    seek(0, false);
+    seek(startAt, false);
     let frame = 0;
     const tick = () => {
       frame = requestAnimationFrame(tick);
@@ -123,7 +127,7 @@ export function ChartPlayer({
     };
     tick();
     return () => cancelAnimationFrame(frame);
-  }, [chart, duration, title, level, art, hitSounds]);
+  }, [chart, duration, title, level, art, hitSounds, startAt]);
 
   const toggle = () => {
     hitSounds.start();
@@ -147,8 +151,20 @@ export function ChartPlayer({
     } catch {}
   };
 
+  /** Copies a link that opens the chart at the current second. */
+  const copyLink = () => {
+    const url = new URL(window.location.href);
+    url.search = "";
+    url.searchParams.set("t", String(Math.max(0, Math.floor(now()))));
+    void navigator.clipboard.writeText(url.toString()).then(() => {
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1800);
+    });
+  };
+
   const loadSong = (file: File | undefined) => {
     if (!file) return;
+    const at = now(); // keep the position (e.g. a ?t= link) when the song takes over the clock
     const previous = audio.current;
     if (previous) {
       previous.pause();
@@ -162,7 +178,7 @@ export function ChartPlayer({
     song.onended = () => setPlaying(false);
     audio.current = song;
     setSongName(file.name);
-    seek(0, false);
+    seek(at, false);
   };
 
   return (
@@ -175,9 +191,17 @@ export function ChartPlayer({
         <button type="button" className="btn chart-player-play" onClick={toggle}>
           {playing ? "Pause" : "Play"}
         </button>
-        <span ref={elapsed} className="num chart-player-time">
-          0:00
-        </span>
+        <button
+          type="button"
+          className="num chart-player-time chart-player-share"
+          title="Copy a link to this moment"
+          onClick={copyLink}
+        >
+          <span ref={elapsed}>0:00</span>
+          <span className="chart-player-copied" role="status">
+            {copied ? "Link copied" : ""}
+          </span>
+        </button>
         <Slider
           className="slider-thin"
           min={Math.min(0, -chart.offset)}
