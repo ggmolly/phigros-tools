@@ -55,6 +55,16 @@ export interface CloudSave {
   playedTime?: number;
   progressValue?: number;
   gameFile: GameFile;
+  user?: { objectId?: string };
+}
+
+/** The player's newest cloud save. Saves whose owner pointer names someone else are skipped: LeanCloud's _GameSave
+ * class isn't guaranteed to be scoped to the session, so trusting the first result could load another account. */
+export function latestSave(saves: CloudSave[], playerId: string): CloudSave | undefined {
+  const time = (save: CloudSave) => Date.parse(save.modifiedAt?.iso ?? save.updatedAt) || 0;
+  return saves
+    .filter((save) => !save.user?.objectId || save.user.objectId === playerId)
+    .sort((a, b) => time(b) - time(a))[0];
 }
 
 export interface SaveArchiveEntry {

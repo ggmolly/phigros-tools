@@ -232,9 +232,11 @@ export function SaveProvider({ children }: { children: React.ReactNode }) {
       });
       await refresh();
       report("Checking cloud saves …");
-      const saves = await api.listSaves(session.token, identity.region, signal);
-      if (!saves.length) throw new Error("That account has no cloud saves yet");
-      const save = saves[0]!;
+      const save = api.latestSave(
+        await api.listSaves(session.token, identity.region, signal),
+        identity.objectId,
+      );
+      if (!save) throw new Error("That account has no cloud saves yet");
       report(`Fetching “${save.name}” from ${new URL(save.gameFile.url).host}…`);
       await ingestZip(
         await api.fetchSaveBytes(save, signal),
