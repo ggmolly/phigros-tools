@@ -2,10 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import { type Chart, countUpTo } from "../player/chart";
 import { HitSounds } from "../player/hit-sounds";
 import { type Art, drawHud, drawScene, loadArt } from "../player/render";
+import { findShift } from "../player/sync";
 import { Slider, Switch } from "./primitives";
 
 const SPEEDS = [0.1, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
 const VOLUME_KEY = "chart-player-volume"; // for our localStorage thing
+/** the offset stepper's nudge, in ms */
+const OFFSET_STEP = 5;
+/** how long before the first note "First Note" lands, so it can be seen coming */
+const FIRST_NOTE_LEAD = 1;
 
 function savedVolume() {
   try {
@@ -56,10 +61,22 @@ export function ChartPlayer({
   const [rate, setRate] = useState(1);
   const [songName, setSongName] = useState<string>();
   const [hitSoundsOn, setHitSoundsOn] = useState(true);
+  /** the user's offset in ms: positive makes the notes come later against the song */
+  const [offset, setOffset] = useState(0);
+  const songFile = useRef<File>(undefined);
+  const [sync, setSync] = useState<"idle" | "busy" | "failed">("idle");
+  /** seconds into the song where chart time 0 falls */
+  const lead = chart.offset + offset / 1000;
+  const leadRef = useRef(lead); // for the frame loop
+  useEffect(() => {
+    leadRef.current = lead;
+  }, [lead]);
   /** When the last link was copied (0: no note showing); keys the note so each copy replays its animation. */
   const [copied, setCopied] = useState(0);
   const copiedTimer = useRef(0);
-  const duration = Math.max(chart.duration, audioDuration - chart.offset);
+  const duration = Math.max(chart.duration, audioDuration - lead);
+  const start = Math.min(0, -lead);
+  const offsetRange = Math.max(1000, Math.ceil(Math.abs(offset) / 1000) * 1000);
 
   useEffect(() => {
     void loadArt().then(setArt);
@@ -75,7 +92,7 @@ export function ChartPlayer({
   );
 
   const now = () => {
-    if (audio.current) return audio.current.currentTime - chart.offset;
+    if (audio.current) return audio.current.currentTime - leadRef.current;
     const c = clock.current;
     return c.playing ? c.base + ((performance.now() - c.wall) / 1000) * c.rate : c.base;
   };
@@ -83,16 +100,18 @@ export function ChartPlayer({
     clock.current = { ...clock.current, base: t, wall: performance.now(), playing: play };
     const song = audio.current;
     if (song) {
-      song.currentTime = Math.max(0, t + chart.offset);
+      song.currentTime = Math.max(0, t + leadRef.current);
       if (play) void song.play();
       else song.pause();
     }
     setPlaying(play);
   };
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: seek only reads refs; start over per chart.
+  useEffect(() => seek(startAt, false), [chart, startAt]);
+
   // biome-ignore lint/correctness/useExhaustiveDependencies: now/seek only read refs; restart the loop per chart.
   useEffect(() => {
-    seek(startAt, false);
     let frame = 0;
     const tick = () => {
       frame = requestAnimationFrame(tick);
@@ -123,13 +142,12 @@ export function ChartPlayer({
       // the seek bar and clock follow playback without re-rendering React every frame
       if (scrub.current && document.activeElement !== scrub.current)
         scrub.current.value = String(t);
-      const start = Math.min(0, -chart.offset);
       scrubBox.current?.style.setProperty("--p", String((t - start) / (duration - start)));
       if (elapsed.current) elapsed.current.textContent = clockTime(t);
     };
     tick();
     return () => cancelAnimationFrame(frame);
-  }, [chart, duration, title, level, art, hitSounds, startAt]);
+  }, [chart, duration, start, title, level, art, hitSounds]);
 
   const toggle = () => {
     hitSounds.start();
@@ -142,6 +160,36 @@ export function ChartPlayer({
     clock.current = { ...clock.current, base: now(), wall: performance.now(), rate: next };
     if (audio.current) audio.current.playbackRate = next;
     setRate(next);
+  };
+
+  const jumpToFirstNote = () => {
+    const first = chart.hits[0]?.sec ?? 0;
+    seek(Math.max(start, first - FIRST_NOTE_LEAD), playing);
+  };
+
+  const changeOffset = (ms: number) => {
+    setOffset(Math.round(ms));
+    setSync("idle");
+  };
+
+  const autoSync = async () => {
+    const file = songFile.current;
+    if (!file) return;
+    setSync("busy");
+    try {
+      const context = new OfflineAudioContext(1, 1, 44100);
+      const decoded = await context.decodeAudioData(await file.arrayBuffer());
+      if (songFile.current !== file) return; // another song was loaded meanwhile
+      const shift = findShift(
+        decoded,
+        chart.hits.map((hit) => hit.sec),
+      );
+      if (shift === undefined) return setSync("failed");
+      setOffset(Math.round((shift - chart.offset) * 1000));
+      setSync("idle");
+    } catch {
+      setSync("failed");
+    }
   };
 
   const changeVolume = (next: number) => {
@@ -184,7 +232,9 @@ export function ChartPlayer({
     song.onloadedmetadata = () => setAudioDuration(song.duration);
     song.onended = () => setPlaying(false);
     audio.current = song;
+    songFile.current = file;
     setSongName(file.name);
+    setSync("idle");
     seek(at, false);
   };
 
@@ -197,6 +247,9 @@ export function ChartPlayer({
       <div className="chart-player-transport">
         <button type="button" className="btn chart-player-play" onClick={toggle}>
           {playing ? "Pause" : "Play"}
+        </button>
+        <button type="button" className="btn btn-ghost" onClick={jumpToFirstNote}>
+          First Note
         </button>
         <button
           type="button"
@@ -211,7 +264,7 @@ export function ChartPlayer({
         </button>
         <Slider
           className="slider-thin"
-          min={Math.min(0, -chart.offset)}
+          min={start}
           max={duration}
           step="any"
           label="Position"
@@ -303,6 +356,60 @@ export function ChartPlayer({
             hidden
             onChange={(event) => loadSong(event.currentTarget.files?.[0])}
           />
+        </div>
+        <div className="player-setting">
+          <div className="player-setting-head">
+            <span>Offset</span>
+            <span className="num">{offset > 0 ? `+${offset}` : offset} ms</span>
+          </div>
+          <div className="stepper">
+            <button
+              type="button"
+              className="step"
+              aria-label="Notes earlier"
+              onClick={() => changeOffset(offset - OFFSET_STEP)}
+            >
+              −
+            </button>
+            <Slider
+              value={offset}
+              min={-offsetRange}
+              max={offsetRange}
+              step={1}
+              label="Offset"
+              onChange={changeOffset}
+            />
+            <button
+              type="button"
+              className="step"
+              aria-label="Notes later"
+              onClick={() => changeOffset(offset + OFFSET_STEP)}
+            >
+              +
+            </button>
+          </div>
+          <div className="player-song">
+            <button
+              type="button"
+              className="btn btn-ghost"
+              disabled={!songName || sync === "busy"}
+              onClick={() => void autoSync()}
+            >
+              {sync === "busy" ? "Syncing…" : "Auto-Sync"}
+            </button>
+            {offset !== 0 && (
+              <button type="button" className="btn btn-ghost" onClick={() => changeOffset(0)}>
+                Reset
+              </button>
+            )}
+            <span className="meta" role="status">
+              {!songName
+                ? "Load a song file to line it up with the chart."
+                : sync === "failed"
+                  ? "Couldn't match this file to the chart."
+                  : ""}
+            </span>
+          </div>
         </div>
       </section>
     </div>
