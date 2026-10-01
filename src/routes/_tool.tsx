@@ -284,6 +284,11 @@ function ToolLayout() {
         </dialog>
 
         <div id="results">
+          {loaded?.document.warnings?.length ? (
+            <div className="panel" role="status">
+              <p className="warning">{loaded.document.warnings.join(" ")}</p>
+            </div>
+          ) : undefined}
           {unsupportedZip ? (
             <div className="panel">
               <p className="warning">This ZIP uses an unsupported save format.</p>

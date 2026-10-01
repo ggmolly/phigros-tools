@@ -3,14 +3,18 @@ import * as v from "valibot";
 import type { SaveDocumentV1 } from "./document";
 import {
   decodeSummary,
+  type GameKey,
+  type GameProgress,
   MODULE_NAMES,
   type ModuleName,
+  PARSEABLE_VERSIONS,
   parseGameKey,
   parseGameProgress,
   parseGameRecord,
   parseProfile,
   parseSettings,
 } from "./modules";
+import { ParseError } from "./binary";
 
 /** The game's LeanCloud apps: the global release and the China (TapTap CN) release keep separate accounts and saves. */
 export type Region = "global" | "china";
@@ -163,13 +167,51 @@ export async function openArchive(zip: Uint8Array): Promise<SaveArchive> {
   };
 }
 
+/** Stands in for a gameProgress module this build cannot parse, so the rest of the save still loads. */
+const EMPTY_PROGRESS: GameProgress = {
+  isFirstRun: false,
+  legacyChapterFinished: false,
+  alreadyShowCollectionTip: false,
+  alreadyShowAutoUnlockINTip: false,
+  completed: "",
+  songUpdateInfo: 0,
+  challengeModeRank: 0,
+  money: [0, 0, 0, 0, 0],
+  unlockFlagOfSpasmodic: 0,
+  unlockFlagOfIgallta: 0,
+  unlockFlagOfRrharil: 0,
+  flagOfSongRecordKey: 0,
+};
+
 export function parseArchive(
   archive: SaveArchive,
   options: { kind?: "cloud" | "zip"; name?: string; cloudUpdatedAt?: string; summary?: string },
 ): SaveDocumentV1 {
+  const warnings: string[] = [];
   const version = (name: ModuleName) => archive.entries[name].version;
   const plain = (name: ModuleName) => archive.entries[name].plainBytes;
-  return {
+  const lenient = (name: ModuleName) => version(name) > PARSEABLE_VERSIONS[name];
+  const failed = new Set<ModuleName>();
+  /** The game only appends fields on a version bump, so a newer-than-known module is parsed leniently
+   * (unknown tail ignored). If it still can't be parsed, that module degrades to empty data instead of
+   * failing the whole import — the user browses with a warning. */
+  function attempt<T>(
+    name: ModuleName,
+    parse: (bytes: Uint8Array, version: number, lenient: boolean) => T,
+    empty: T,
+  ): T {
+    try {
+      return parse(plain(name), version(name), lenient(name));
+    } catch (error) {
+      if (!(error instanceof ParseError)) throw error;
+      warnings.push(
+        `${name} could not be parsed (${error.message}); its data is not shown. Try updating phigros.tools.`,
+      );
+      failed.add(name);
+      return empty;
+    }
+  }
+  const document: SaveDocumentV1 = {
     schema: "phigros-web-save",
     schemaVersion: 1,
     source: {
@@ -183,12 +225,18 @@ export function parseArchive(
       number
     >,
     ...(options.summary ? { summary: decodeSummary(options.summary) } : {}),
-    profile: parseProfile(plain("user"), version("user")),
-    settings: parseSettings(plain("settings"), version("settings")),
-    gameKey: parseGameKey(plain("gameKey"), version("gameKey")),
-    gameProgress: parseGameProgress(plain("gameProgress"), version("gameProgress")),
-    songs: parseGameRecord(plain("gameRecord"), version("gameRecord")),
+    profile: attempt("user", parseProfile, undefined),
+    settings: attempt("settings", parseSettings, undefined),
+    gameKey: attempt("gameKey", parseGameKey, { entries: [], lanotaReadKeys: 0 }),
+    gameProgress: attempt("gameProgress", parseGameProgress, EMPTY_PROGRESS),
+    songs: attempt("gameRecord", parseGameRecord, []),
   };
+  for (const name of MODULE_NAMES)
+    if (lenient(name) && !failed.has(name))
+      warnings.push(
+        `${name} v${version(name)} is newer than this build parses (up to v${PARSEABLE_VERSIONS[name]}); its newest fields are unknown, so some info may be missing. Try updating phigros.tools.`,
+      );
+  return warnings.length ? { ...document, warnings } : document;
 }
 
 const player = v.object({

@@ -1,5 +1,15 @@
 import { ParseError, Reader } from "./binary";
 
+/** The newest module version this build parses. The game only ever appends fields on a version bump, so a
+ * newer module is parsed leniently (strict tail check skipped); a version below the minimum can't be read. */
+export const PARSEABLE_VERSIONS: Record<ModuleName, number> = {
+  gameKey: 3,
+  gameProgress: 5,
+  gameRecord: 1,
+  settings: 1,
+  user: 1,
+};
+
 export const LEVELS = ["EZ", "HD", "IN", "AT"] as const;
 export type LevelName = (typeof LEVELS)[number];
 export type ModuleName = "gameKey" | "gameProgress" | "gameRecord" | "settings" | "user";
@@ -95,8 +105,8 @@ export interface GameProgress {
   chapter9SecretPassword?: string;
 }
 
-function supported(module: ModuleName, version: number, min: number, max = min) {
-  if (version < min || version > max) {
+function supported(module: ModuleName, version: number, min: number, max = min, lenient = false) {
+  if (version < min || (version > max && !lenient)) {
     throw new ParseError(
       `unsupported version ${version} (supported ${min}${max === min ? "" : `-${max}`})`,
       module,
@@ -130,8 +140,12 @@ export function decodeSummary(encoded: string): Summary {
   return summary;
 }
 
-export function parseGameRecord(bytes: Uint8Array, version: number): SongRecord[] {
-  supported("gameRecord", version, 1);
+export function parseGameRecord(
+  bytes: Uint8Array,
+  version: number,
+  lenient = false,
+): SongRecord[] {
+  supported("gameRecord", version, 1, PARSEABLE_VERSIONS.gameRecord, lenient);
   const r = new Reader(bytes, "gameRecord");
   const count = r.varshort("count");
   const songs: SongRecord[] = [];
@@ -175,12 +189,12 @@ export function parseGameRecord(bytes: Uint8Array, version: number): SongRecord[
     ids.add(songId);
     songs.push({ rawSongId, songId, fc, levels });
   }
-  r.finish();
+  if (!lenient) r.finish();
   return songs;
 }
 
-export function parseProfile(bytes: Uint8Array, version: number): Profile {
-  supported("user", version, 1);
+export function parseProfile(bytes: Uint8Array, version: number, lenient = false): Profile {
+  supported("user", version, 1, PARSEABLE_VERSIONS.user, lenient);
   const r = new Reader(bytes, "user");
   const profile = {
     idShown: r.bool("showPlayerId"),
@@ -188,12 +202,12 @@ export function parseProfile(bytes: Uint8Array, version: number): Profile {
     avatar: r.string("avatar"),
     background: r.string("background"),
   };
-  r.finish();
+  if (!lenient) r.finish();
   return profile;
 }
 
-export function parseSettings(bytes: Uint8Array, version: number): Settings {
-  supported("settings", version, 1);
+export function parseSettings(bytes: Uint8Array, version: number, lenient = false): Settings {
+  supported("settings", version, 1, PARSEABLE_VERSIONS.settings, lenient);
   const r = new Reader(bytes, "settings");
   const settings = {
     chordSupport: r.bool("chordSupport"),
@@ -208,12 +222,12 @@ export function parseSettings(bytes: Uint8Array, version: number): Settings {
     offset: r.f32("soundOffset"),
     noteScale: r.f32("noteScale"),
   };
-  r.finish();
+  if (!lenient) r.finish();
   return settings;
 }
 
-export function parseGameKey(bytes: Uint8Array, version: number): GameKey {
-  supported("gameKey", version, 1, 3);
+export function parseGameKey(bytes: Uint8Array, version: number, lenient = false): GameKey {
+  supported("gameKey", version, 1, PARSEABLE_VERSIONS.gameKey, lenient);
   const r = new Reader(bytes, "gameKey");
   const count = r.varshort("count");
   const entries: GameKeyEntry[] = [];
@@ -235,12 +249,16 @@ export function parseGameKey(bytes: Uint8Array, version: number): GameKey {
     result.sideStory4BeginReadKey = r.u8("sideStory4BeginReadKey");
     result.oldScoreClearedV390 = r.u8("oldScoreClearedV390");
   }
-  r.finish();
+  if (!lenient) r.finish();
   return result;
 }
 
-export function parseGameProgress(bytes: Uint8Array, version: number): GameProgress {
-  supported("gameProgress", version, 1, 5);
+export function parseGameProgress(
+  bytes: Uint8Array,
+  version: number,
+  lenient = false,
+): GameProgress {
+  supported("gameProgress", version, 1, PARSEABLE_VERSIONS.gameProgress, lenient);
   const r = new Reader(bytes, "gameProgress");
   const result: GameProgress = {
     isFirstRun: r.bool("isFirstRun"),
@@ -274,7 +292,7 @@ export function parseGameProgress(bytes: Uint8Array, version: number): GameProgr
     result.chapter9SecretChallengeSelectedLifeTier = tiers >> 4;
     result.chapter9SecretPassword = r.string("chapter9SecretPassword");
   }
-  r.finish();
+  if (!lenient) r.finish();
   return result;
 }
 

@@ -19,6 +19,8 @@ export interface SaveDocumentV1 {
     cloudUpdatedAt?: string;
   };
   moduleVersions: Record<ModuleName, number>;
+  /** Set when a save module is newer than this build parses or couldn't be parsed; shown as a banner. */
+  warnings?: string[];
   summary?: Summary;
   profile?: Profile;
   settings?: Settings;
@@ -136,6 +138,7 @@ const saveDocument = v.object({
     cloudUpdatedAt: v.optional(isoString),
   }),
   moduleVersions,
+  warnings: v.optional(v.pipe(v.array(shortString), v.maxLength(10))),
   summary: v.optional(summary),
   profile: v.optional(profile),
   settings: v.optional(settings),
