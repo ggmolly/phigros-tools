@@ -4,6 +4,7 @@ import {
   countUpTo,
   type Line,
   lineFloor,
+  linePose,
   type Note,
   segmentAt,
   valueAt,
@@ -73,14 +74,8 @@ export function loadArt() {
 
 /** Where a line is and how it's turned at t, in canvas pixels. */
 function pose(line: Line, t: number, W: number, H: number) {
-  const move = segmentAt(line.move, t);
-  const r = (-valueAt(segmentAt(line.rotate, t), t) * Math.PI) / 180;
-  return {
-    x: valueAt(move, t) * W,
-    y: (1 - valueAt(move, t, true)) * H,
-    cos: Math.cos(r),
-    sin: Math.sin(r),
-  };
+  const at = linePose(line, t);
+  return { ...at, x: at.x * W, y: at.y * H };
 }
 
 // classic noise function for the particules

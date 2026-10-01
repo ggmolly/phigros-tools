@@ -197,7 +197,7 @@ const DROP_PER_LEVEL = 4;
  * average of nearby records inside the range they've played, falling off steeply past their hardest chart
  * (nobody's scores above their level are known, so be conservative). Undefined with too few records to judge.
  */
-function skillModel(charts: readonly ChartMetric[]): (constant: number) => number | undefined {
+function constantModel(charts: readonly ChartMetric[]): (constant: number) => number | undefined {
   const points = charts.filter((chart) => chart.accuracy > 0);
   if (points.length < 5) return () => undefined;
   const constants = points.map((point) => point.constant);
@@ -221,34 +221,106 @@ function skillModel(charts: readonly ChartMetric[]): (constant: number) => numbe
   };
 }
 
+/** Cosine similarity of how two charts are built (see chartSimilarity.ts), by chart key; undefined if unknown. */
+export type SimilarityFn = (keyA: string, keyB: string) => number | undefined;
+
+/** How the style correction weighs a played chart: similarity^power × a Gaussian of the constant gap (band wide). */
+export const STYLE = {
+  power: 2,
+  band: 1.5,
+  /** pseudo-weight of "no difference" the evidence must outweigh, so a lone lookalike only nudges the estimate */
+  prior: 1.5,
+  /** a single record moves the estimate by at most this many accuracy points (one bad day shouldn't dominate) */
+  cap: 4,
+  /** the closest played chart is only named when at least this similar */
+  nameAt: 0.4,
+};
+
+export interface Prediction {
+  accuracy: number;
+  /** the played chart built most like this one, which weighed most in the estimate */
+  similarTo?: ChartMetric;
+}
+
+/**
+ * Predicts a player's accuracy on a chart from their own records. The baseline averages their records at a similar
+ * constant ({@link constantModel}); with chart similarity, it's then corrected by how much better or worse than that
+ * baseline they did on charts built like this one (a weighted mean of those residuals, shrunk towards zero).
+ */
+export function skillModel(
+  charts: readonly ChartMetric[],
+  similarity?: SimilarityFn,
+  style = STYLE,
+): (chart: ChartMetric) => Prediction | undefined {
+  const baseline = constantModel(charts);
+  const residuals = similarity
+    ? charts.flatMap((chart) => {
+        const expected = chart.accuracy > 0 ? baseline(chart.constant) : undefined;
+        if (expected === undefined) return [];
+        const residual = Math.max(-style.cap, Math.min(style.cap, chart.accuracy - expected));
+        return [{ chart, residual }];
+      })
+    : [];
+  return (chart) => {
+    const base = baseline(chart.constant);
+    if (base === undefined) return undefined;
+    let weights = 0,
+      sum = 0,
+      closest: ChartMetric | undefined,
+      closestWeight = 0;
+    for (const { chart: other, residual } of residuals) {
+      if (other.key === chart.key) continue;
+      const sim = similarity!(chart.key, other.key);
+      if (sim === undefined || sim <= 0) continue;
+      const weight =
+        sim ** style.power * Math.exp(-(((other.constant - chart.constant) / style.band) ** 2));
+      weights += weight;
+      sum += weight * residual;
+      if (sim >= style.nameAt && weight > closestWeight) [closest, closestWeight] = [other, weight];
+    }
+    return {
+      accuracy: Math.max(0, Math.min(100, base + sum / (style.prior + weights))),
+      similarTo: closest,
+    };
+  };
+}
+
 export interface TargetSuggestion extends GoalCandidate {
   /** Accuracy the player would likely get (their current accuracy if already higher), if the model has enough data. */
   expectedAccuracy?: number;
   /** "likely": expected ≥ needed. "stretch": needs up to STRETCH points more than expected. */
   reach: "likely" | "stretch";
   isNew: boolean;
+  /** the played chart built most like this one, whose record weighed most in the estimate */
+  similarTo?: ChartMetric;
 }
 
 const STRETCH = 1.5;
 
 /**
  * Realistic one-chart ways to reach a target RKS: goal candidates the player's skill model says they can plausibly hit.
- * Improvements to played charts come first, then new charts, each most achievable first. A never-played song is offered once, at the difficulty whose constant is nearest their RKS.
+ * Improvements to played charts come first, then new charts, each most achievable first. A never-played song is offered once: at its most achievable difficulty with chart similarity, else at the one whose constant is nearest their RKS.
  */
 export function targetSuggestions(
   result: RankingResult,
   targetRanking: number,
-  { limit = 12, maxNew = 4 } = {},
+  {
+    limit = 12,
+    maxNew = 4,
+    similarity,
+  }: { limit?: number; maxNew?: number; similarity?: SimilarityFn } = {},
 ): TargetSuggestion[] {
-  const predict = skillModel(result.charts);
+  const predict = skillModel(result.charts, similarity);
   const played = new Set(result.charts.map((chart) => chart.key));
   const playedSongs = new Set(result.charts.map((chart) => canonicalSongId(chart.songId)));
   const rated = goalCandidates(result, targetRanking).flatMap(
     (candidate): (TargetSuggestion & { margin: number })[] => {
       const isNew = !played.has(candidate.key);
-      const predicted = predict(candidate.constant);
+      const predicted = predict(candidate);
       const expectedAccuracy =
-        predicted === undefined ? undefined : Math.max(predicted, isNew ? 0 : candidate.accuracy);
+        predicted === undefined
+          ? undefined
+          : Math.max(predicted.accuracy, isNew ? 0 : candidate.accuracy);
       // Without a model, rank by how big a jump is needed instead.
       const margin =
         expectedAccuracy === undefined
@@ -261,22 +333,24 @@ export function targetSuggestions(
           expectedAccuracy,
           reach: margin >= 0 || expectedAccuracy === undefined ? "likely" : "stretch",
           isNew,
+          similarTo: predicted?.similarTo,
           margin,
         },
       ];
     },
   );
-  const nearestNew = new Map<string, TargetSuggestion>();
+  const nearestNew = new Map<string, (typeof rated)[number]>();
   for (const suggestion of rated) {
     const song = canonicalSongId(suggestion.songId);
     if (playedSongs.has(song)) continue;
     const kept = nearestNew.get(song);
-    if (
-      !kept ||
-      Math.abs(suggestion.constant - result.rankingScore) <
-        Math.abs(kept.constant - result.rankingScore)
-    )
-      nearestNew.set(song, suggestion);
+    const better = !kept
+      ? true
+      : similarity && suggestion.expectedAccuracy !== undefined
+        ? suggestion.margin > kept.margin // knowing how the charts are built: the most achievable difficulty
+        : Math.abs(suggestion.constant - result.rankingScore) <
+          Math.abs(kept.constant - result.rankingScore);
+    if (better) nearestNew.set(song, suggestion);
   }
   let newCount = 0;
   return (

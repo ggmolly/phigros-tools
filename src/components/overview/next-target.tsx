@@ -1,7 +1,28 @@
 import { useState } from "react";
-import { type RankingResult, targetSuggestions } from "../../metrics";
+import { useChartSimilarity } from "../../chartSimilarity";
+import { type RankingResult, type TargetSuggestion, targetSuggestions } from "../../metrics";
 import { Arrow } from "../arrow";
 import { Difficulty } from "../primitives";
+
+/** Within reach, and built like a chart they've already played: the suggestions worth trying first. */
+const recommended = (suggestion: TargetSuggestion) =>
+  suggestion.reach === "likely" && suggestion.similarTo !== undefined;
+
+/** Why a suggestion's expected accuracy is what it is, for its tooltip. */
+function expectation(suggestion: TargetSuggestion) {
+  const { expectedAccuracy, similarTo, reach } = suggestion;
+  if (expectedAccuracy === undefined) return undefined;
+  return [
+    recommended(suggestion) && "Recommended",
+    suggestion.isNew && "Not played yet",
+    `You typically get about ${expectedAccuracy.toFixed(2)}% on charts like this`,
+    similarTo &&
+      `Plays like ${similarTo.title} ${similarTo.level} (${similarTo.accuracy.toFixed(2)}%)`,
+    reach === "stretch" && "A bit of a stretch: needs more than you usually get",
+  ]
+    .filter(Boolean)
+    .join(". ");
+}
 
 /** One-chart ways to reach a target RKS; picking one loads it into the simulator at the needed accuracy. */
 export function NextTarget({
@@ -15,7 +36,8 @@ export function NextTarget({
     Math.min(20, Math.ceil((ranking.rankingScore + 0.01) * 100) / 100).toFixed(2),
   );
   const valid = target !== "" && Number(target) >= 0 && Number(target) <= 20;
-  const candidates = valid ? targetSuggestions(ranking, Number(target)) : [];
+  const similarity = useChartSimilarity();
+  const candidates = valid ? targetSuggestions(ranking, Number(target), { similarity }) : [];
   return (
     <section className="panel target" aria-labelledby="target-heading">
       <div className="panel-head">
@@ -46,27 +68,14 @@ export function NextTarget({
               <button
                 type="button"
                 className="arrow-row target-item"
-                title={
-                  candidate.expectedAccuracy === undefined
-                    ? undefined
-                    : `You typically get about ${candidate.expectedAccuracy.toFixed(2)}% on charts of this level`
-                }
+                title={expectation(candidate)}
                 onClick={() => onPick(candidate.key, candidate.targetAccuracy.toFixed(2))}
               >
-                <span className="target-song">{candidate.title}</span>
-                {candidate.isNew && (
-                  <span className="new-tag" title="Not played yet">
-                    New
-                  </span>
-                )}
-                {candidate.reach === "stretch" && (
-                  <span
-                    className="stretch-tag"
-                    title="Needs a bit more than you usually get at this level"
-                  >
-                    Stretch
-                  </span>
-                )}
+                <span
+                  className={recommended(candidate) ? "target-song recommended" : "target-song"}
+                >
+                  {candidate.title}
+                </span>
                 <Difficulty level={candidate.level} />
                 <span className="target-accuracy">
                   <span className="target-from">

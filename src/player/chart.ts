@@ -161,6 +161,18 @@ export function valueAt(segment: Segment | undefined, t: number, second = false)
     : segment.a + (segment.b - segment.a) * k;
 }
 
+/** where a line is (as a fraction of the screen, y down) and how it's turned at t */
+export function linePose(line: Line, t: number) {
+  const move = segmentAt(line.move, t);
+  const r = (-valueAt(segmentAt(line.rotate, t), t) * Math.PI) / 180;
+  return {
+    x: valueAt(move, t),
+    y: 1 - valueAt(move, t, true),
+    cos: Math.cos(r),
+    sin: Math.sin(r),
+  };
+}
+
 /** how far the line has scrolled by t, in floor units */
 export function lineFloor(line: Line, t: number) {
   const segment = segmentAt(line.speed, t);

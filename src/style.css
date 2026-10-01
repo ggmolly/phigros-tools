@@ -2109,12 +2109,11 @@ a.btn[aria-disabled="true"] {
 .target-from {
   color: var(--dim);
 }
-.stretch-tag {
-  flex: none;
-  color: #f3d36b;
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+/* a recommended suggestion glows gold, like the game's highlighted notes */
+.target-song.recommended {
+  text-shadow:
+    0 0 10px rgb(255 238 110 / 0.7),
+    0 0 3px rgb(255 238 110 / 0.45);
 }
 .target-item .arrow-chip {
   width: 50px;
@@ -2123,13 +2122,6 @@ a.btn[aria-disabled="true"] {
 }
 .target-item:hover .target-song {
   color: var(--glow);
-}
-.new-tag {
-  flex: none;
-  color: var(--dim);
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
 }
 
 /* ---------- Records ---------- */
@@ -3259,11 +3251,6 @@ dialog strong {
   }
   .target-from {
     display: none;
-  }
-  .new-tag,
-  .stretch-tag {
-    font-size: 10px;
-    letter-spacing: 0.02em;
   }
   .simulator-label,
   .simulator-value,
