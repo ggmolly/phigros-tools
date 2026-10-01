@@ -112,6 +112,12 @@ const gameProgress = v.object({
   chapter8Passed: v.optional(v.boolean()),
   chapter8SongUnlocked: v.optional(byte),
   flagOfSongRecordKeyTakumi: v.optional(byte),
+  chapter9UnlockBegin: v.optional(v.boolean()),
+  chapter9SecretChallengePendingLifeUnlock: v.optional(v.boolean()),
+  chapter9SongUnlocked: v.optional(byte),
+  chapter9SecretChallengeLifeTier: v.optional(v.pipe(byte, v.maxValue(15))),
+  chapter9SecretChallengeSelectedLifeTier: v.optional(v.pipe(byte, v.maxValue(15))),
+  chapter9SecretPassword: v.optional(shortString),
 });
 const moduleVersions = v.object({
   gameKey: byte,

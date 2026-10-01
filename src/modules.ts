@@ -86,6 +86,13 @@ export interface GameProgress {
   chapter8Passed?: boolean;
   chapter8SongUnlocked?: number;
   flagOfSongRecordKeyTakumi?: number;
+  /** gameProgress v5 (Phigros 4.0.0): the two bools share one byte, and the tiers are nibbles of one byte. */
+  chapter9UnlockBegin?: boolean;
+  chapter9SecretChallengePendingLifeUnlock?: boolean;
+  chapter9SongUnlocked?: number;
+  chapter9SecretChallengeLifeTier?: number;
+  chapter9SecretChallengeSelectedLifeTier?: number;
+  chapter9SecretPassword?: string;
 }
 
 function supported(module: ModuleName, version: number, min: number, max = min) {
@@ -233,7 +240,7 @@ export function parseGameKey(bytes: Uint8Array, version: number): GameKey {
 }
 
 export function parseGameProgress(bytes: Uint8Array, version: number): GameProgress {
-  supported("gameProgress", version, 1, 4);
+  supported("gameProgress", version, 1, 5);
   const r = new Reader(bytes, "gameProgress");
   const result: GameProgress = {
     isFirstRun: r.bool("isFirstRun"),
@@ -257,6 +264,16 @@ export function parseGameProgress(bytes: Uint8Array, version: number): GameProgr
     result.chapter8SongUnlocked = r.u8("chapter8SongUnlocked");
   }
   if (version >= 4) result.flagOfSongRecordKeyTakumi = r.u8("flagOfSongRecordKeyTakumi");
+  if (version >= 5) {
+    const chapter9Flags = r.u8("chapter9Flags");
+    result.chapter9UnlockBegin = (chapter9Flags & 1) === 1;
+    result.chapter9SecretChallengePendingLifeUnlock = (chapter9Flags & 2) === 2;
+    result.chapter9SongUnlocked = r.u8("chapter9SongUnlocked");
+    const tiers = r.u8("chapter9SecretChallengeTiers");
+    result.chapter9SecretChallengeLifeTier = tiers & 0xf;
+    result.chapter9SecretChallengeSelectedLifeTier = tiers >> 4;
+    result.chapter9SecretPassword = r.string("chapter9SecretPassword");
+  }
   r.finish();
   return result;
 }
