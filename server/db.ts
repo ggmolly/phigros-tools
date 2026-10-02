@@ -16,16 +16,23 @@ sqlite.run(`
     browser TEXT NOT NULL,
     device TEXT NOT NULL,
     is_bot INTEGER NOT NULL DEFAULT 0,
-    visitor_hash TEXT NOT NULL
+    visitor_hash TEXT NOT NULL,
+    bot_ua TEXT,
+    bot_match TEXT
   )
 `);
+const eventColumns = new Set(
+  sqlite.query<{ name: string }, []>("PRAGMA table_info(events)").all().map((c) => c.name),
+);
+if (!eventColumns.has("bot_ua")) sqlite.run("ALTER TABLE events ADD COLUMN bot_ua TEXT");
+if (!eventColumns.has("bot_match")) sqlite.run("ALTER TABLE events ADD COLUMN bot_match TEXT");
 sqlite.run("CREATE INDEX IF NOT EXISTS idx_events_day ON events(day)");
 sqlite.run("CREATE INDEX IF NOT EXISTS idx_events_day_path ON events(day, path)");
 sqlite.run("CREATE INDEX IF NOT EXISTS idx_events_day_bot ON events(day, is_bot)");
 
 const insertStmt = sqlite.prepare(`
-  INSERT INTO events (ts, day, path, referrer_domain, browser, device, is_bot, visitor_hash)
-  VALUES ($ts, $day, $path, $referrerDomain, $browser, $device, $isBot, $visitorHash)
+  INSERT INTO events (ts, day, path, referrer_domain, browser, device, is_bot, visitor_hash, bot_ua, bot_match)
+  VALUES ($ts, $day, $path, $referrerDomain, $browser, $device, $isBot, $visitorHash, $botUa, $botMatch)
 `);
 
 export function insertEvent(row: {
@@ -37,6 +44,8 @@ export function insertEvent(row: {
   device: string;
   isBot: boolean;
   visitorHash: string;
+  botUa: string | null;
+  botMatch: string | null;
 }) {
   insertStmt.run({
     $ts: row.ts,
@@ -47,5 +56,7 @@ export function insertEvent(row: {
     $device: row.device,
     $isBot: row.isBot ? 1 : 0,
     $visitorHash: row.visitorHash,
+    $botUa: row.botUa,
+    $botMatch: row.botMatch,
   });
 }

@@ -1,5 +1,5 @@
 import { createHmac } from "node:crypto";
-import { isbot } from "isbot";
+import { isbot, isbotMatch } from "isbot";
 import { defineHandler } from "nitro/h3";
 import { UAParser } from "ua-parser-js";
 import { config } from "../../config";
@@ -47,6 +47,9 @@ export default defineHandler(async (event) => {
     device: device.type ?? "desktop",
     isBot: bot,
     visitorHash,
+    // only keep the UA of bots
+    botUa: bot ? ua.slice(0, 512) : null,
+    botMatch: bot && ua ? isbotMatch(ua) : null,
   });
   return noContent();
 });
