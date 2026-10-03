@@ -2263,23 +2263,12 @@ tbody tr:hover {
   font-size: 17px;
 }
 .record-index {
-  position: relative;
   width: 44px;
   color: var(--faint);
   font-size: 14px;
 }
 tr.in-best .record-index {
   color: var(--text);
-}
-tr.in-best .record-index::before {
-  content: "";
-  position: absolute;
-  left: 2px;
-  top: 25%;
-  bottom: 25%;
-  width: 3px;
-  background: var(--white);
-  transform: skewX(var(--skew));
 }
 tr.b27-edge td {
   border-top: 1px dashed rgb(255 255 255 / 0.55);
