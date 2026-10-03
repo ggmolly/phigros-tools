@@ -295,8 +295,9 @@
 .player-name,
 .player-rks,
 .corner,
-.hero-label,
-.phi-slot,
+.hero-name,
+.hero-rks,
+.challenge-badge,
 .difficulty {
   position: relative;
   isolation: isolate;
@@ -310,8 +311,9 @@
 .step::before,
 .player-name::before,
 .player-rks::before,
-.hero-label::before,
-.phi-slot::before,
+.hero-name::before,
+.hero-rks::before,
+.challenge-badge::before,
 .difficulty::before {
   content: "";
   position: absolute;
@@ -1254,82 +1256,129 @@
   }
 }
 
-/* ---------- Hero: profile card with ribbon + stat bar ---------- */
+/* ---------- Hero: the in-game profile strip, totals and the per-difficulty stat bar ---------- */
+/* Identity on top (avatar | name band | RKS tag | Challenge badge, as in the game's Profile screen),
+ * then the overall totals beside the completion stat bar, then the self-intro. */
 .hero {
   position: relative;
-  isolation: isolate;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
-  grid-template-rows: auto 1fr;
-  align-items: end;
-  gap: 16px 48px;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 30px 64px;
   margin: 0 0 28px;
-  padding: 36px 72px 30px;
-}
-.hero-art {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  transform: skewX(var(--skew));
+  padding: 30px 34px 28px;
   background: var(--glass);
 }
-/* Profile ribbon: white tile flush with a black band that ends in the corner block's white stripe */
-.hero-ribbon {
-  position: relative;
-  isolation: isolate;
+.hero-id {
   display: flex;
-  align-items: stretch;
-  grid-row: 1;
-  justify-self: start;
-  height: 116px;
-  margin-left: -46px;
-  filter: drop-shadow(0 14px 24px rgb(0 0 0 / 0.35));
+  align-items: flex-start;
+  grid-column: 1 / -1;
+  min-width: 0;
+  /* Room for the Share button in the top-right corner. */
+  margin-right: 190px;
+  padding-bottom: 16px;
 }
-.hero-ribbon::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 0 40px;
-  z-index: -1;
+/* Avatar tile cut on the shared slant (--tan × its height), overlapping the name band like the game's. */
+.hero-avatar {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  width: 136px;
+  height: 112px;
+  margin-right: -28px;
+  object-fit: cover;
+  clip-path: polygon(28px 0, 100% 0, calc(100% - 28px) 100%, 0 100%);
+}
+.hero-name {
+  display: flex;
+  align-items: center;
+  flex: 0 1 auto;
+  min-width: 0;
+  height: 112px;
+  padding: 0 84px 0 58px;
+  font-size: 44px;
+  font-weight: 400;
+  line-height: 1.1;
+}
+.hero-name::before {
   background: var(--ink);
-  transform: skewX(var(--skew));
 }
-.hero-ribbon::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: -22px;
-  width: 8px;
+/* Ellipsis on an inner span: overflow on .hero-name itself would clip the skewed band's corners. */
+.hero-name-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* White tag hanging off the band's lower right, like the game's RKS tag (7.22 under "ggmolly"). */
+.hero-rks {
+  display: flex;
+  align-items: baseline;
+  flex: none;
+  gap: 12px;
+  align-self: flex-end;
+  height: 60px;
+  margin: 0 0 -16px -56px;
+  padding: 6px 30px 0;
+  color: var(--ink);
+}
+.hero-rks::before {
   background: var(--white);
-  transform: skewX(var(--skew));
 }
-.hero-label {
+.hero-rks-label {
+  font-size: 18px;
+  font-weight: 500;
+}
+.ranking-number {
+  font-size: 50px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+/* Challenge Mode level in its tier colour, the game's badge beside the RKS. */
+.challenge-badge {
   display: grid;
   place-items: center;
   flex: none;
-  min-width: 124px;
-  padding: 0 26px;
-  color: var(--ink);
-  font-size: 32px;
-  font-weight: 500;
+  align-self: flex-end;
+  /* As tall as the RKS tag beside it. */
+  height: 60px;
+  min-width: 76px;
+  margin: 0 0 -16px 10px;
+  padding: 0 18px;
+  font-size: 40px;
+  line-height: 1;
 }
-.hero-label::before {
+.challenge-white {
+  color: var(--ink);
+}
+.challenge-white::before {
   background: var(--white);
 }
-.ranking-number {
-  display: flex;
-  align-items: center;
-  padding: 6px 52px 0 30px;
-  font-size: clamp(58px, 6vw, 88px);
-  font-weight: 300;
-  line-height: 1;
-  letter-spacing: 0.03em;
-  white-space: nowrap;
+.challenge-green::before {
+  background: var(--ez);
+}
+.challenge-blue::before {
+  background: var(--hd);
+}
+.challenge-red::before {
+  background: var(--in);
+}
+.challenge-gold {
+  color: var(--ink);
+}
+.challenge-gold::before {
+  background: #f2c65a;
+}
+.challenge-rainbow {
+  color: var(--ink);
+}
+.challenge-rainbow::before {
+  background: linear-gradient(100deg, #ff9a9a, #ffd36e, #8cf29a, #8fdcff, #c79bff);
 }
 .hero-share {
   position: absolute;
-  top: 16px;
-  right: 84px;
+  top: 30px;
+  right: 34px;
   z-index: 1;
 }
 a.btn[aria-disabled="true"] {
@@ -1374,50 +1423,37 @@ a.btn[aria-disabled="true"] {
   font-size: 14px;
 }
 .hero-stats {
-  grid-row: 2;
-  align-self: start;
   display: flex;
   flex-wrap: wrap;
-  gap: 12px 32px;
-  margin-left: 32px;
+  gap: 12px 40px;
+  padding-left: 8px;
 }
 .hero-stats .stat {
   align-items: flex-start;
   padding: 0;
 }
 .hero-stats .stat-value {
-  font-size: 30px;
+  font-size: 34px;
 }
 .hero-stats .stat-total {
-  font-size: 16px;
+  font-size: 17px;
 }
 .hero-stats .stat-label {
   color: var(--dim);
-  font-size: 13px;
 }
-/* Challenge Mode level, coloured like its in-game badge */
-.challenge-green .stat-value {
-  color: var(--ez);
+.hero-stats {
+  grid-row: 2;
 }
-.challenge-blue .stat-value {
-  color: var(--fc);
-}
-.challenge-red .stat-value {
-  color: var(--negative);
-}
-.challenge-gold .stat-value {
-  color: #f2c65a;
-}
-.challenge-rainbow .stat-value {
-  background: linear-gradient(90deg, #ff8a8a, #ffd36e, #8cf29a, #8fdcff, #c79bff);
-  background-clip: text;
-  color: transparent;
+.hero .stat-bar {
+  grid-column: 2;
+  grid-row: 2;
 }
 .hero-intro {
-  grid-column: 1;
+  grid-column: 1 / -1;
   grid-row: 3;
-  max-width: 60ch;
-  margin-left: 32px;
+  max-width: 70ch;
+  margin-top: -12px;
+  padding-left: 8px;
   color: var(--dim);
   font-size: 15px;
   white-space: pre-line;
@@ -1427,9 +1463,6 @@ a.btn[aria-disabled="true"] {
   isolation: isolate;
   display: flex;
   align-items: stretch;
-  grid-column: 2;
-  grid-row: 1 / 3;
-  align-self: end;
 }
 .stat-bar::before {
   content: "";
@@ -2806,15 +2839,16 @@ dialog strong {
   }
   .hero {
     grid-template-columns: 1fr;
-    padding: 32px 56px 28px;
+    gap: 24px;
   }
-  .stat-bar {
+  .hero-stats,
+  .hero .stat-bar,
+  .hero-intro {
     grid-column: 1;
     grid-row: auto;
   }
-  .hero-stats,
   .hero-intro {
-    grid-row: auto;
+    margin-top: -8px;
   }
 }
 /* Header: a loaded save needs ~1250px for one row (brand, five tabs, sync, player tag, GitHub), so it tightens
@@ -3069,43 +3103,72 @@ dialog strong {
     padding: 10px;
   }
   .hero {
-    padding: 24px 20px 20px;
-  }
-  .hero-art {
-    transform: none;
-  }
-  .hero-ribbon {
-    margin-left: -8px;
+    gap: 20px;
+    padding: 18px 16px 20px;
   }
   .hero-share {
     position: relative;
     top: auto;
     right: auto;
-    order: -1;
     justify-self: end;
-    margin: -8px 4px 0 0;
+    order: -1;
+    margin-bottom: -8px;
   }
-  .hero-ribbon {
-    height: 84px;
+  /* The name band takes the first line; the RKS tag and Challenge badge hang under its right end. */
+  .hero-id {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    margin-right: 0;
+    padding-bottom: 0;
   }
-  .hero-ribbon::after {
-    right: -14px;
-    width: 6px;
+  .hero-avatar {
+    width: 84px;
+    height: 68px;
+    margin-right: -17px;
+    clip-path: polygon(17px 0, 100% 0, calc(100% - 17px) 100%, 0 100%);
   }
-  .hero-label {
-    min-width: 78px;
-    font-size: 22px;
+  /* Fill the line after the avatar so the tags wrap under it. */
+  .hero-name {
+    flex: 1 0 calc(100% - 67px);
+    height: 68px;
+    padding: 0 30px 0 34px;
+    font-size: 26px;
   }
-  .hero-stats {
-    gap: 12px 26px;
-    margin-left: 12px;
+  .hero-rks {
+    gap: 8px;
+    height: 44px;
+    margin: -8px 0 0;
+    padding: 4px 20px 0;
   }
-  .hero-intro {
-    margin-left: 12px;
+  .hero-rks-label {
+    font-size: 15px;
   }
   .ranking-number {
-    padding: 0 22px 0 16px;
-    font-size: clamp(48px, 15vw, 70px);
+    font-size: 36px;
+  }
+  .challenge-badge {
+    height: 44px;
+    min-width: 58px;
+    margin: -8px 4px 0 8px;
+    padding: 0 12px;
+    font-size: 30px;
+  }
+  /* All four totals on one line. */
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 4px;
+  }
+  .hero-stats .stat-value {
+    font-size: 26px;
+  }
+  .hero-stats .stat-total {
+    font-size: 14px;
+  }
+  .hero-intro {
+    padding-left: 4px;
   }
   .stat-bar {
     flex-direction: column;

@@ -125,13 +125,17 @@ export function challengeRank(value: number) {
 
 const DATA_UNITS = ["KB", "MB", "GB", "TB", "PB"];
 
-/** The in-game "Data" currency: `money` is [KB, MB, GB, TB, PB]; show the two largest units, like the game. */
+/** The in-game "Data" currency: `money` is [KB, MB, GB, TB, PB], each unit 1024 of the one below. Shown in its
+ * largest unit with one decimal (rounded down, so 1023 KB never reads as a full unit): 56 MB 342 KB → 56.3 MB. */
 export function dataAmount(money: readonly number[]) {
-  const top = money.findLastIndex((amount) => amount > 0);
-  if (top < 0) return { value: "0 KB" };
+  const top = Math.max(
+    0,
+    money.findLastIndex((amount) => amount > 0),
+  );
+  const amount = (money[top] ?? 0) + (top > 0 ? (money[top - 1] ?? 0) / 1024 : 0);
   return {
-    value: `${money[top]} ${DATA_UNITS[top]}`,
-    rest: top > 0 && money[top - 1] ? ` ${money[top - 1]} ${DATA_UNITS[top - 1]}` : undefined,
+    value: top > 0 ? (Math.floor(amount * 10) / 10).toFixed(1) : String(amount),
+    unit: ` ${DATA_UNITS[top]}`,
   };
 }
 
