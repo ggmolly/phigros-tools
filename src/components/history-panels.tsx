@@ -25,7 +25,7 @@ export function SnapshotProgress({ history }: { history: SnapshotV1[] }) {
               [
                 ["RKS", progress.rks, 3],
                 ["Full Combo", progress.fc, 0],
-                ["All Perfect", progress.ap, 0],
+                ["Phi", progress.ap, 0],
               ] as const
             ).map(([label, value, digits]) => (
               <div className="stat" key={label}>

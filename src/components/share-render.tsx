@@ -329,7 +329,7 @@ function Card({ name, ranking, songs, date, palette, avatar }: CardData) {
           >
             <Stat label="Charts Played" value={played} />
             <Stat label="Full Combo" value={total("fc")} total={played} />
-            <Stat label="All Perfect" value={total("phi")} total={played} />
+            <Stat label="Phi" value={total("phi")} total={played} />
           </Para>
           <div
             style={{
