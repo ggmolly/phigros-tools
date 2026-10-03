@@ -1712,7 +1712,7 @@ a.btn[aria-disabled="true"] {
   white-space: nowrap;
 }
 .song-row.selected {
-  grid-template-columns: 34px minmax(0, 1fr) 34px 120px;
+  grid-template-columns: 34px minmax(0, 1fr) 34px 144px;
   min-height: 108px;
   margin: 10px 0;
   padding: 0 0 0 26px;
@@ -1730,7 +1730,7 @@ a.btn[aria-disabled="true"] {
 .song-row.selected .song-level {
   align-self: stretch;
   justify-content: center;
-  width: 120px;
+  width: 144px;
   color: var(--ink);
 }
 .song-row.selected .song-level::before {
@@ -1742,7 +1742,7 @@ a.btn[aria-disabled="true"] {
   transform: skewX(var(--skew));
 }
 .song-row.selected .song-level-number {
-  font-size: 40px;
+  font-size: 36px;
 }
 .song-row.selected .song-level-name {
   color: var(--ink);
@@ -3248,7 +3248,7 @@ dialog strong {
     padding: 0 8px;
   }
   .song-row.selected {
-    grid-template-columns: 28px minmax(0, 1fr) 28px 84px;
+    grid-template-columns: 28px minmax(0, 1fr) 28px 100px;
     padding-left: 14px;
   }
   .song-row.selected::before {
@@ -3261,10 +3261,10 @@ dialog strong {
     font-size: 24px;
   }
   .song-row.selected .song-level {
-    width: 84px;
+    width: 100px;
   }
   .song-row.selected .song-level-number {
-    font-size: 30px;
+    font-size: 28px;
   }
   .chart-detail {
     padding: 18px 18px 22px;
