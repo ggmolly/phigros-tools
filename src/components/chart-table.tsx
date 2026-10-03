@@ -4,7 +4,7 @@ import { catalogSong } from "../catalog";
 import type { SaveDocumentV1 } from "../document";
 import { calculateRanking, chartRks, projectAccuracy } from "../metrics";
 import { LEVELS } from "../modules";
-import { Difficulty, DifficultyFilter, Rank, score7 } from "./primitives";
+import { Difficulty, DifficultyFilter, PhiSlot, Rank, score7 } from "./primitives";
 
 function rowsFor(document: SaveDocumentV1) {
   return document.songs.flatMap((song) =>
@@ -36,7 +36,7 @@ export function ChartTable({ document }: { document: SaveDocumentV1 }) {
   const [status, setStatus] = useState("");
   const ranking = calculateRanking(document);
   const inBest = new Set(ranking.best.map((record) => record.key));
-  const inPhi = new Set(ranking.phi.map((record) => record.key));
+  const phiSlot = new Map(ranking.phi.map((record, index) => [record.key, index]));
   const unfiltered = sort === "rks" && !search.trim() && difficulty === "" && status === "";
   const all = rowsFor(document);
   const query = search.trim().toLocaleLowerCase();
@@ -173,11 +173,7 @@ export function ChartTable({ document }: { document: SaveDocumentV1 }) {
                   <td>
                     <span className="record-rank">
                       <Rank score={record.score} fc={record.fc} />
-                      {inPhi.has(key) && (
-                        <span className="phi-slot" title="Counted in one of your Phi slots">
-                          φ slot
-                        </span>
-                      )}
+                      {phiSlot.has(key) && <PhiSlot index={phiSlot.get(key)!} />}
                     </span>
                   </td>
                   <td className="num record-rks">

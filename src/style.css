@@ -1585,19 +1585,29 @@ a.btn[aria-disabled="true"] {
 .difficulty-at::before {
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.3);
 }
+/* Which Phi slot a chart fills: a raised φ-yellow digit after its φ (φ¹), glowing like the rank icon. */
 .phi-slot {
-  display: inline-block;
-  margin-left: 12px;
-  padding: 0 8px;
-  color: var(--ink);
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 19px;
-  white-space: nowrap;
+  margin-left: 1px;
+  color: var(--phi);
+  font-size: 0.6em;
+  line-height: 1;
+  vertical-align: super;
+  text-shadow: 0 0 8px rgb(245 242 91 / 0.45);
 }
-.phi-slot::before {
-  background: var(--phi);
-  box-shadow: 0 0 10px rgb(245 242 91 / 0.45);
+/* The rank icon sits in a flex row, where vertical-align does nothing. */
+.record-rank .phi-slot {
+  align-self: flex-start;
+  /* Pull it in past the rank icon's min-width, to sit against the φ. */
+  margin-left: -3px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.phi-note {
+  margin-left: 12px;
+  color: var(--phi);
+  font-size: 17px;
+  white-space: nowrap;
+  text-shadow: 0 0 8px rgb(245 242 91 / 0.45);
 }
 
 /* ---------- Overview: song-select composition ---------- */

@@ -41,6 +41,17 @@ export function Rank({ score, fc }: { score: number; fc: boolean }) {
   );
 }
 
+/** Which Phi slot a chart fills, as a raised digit after its φ (φ¹ φ² φ³). A styled <sup> rather than ¹²³:
+ * the subset Saira has no superscript glyphs. */
+export function PhiSlot({ index }: { index: number }) {
+  return (
+    <sup className="phi-slot" title={`Phi slot ${index + 1}`}>
+      <span className="sr-only">Phi slot </span>
+      {index + 1}
+    </sup>
+  );
+}
+
 export function Difficulty({ level }: { level: string }) {
   return <span className={`difficulty difficulty-${level.toLowerCase()}`}>{level}</span>;
 }

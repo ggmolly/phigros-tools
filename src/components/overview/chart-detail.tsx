@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { catalogSong } from "../../catalog";
 import { type ChartMetric, projectAccuracy, type RankingResult } from "../../metrics";
 import { LEVELS } from "../../modules";
-import { Rank, Slider, score7, signed } from "../primitives";
+import { PhiSlot, Rank, Slider, score7, signed } from "../primitives";
 
 const MIN_ACCURACY = 70; // chart RKS is zero below this
 
@@ -89,7 +89,11 @@ export function ChartDetail({
           : bestIndex >= 0
             ? `Best #${bestIndex + 1}`
             : `Outside Best ${ranking.best.length}`}
-        {phiIndex >= 0 && <span className="phi-slot">φ slot {phiIndex + 1}</span>}
+        {phiIndex >= 0 && (
+          <span className="phi-note">
+            φ<PhiSlot index={phiIndex} />
+          </span>
+        )}
       </p>
       <h2 id="detail-title" className="detail-title">
         <Link to="/charts/$id" params={{ id: chart.songId }} title="View this chart's details">
