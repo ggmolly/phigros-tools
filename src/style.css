@@ -2111,6 +2111,8 @@ a.btn[aria-disabled="true"] {
   scrollbar-color: rgb(255 255 255 / 0.35) transparent;
 }
 .target-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 10.5em auto;
   gap: 14px;
   padding: 7px 4px;
   font-size: 18px;
@@ -2123,7 +2125,6 @@ a.btn[aria-disabled="true"] {
   white-space: nowrap;
 }
 .target-accuracy {
-  min-width: 150px;
   text-align: right;
   white-space: nowrap;
 }
@@ -3301,11 +3302,11 @@ dialog strong {
     width: 44px;
   }
   .target-item {
+    grid-template-columns: minmax(0, 1fr) auto 5.2em auto;
     gap: 8px;
     font-size: 16px;
   }
   .target-accuracy {
-    min-width: 0;
     font-size: 14px;
   }
   .target-from {

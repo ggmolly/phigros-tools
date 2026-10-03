@@ -79,7 +79,7 @@ export function NextTarget({
                 <Difficulty level={candidate.level} />
                 <span className="target-accuracy">
                   <span className="target-from">
-                    {candidate.isNew ? "—" : `${candidate.accuracy.toFixed(2)}%`}
+                    {candidate.isNew ? "New" : `${candidate.accuracy.toFixed(2)}%`}
                   </span>{" "}
                   → {candidate.targetAccuracy.toFixed(2)}%
                 </span>
