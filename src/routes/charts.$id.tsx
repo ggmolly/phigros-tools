@@ -241,73 +241,85 @@ function SongLinks({ heading, songs }: { heading: string; songs: CatalogSong[] }
   );
 }
 
-/** With a save loaded: the player's record on each of this song's charts, and a way into the Overview's simulator. */
-function YourRecords({ song }: { song: CatalogSong }) {
-  const { loaded, setChartKey } = useSave();
-  const navigate = useNavigate();
-  if (!loaded) return null;
-  const ranking = calculateRanking(loaded.document);
-  const bestIndex = new Map(ranking.best.map((chart, index) => [chart.key, index + 1]));
-  const records = ranking.charts.filter((chart) => canonicalSongId(chart.songId) === song.id);
+/** Each of this song's charts: constant, charter and a link to its preview, plus the player's record on it once
+ * a save is loaded. */
+function SongCharts({ song }: { song: CatalogSong }) {
+  const { loaded } = useSave();
+  const ranking = loaded && calculateRanking(loaded.document);
+  const bestIndex = new Map(
+    ranking ? ranking.best.map((chart, index) => [chart.key, index + 1]) : [],
+  );
+  const records = ranking
+    ? ranking.charts.filter((chart) => canonicalSongId(chart.songId) === song.id)
+    : [];
+  const columns = [
+    "Difficulty",
+    "Constant",
+    "Charter",
+    ...(ranking ? ["Score", "Acc", "Rank", "RKS"] : []),
+    "",
+  ];
   return (
     <section className="panel your-records">
       <div className="panel-head">
-        <h2 className="panel-title">Your Records</h2>
+        <h2 className="panel-title">{ranking ? "Your Records" : "Charts"}</h2>
       </div>
-      <table className="song-diff-table">
-        <thead>
-          <tr>
-            {["Difficulty", "Score", "Acc", "Rank", "RKS", ""].map((name) => (
-              <th key={name} scope="col">
-                {name || <span className="sr-only">Simulate</span>}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {LEVELS.map((level, levelIndex) => {
-            if (song.constants[levelIndex] == null) return null;
-            const record = records.find((chart) => chart.levelIndex === levelIndex);
-            const best = record && bestIndex.get(record.key);
-            return (
-              <tr key={level}>
-                <td>
-                  <Difficulty level={level} />
-                </td>
-                {record ? (
-                  <>
-                    <td className="num record-score">{score7(record.score)}</td>
-                    <td className="num">{record.accuracy.toFixed(2)}%</td>
-                    <td>
-                      <Rank score={record.score} fc={record.fc} />
-                    </td>
-                    <td className="num">
-                      {record.rks.toFixed(2)}
-                      {best && <span className="meta"> · Best #{best}</span>}
-                    </td>
-                  </>
-                ) : (
-                  <td className="meta" colSpan={4}>
-                    Not played
+      <div className="chart-stats-scroll">
+        <table className="song-diff-table">
+          <thead>
+            <tr>
+              {columns.map((name) => (
+                <th key={name} scope="col">
+                  {name || <span className="sr-only">Preview</span>}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {LEVELS.map((level, levelIndex) => {
+              if (song.constants[levelIndex] == null) return null;
+              const record = records.find((chart) => chart.levelIndex === levelIndex);
+              const best = record && bestIndex.get(record.key);
+              return (
+                <tr key={level}>
+                  <td>
+                    <Difficulty level={level} />
                   </td>
-                )}
-                <td>
-                  <button
-                    type="button"
-                    className="link-button"
-                    onClick={() => {
-                      setChartKey(record?.key ?? `${song.id}:${level}`);
-                      void navigate({ to: "/" });
-                    }}
-                  >
-                    Simulate
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+                  <td className="num">{song.constants[levelIndex]!.toFixed(1)}</td>
+                  <td className="meta">{song.charters[levelIndex] ?? "-"}</td>
+                  {ranking &&
+                    (record ? (
+                      <>
+                        <td className="num record-score">{score7(record.score)}</td>
+                        <td className="num">{record.accuracy.toFixed(2)}%</td>
+                        <td>
+                          <Rank score={record.score} fc={record.fc} />
+                        </td>
+                        <td className="num">
+                          {record.rks.toFixed(2)}
+                          {best && <span className="meta"> · Best #{best}</span>}
+                        </td>
+                      </>
+                    ) : (
+                      <td className="meta" colSpan={4}>
+                        Not played
+                      </td>
+                    ))}
+                  <td>
+                    <Link
+                      to="/charts/$id/play/$level"
+                      params={{ id: song.id, level }}
+                      className="link-button"
+                    >
+                      Preview
+                    </Link>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </section>
   );
 }
@@ -354,70 +366,40 @@ function SongPage() {
           </Link>{" "}
           / {song.title}
         </p>
-        {/* On wide screens the song stays put on the left and everything else scrolls on the right, like the /charts table. */}
+        {/* On wide screens two columns that scroll on their own: the song and its links to other songs on the left,
+         * its charts, records and stats on the right. */}
         <div className="song-layout">
-          <section className="panel song-detail">
-            <div className="song-detail-media">
-              <img
-                src={`/covers/${song.id}.avif`}
-                width={1024}
-                height={540}
-                alt={`Cover art for ${song.title}${song.illustrator ? `, illustrated by ${song.illustrator}` : ""}`}
-                decoding="async"
-              />
-            </div>
-            <div className="song-detail-body">
-              <h1 className="panel-title">{song.title}</h1>
-              <p className="meta">
-                <Link to="/charts" search={{ q: song.artist }} className="artist-link">
-                  {song.artist}
-                </Link>{" "}
-                ·{" "}
-                <Link to="/charts" search={{ chapter: song.chapter }} className="chapter-link">
-                  {song.chapter}
-                </Link>
-              </p>
-              {song.illustrator && <p className="meta">Illustrated by {song.illustrator}</p>}
-              <table className="song-diff-table">
-                <thead>
-                  <tr>
-                    <th scope="col">Difficulty</th>
-                    <th scope="col">Constant</th>
-                    <th scope="col">Charter</th>
-                    <th scope="col">
-                      <span className="sr-only">Preview</span>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {LEVELS.map(
-                    (level, levelIndex) =>
-                      song.constants[levelIndex] != null && (
-                        <tr key={level}>
-                          <td>
-                            <Difficulty level={level} />
-                          </td>
-                          <td className="num">{song.constants[levelIndex]!.toFixed(1)}</td>
-                          <td className="meta">{song.charters[levelIndex] ?? "-"}</td>
-                          <td>
-                            <Link
-                              to="/charts/$id/play/$level"
-                              params={{ id: song.id, level }}
-                              className="link-button"
-                            >
-                              Preview
-                            </Link>
-                          </td>
-                        </tr>
-                      ),
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </section>
+          <div className="song-main">
+            <section className="panel song-detail">
+              <div className="song-detail-media">
+                <img
+                  src={`/covers/${song.id}.avif`}
+                  width={1024}
+                  height={540}
+                  alt={`Cover art for ${song.title}${song.illustrator ? `, illustrated by ${song.illustrator}` : ""}`}
+                  decoding="async"
+                />
+              </div>
+              <div className="song-detail-body">
+                <h1 className="panel-title">{song.title}</h1>
+                <p className="meta">
+                  <Link to="/charts" search={{ q: song.artist }} className="artist-link">
+                    {song.artist}
+                  </Link>{" "}
+                  ·{" "}
+                  <Link to="/charts" search={{ chapter: song.chapter }} className="chapter-link">
+                    {song.chapter}
+                  </Link>
+                </p>
+                {song.illustrator && <p className="meta">Illustrated by {song.illustrator}</p>}
+              </div>
+            </section>
+            <SongLinks heading={`More From ${song.chapter}`} songs={sameChapter} />
+            <SongLinks heading={`More By ${song.artist}`} songs={sameArtist} />
+          </div>
           <div className="song-side">
-            <section className="song-scroll" aria-label="Records, chart stats and related songs">
-              <YourRecords song={song} />
+            <section className="song-scroll" aria-label="Charts, records and chart stats">
+              <SongCharts song={song} />
               {stats && (
                 <section className="panel chart-stats">
                   <div className="panel-head">
@@ -466,8 +448,6 @@ function SongPage() {
                   </div>
                 </section>
               )}
-              <SongLinks heading={`More From ${song.chapter}`} songs={sameChapter} />
-              <SongLinks heading={`More By ${song.artist}`} songs={sameArtist} />
             </section>
             {/* Outside the scroll area so it stays put from one song to the next (← and → follow it too). */}
             <nav className="song-pager" aria-label="Adjacent songs">

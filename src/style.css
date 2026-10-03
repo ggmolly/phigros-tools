@@ -869,6 +869,14 @@
   height: 27px;
   object-fit: cover;
 }
+/* Stacked panels: the song and its related songs (.song-main), its charts and stats (.song-scroll). */
+.song-layout,
+.song-main,
+.song-scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
 .song-detail {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
@@ -970,7 +978,10 @@
     flex: 1;
     min-height: 0;
   }
-  .song-layout .song-detail,
+  .song-main {
+    min-height: 0;
+  }
+  .song-main,
   .song-scroll {
     overflow-y: auto;
     overscroll-behavior: contain;
