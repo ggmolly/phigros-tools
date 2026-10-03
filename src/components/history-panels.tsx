@@ -69,12 +69,16 @@ export function SnapshotProgress({ history }: { history: SnapshotV1[] }) {
               ? "Import another save from this player to compare RKS, FC and AP."
               : "Import two saves from the same player to compare RKS, FC and AP."}
           </p>
-          <a className="arrow-row" href="#import">
+          <button
+            type="button"
+            className="arrow-row"
+            onClick={() => document.querySelector<HTMLDialogElement>("#importDialog")?.showModal()}
+          >
             Import save
             <span className="arrow-chip">
               <Arrow />
             </span>
-          </a>
+          </button>
         </div>
       )}
     </section>

@@ -1030,6 +1030,15 @@
   color: var(--dim);
   font-size: 14px;
 }
+.import-list {
+  display: grid;
+  gap: 4px;
+  margin-top: 16px;
+}
+.import-open {
+  flex: none;
+  margin-left: auto;
+}
 .file-input {
   position: absolute;
   width: 1px;
@@ -3005,8 +3014,18 @@ dialog strong {
   .player-rks {
     font-size: 16px;
   }
+  /* Its own line under the brand: the player tag left, the actions right, clear of the tab strip. */
   .player-area {
+    justify-content: space-between;
     gap: 12px;
+    width: 100%;
+    padding: 2px 0 8px 12px;
+  }
+  .player-tag {
+    align-items: center;
+  }
+  .player-rks {
+    margin-bottom: 0;
   }
   .sync-row .sync-label,
   .sync-fix {
@@ -3022,20 +3041,6 @@ dialog strong {
   .tab {
     padding: 0 16px;
     font-size: 16px;
-  }
-  .import-band.compact .import-heading,
-  .import-band.compact .import-description {
-    display: none;
-  }
-  .import-band.compact {
-    padding: 8px 22px;
-  }
-  .import-band.compact .import-option strong {
-    font-size: 16px;
-  }
-  .import-band.compact .arrow-chip {
-    width: 46px;
-    height: 28px;
   }
   .stepper {
     gap: 10px;

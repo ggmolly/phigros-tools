@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Arrow, SyncIcon } from "../components/arrow";
 import { SiteHeader, TAB_LABEL, type TabId, toolTabs } from "../components/chrome";
 import { ImportOptions, TapTapDialog } from "../components/import";
@@ -54,6 +54,8 @@ function ToolLayout() {
     setSelectedPlayer,
   } = useSave();
   const navigate = useNavigate();
+  const importDialog = useRef<HTMLDialogElement>(null);
+  const openImport = () => importDialog.current?.showModal();
   const pathname = useRouterState({ select: (state) => state.location.pathname as TabId });
   const loadedCredential = loaded && credentials.find((c) => c.playerId === loaded.playerId);
   const playerName = loaded && (loadedCredential?.nickname ?? loaded.playerId);
@@ -103,31 +105,34 @@ function ToolLayout() {
                 Re-enter token
               </button>
             )}
-            <div
-              className="player-tag"
-              title={loaded.playerId ? `Player ${loaded.playerId}` : undefined}
-            >
-              <Avatar
-                className="player-avatar"
-                name={loaded.document.profile?.avatar || loaded.document.summary?.avatar || ""}
-              />
-              <span className="player-name">{playerName || "Local save"}</span>
-              <span className="player-rks">
-                <span className="sr-only">RKS </span>
-                {calculateRanking(loaded.document).rankingScore.toFixed(2)}
-              </span>
-            </div>
+            {/* Overview's hero is this same profile strip, larger; one is enough per screen. */}
+            {activeTab !== "/" && (
+              <div
+                className="player-tag"
+                title={loaded.playerId ? `Player ${loaded.playerId}` : undefined}
+              >
+                <Avatar
+                  className="player-avatar"
+                  name={loaded.document.profile?.avatar || loaded.document.summary?.avatar || ""}
+                />
+                <span className="player-name">{playerName || "Local save"}</span>
+                <span className="player-rks">
+                  <span className="sr-only">RKS </span>
+                  {calculateRanking(loaded.document).rankingScore.toFixed(2)}
+                </span>
+              </div>
+            )}
+            <button type="button" className="btn btn-ghost import-open" onClick={openImport}>
+              Import
+            </button>
           </div>
         )}
       </SiteHeader>
       <main id="overview" className="app-shell">
-        {/* With no save open, the main menu's Import entry offers these instead. */}
-        {(loaded || unsupportedZip) && (
-          <section
-            id="import"
-            className={`import-band${loaded ? " compact" : ""}`}
-            aria-labelledby="import-heading"
-          >
+        {/* With no save open, the main menu's Import entry offers these instead; with one open, the header's
+         * Import button does (in a dialog, so the import methods don't push every tab's content down). */}
+        {!loaded && unsupportedZip && (
+          <section id="import" className="import-band" aria-labelledby="import-heading">
             <div className="import-heading">
               <h2 id="import-heading">Import Save</h2>
               <p>Load your Phigros progress</p>
@@ -135,6 +140,20 @@ function ToolLayout() {
             <ImportOptions />
           </section>
         )}
+        <dialog ref={importDialog} id="importDialog" aria-labelledby="import-dialog-heading">
+          <form method="dialog" className="dialog-head">
+            <h2 id="import-dialog-heading">Import Save</h2>
+            {/* biome-ignore lint/a11y/useButtonType: the default submit type is intentional; submitting a method="dialog" form is how this button closes the dialog without JS. */}
+            <button className="dialog-close" aria-label="Close import dialog">
+              ×
+            </button>
+          </form>
+          <p className="meta">Load newer progress, or another player's save.</p>
+          {/* Each option opens its own dialog or picker: close this one first (capture runs before their click). */}
+          <div className="import-list" onClickCapture={() => importDialog.current?.close()}>
+            <ImportOptions />
+          </div>
+        </dialog>
         <input
           ref={fileInput}
           id="file"
