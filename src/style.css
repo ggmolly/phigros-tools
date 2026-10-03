@@ -2496,6 +2496,9 @@ tr.b27-edge td {
 .rks-hint {
   padding: 6px 0;
 }
+.rks-plot {
+  position: relative;
+}
 .rks-chart {
   display: block;
   width: 100%;
@@ -2509,6 +2512,23 @@ tr.b27-edge td {
 }
 .rks-area {
   fill: rgb(255 255 255 / 0.07);
+}
+.rks-version {
+  stroke: rgb(255 255 255 / 0.45);
+  stroke-width: 1;
+  stroke-dasharray: 3 4;
+}
+.rks-version-label {
+  position: absolute;
+  top: 0;
+  padding-left: 6px;
+  color: var(--dim);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.rks-version-label.end {
+  padding: 0 6px 0 0;
+  translate: -100%;
 }
 .rks-range {
   display: flex;

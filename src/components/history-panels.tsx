@@ -1,4 +1,4 @@
-import { catalogRevision, catalogSong } from "../catalog";
+import { catalogSong } from "../catalog";
 import { rksSeries, snapshotProgress } from "../snapshots";
 import type { SnapshotV1 } from "../store";
 import { Arrow } from "./arrow";
@@ -82,7 +82,7 @@ export function SnapshotProgress({ history }: { history: SnapshotV1[] }) {
 }
 
 export function RksHistory({ history }: { history: SnapshotV1[] }) {
-  const series = rksSeries(history, catalogRevision);
+  const series = rksSeries(history);
   const values = series.map((point) => point.rks);
   const delta = values.length > 1 ? values.at(-1)! - values[0]! : 0;
   const range = (
@@ -101,11 +101,7 @@ export function RksHistory({ history }: { history: SnapshotV1[] }) {
       </div>
       {series.length < 3 ? (
         <>
-          <p className="meta rks-hint">
-            {history.length < 3
-              ? "Save a third time to unlock the trend line."
-              : "RKS can’t be charted across catalog revisions or ranking rules."}
-          </p>
+          <p className="meta rks-hint">Save a third time to unlock the trend line.</p>
           {series.length === 2 && range}
         </>
       ) : (
@@ -118,22 +114,54 @@ export function RksHistory({ history }: { history: SnapshotV1[] }) {
               [(index / (series.length - 1)) * 100, 92 - ((point.rks - min) / span) * 84] as const,
           );
           const points = coords.map(([x, y]) => `${x},${y}`).join(" ");
+          // Each change sits halfway between the last snapshot before it and the first after.
+          const changes = series.flatMap((point, index) =>
+            point.versionChange
+              ? [{ label: point.versionChange, x: (coords[index - 1]![0] + coords[index]![0]) / 2 }]
+              : [],
+          );
           return (
             <>
               <p className="progress-period">
                 {new Date(series[0]!.capturedAt).toLocaleString()} →{" "}
                 {new Date(series.at(-1)!.capturedAt).toLocaleString()}
               </p>
-              <svg
-                className="rks-chart"
-                viewBox="0 0 100 100"
-                preserveAspectRatio="none"
-                role="img"
-                aria-label={`RKS trend across ${series.length} snapshots: from ${values[0]!.toFixed(3)} to ${values.at(-1)!.toFixed(3)}`}
-              >
-                <polygon className="rks-area" points={`0,100 ${points} 100,100`} />
-                <polyline className="rks-line" points={points} vectorEffect="non-scaling-stroke" />
-              </svg>
+              <div className="rks-plot">
+                <svg
+                  className="rks-chart"
+                  viewBox="0 0 100 100"
+                  preserveAspectRatio="none"
+                  role="img"
+                  aria-label={`RKS trend across ${series.length} snapshots: from ${values[0]!.toFixed(3)} to ${values.at(-1)!.toFixed(3)}`}
+                >
+                  <polygon className="rks-area" points={`0,100 ${points} 100,100`} />
+                  {changes.map(({ label, x }) => (
+                    <line
+                      key={`${label}-${x}`}
+                      className="rks-version"
+                      x1={x}
+                      x2={x}
+                      y1={0}
+                      y2={100}
+                      vectorEffect="non-scaling-stroke"
+                    />
+                  ))}
+                  <polyline
+                    className="rks-line"
+                    points={points}
+                    vectorEffect="non-scaling-stroke"
+                  />
+                </svg>
+                {changes.map(({ label, x }) => (
+                  <span
+                    key={`${label}-${x}`}
+                    className={`rks-version-label${x > 70 ? " end" : ""}`}
+                    style={{ left: `${x}%` }}
+                  >
+                    {label}
+                  </span>
+                ))}
+              </div>
               {range}
             </>
           );

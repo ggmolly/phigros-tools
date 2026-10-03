@@ -86,25 +86,36 @@ export function compareDocuments(older: Comparable, newer: Comparable): Snapshot
 export interface RksPoint {
   capturedAt: string;
   rks: number;
+  /** Set when this snapshot's catalog revision or ranking rules differ from the previous point's. */
+  versionChange?: string;
 }
 
-/** RKS per snapshot, oldest first; empty unless at least two comparable snapshots (same ruleset, current catalog). */
-export function rksSeries(history: SnapshotV1[], currentRevision: string): RksPoint[] {
-  const rulesets = new Set(
-    history.map((snapshot) => rulesetForGameVersion(snapshot.document.summary?.gameVersion)),
-  );
-  if (
-    history.length < 2 ||
-    rulesets.size > 1 ||
-    !history.every((snapshot) => snapshot.catalogRevision === currentRevision)
-  )
-    return [];
-  return history
-    .map((snapshot) => ({
+/** RKS per snapshot, oldest first, flagging where the catalog revision or ranking rules change. */
+export function rksSeries(history: SnapshotV1[]): RksPoint[] {
+  const sorted = [...history].sort((a, b) => a.capturedAt.localeCompare(b.capturedAt));
+  return sorted.map((snapshot, index) => {
+    const ranking = calculateRanking(snapshot.document);
+    const previous = sorted[index - 1];
+    const previousRuleset =
+      previous && rulesetForGameVersion(previous.document.summary?.gameVersion);
+    const version = snapshot.catalogRevision.split("-")[0]!;
+    const versionChange = !previous
+      ? undefined
+      : previousRuleset !== ranking.ruleset
+        ? ranking.ruleset === "b30"
+          ? "B27 + 3 Phi"
+          : "B19"
+        : previous.catalogRevision !== snapshot.catalogRevision
+          ? previous.catalogRevision.split("-")[0] === version
+            ? "Catalog update"
+            : `v${version}`
+          : undefined;
+    return {
       capturedAt: snapshot.capturedAt,
-      rks: calculateRanking(snapshot.document).rankingScore,
-    }))
-    .sort((a, b) => a.capturedAt.localeCompare(b.capturedAt));
+      rks: ranking.rankingScore,
+      ...(versionChange ? { versionChange } : {}),
+    };
+  });
 }
 
 export function snapshotProgress(previous: SnapshotV1, latest: SnapshotV1) {
