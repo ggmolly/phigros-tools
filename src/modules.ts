@@ -140,11 +140,7 @@ export function decodeSummary(encoded: string): Summary {
   return summary;
 }
 
-export function parseGameRecord(
-  bytes: Uint8Array,
-  version: number,
-  lenient = false,
-): SongRecord[] {
+export function parseGameRecord(bytes: Uint8Array, version: number, lenient = false): SongRecord[] {
   supported("gameRecord", version, 1, PARSEABLE_VERSIONS.gameRecord, lenient);
   const r = new Reader(bytes, "gameRecord");
   const count = r.varshort("count");

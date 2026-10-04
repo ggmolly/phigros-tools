@@ -6,6 +6,7 @@ import {
   catalogManifest,
   catalogSongs,
   chapterSearchText,
+  searchFold,
 } from "../catalog";
 import { SiteHeader } from "../components/chrome";
 import { Difficulty, DifficultyFilter } from "../components/primitives";
@@ -65,13 +66,17 @@ function ChartsPage() {
   const setFilter = (key: "q" | "chapter" | "view", value: string) =>
     void navigate({ search: (prev) => ({ ...prev, [key]: value || undefined }), replace: true });
   const [difficulty, setDifficulty] = useState("");
-  const query = search.trim().toLocaleLowerCase();
+  const query = searchFold(search);
   const rows = catalogSongs.filter(
     (song) =>
       (!query ||
-        `${song.title} ${song.artist} ${song.illustrator ?? ""} ${chapterSearchText(song.chapter)}`
-          .toLocaleLowerCase()
-          .includes(query)) &&
+        searchFold(
+          song.title,
+          song.artist,
+          song.illustrator,
+          chapterSearchText(song.chapter),
+          ...(song.romanized ?? []),
+        ).includes(query)) &&
       (!chapter || song.chapter === chapter) &&
       (difficulty === "" || song.constants[Number(difficulty)] != null),
   );

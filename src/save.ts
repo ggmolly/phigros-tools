@@ -1,5 +1,6 @@
 import { unzipSync } from "fflate";
 import * as v from "valibot";
+import { ParseError } from "./binary";
 import type { SaveDocumentV1 } from "./document";
 import {
   decodeSummary,
@@ -14,7 +15,6 @@ import {
   parseProfile,
   parseSettings,
 } from "./modules";
-import { ParseError } from "./binary";
 
 /** The game's LeanCloud apps: the global release and the China (TapTap CN) release keep separate accounts and saves. */
 export type Region = "global" | "china";

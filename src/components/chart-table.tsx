@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { catalogSong } from "../catalog";
+import { catalogSong, searchFold } from "../catalog";
 import type { SaveDocumentV1 } from "../document";
 import { calculateRanking, chartRks, projectAccuracy } from "../metrics";
 import { LEVELS } from "../modules";
@@ -17,6 +17,7 @@ function rowsFor(document: SaveDocumentV1) {
           songId: song.songId,
           title: metadata?.title ?? song.songId,
           artist: metadata?.artist ?? "unknown",
+          romanized: metadata?.romanized ?? [],
           levelIndex,
           score: record.score,
           accuracy: record.accuracy,
@@ -39,10 +40,10 @@ export function ChartTable({ document }: { document: SaveDocumentV1 }) {
   const phiSlot = new Map(ranking.phi.map((record, index) => [record.key, index]));
   const unfiltered = sort === "rks" && !search.trim() && difficulty === "" && status === "";
   const all = rowsFor(document);
-  const query = search.trim().toLocaleLowerCase();
+  const query = searchFold(search);
   const rows = all.filter(
     (row) =>
-      (!query || `${row.title} ${row.artist} ${row.songId}`.toLocaleLowerCase().includes(query)) &&
+      (!query || searchFold(row.title, row.artist, row.songId, ...row.romanized).includes(query)) &&
       (difficulty === "" || row.levelIndex === Number(difficulty)) &&
       (status === "" ||
         (status === "no-fc" && !row.fc) ||
