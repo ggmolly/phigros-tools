@@ -1,10 +1,10 @@
 {
   "manifest": {
     "schemaVersion": 1,
-    "gameVersion": 155,
+    "gameVersion": 157,
     "source": "Phigros APK: level0 GameInformation (extract/export_game_info.py)",
-    "sourceRevision": "e4a4f8c87b9fd71569eef1b5806858395702da1007a0317a7a23c56de9e99d6a",
-    "sourceHash": "e4a4f8c87b9fd71569eef1b5806858395702da1007a0317a7a23c56de9e99d6a"
+    "sourceRevision": "ae15fceed1ea2cd1aa58695def0d65c93834f9aa6f2a5ddc1c2e19cf8aa0ad4e",
+    "sourceHash": "ae15fceed1ea2cd1aa58695def0d65c93834f9aa6f2a5ddc1c2e19cf8aa0ad4e"
   },
   "aliases": {},
   "chapterAliases": {
@@ -168,6 +168,15 @@
       "chapter": "Single",
       "constants": [5, 9.5, 15.8, null],
       "charters": ["XMT小咩兔", "XMT小咩兔", "□MT in a XXXXXXXX", null]
+    },
+    {
+      "id": "Ametrine.GRYSCLMIssionary",
+      "title": "Ametrine",
+      "artist": "GRYSCL & MIssionary",
+      "illustrator": "子狼",
+      "chapter": "Chapter 9 Solivault",
+      "constants": [6, 12.2, 15, 16.2],
+      "charters": ["Enstatite", "Heliodor", "Indigolite", "Ametrine"]
     },
     {
       "id": "AnotherMe.DAAN",
@@ -812,6 +821,20 @@
       ]
     },
     {
+      "id": "DesultorySignals.technoplanet",
+      "title": "Desultory Signals",
+      "artist": "technoplanet",
+      "illustrator": "月光大刺剑",
+      "chapter": "Chapter 9 Solivault",
+      "constants": [10, 14, 17, 18],
+      "charters": [
+        "Hesitating Trepidation \"踌躇的惶恐\"",
+        "Denying Pseudomorph \"否认的伪形\"",
+        "Retaliating Resolve \"反击的决意\"",
+        "Ceaseless Signal \"不息的信号\""
+      ]
+    },
+    {
       "id": "DevastatingHistory.NAMV",
       "title": "Devastating History",
       "artist": "NAMV",
@@ -996,7 +1019,7 @@
       "title": "Entrance to the Chaos",
       "artist": "打打だいず vs. siromaru",
       "romanized": ["dadadaizu vs. siromaru"],
-      "illustrator": "Rallxkurara",
+      "illustrator": "群青kurara",
       "chapter": "Chapter 9 Solivault",
       "constants": [8.8, 13.7, 16.8, 17.6],
       "charters": [
@@ -1038,7 +1061,7 @@
       "id": "Evanescent.LeaF",
       "title": "Evanescent",
       "artist": "LeaF",
-      "illustrator": "海产",
+      "illustrator": "海产 feat. 佑木いずみ",
       "chapter": "Chapter 9 Solivault",
       "constants": [6.5, 12.6, 15.7, null],
       "charters": [
@@ -1051,11 +1074,10 @@
     {
       "id": "ExoplanetaryMirage.かめりあ",
       "title": "Exoplanetary Mirage",
-      "artist": "かめりあ",
-      "romanized": ["kameria"],
+      "artist": "Camellia",
       "illustrator": "神居冰绘 feat. 祈莲",
       "chapter": "Chapter 9 Solivault",
-      "constants": [8.7, 13.4, 16.9, 17.9],
+      "constants": [8.7, 13.4, 16.8, 17.9],
       "charters": [
         "Orbital Velocity: 7.900 km/s",
         "Orbital Velocity: 11.200 km/s",
@@ -1554,8 +1576,13 @@
       "artist": "rider",
       "illustrator": "笔记RE",
       "chapter": "Chapter 5 NEON LED",
-      "constants": [3, 8.9, 12.7, null],
-      "charters": ["亚树见希子 & 百九十八", "亚树见希子 & 百九十八", "亚树见希子 & 百九十八", null]
+      "constants": [3, 8.9, 12.7, 15],
+      "charters": [
+        "亚树见希子 & 百九十八",
+        "亚树见希子 & 百九十八",
+        "亚树见希子 & 百九十八",
+        "WinterPT & Rikko"
+      ]
     },
     {
       "id": "Letempsperdu.Daison",
@@ -1667,6 +1694,16 @@
       "chapter": "Chapter EX-Rising Sun Traxx",
       "constants": [3, 11.3, 14.9, null],
       "charters": ["Ctymax", "Ctymax", "Ctymax", null]
+    },
+    {
+      "id": "Message.くるぶっこちゃん",
+      "title": "Message",
+      "artist": "くるぶっこちゃん",
+      "romanized": ["kurubukkochan"],
+      "illustrator": "神居冰绘 feat. 祈莲",
+      "chapter": "Chapter 9 Solivault",
+      "constants": [3, 13.2, 15.6, 16.5],
+      "charters": ["■■■p■l■a", "■■o■elia's l", "Geo■elia's lov", "Geopelia's love 2u"]
     },
     {
       "id": "microwav.dandeless",
@@ -1882,6 +1919,15 @@
       "chapter": "Single",
       "constants": [4, 11.7, 14.6, null],
       "charters": ["Rikko", "Rikko & TangScend", "TangScend", null]
+    },
+    {
+      "id": "Petrichor.voidMournfinale",
+      "title": "Petrichor",
+      "artist": "void (Mournfinale)",
+      "illustrator": "青鸟 feat. 祈莲",
+      "chapter": "Chapter 9 Solivault",
+      "constants": [7.5, 13.8, 16.5, 17.5],
+      "charters": ["Seed | Promise", "Rain | Rewrites", "Silence | Us", "Return | Petrichor"]
     },
     {
       "id": "PixelRebelz.Normal1zer",
@@ -2508,6 +2554,20 @@
       "charters": ["M3d1uM", "M3d1uM", "Warning: XMT is infected by Trojan!!", null]
     },
     {
+      "id": "TrueHomeTrueWorldRework.816ThreeNumbers",
+      "title": "True Home, True World (Rework)",
+      "artist": "816ThreeNumbers",
+      "illustrator": "PEZZ",
+      "chapter": "Chapter 9 Solivault",
+      "constants": [5, 11.9, 15.8, null],
+      "charters": [
+        "Backward, go backward,",
+        "turn back to the antemundane realm,",
+        "go back to the -",
+        null
+      ]
+    },
+    {
       "id": "UnorthodoxThoughts.Joulez",
       "title": "Unorthodox Thoughts",
       "artist": "Joulez",
@@ -2571,6 +2631,24 @@
       "chapter": "Single",
       "constants": [6, 9.4, 13.9, null],
       "charters": ["Sillyp", "Sillyp", "百九十八 vs. Barbarianerman", null]
+    },
+    {
+      "id": "WhatdoyouwantmorethanaHappyending.Apo11oHALOprogramft安月名莉子大瀬良あい",
+      "title": "What do you want more than a Happy ending?",
+      "artist": "Apo11o\"HALO\"program ft. 安月名 莉子×大瀬良あい",
+      "romanized": [
+        "Apo11o\"HALO\"program ft. yasutsukimei riko × oseryoai",
+        "Apo11o\"HALO\"program ft. yasutsukimei riko × ooseryouai"
+      ],
+      "illustrator": "Amor fati",
+      "chapter": "Chapter 9 Solivault",
+      "constants": [0.5, 11.5, 16.1, 17.1],
+      "charters": [
+        "欢迎回到 Phigros！",
+        "欢迎回到 Phigros！",
+        "欢迎回到 Phigros！",
+        "欢迎回到 Phigros！"
+      ]
     },
     {
       "id": "Wintercube.CtymaxfeatNceS",
@@ -2714,6 +2792,16 @@
         "Ctymax respect for STAR TRACK in 2008",
         null
       ]
+    },
+    {
+      "id": "ハテ.rNFrums",
+      "title": "ハテ",
+      "artist": "rN || Frums",
+      "romanized": ["hate"],
+      "illustrator": "宙風みけ || rN",
+      "chapter": "Chapter 9 Solivault",
+      "constants": [9, 13.9, 16.7, 17.9],
+      "charters": ["the end of hope.", "the end of ache.", "the end of this.", "the end of ever."]
     },
     {
       "id": "ぱぴぷぴぷぴぱ.ころねぽちWith立秋",
