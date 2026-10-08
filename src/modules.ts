@@ -4,7 +4,7 @@ import { ParseError, Reader } from "./binary";
  * newer module is parsed leniently (strict tail check skipped); a version below the minimum can't be read. */
 export const PARSEABLE_VERSIONS: Record<ModuleName, number> = {
   gameKey: 3,
-  gameProgress: 5,
+  gameProgress: 6,
   gameRecord: 1,
   settings: 1,
   user: 1,
@@ -103,6 +103,12 @@ export interface GameProgress {
   chapter9SecretChallengeLifeTier?: number;
   chapter9SecretChallengeSelectedLifeTier?: number;
   chapter9SecretPassword?: string;
+  /** gameProgress v6 (Phigros 4.0.1): the three bools share one byte. */
+  chapter9Phase2SongUnlocked?: number;
+  chapter9Phase2Begin?: boolean;
+  chapter9Phase2Passed?: boolean;
+  c9BaselineChallengeReached?: boolean;
+  chapter9Phase2Step?: number;
 }
 
 function supported(module: ModuleName, version: number, min: number, max = min, lenient = false) {
@@ -287,6 +293,14 @@ export function parseGameProgress(
     result.chapter9SecretChallengeLifeTier = tiers & 0xf;
     result.chapter9SecretChallengeSelectedLifeTier = tiers >> 4;
     result.chapter9SecretPassword = r.string("chapter9SecretPassword");
+  }
+  if (version >= 6) {
+    result.chapter9Phase2SongUnlocked = r.u8("chapter9Phase2SongUnlocked");
+    const phase2Flags = r.u8("chapter9Phase2Flags");
+    result.chapter9Phase2Begin = (phase2Flags & 1) === 1;
+    result.chapter9Phase2Passed = (phase2Flags & 2) === 2;
+    result.c9BaselineChallengeReached = (phase2Flags & 4) === 4;
+    result.chapter9Phase2Step = r.u8("chapter9Phase2Step");
   }
   if (!lenient) r.finish();
   return result;

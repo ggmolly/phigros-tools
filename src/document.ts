@@ -120,6 +120,11 @@ const gameProgress = v.object({
   chapter9SecretChallengeLifeTier: v.optional(v.pipe(byte, v.maxValue(15))),
   chapter9SecretChallengeSelectedLifeTier: v.optional(v.pipe(byte, v.maxValue(15))),
   chapter9SecretPassword: v.optional(shortString),
+  chapter9Phase2SongUnlocked: v.optional(byte),
+  chapter9Phase2Begin: v.optional(v.boolean()),
+  chapter9Phase2Passed: v.optional(v.boolean()),
+  c9BaselineChallengeReached: v.optional(v.boolean()),
+  chapter9Phase2Step: v.optional(byte),
 });
 const moduleVersions = v.object({
   gameKey: byte,
