@@ -29,7 +29,13 @@ export function Hero({
   const apTotal = counts.reduce((sum, count) => sum + count.phi, 0);
   return (
     <section className="hero" aria-labelledby="hero-name">
-      <ShareCard ranking={ranking} songs={songs} playerName={playerName} avatar={avatar} />
+      <ShareCard
+        ranking={ranking}
+        songs={songs}
+        playerName={playerName}
+        avatar={avatar}
+        challenge={document.gameProgress.challengeModeRank}
+      />
       <div className="hero-id">
         <Avatar className="hero-avatar" name={avatar} />
         <h1 id="hero-name" className="hero-name">

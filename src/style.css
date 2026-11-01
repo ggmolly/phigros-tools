@@ -1420,6 +1420,20 @@ a.btn[aria-disabled="true"] {
   width: 100%;
   height: auto;
 }
+/* The grid formats are portrait: fit the dialog's height instead of its width. */
+.share-preview-b30,
+.share-preview-fc30 {
+  aspect-ratio: auto;
+  height: min(62vh, 680px);
+}
+.share-preview-b30 img,
+.share-preview-fc30 img {
+  width: auto;
+  height: 100%;
+}
+.share-format {
+  margin-top: 12px;
+}
 .share-controls {
   display: flex;
   flex-wrap: wrap;

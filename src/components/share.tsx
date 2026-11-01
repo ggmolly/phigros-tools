@@ -5,8 +5,17 @@ import { currentPalette } from "../palettes";
 
 const SITE_URL = "https://phigros.tools";
 export const DEFAULT_NAME = "Unnamed Pigeon";
-export const W = 1600;
-export const H = 900;
+export type CardFormat = "info" | "b30" | "fc30";
+export const CARD_SIZE: Record<CardFormat, { width: number; height: number }> = {
+  info: { width: 1600, height: 900 },
+  b30: { width: 1600, height: 2150 },
+  fc30: { width: 1600, height: 2150 },
+};
+const FORMATS: [CardFormat, string][] = [
+  ["info", "Player info"],
+  ["b30", "Best 30"],
+  ["fc30", "FC 30"],
+];
 
 function ShareIcon() {
   return (
@@ -30,21 +39,25 @@ export function ShareCard({
   songs,
   playerName,
   avatar,
+  challenge,
 }: {
   ranking: RankingResult;
   songs: SongRecord[];
   playerName?: string;
+  challenge: number;
   /** In-game avatar name. */
   avatar: string;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);
   const [name, setName] = useState(playerName ?? "");
+  const [format, setFormat] = useState<CardFormat>("info");
   const [image, setImage] = useState<{ url: string; blob: Blob }>();
   const [status, setStatus] = useState("");
   const [canShare, setCanShare] = useState(false);
   const rks = ranking.rankingScore.toFixed(3);
-  const file = image && new File([image.blob], `phigros-rks-${rks}.png`, { type: "image/png" });
+  const file =
+    image && new File([image.blob], `phigros-${format}-rks-${rks}.png`, { type: "image/png" });
   const caption = `My Phigros RKS is ${rks}! Check yours at ${SITE_URL}`;
 
   useEffect(() => {
@@ -54,13 +67,14 @@ export function ShareCard({
     const timer = setTimeout(async () => {
       try {
         const { renderShareCard } = await import("./share-render"); // satori + resvg: only downloaded once the dialog opens
-        const blob = await renderShareCard({
+        const blob = await renderShareCard(format, {
           name: name.trim(),
           ranking,
           songs,
           date: new Date(),
           palette: currentPalette(),
           avatar,
+          challenge,
         });
         if (cancelled) return;
         url = URL.createObjectURL(blob);
@@ -79,7 +93,7 @@ export function ShareCard({
       clearTimeout(timer);
       if (url) URL.revokeObjectURL(url);
     };
-  }, [open, name, ranking, songs, avatar]);
+  }, [open, name, format, ranking, songs, avatar, challenge]);
 
   async function copy() {
     if (!image) return;
@@ -126,12 +140,29 @@ export function ShareCard({
             ×
           </button>
         </form>
-        <div className="share-preview">
+        {/* biome-ignore lint/a11y/useSemanticElements: same button group as the import dialog's game version. */}
+        <div className="seg share-format" role="group" aria-label="Card format">
+          {FORMATS.map(([value, label]) => (
+            <button
+              key={value}
+              type="button"
+              className="seg-option"
+              aria-pressed={format === value}
+              onClick={() => {
+                setImage(undefined);
+                setFormat(value);
+              }}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        <div className={`share-preview share-preview-${format}`}>
           {image ? (
             <img
               src={image.url}
-              width={W}
-              height={H}
+              width={CARD_SIZE[format].width}
+              height={CARD_SIZE[format].height}
               alt={`Share card: ${name || DEFAULT_NAME}, RKS ${rks}, top charts`}
             />
           ) : (

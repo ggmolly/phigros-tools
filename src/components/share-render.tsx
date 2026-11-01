@@ -5,12 +5,14 @@ import { initWasm, Resvg } from "@resvg/resvg-wasm";
 import resvgWasm from "@resvg/resvg-wasm/index_bg.wasm?url";
 import satori, { init as initSatori } from "satori/standalone";
 import yogaWasm from "satori/yoga.wasm?url";
-import { catalogChartTotals } from "../catalog";
-import type { ChartMetric, RankingResult } from "../metrics";
+import { canonicalSongId, catalogChartTotals } from "../catalog";
+import { type ChartMetric, fullComboBest, type RankingResult } from "../metrics";
 import { countLevels, LEVELS, type SongRecord } from "../modules";
 import { FOG_LAYOUT } from "../palettes";
-import { avatarUrl, rankOf } from "./primitives";
-import { DEFAULT_NAME, H, W } from "./share";
+import { avatarUrl, challengeRank, rankOf } from "./primitives";
+import { CARD_SIZE, type CardFormat, DEFAULT_NAME } from "./share";
+
+const { width: W, height: H } = CARD_SIZE.info;
 
 /*
  * The share card as JSX, laid out by satori (flexbox, like the page) into an SVG and rasterised by resvg.
@@ -87,14 +89,14 @@ const BOKEH = [
   [0.62, 0.95, 22],
 ] as const;
 
-function bokeh() {
+function bokeh(width: number, height: number) {
   return BOKEH.map(([x, y, r]) => (
     <div
       key={`${x}-${y}`}
       style={{
         position: "absolute",
-        left: x * W - r,
-        top: y * H - r,
+        left: x * width - r,
+        top: y * height - r,
         width: r * 2,
         height: r * 2,
         borderRadius: r,
@@ -132,10 +134,10 @@ function Header({ date }: { date: Date }) {
 }
 
 /** Profile ribbon: avatar tile cut on the same slant, like the in-game profile, then the name. */
-function Ribbon({ name, avatar }: { name: string; avatar?: string }) {
+function Ribbon({ name, avatar, width = 740 }: { name: string; avatar?: string; width?: number }) {
   const slant = (RIBBON * TAN) / 2; // how far the top and bottom edges sit off the centre line
   return (
-    <Para fill="#000" style={{ width: 740, height: RIBBON }}>
+    <Para fill="#000" style={{ width, height: RIBBON }}>
       {avatar && (
         <img
           src={avatar}
@@ -152,7 +154,7 @@ function Ribbon({ name, avatar }: { name: string; avatar?: string }) {
       <span
         style={{
           ...ellipsis,
-          maxWidth: avatar ? 520 : 600,
+          maxWidth: width - (avatar ? 220 : 140),
           marginLeft: avatar ? 19 : 64,
           fontSize: 56,
         }}
@@ -287,29 +289,263 @@ type CardData = {
   songs: SongRecord[];
   date: Date;
   palette: string[];
+  /** Challenge Mode rank as stored in the save (hundreds = colour, rest = level); 0 if never cleared. */
+  challenge: number;
   /** The avatar as a PNG/JPEG data URL (resvg can't decode AVIF). */
   avatar?: string;
+  /** Jacket data URLs by canonical song id, for the grid formats. */
+  covers?: Map<string, string>;
 };
 
-function Card({ name, ranking, songs, date, palette, avatar }: CardData) {
-  const counts = countLevels(songs);
-  const played = songs.reduce((sum, song) => sum + song.levels.filter(Boolean).length, 0);
-  const total = (key: "fc" | "phi") => counts.reduce((sum, count) => sum + count[key], 0);
+const FONT_FAMILY = "Saira, Phi, DejaVu Sans, Noto Sans SC, Noto Sans Armenian";
+
+/** Card background shared by every format: the fog, bokeh, white text. */
+function Canvas({
+  width,
+  height,
+  palette,
+  children,
+}: {
+  width: number;
+  height: number;
+  palette: string[];
+  children: React.ReactNode;
+}) {
   return (
     <div
       style={{
         position: "relative",
         display: "flex",
         flexDirection: "column",
-        width: W,
-        height: H,
+        width,
+        height,
         color: "#fff",
-        fontFamily: "Saira, Phi, DejaVu Sans, Noto Sans SC, Noto Sans Armenian",
+        fontFamily: FONT_FAMILY,
         fontWeight: 400,
         ...fog(palette),
       }}
     >
-      {bokeh()}
+      {bokeh(width, height)}
+      {children}
+    </div>
+  );
+}
+
+const CHALLENGE_FILL: Record<string, string> = {
+  Green: "#4fbf5a",
+  Blue: "#3a78c0",
+  Red: "#c43a33",
+  Gold: "#e0b43a",
+  Rainbow: "linear-gradient(90deg, #f55, #fb4, #5d5, #4bf, #a6f)",
+};
+
+/** One line for the grid formats: ribbon, then RKS, Challenge Mode and the format's own figure. */
+function ProfileStrip({
+  name,
+  avatar,
+  ranking,
+  challenge,
+  extra,
+}: {
+  name: string;
+  avatar?: string;
+  ranking: RankingResult;
+  challenge: number;
+  extra?: [label: string, value: string];
+}) {
+  const rank = challengeRank(challenge);
+  return (
+    <div style={{ ...row, marginTop: 40, paddingLeft: 40, gap: 30 }}>
+      <Ribbon name={name} avatar={avatar} width={620} />
+      <Para fill="rgba(8,4,12,.55)" style={{ height: RIBBON, paddingLeft: 30, paddingRight: 40 }}>
+        <span style={{ fontSize: 26, color: DIM, marginRight: 18 }}>RKS</span>
+        <span style={{ fontSize: 64, fontWeight: 300 }}>{ranking.rankingScore.toFixed(3)}</span>
+      </Para>
+      {rank && (
+        <Para
+          fill={CHALLENGE_FILL[rank.colour] ?? "#fff"}
+          style={{ width: 96, height: RIBBON, justifyContent: "center" }}
+        >
+          <span style={{ fontSize: 48, fontWeight: 600, textShadow: "0 0 8px rgba(0,0,0,.5)" }}>
+            {rank.level}
+          </span>
+        </Para>
+      )}
+      {extra && (
+        <Para fill="rgba(8,4,12,.55)" style={{ height: RIBBON, paddingLeft: 30, paddingRight: 40 }}>
+          <span style={{ fontSize: 26, color: DIM, marginRight: 18 }}>{extra[0]}</span>
+          <span style={{ fontSize: 64, fontWeight: 300 }}>{extra[1]}</span>
+        </Para>
+      )}
+    </div>
+  );
+}
+
+const TILE_W = 296;
+const COVER_H = 156; // the jackets are 1024×540
+const TILE_GAP = 16;
+const COLUMNS = 5;
+
+/** A chart as a jacket tile: slot tag and level over the art, then title, score, accuracy, rank and RKS. */
+function Tile({ chart, tag, cover }: { chart?: ChartMetric; tag: string; cover?: string }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        width: TILE_W,
+        background: "rgba(6,3,8,.72)",
+        ...(chart ? {} : { opacity: 0.4 }),
+      }}
+    >
+      <div style={{ position: "relative", display: "flex", width: TILE_W, height: COVER_H }}>
+        {cover && <img src={cover} alt="" width={TILE_W} height={COVER_H} />}
+        <span
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            padding: "2px 10px",
+            fontSize: 20,
+            fontWeight: 500,
+            background: "rgba(0,0,0,.72)",
+          }}
+        >
+          {tag}
+        </span>
+        {chart && (
+          <Para
+            fill={LEVEL_COLORS[chart.level]!}
+            style={{
+              position: "absolute",
+              right: 10,
+              bottom: 8,
+              height: 30,
+              paddingLeft: 12,
+              paddingRight: 12,
+            }}
+          >
+            <span style={{ fontSize: 17, fontWeight: 600 }}>
+              {chart.level} {chart.constant.toFixed(1)}
+            </span>
+          </Para>
+        )}
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", padding: "8px 12px 10px" }}>
+        <span style={{ ...ellipsis, fontSize: 22 }}>{chart?.title ?? "—"}</span>
+        {chart && (
+          <div style={{ ...row, marginTop: 2 }}>
+            <span style={{ fontSize: 26, fontWeight: 500 }}>
+              {String(chart.score).padStart(7, "0")}
+            </span>
+            <span style={{ marginLeft: 10, fontSize: 26 }}>
+              <RankGlyph chart={chart} />
+            </span>
+            <span style={{ marginLeft: "auto", fontSize: 18, color: DIM }}>
+              {chart.accuracy.toFixed(2)}%
+            </span>
+          </div>
+        )}
+        {chart && (
+          <span style={{ fontSize: 18, color: DIM }}>
+            RKS <span style={{ color: "#fff", marginLeft: 6 }}>{chart.rks.toFixed(3)}</span>
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function TileGrid({
+  slots,
+  covers,
+}: {
+  slots: { chart?: ChartMetric; tag: string }[];
+  covers?: Map<string, string>;
+}) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexWrap: "wrap",
+        gap: TILE_GAP,
+        width: COLUMNS * TILE_W + (COLUMNS - 1) * TILE_GAP,
+        marginTop: 36,
+        marginLeft: 28,
+      }}
+    >
+      {slots.map(({ chart, tag }) => (
+        <Tile
+          key={tag}
+          tag={tag}
+          chart={chart}
+          cover={chart && covers?.get(canonicalSongId(chart.songId))}
+        />
+      ))}
+    </div>
+  );
+}
+
+function Disclaimer() {
+  return (
+    <span style={{ position: "absolute", left: 64, bottom: 30, fontSize: 18, color: FAINT }}>
+      Unofficial fan-made tool · Not affiliated with Pigeon Games
+    </span>
+  );
+}
+
+/** Best 27 + 3 Phi as jacket tiles, the Phi slots first like the in-game ranking. */
+function B30Card(data: CardData) {
+  const { width, height } = CARD_SIZE.b30;
+  const { ranking } = data;
+  const slots = [
+    ...Array.from({ length: SLOTS_PHI(ranking) }, (_, i) => ({
+      chart: ranking.phi[i],
+      tag: `φ${i + 1}`,
+    })),
+    ...Array.from({ length: SLOTS_BEST(ranking) }, (_, i) => ({
+      chart: ranking.best[i],
+      tag: `#${i + 1}`,
+    })),
+  ];
+  return (
+    <Canvas width={width} height={height} palette={data.palette}>
+      <Header date={data.date} />
+      <ProfileStrip
+        {...data}
+        extra={["Best", ranking.ruleset === "b30" ? "B27 + 3φ" : "B19 + 1φ"]}
+      />
+      <TileGrid slots={slots} covers={data.covers} />
+      <Disclaimer />
+    </Canvas>
+  );
+}
+
+/** The best 30 Full Combo charts, and their average. */
+function Fc30Card(data: CardData) {
+  const { width, height } = CARD_SIZE.fc30;
+  const { charts, average } = fullComboBest(data.ranking);
+  const slots = Array.from({ length: 30 }, (_, i) => ({ chart: charts[i], tag: `FC #${i + 1}` }));
+  return (
+    <Canvas width={width} height={height} palette={data.palette}>
+      <Header date={data.date} />
+      <ProfileStrip {...data} extra={["FC30", average.toFixed(3)]} />
+      <TileGrid slots={slots} covers={data.covers} />
+      <Disclaimer />
+    </Canvas>
+  );
+}
+
+const SLOTS_PHI = (ranking: RankingResult) => (ranking.ruleset === "b30" ? 3 : 1);
+const SLOTS_BEST = (ranking: RankingResult) => (ranking.ruleset === "b30" ? 27 : 19);
+
+/** The summary card: profile, RKS, totals, per-difficulty clears and the top of the Best list. */
+function InfoCard({ name, ranking, songs, date, palette, avatar }: CardData) {
+  const counts = countLevels(songs);
+  const played = songs.reduce((sum, song) => sum + song.levels.filter(Boolean).length, 0);
+  const total = (key: "fc" | "phi") => counts.reduce((sum, count) => sum + count[key], 0);
+  return (
+    <Canvas width={W} height={H} palette={palette}>
       <Header date={date} />
       <div style={{ display: "flex", marginTop: 54, paddingLeft: 40, gap: 54 }}>
         {/* Each block steps right as it goes down, following the skew. */}
@@ -352,10 +588,8 @@ function Card({ name, ranking, songs, date, palette, avatar }: CardData) {
         </div>
         <BestCharts ranking={ranking} />
       </div>
-      <span style={{ position: "absolute", left: 64, bottom: 34, fontSize: 18, color: FAINT }}>
-        Unofficial fan-made tool · Not affiliated with Pigeon Games
-      </span>
-    </div>
+      <Disclaimer />
+    </Canvas>
   );
 }
 
@@ -390,28 +624,65 @@ function load() {
   return ready;
 }
 
-/** An avatar as a PNG data URL, since resvg can't decode the AVIF files. Undefined if it won't load. */
-async function avatarPng(name: string): Promise<string | undefined> {
+/**
+ * An image re-encoded as a data URL, since resvg can't decode the AVIF files; scaled to `width` if given.
+ * Undefined if it won't load, and the card is drawn without it.
+ */
+async function decoded(url: string, type: string, width?: number): Promise<string | undefined> {
   const image = new Image();
-  image.src = avatarUrl(name);
+  image.src = url;
   try {
     await image.decode();
   } catch {
-    return undefined; // missing avatar: draw the card without it
+    return undefined;
   }
   const canvas = document.createElement("canvas");
-  canvas.width = image.naturalWidth;
-  canvas.height = image.naturalHeight;
-  canvas.getContext("2d")!.drawImage(image, 0, 0);
-  return canvas.toDataURL("image/png");
+  canvas.width = width ?? image.naturalWidth;
+  canvas.height = Math.round((canvas.width / image.naturalWidth) * image.naturalHeight);
+  canvas.getContext("2d")!.drawImage(image, 0, 0, canvas.width, canvas.height);
+  return canvas.toDataURL(type, 0.86);
 }
 
-export async function renderShareCard({
-  avatar,
-  ...data
-}: Omit<CardData, "avatar"> & { /** In-game avatar name. */ avatar: string }): Promise<Blob> {
-  const [fonts, avatarImage] = await Promise.all([load(), avatarPng(avatar)]);
-  const svg = await satori(<Card {...data} avatar={avatarImage} />, { width: W, height: H, fonts });
+/** Jackets for the charts a grid format shows, at twice the tile width so they stay sharp. */
+async function coverImages(charts: ChartMetric[]) {
+  const ids = [...new Set(charts.map((chart) => canonicalSongId(chart.songId)))];
+  const images = await Promise.all(
+    ids.map((id) => decoded(`/covers/${id}.avif`, "image/jpeg", TILE_W * 2)),
+  );
+  return new Map(ids.flatMap((id, i) => (images[i] ? [[id, images[i]] as const] : [])));
+}
+
+export const CARDS: Record<CardFormat, (data: CardData) => React.ReactElement> = {
+  info: InfoCard,
+  b30: B30Card,
+  fc30: Fc30Card,
+};
+
+export async function renderShareCard(
+  format: CardFormat,
+  {
+    avatar,
+    ...data
+  }: Omit<CardData, "avatar" | "covers"> & { /** In-game avatar name. */ avatar: string },
+): Promise<Blob> {
+  const shown =
+    format === "b30"
+      ? [...data.ranking.phi, ...data.ranking.best]
+      : format === "fc30"
+        ? fullComboBest(data.ranking).charts
+        : [];
+  const [fonts, avatarImage, covers] = await Promise.all([
+    load(),
+    decoded(avatarUrl(avatar), "image/png"),
+    coverImages(shown),
+  ]);
+  const Card = CARDS[format];
+  const { width, height } = CARD_SIZE[format];
+  const svg = await satori(<Card {...data} avatar={avatarImage} covers={covers} />, {
+    width,
+    height,
+    fonts,
+  });
   const png = new Resvg(svg, { fitTo: { mode: "original" } }).render().asPng();
   return new Blob([new Uint8Array(png)], { type: "image/png" });
 }
