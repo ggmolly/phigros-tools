@@ -2,20 +2,24 @@ import { createFileRoute } from "@tanstack/react-router";
 import { MainMenu } from "../components/main-menu";
 import { Overview } from "../components/overview";
 import { useSave } from "../save-context";
-import { jsonLd, SITE, SITE_DESCRIPTION, SITE_NAME } from "../seo";
+import { headT, jsonLd, localeUrl, SITE_NAME } from "../seo";
 
 export const Route = createFileRoute("/_tool/")({
-  head: () => ({
-    scripts: [
-      jsonLd({
-        "@type": "WebSite",
-        name: SITE_NAME,
-        alternateName: "phigros.tools",
-        url: `${SITE}/`,
-        description: SITE_DESCRIPTION,
-      }),
-    ],
-  }),
+  head: ({ match }) => {
+    const { locale, t } = headT(match);
+    return {
+      scripts: [
+        jsonLd({
+          "@type": "WebSite",
+          name: SITE_NAME,
+          alternateName: "phigros.tools",
+          url: localeUrl("/", locale),
+          inLanguage: locale,
+          description: t.seo.siteDescription,
+        }),
+      ],
+    };
+  },
   component: OverviewRoute,
 });
 

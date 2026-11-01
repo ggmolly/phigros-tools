@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { canonicalSongId, catalogSongs } from "../catalog";
+import { useFormat, useT } from "../i18n";
 import { calculateRanking, type RankingResult } from "../metrics";
 import { countLevels } from "../modules";
 import { useSave } from "../save-context";
@@ -24,6 +25,7 @@ function MenuArt({ song }: { song?: string }) {
  */
 export function MainMenu() {
   const { credentials, snapshots, setChartKey } = useSave();
+  const t = useT();
   const [randomSongs, setRandomSongs] = useState<string[]>([]);
   // Picked after hydration so the server and client render the same markup.
   useEffect(() => {
@@ -74,7 +76,7 @@ export function MainMenu() {
     <div
       className="menu"
       role="group"
-      aria-label="Main menu"
+      aria-label={t.menu.label}
       onKeyDown={(e) => {
         const step = { ArrowLeft: -1, ArrowRight: 1 }[e.key];
         const next = step && keys[keys.indexOf(open) + step];
@@ -88,13 +90,13 @@ export function MainMenu() {
         const player = players.find((p) => p.credential.playerId === key);
         const label =
           key === "charts"
-            ? "Charts"
+            ? t.tabs.charts
             : key === "import"
-              ? "Import"
+              ? t.menu.import
               : (player!.credential.nickname ?? key);
         const sub =
           key === "charts"
-            ? `${catalogSongs.length} songs`
+            ? t.menu.songs(catalogSongs.length)
             : player?.ranking && `RKS ${player.ranking.rankingScore.toFixed(2)}`;
         if (key !== open)
           return (
@@ -122,21 +124,19 @@ export function MainMenu() {
             <MenuArt song={art(key)} />
             {key === "charts" ? (
               <>
-                <MenuHead kicker={sub} title="Charts" />
+                <MenuHead kicker={sub} title={t.tabs.charts} />
                 <div className="menu-strip">
-                  <p className="menu-text">
-                    Every chart’s difficulty constant, charters and note stats.
-                  </p>
+                  <p className="menu-text">{t.menu.chartsText}</p>
                   <Link to="/charts" className="btn menu-play">
-                    Browse <Arrow />
+                    {t.menu.browse} <Arrow />
                   </Link>
                 </div>
               </>
             ) : key === "import" ? (
               <>
                 <MenuHead
-                  kicker={players.length ? "Another account or file" : "Your Progress"}
-                  title={players.length ? "Import Save" : "My Save"}
+                  kicker={players.length ? t.menu.anotherAccount : t.menu.yourProgress}
+                  title={players.length ? t.menu.importSave : t.menu.mySave}
                 />
                 <div className="menu-strip">
                   <div className="menu-import">
@@ -172,13 +172,15 @@ function PlayerCard({
   player: { credential: Credential; latest?: SnapshotV1; ranking?: RankingResult };
 }) {
   const { sync, busy, syncPlayer, syncLabel } = useSave();
+  const t = useT();
+  const format = useFormat();
   const songs = latest?.document.songs ?? [];
   const counts = countLevels(songs);
   const syncing = sync && sync.playerId === credential.playerId ? sync.state : undefined;
   return (
     <>
       <MenuHead
-        kicker={`Welcome back${latest ? ` · last sync ${new Date(latest.capturedAt).toLocaleDateString()}` : ""}`}
+        kicker={`${t.menu.welcomeBack}${latest ? ` · ${t.menu.lastSync(format.date(latest.capturedAt))}` : ""}`}
         title={credential.nickname ?? credential.playerId}
       />
       <div className="menu-strip">
@@ -186,14 +188,17 @@ function PlayerCard({
           <div className="stat-row">
             <Stat label="RKS" value={ranking.rankingScore.toFixed(2)} />
             <Stat
-              label="Played"
+              label={t.menu.played}
               value={songs.reduce((sum, song) => sum + song.levels.filter(Boolean).length, 0)}
             />
-            <Stat label="Full Combo" value={counts.reduce((sum, count) => sum + count.fc, 0)} />
+            <Stat
+              label={t.menu.fullCombo}
+              value={counts.reduce((sum, count) => sum + count.fc, 0)}
+            />
             <Stat label="Phi" value={counts.reduce((sum, count) => sum + count.phi, 0)} />
           </div>
         ) : (
-          <p className="menu-text">Sync to fetch your newest cloud save.</p>
+          <p className="menu-text">{t.menu.syncPrompt}</p>
         )}
         <button
           type="button"
@@ -202,7 +207,7 @@ function PlayerCard({
           onClick={() => void syncPlayer(credential)}
         >
           <SyncIcon spinning={syncing === "syncing"} />
-          <span className="sync-label">{syncLabel(credential.playerId, "Sync")}</span>
+          <span className="sync-label">{syncLabel(credential.playerId, t.menu.sync)}</span>
         </button>
       </div>
     </>

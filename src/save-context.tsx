@@ -3,6 +3,7 @@ import { createContext, type RefObject, use, useEffect, useRef, useState } from 
 import type { Account } from "./adb";
 import { catalogRevision } from "./catalog";
 import { MAX_JSON_SIZE, parseJsonDocument, type SaveDocumentV1 } from "./document";
+import { useT } from "./i18n";
 import { calculateRanking } from "./metrics";
 import { applyPalette } from "./palettes";
 import type { Region, SaveArchive } from "./save";
@@ -73,6 +74,7 @@ export function useSave(): SaveContextValue {
 }
 
 export function SaveProvider({ children }: { children: React.ReactNode }) {
+  const t = useT();
   const navigate = useNavigate();
   const [loaded, setLoaded] = useState<Loaded>();
   const [chartKey, setChartKey] = useState("");
@@ -269,10 +271,10 @@ export function SaveProvider({ children }: { children: React.ReactNode }) {
   function syncLabel(playerId: string, idle: string) {
     if (sync?.playerId !== playerId) return idle;
     return {
-      syncing: "Syncing…",
-      fresh: "New save fetched",
-      same: "Already up to date",
-      error: "Sync failed",
+      syncing: t.menu.syncing,
+      fresh: t.menu.fresh,
+      same: t.menu.same,
+      error: t.menu.failed,
     }[sync.state];
   }
   /** The fade-out is pure CSS (see #usbDialog in style.css). */

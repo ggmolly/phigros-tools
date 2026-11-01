@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { encode } from "uqr";
+import { Rich, useT } from "../i18n";
 import type { Region } from "../save";
 import { message, useSave } from "../save-context";
 import type { LoginCode, LoginStatus } from "../taptap";
@@ -9,6 +10,7 @@ import { Arrow } from "./arrow";
  * "Local file" clicks the page's one hidden #file input (rendered by the tool layout). */
 export function ImportOptions() {
   const { dialog, busy, connectAndroid, fileInput, openTapTap } = useSave();
+  const t = useT();
   return (
     <>
       <button
@@ -18,8 +20,8 @@ export function ImportOptions() {
         onClick={() => openTapTap.current?.()}
       >
         <span>
-          <strong>TapTap login</strong>
-          <span className="import-description">Scan a QR code, on any device</span>
+          <strong>{t.import.taptap}</strong>
+          <span className="import-description">{t.import.taptapDesc}</span>
         </span>
         <span className="arrow-chip">
           <Arrow />
@@ -32,8 +34,8 @@ export function ImportOptions() {
         onClick={() => void connectAndroid()}
       >
         <span>
-          <strong>Android (USB)</strong>
-          <span className="import-description">Connect phone and fetch cloud save</span>
+          <strong>{t.import.usb}</strong>
+          <span className="import-description">{t.import.usbDesc}</span>
         </span>
         <span className="arrow-chip">
           <Arrow />
@@ -45,8 +47,8 @@ export function ImportOptions() {
         onClick={() => dialog.current?.showModal()}
       >
         <span>
-          <strong>Session token</strong>
-          <span className="import-description">Paste Phigros session token</span>
+          <strong>{t.import.token}</strong>
+          <span className="import-description">{t.import.tokenDesc}</span>
         </span>
         <span className="arrow-chip">
           <Arrow />
@@ -58,8 +60,8 @@ export function ImportOptions() {
         onClick={() => fileInput.current?.click()}
       >
         <span>
-          <strong>Local file</strong>
-          <span className="import-description">Select ZIP or JSON file</span>
+          <strong>{t.import.file}</strong>
+          <span className="import-description">{t.import.fileDesc}</span>
         </span>
         <span className="arrow-chip">
           <Arrow />
@@ -71,25 +73,19 @@ export function ImportOptions() {
 
 /** A QR code as crisp SVG squares (dark on a white tile, which scanners need whatever the theme). */
 function QrCode({ text }: { text: string }) {
+  const t = useT();
   const { data, size } = encode(text, { border: 2 });
   const path = data
     .flatMap((row, y) => row.map((dark, x) => (dark ? `M${x} ${y}h1v1h-1z` : "")))
     .join("");
   return (
     <svg className="qr-code" viewBox={`0 0 ${size} ${size}`} shapeRendering="crispEdges">
-      <title>Login QR code</title>
+      <title>{t.import.qrTitle}</title>
       <rect width={size} height={size} fill="#fff" />
       <path d={path} fill="#000" />
     </svg>
   );
 }
-
-const STATUS_TEXT: Record<LoginStatus | "loading", string> = {
-  loading: "Getting a login code…",
-  waiting: "Waiting for you to approve it in TapTap…",
-  scanned: "Scanned. Approve the login in TapTap.",
-  approved: "Approved. Logging in to Phigros…",
-};
 
 /** "Log in with TapTap" (see src/taptap.ts): one dialog for the whole tool, opened through `openTapTap`. */
 export function TapTapDialog() {
@@ -100,6 +96,7 @@ export function TapTapDialog() {
   const [code, setCode] = useState<LoginCode>();
   const [status, setStatus] = useState<LoginStatus | "loading">("loading");
   const [error, setError] = useState("");
+  const t = useT();
 
   async function start(next: Region) {
     controller.current?.abort();
@@ -142,22 +139,21 @@ export function TapTapDialog() {
       onClose={() => controller.current?.abort()}
     >
       <form method="dialog" className="dialog-head">
-        <h2 id="taptap-heading">TapTap Login</h2>
+        <h2 id="taptap-heading">{t.import.dialogTitle}</h2>
         {/* biome-ignore lint/a11y/useButtonType: the default submit type closes the method="dialog" form. */}
-        <button className="dialog-close" aria-label="Close TapTap login">
+        <button className="dialog-close" aria-label={t.import.close}>
           ×
         </button>
       </form>
       <p className="meta">
-        Scan the code with your phone, or tap <strong>Open TapTap</strong> on the phone itself, and
-        approve with the TapTap account you play Phigros with.
+        <Rich text={t.import.intro} />
       </p>
       {/* biome-ignore lint/a11y/useSemanticElements: same button group as DifficultyFilter. */}
-      <div className="seg" role="group" aria-label="Game version">
+      <div className="seg" role="group" aria-label={t.import.gameVersion}>
         {(
           [
-            ["global", "Global"],
-            ["china", "China"],
+            ["global", t.import.global],
+            ["china", t.import.china],
           ] as const
         ).map(([value, label]) => (
           <button
@@ -176,20 +172,20 @@ export function TapTapDialog() {
         <div className="taptap-side">
           {code && (
             <p className="taptap-code">
-              <span className="meta">Code</span> <strong>{code.userCode}</strong>
+              <span className="meta">{t.import.code}</span> <strong>{code.userCode}</strong>
             </p>
           )}
           <p role="status" className={error ? "negative" : "meta"}>
-            {error || STATUS_TEXT[status]}
+            {error || t.import[status]}
           </p>
           {error ? (
             <button type="button" className="btn" onClick={() => void start(region)}>
-              New code <Arrow />
+              {t.import.newCode} <Arrow />
             </button>
           ) : (
             code && (
               <a className="btn" href={code.url} target="_blank" rel="noopener noreferrer">
-                Open TapTap <Arrow />
+                {t.import.openTapTap} <Arrow />
               </a>
             )
           )}
@@ -203,54 +199,48 @@ export function TapTapDialog() {
 export function ImportGuide({ className = "btn btn-ghost" }: { className?: string }) {
   const { openTapTap, busy } = useSave();
   const guide = useRef<HTMLDialogElement>(null);
+  const t = useT();
   return (
     <>
       <button type="button" className={className} onClick={() => guide.current?.showModal()}>
-        How to import <Arrow />
+        {t.import.guideButton} <Arrow />
       </button>
       <dialog ref={guide} id="guideDialog" aria-labelledby="guide-heading">
         <form method="dialog" className="dialog-head">
-          <h2 id="guide-heading">How to Import</h2>
+          <h2 id="guide-heading">{t.import.guideTitle}</h2>
           {/* biome-ignore lint/a11y/useButtonType: the default submit type closes the method="dialog" form. */}
-          <button className="dialog-close" aria-label="Close import guide">
+          <button className="dialog-close" aria-label={t.import.guideClose}>
             ×
           </button>
         </form>
         <p className="meta">
-          phigros.tools reads your <strong>TapTap cloud save</strong>, so sync it first: in Phigros,
-          open <strong>Settings → Profile</strong>, log in with TapTap and tap{" "}
-          <strong>Sync Now</strong>. Global and China versions of the game both work.
+          <Rich text={t.import.guideIntro} />
         </p>
         <ol className="guide-steps">
           <li>
-            Choose <strong>TapTap login</strong> and pick your game version.
+            <Rich text={t.import.step1} />
           </li>
           <li>
-            Scan the QR code with your phone, or tap <strong>Open TapTap</strong> if you’re on the
-            phone already, and approve with the TapTap account you play with.
+            <Rich text={t.import.step2} />
           </li>
           <li>
-            Your save loads, and this browser remembers the login so <strong>Sync</strong> fetches
-            newer saves later.
+            <Rich text={t.import.step3} />
           </li>
         </ol>
         <details className="guide-more">
-          <summary>Android over USB instead</summary>
+          <summary>{t.import.usbSummary}</summary>
           <ol className="guide-steps">
             <li>
-              On the phone, open <strong>Settings → About phone</strong> and tap{" "}
-              <strong>Build number</strong> seven times to unlock Developer options.
+              <Rich text={t.import.usb1} />
             </li>
             <li>
-              In <strong>Developer options</strong>, turn on <strong>USB debugging</strong>.
+              <Rich text={t.import.usb2} />
             </li>
             <li>
-              Plug the phone into a computer and open this site in <strong>Chrome</strong> or{" "}
-              <strong>Edge</strong> (Firefox and Safari can’t talk to USB devices).
+              <Rich text={t.import.usb3} />
             </li>
             <li>
-              Choose <strong>Android (USB)</strong>, pick your phone, then tap{" "}
-              <strong>Allow</strong> on the phone.
+              <Rich text={t.import.usb4} />
             </li>
           </ol>
         </details>
@@ -264,7 +254,7 @@ export function ImportGuide({ className = "btn btn-ghost" }: { className?: strin
               openTapTap.current?.();
             }}
           >
-            Log in with TapTap <Arrow />
+            {t.import.loginWithTapTap} <Arrow />
           </button>
         </div>
       </dialog>

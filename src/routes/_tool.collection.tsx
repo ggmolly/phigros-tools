@@ -1,11 +1,24 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CollectionTracker } from "../components/collection";
 import { useSave } from "../save-context";
+import { headT, pageMeta } from "../seo";
 
 export const Route = createFileRoute("/_tool/collection")({
-  head: () => ({
-    meta: [{ title: "Collection — Phigros Tools" }],
-  }),
+  // Empty without a save, so kept out of search results; "/" is the page to index.
+  head: ({ match }) => {
+    const { locale, t } = headT(match);
+    return {
+      meta: [
+        ...pageMeta({
+          title: t.seo.collectionTitle,
+          description: t.seo.collectionDescription,
+          path: "/collection",
+          locale,
+        }),
+        { name: "robots", content: "noindex" },
+      ],
+    };
+  },
   component: CollectionRoute,
 });
 

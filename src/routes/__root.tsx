@@ -1,5 +1,5 @@
 import {
-  createRootRoute,
+  createRootRouteWithContext,
   HeadContent,
   Link,
   Outlet,
@@ -9,9 +9,11 @@ import {
 import type { CSSProperties } from "react";
 import { useEffect } from "react";
 import { Backdrop, SiteFooter, SiteHeader } from "../components/chrome";
+import { I18nProvider, useT } from "../i18n";
+import type { Locale } from "../i18n/locales";
 import { fogStyle } from "../palettes";
 import { SaveProvider } from "../save-context";
-import { pageMeta, SITE_DESCRIPTION, SITE_NAME } from "../seo";
+import { headT, pageMeta, SITE_NAME } from "../seo";
 import { getStars } from "../stars";
 import stylesheet from "../style.css?url";
 
@@ -37,25 +39,37 @@ function Analytics() {
 // Shared by every page (the save-analyzer tabs and the /charts reference pages): the fog backdrop, the
 // footer, and the loaded save, so following a song link and coming back keeps it. The tool's layout is in routes/_tool.tsx.
 function Root() {
+  const { locale } = Route.useLoaderData();
   return (
-    <SaveProvider>
-      <Backdrop />
-      <Analytics />
-      <Outlet />
-      <SiteFooter />
-    </SaveProvider>
+    <I18nProvider locale={locale}>
+      <SaveProvider>
+        <Backdrop />
+        <Analytics />
+        <Outlet />
+        <SiteFooter />
+      </SaveProvider>
+    </I18nProvider>
   );
 }
 
-export const Route = createRootRoute({
-  // Server-rendered with the page; never refetched on client navigation.
-  loader: () => getStars().catch(() => null),
+export const Route = createRootRouteWithContext<{ i18n: { locale: Locale } }>()({
+  // Server-rendered with the page; never refetched on client navigation. The language comes from the URL
+  // prefix (see router.tsx); switching it loads the other prefix.
+  loader: async ({ context }) => ({
+    stars: await getStars().catch(() => null),
+    locale: context.i18n.locale,
+  }),
   staleTime: Number.POSITIVE_INFINITY,
-  head: () => ({
+  head: ({ match }) => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      ...pageMeta({ title: SITE_NAME, description: SITE_DESCRIPTION, path: "/" }),
+      ...pageMeta({
+        title: SITE_NAME,
+        description: headT(match).t.seo.siteDescription,
+        path: "/",
+        locale: headT(match).locale,
+      }),
     ],
     links: [
       {
@@ -69,9 +83,16 @@ export const Route = createRootRoute({
       { rel: "stylesheet", href: stylesheet },
     ],
   }),
-  shellComponent: ({ children }) => (
+  shellComponent: ({ children }) => <Shell>{children}</Shell>,
+  component: Root,
+  notFoundComponent: NotFound,
+});
+
+function Shell({ children }: { children: React.ReactNode }) {
+  const { locale } = Route.useLoaderData();
+  return (
     // The default fog is set inline so the first paint already has it (see DEFAULT_PALETTE).
-    <html lang="en" style={fogStyle() as CSSProperties}>
+    <html lang={locale} style={fogStyle() as CSSProperties}>
       <head>
         <HeadContent />
       </head>
@@ -80,20 +101,23 @@ export const Route = createRootRoute({
         <Scripts />
       </body>
     </html>
-  ),
-  component: Root,
-  notFoundComponent: () => (
+  );
+}
+
+function NotFound() {
+  const t = useT();
+  return (
     <>
       <SiteHeader />
       <main className="app-shell">
         <section className="panel">
-          <h1 className="panel-title">Page Not Found</h1>
+          <h1 className="panel-title">{t.notFound.title}</h1>
           <p className="meta">
-            Nothing lives at this address. <Link to="/">Open your save</Link> or{" "}
-            <Link to="/charts">browse the chart list</Link>.
+            {t.notFound.body} <Link to="/">{t.notFound.openSave}</Link> {t.notFound.or}{" "}
+            <Link to="/charts">{t.notFound.browseCharts}</Link>.
           </p>
         </section>
       </main>
     </>
-  ),
-});
+  );
+}

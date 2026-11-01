@@ -1,16 +1,16 @@
 import { createFileRoute, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import { Arrow, SyncIcon } from "../components/arrow";
-import { SiteHeader, TAB_LABEL, type TabId, toolTabs } from "../components/chrome";
+import { SiteHeader, TAB_KEY, type TabId, toolTabs } from "../components/chrome";
 import { ImportOptions, TapTapDialog } from "../components/import";
 import { Avatar } from "../components/primitives";
 import { calculateRanking } from "../metrics";
 import { message, useSave } from "../save-context";
-import { SITE } from "../seo";
+import { headT, pageLinks } from "../seo";
 import { deleteCredential } from "../store";
 
 export const Route = createFileRoute("/_tool")({
-  head: () => ({ links: [{ rel: "canonical", href: `${SITE}/` }] }),
+  head: ({ match }) => ({ links: pageLinks("/", headT(match).locale) }),
   component: ToolLayout,
 });
 
@@ -68,7 +68,7 @@ function ToolLayout() {
   // biome-ignore lint/correctness/useExhaustiveDependencies: navigate isn't wrapped in useCallback (the project relies on the React Compiler instead), so listing it would re-run this every render.
   useEffect(() => {
     // Only for the tool's own tabs: while following a link out (e.g. to /charts/$id) this layout briefly sees the new path.
-    if (storageReady && pathname in TAB_LABEL && pathname !== "/charts" && pathname !== activeTab)
+    if (storageReady && pathname in TAB_KEY && pathname !== "/charts" && pathname !== activeTab)
       void navigate({ to: activeTab, replace: true });
   }, [storageReady, pathname, activeTab]);
   return (

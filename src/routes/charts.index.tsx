@@ -11,11 +11,10 @@ import {
 import { SiteHeader } from "../components/chrome";
 import { Difficulty, DifficultyFilter } from "../components/primitives";
 import { LEVELS } from "../modules";
-import { breadcrumbs, CHARTS_IMAGE, jsonLd, pageMeta, SITE } from "../seo";
+import { breadcrumbs, chartsImage, headT, jsonLd, localeUrl, pageLinks, pageMeta } from "../seo";
 
 const CHAPTERS = [...new Set(catalogSongs.map((song) => song.chapter))].sort();
-const TITLE = "Chart & Difficulty List";
-const DESCRIPTION = `Every Phigros chart and its difficulty constant: ${catalogChartTotals.reduce((sum, total) => sum + total, 0)} EZ, HD, IN and AT charts from ${catalogSongs.length} songs across ${CHAPTERS.length} chapters, with charters and illustrators (game version ${catalogManifest.gameVersion}).`;
+const CHART_TOTAL = catalogChartTotals.reduce((sum, total) => sum + total, 0);
 
 export const Route = createFileRoute("/charts/")({
   // Filters live in the URL, so song pages and artist names can link straight to a filtered list.
@@ -28,35 +27,47 @@ export const Route = createFileRoute("/charts/")({
       ? { chapter: canonicalChapter(search.chapter) }
       : {}),
   }),
-  head: () => ({
-    meta: pageMeta({
-      title: TITLE,
-      description: DESCRIPTION,
-      path: "/charts",
-      image: CHARTS_IMAGE,
-    }),
-    links: [{ rel: "canonical", href: `${SITE}/charts` }],
-    scripts: [
-      jsonLd({
-        "@graph": [
-          breadcrumbs([
-            ["Phigros Tools", "/"],
-            ["Charts", "/charts"],
-          ]),
-          {
-            "@type": "ItemList",
-            name: "Phigros songs",
-            itemListElement: catalogSongs.map((song, index) => ({
-              "@type": "ListItem",
-              position: index + 1,
-              url: `${SITE}/charts/${encodeURIComponent(song.id)}`,
-              name: song.title,
-            })),
-          },
-        ],
+  head: ({ match }) => {
+    const { locale, t } = headT(match);
+    return {
+      meta: pageMeta({
+        title: t.seo.chartsTitle,
+        description: t.seo.chartsDescription(
+          CHART_TOTAL,
+          catalogSongs.length,
+          CHAPTERS.length,
+          String(catalogManifest.gameVersion),
+        ),
+        path: "/charts",
+        locale,
+        image: chartsImage(locale),
       }),
-    ],
-  }),
+      links: pageLinks("/charts", locale),
+      scripts: [
+        jsonLd({
+          "@graph": [
+            breadcrumbs(
+              [
+                ["Phigros Tools", "/"],
+                [t.tabs.charts, "/charts"],
+              ],
+              locale,
+            ),
+            {
+              "@type": "ItemList",
+              name: t.seo.songList,
+              itemListElement: catalogSongs.map((song, index) => ({
+                "@type": "ListItem",
+                position: index + 1,
+                url: localeUrl(`/charts/${encodeURIComponent(song.id)}`, locale),
+                name: song.title,
+              })),
+            },
+          ],
+        }),
+      ],
+    };
+  },
   component: ChartsPage,
 });
 

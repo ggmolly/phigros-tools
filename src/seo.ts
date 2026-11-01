@@ -1,7 +1,29 @@
+import { LOCALES, type Locale, withLocale } from "./i18n/locales";
+import { MESSAGES } from "./i18n/messages";
+
 export const SITE = "https://phigros.tools";
 export const SITE_NAME = "Phigros Tools";
-export const SITE_DESCRIPTION =
-  "Analyze your Phigros save: ranking score, Best charts, chart records and progress, privately in your browser. Plus every chart's difficulty constant.";
+
+/** A page's absolute URL in a given language. */
+export const localeUrl = (path: string, locale: Locale) => `${SITE}${withLocale(path, locale)}`;
+
+/** The messages for a route's head(), which runs outside React: the language is on the router context. */
+export const headT = (match: { context: { i18n: { locale: Locale } } }) => ({
+  locale: match.context.i18n.locale,
+  t: MESSAGES[match.context.i18n.locale],
+});
+
+/**
+ * Canonical link for this language's version, plus one alternate per language and x-default (English, whose
+ * bare URL also redirects readers to their own language). Search engines index each language separately.
+ */
+export function pageLinks(path: string, locale: Locale) {
+  return [
+    { rel: "canonical", href: localeUrl(path, locale) },
+    ...LOCALES.map((code) => ({ rel: "alternate", hrefLang: code, href: localeUrl(path, code) })),
+    { rel: "alternate", hrefLang: "x-default", href: localeUrl(path, "en") },
+  ];
+}
 
 interface Image {
   url: string;
@@ -11,19 +33,35 @@ interface Image {
 }
 
 /** The site-wide preview image (scripts/build-site-og.ts). */
-const SITE_IMAGE: Image = {
+export const siteImage = (locale: Locale): Image => ({
   url: `${SITE}/og.jpg`,
   width: 1200,
   height: 630,
-  alt: "Phigros Tools: ranking score, Best charts and every chart constant",
-};
+  alt: MESSAGES[locale].seo.siteImageAlt,
+});
 
 /** The chart list's preview image, from the same script. */
-export const CHARTS_IMAGE: Image = {
+export const chartsImage = (locale: Locale): Image => ({
   url: `${SITE}/og-charts.jpg`,
   width: 1200,
   height: 630,
-  alt: "Phigros Tools: every chart's difficulty constant",
+  alt: MESSAGES[locale].seo.chartsImageAlt,
+});
+
+/** og:locale wants a territory. */
+const OG_LOCALE: Record<Locale, string> = {
+  en: "en_US",
+  fr: "fr_FR",
+  es: "es_ES",
+  it: "it_IT",
+  de: "de_DE",
+  zh: "zh_CN",
+  "zh-Hant": "zh_TW",
+  ja: "ja_JP",
+  ko: "ko_KR",
+  vi: "vi_VN",
+  id: "id_ID",
+  ms: "ms_MY",
 };
 
 /**
@@ -36,13 +74,15 @@ export function pageMeta({
   title,
   description,
   path,
-  image = SITE_IMAGE,
+  locale,
+  image = siteImage(locale),
   themeColor = "#8fdcff",
   type = "website",
 }: {
   title: string;
   description: string;
   path: string;
+  locale: Locale;
   image?: Image;
   themeColor?: string;
   type?: "website" | "music.song";
@@ -55,7 +95,8 @@ export function pageMeta({
     { property: "og:type", content: type },
     { property: "og:title", content: title },
     { property: "og:description", content: description },
-    { property: "og:url", content: `${SITE}${path}` },
+    { property: "og:url", content: localeUrl(path, locale) },
+    { property: "og:locale", content: OG_LOCALE[locale] },
     { property: "og:image", content: image.url },
     { property: "og:image:width", content: String(image.width) },
     { property: "og:image:height", content: String(image.height) },
@@ -75,14 +116,14 @@ export function jsonLd(data: object) {
   };
 }
 
-export function breadcrumbs(trail: [name: string, path: string][]) {
+export function breadcrumbs(trail: [name: string, path: string][], locale: Locale) {
   return {
     "@type": "BreadcrumbList",
     itemListElement: trail.map(([name, path], index) => ({
       "@type": "ListItem",
       position: index + 1,
       name,
-      item: `${SITE}${path}`,
+      item: localeUrl(path, locale),
     })),
   };
 }

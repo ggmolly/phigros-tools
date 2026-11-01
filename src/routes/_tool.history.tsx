@@ -4,13 +4,26 @@ import { Arrow } from "../components/arrow";
 import { RksHistory, SnapshotProgress } from "../components/history-panels";
 import { calculateRanking } from "../metrics";
 import { message, useSave } from "../save-context";
+import { headT, pageMeta } from "../seo";
 import { compareDocuments } from "../snapshots";
 import { clearSnapshots, deleteSnapshot } from "../store";
 
 export const Route = createFileRoute("/_tool/history")({
-  head: () => ({
-    meta: [{ title: "History — Phigros Tools" }],
-  }),
+  // Empty without a save, so kept out of search results; "/" is the page to index.
+  head: ({ match }) => {
+    const { locale, t } = headT(match);
+    return {
+      meta: [
+        ...pageMeta({
+          title: t.seo.historyTitle,
+          description: t.seo.historyDescription,
+          path: "/history",
+          locale,
+        }),
+        { name: "robots", content: "noindex" },
+      ],
+    };
+  },
   component: HistoryRoute,
 });
 

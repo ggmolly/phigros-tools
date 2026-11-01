@@ -10,7 +10,7 @@ import { Difficulty } from "../components/primitives";
 import { LEVELS, type LevelName } from "../modules";
 import { type Chart, parseChart } from "../player/chart";
 import { decodePhc } from "../player/phc";
-import { pageMeta, SITE } from "../seo";
+import { headT, pageLinks, pageMeta, SITE } from "../seo";
 
 const songLevels = (id: string) =>
   LEVELS.filter((_, index) => catalogSong(id)?.constants[index] != null);
@@ -34,38 +34,43 @@ export const Route = createFileRoute("/charts/$id_/play/$level")({
   },
   // Link previews like the song page's: the cover card and its accent colour, plus this chart's size and tempo.
   head: ({ params, loaderData, match }) => {
+    const { locale, t } = headT(match);
     const song = catalogSong(params.id);
     const path = `/charts/${encodeURIComponent(params.id)}/play/${params.level}`;
     if (!song)
       return {
         meta: [
           ...pageMeta({
-            title: "Chart Preview",
-            description: "Watch a Phigros chart play out.",
+            title: t.seo.playFallbackTitle,
+            description: t.seo.playFallbackDescription,
             path,
+            locale,
           }),
           { name: "robots", content: "noindex" },
         ],
       };
     const stats = loaderData?.stats?.[LEVELS.indexOf(params.level as LevelName)];
-    const { t } = match.search;
-    const at = t ? ` at ${Math.floor(t / 60)}:${String(t % 60).padStart(2, "0")}` : "";
+    const time = match.search.t;
+    const at = time
+      ? t.seo.playAt(`${Math.floor(time / 60)}:${String(time % 60).padStart(2, "0")}`)
+      : "";
     const bpm =
       stats && (stats.bpmMin === stats.bpmMax ? `${stats.bpm}` : `${stats.bpmMin}–${stats.bpmMax}`);
     return {
       meta: [
         ...pageMeta({
-          title: `${song.title} (${params.level}) Chart Preview${at}`,
+          title: `${t.seo.playTitle(song.title, params.level)}${at}`,
           description: [
-            `Watch the ${params.level} chart of ${song.title} by ${song.artist} play out${at}.`,
-            stats && `${stats.notes.toLocaleString("en")} notes at ${bpm} BPM.`,
+            t.seo.playDescription(params.level, song.title, song.artist, at),
+            stats && t.seo.playStats(stats.notes.toLocaleString(locale), bpm!),
           ]
             .filter(Boolean)
             .join(" "),
           path,
+          locale,
           themeColor: loaderData?.themeColor,
           image: {
-            url: `${SITE}/og/chart/${encodeURIComponent(song.id)}/${params.level}.jpg${t ? `?t=${t}` : ""}`,
+            url: `${SITE}/og/chart/${encodeURIComponent(song.id)}/${params.level}.jpg${time ? `?t=${time}` : ""}`,
             width: 1200,
             height: 630,
             alt: `${song.title} (${params.level} ${song.constants[LEVELS.indexOf(params.level as LevelName)]?.toFixed(1)}) by ${song.artist}${stats ? `: ${stats.notes} notes at ${bpm} BPM` : ""}`,
@@ -73,7 +78,7 @@ export const Route = createFileRoute("/charts/$id_/play/$level")({
         }),
         { name: "robots", content: "noindex" },
       ],
-      links: [{ rel: "canonical", href: `${SITE}${path}` }],
+      links: pageLinks(path, locale),
     };
   },
   component: PlayPage,

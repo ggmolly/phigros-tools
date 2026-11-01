@@ -643,6 +643,22 @@
 .github-stars {
   font-variant-numeric: tabular-nums;
 }
+.lang-switch {
+  flex: none;
+  padding: 2px 4px;
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--dim);
+  font: inherit;
+}
+.lang-switch:hover {
+  color: var(--text);
+}
+.lang-switch option {
+  background: #10141c;
+  color: #fff;
+}
 .tabs {
   position: relative;
   isolation: isolate;
@@ -2840,6 +2856,12 @@ dialog strong {
 }
 .site-footer a {
   color: var(--dim);
+}
+.footer-end {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 16px;
 }
 .site-footer a:hover {
   color: var(--glow);

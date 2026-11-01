@@ -5,10 +5,12 @@ import { type ChartStats, getSongDetails } from "../chartStats";
 import { Arrow } from "../components/arrow";
 import { SiteHeader } from "../components/chrome";
 import { Difficulty, Rank, score7 } from "../components/primitives";
+import type { Locale } from "../i18n/locales";
+import { MESSAGES } from "../i18n/messages";
 import { calculateRanking } from "../metrics";
 import { LEVELS } from "../modules";
 import { useSave } from "../save-context";
-import { breadcrumbs, jsonLd, pageMeta, SITE } from "../seo";
+import { breadcrumbs, headT, jsonLd, localeUrl, pageLinks, pageMeta, SITE } from "../seo";
 
 function mmss(totalSeconds: number) {
   const m = Math.floor(totalSeconds / 60);
@@ -88,18 +90,20 @@ const STAT_ROWS: [string, (s: ChartStats) => string, string?][] = [
   ],
 ];
 
-/** "a", "a and b", "a, b and c". */
-function list(items: string[]) {
-  return items.length < 3
-    ? items.join(" and ")
-    : `${items.slice(0, -1).join(", ")} and ${items.at(-1)}`;
-}
+/** "a", "a and b", "a, b and c", in the page's language. */
+const list = (items: string[], locale: Locale) =>
+  new Intl.ListFormat(locale, { type: "conjunction" }).format(items);
 
 /**
  * A few natural sentences about a song for search snippets and link previews: who made it, where it's
  * from, which difficulties exist and who charted them, and what its hardest chart is like.
  */
-function describe(song: CatalogSong, songStats: (ChartStats | null)[] | null): string {
+function describe(
+  song: CatalogSong,
+  songStats: (ChartStats | null)[] | null,
+  locale: Locale,
+): string {
+  const t = MESSAGES[locale].seo;
   const levels = LEVELS.flatMap((level, index) =>
     song.constants[index] == null ? [] : [{ level, index, constant: song.constants[index]! }],
   );
@@ -110,23 +114,37 @@ function describe(song: CatalogSong, songStats: (ChartStats | null)[] | null): s
   }
   const charters =
     byCharter.size === 1
-      ? `, all charted by ${[...byCharter.keys()][0]}`
+      ? t.allChartedBy([...byCharter.keys()][0]!)
       : byCharter.size > 1
-        ? `, charted by ${list([...byCharter].map(([name, charted]) => `${name} (${charted.join("/")})`))}`
+        ? t.chartedBy(
+            list(
+              [...byCharter].map(([name, charted]) => `${name} (${charted.join("/")})`),
+              locale,
+            ),
+          )
         : "";
   const hardest = levels.at(-1);
   const stats = hardest && songStats?.[hardest.index];
   const bpm =
     stats && (stats.bpmMin === stats.bpmMax ? `${stats.bpm}` : `${stats.bpmMin}–${stats.bpmMax}`);
-  return [
-    `${song.title} is a Phigros song by ${song.artist}, from ${song.chapter}.`,
-    `It has ${levels.length === 1 ? "one chart" : `${levels.length} charts`}: ${list(levels.map(({ level, constant }) => `${level} ${constant.toFixed(1)}`))}${charters}.`,
-    stats &&
-      `The ${hardest.level} chart packs ${stats.notes.toLocaleString("en")} notes into ${mmss(stats.lengthSec)} at ${bpm} BPM.`,
-    song.illustrator && `Cover art by ${song.illustrator}.`,
-  ]
-    .filter(Boolean)
-    .join(" ");
+  const chartList = list(
+    levels.map(({ level, constant }) => `${level} ${constant.toFixed(1)}`),
+    locale,
+  );
+  return (
+    [
+      t.songIntro(song.title, song.artist, song.chapter),
+      levels.length === 1
+        ? t.oneChart(chartList, charters)
+        : t.nCharts(levels.length, chartList, charters),
+      stats &&
+        t.hardest(hardest.level, stats.notes.toLocaleString(locale), mmss(stats.lengthSec), bpm!),
+      song.illustrator && t.coverBy(song.illustrator),
+    ]
+      .filter(Boolean)
+      // CJK sentences run on without spaces.
+      .join(/^(zh|ja)/.test(locale) ? "" : " ")
+  );
 }
 
 const songPath = (song: CatalogSong) => `/charts/${encodeURIComponent(song.id)}`;
@@ -136,49 +154,59 @@ export const Route = createFileRoute("/charts/$id")({
     if (!catalogSong(params.id)) throw notFound(); // a real 404, not a 200 "not found" page
     return getSongDetails({ data: params.id });
   },
-  head: ({ params, loaderData }) => {
+  head: ({ params, loaderData, match }) => {
+    const { locale, t } = headT(match);
     const song = catalogSong(params.id);
     if (!song)
       return {
         meta: [
           ...pageMeta({
-            title: "Song Not Found",
-            description: "This song isn't in the Phigros chart list.",
+            title: t.seo.songNotFound,
+            description: t.seo.songNotFoundDescription,
             path: "/charts",
+            locale,
           }),
           { name: "robots", content: "noindex" },
         ],
       };
     const title = `${song.title} — ${song.artist}`;
     const image = `${SITE}/covers/${encodeURIComponent(song.id)}.og.jpg`;
+    const description = describe(song, loaderData?.stats ?? null, locale);
     return {
       meta: pageMeta({
         title,
-        description: describe(song, loaderData?.stats ?? null),
+        description,
         path: songPath(song),
+        locale,
         type: "music.song",
         themeColor: loaderData?.themeColor,
         image: {
           url: image,
           width: 1024,
           height: 540,
-          alt: `Cover art for ${song.title}${song.illustrator ? ` by ${song.illustrator}` : ""}`,
+          alt: song.illustrator
+            ? t.seo.coverAltBy(song.title, song.illustrator)
+            : t.seo.coverAlt(song.title),
         },
       }),
-      links: [{ rel: "canonical", href: `${SITE}${songPath(song)}` }],
+      links: pageLinks(songPath(song), locale),
       scripts: [
         jsonLd({
           "@graph": [
-            breadcrumbs([
-              ["Phigros Tools", "/"],
-              ["Charts", "/charts"],
-              [song.title, songPath(song)],
-            ]),
+            breadcrumbs(
+              [
+                ["Phigros Tools", "/"],
+                [t.tabs.charts, "/charts"],
+                [song.title, songPath(song)],
+              ],
+              locale,
+            ),
             {
               "@type": "MusicRecording",
               name: song.title,
-              url: `${SITE}${songPath(song)}`,
-              description: describe(song, loaderData?.stats ?? null),
+              url: localeUrl(songPath(song), locale),
+              inLanguage: locale,
+              description,
               image,
               byArtist: { "@type": "MusicGroup", name: song.artist },
               ...(song.illustrator
@@ -187,7 +215,7 @@ export const Route = createFileRoute("/charts/$id")({
               inAlbum: {
                 "@type": "MusicAlbum",
                 name: song.chapter,
-                url: `${SITE}/charts?chapter=${encodeURIComponent(song.chapter)}`,
+                url: `${localeUrl("/charts", locale)}?chapter=${encodeURIComponent(song.chapter)}`,
               },
             },
           ],
