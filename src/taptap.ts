@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import * as v from "valibot";
+import { AppError } from "./i18n/errors";
 import { CLOUD, type Region } from "./save";
 
 /*
@@ -85,7 +86,7 @@ export async function requestLoginCode(region: Region, signal?: AbortSignal): Pr
     signal,
   );
   const parsed = v.safeParse(codeResponse, body);
-  if (!ok || !parsed.success) throw new Error("TapTap didn't return a login code. Try again.");
+  if (!ok || !parsed.success) throw new AppError("noLoginCode");
   const data = parsed.output.data;
   return {
     region,
@@ -126,11 +127,11 @@ async function waitForApproval(
     if (ok && token.success) return token.output.data;
     const error = (body as { data?: { error?: string } }).data?.error;
     if (error === "authorization_waiting") onStatus("scanned");
-    else if (error === "access_denied") throw new Error("The login was declined in TapTap.");
+    else if (error === "access_denied") throw new AppError("loginDeclined");
     else if (error !== "authorization_pending")
-      throw new Error(`TapTap login failed: ${error ?? "unexpected response"}`);
+      throw error ? new AppError("loginFailed", error) : new AppError("loginUnexpected");
   }
-  throw new Error("The login code expired. Get a new one and try again.");
+  throw new AppError("loginExpired");
 }
 
 /** TapTap's MAC request signature (the scheme its SDKs use for the profile endpoint). */
@@ -169,7 +170,7 @@ export const getTapTapProfile = createServerFn({ method: "POST" })
     });
     const profile = v.safeParse(profileResponse, await response.json().catch(() => null));
     if (!response.ok || !profile.success)
-      throw new Error(`TapTap profile lookup failed: HTTP ${response.status}`);
+      throw new AppError("profileFailed", String(response.status));
     return profile.output.data;
   });
 
@@ -201,10 +202,8 @@ export async function completeLogin(
     code?: number;
   };
   if (user.code === 211)
-    throw new Error(
-      `This TapTap account has no Phigros ${code.region === "china" ? "China" : "global"} save. Check the region, and sync once in the game.`,
-    );
+    throw new AppError(code.region === "china" ? "noSaveChina" : "noSaveGlobal");
   if (!response.ok || !user.sessionToken || !user.objectId)
-    throw new Error(`Phigros login failed: HTTP ${response.status}`);
+    throw new AppError("phigrosLoginFailed", String(response.status));
   return { token: user.sessionToken, objectId: user.objectId, nickname: user.nickname };
 }

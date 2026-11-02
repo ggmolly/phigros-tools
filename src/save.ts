@@ -2,6 +2,7 @@ import { unzipSync } from "fflate";
 import * as v from "valibot";
 import { ParseError } from "./binary";
 import type { SaveDocumentV1 } from "./document";
+import { AppError } from "./i18n/errors";
 import {
   decodeSummary,
   type GameKey,
@@ -101,7 +102,7 @@ async function decrypt(name: string, encrypted: Uint8Array): Promise<Uint8Array>
     );
     return new Uint8Array(plain);
   } catch {
-    throw new Error(`${name}: decryption failed`);
+    throw new AppError("decryptFailed", name);
   }
 }
 
@@ -110,10 +111,9 @@ async function sha256(bytes: Uint8Array): Promise<string> {
 }
 
 function unzip(bytes: Uint8Array): Record<ModuleName, Uint8Array> {
-  if (bytes.byteLength > MAX_ZIP_SIZE)
-    throw new Error(`Save ZIP exceeds the ${MAX_ZIP_SIZE / MB} MB limit`);
+  if (bytes.byteLength > MAX_ZIP_SIZE) throw new AppError("zipTooLarge", String(MAX_ZIP_SIZE / MB));
   if (bytes[0] !== 0x50 || bytes[1] !== 0x4b || bytes[2] !== 0x03 || bytes[3] !== 0x04) {
-    throw new Error("Not a ZIP file");
+    throw new AppError("notZip");
   }
   const seen = new Set<string>();
   let total = 0;
@@ -126,24 +126,22 @@ function unzip(bytes: Uint8Array): Record<ModuleName, Uint8Array> {
           file.name.includes("\\") ||
           !MODULE_NAMES.includes(file.name as ModuleName)
         ) {
-          throw new Error(`Unexpected ZIP entry ${JSON.stringify(file.name)}`);
+          throw new AppError("unexpectedEntry", JSON.stringify(file.name));
         }
-        if (seen.has(file.name))
-          throw new Error(`Duplicate ZIP entry ${JSON.stringify(file.name)}`);
+        if (seen.has(file.name)) throw new AppError("duplicateEntry", JSON.stringify(file.name));
         seen.add(file.name);
         if (file.originalSize > MAX_ENTRY_SIZE)
-          throw new Error(`${file.name}: entry exceeds the ${MAX_ENTRY_SIZE / MB} MB limit`);
+          throw new AppError("entryTooLarge", file.name, String(MAX_ENTRY_SIZE / MB));
         total += file.originalSize;
-        if (total > MAX_TOTAL_SIZE)
-          throw new Error(`ZIP expands beyond the ${MAX_TOTAL_SIZE / MB} MB limit`);
+        if (total > MAX_TOTAL_SIZE) throw new AppError("zipExpands", String(MAX_TOTAL_SIZE / MB));
         return true;
       },
     });
   } catch (error) {
-    throw new Error(`Invalid save ZIP: ${error instanceof Error ? error.message : String(error)}`);
+    throw new AppError("invalidZip", error instanceof Error ? error : String(error));
   }
   const missing = MODULE_NAMES.filter((name) => !entries[name]);
-  if (missing.length) throw new Error(`Save ZIP is missing: ${missing.join(", ")}`);
+  if (missing.length) throw new AppError("missingEntries", missing.join(", "));
   return entries as Record<ModuleName, Uint8Array>;
 }
 
@@ -153,7 +151,7 @@ export async function openArchive(zip: Uint8Array): Promise<SaveArchive> {
   const pairs = await Promise.all(
     MODULE_NAMES.map(async (name) => {
       const entry = zipped[name];
-      if (entry.byteLength < 17) throw new Error(`${name}: encrypted entry is too short`);
+      if (entry.byteLength < 17) throw new AppError("entryTooShort", name);
       const version = entry[0]!;
       const encryptedBytes = new Uint8Array(entry.subarray(1));
       const plainBytes = await decrypt(name, encryptedBytes);
@@ -259,10 +257,10 @@ export async function identifyPlayer(
     status = response.status;
     if (!response.ok) continue;
     const user = v.safeParse(player, await response.json());
-    if (!user.success) throw new Error("TapTap did not return a player ID");
+    if (!user.success) throw new AppError("noPlayerId");
     return { ...user.output, region: candidate };
   }
-  throw new Error(`TapTap account verification failed: HTTP ${status}`);
+  throw new AppError("verifyFailed", String(status));
 }
 
 export async function listSaves(
@@ -274,18 +272,18 @@ export async function listSaves(
     signal,
     headers: lcHeaders(region, token),
   });
-  if (!response.ok) throw new Error(`TapTap API: HTTP ${response.status} ${await response.text()}`);
+  if (!response.ok) throw new AppError("apiFailed", String(response.status), await response.text());
   const body = (await response.json()) as { results?: unknown };
-  if (!Array.isArray(body.results)) throw new Error("TapTap API returned an invalid save list");
+  if (!Array.isArray(body.results)) throw new AppError("invalidSaveList");
   return body.results as CloudSave[];
 }
 
 export async function fetchSaveBytes(save: CloudSave, signal?: AbortSignal): Promise<Uint8Array> {
   const url = new URL(save.gameFile.url);
-  if (url.protocol !== "https:") throw new Error("Save download URL is not HTTPS");
+  if (url.protocol !== "https:") throw new AppError("notHttps");
   const response = await fetch(url, { signal });
-  if (!response.ok) throw new Error(`Save download: HTTP ${response.status}`);
+  if (!response.ok) throw new AppError("downloadFailed", String(response.status));
   const length = Number(response.headers.get("content-length"));
-  if (length > MAX_ZIP_SIZE) throw new Error(`Save ZIP exceeds the ${MAX_ZIP_SIZE / MB} MB limit`);
+  if (length > MAX_ZIP_SIZE) throw new AppError("zipTooLarge", String(MAX_ZIP_SIZE / MB));
   return new Uint8Array(await response.arrayBuffer());
 }

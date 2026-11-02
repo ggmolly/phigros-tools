@@ -1,4 +1,5 @@
 import * as v from "valibot";
+import { AppError } from "./i18n/errors";
 import type {
   GameKey,
   GameProgress,
@@ -161,11 +162,11 @@ function uniqueSongs(songs: { songId: string }[]) {
 
 function decodeJson(text: string): unknown {
   if (new Blob([text]).size > MAX_JSON_SIZE)
-    throw new Error(`JSON exceeds the ${MAX_JSON_SIZE / 1_000_000} MB import limit`);
+    throw new AppError("jsonTooLarge", String(MAX_JSON_SIZE / 1_000_000));
   try {
     return JSON.parse(text);
   } catch {
-    throw new Error("Invalid JSON");
+    throw new AppError("invalidJson");
   }
 }
 

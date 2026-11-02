@@ -1,5 +1,5 @@
 import { Link, useLoaderData, useNavigate, useRouterState } from "@tanstack/react-router";
-import type { KeyboardEvent } from "react";
+import { Fragment, type KeyboardEvent } from "react";
 import { setLocale, useFormat, useLocale, useT } from "../i18n";
 import { isLocale, LOCALE_NAME, LOCALES } from "../i18n/locales";
 import { useSave } from "../save-context";
@@ -146,11 +146,21 @@ export function SiteFooter() {
   return (
     <footer className="site-footer">
       <span>
-        {t.footer.madeWith} <span aria-hidden="true">♥</span>
-        <span className="sr-only">{t.footer.love}</span> {t.footer.by}{" "}
-        <a href="https://github.com/ggmolly" target="_blank" rel="noopener noreferrer">
-          ggmolly
-        </a>
+        {t.footer
+          .credit("\0")
+          .split("\0")
+          .map((part, index) =>
+            index ? (
+              <Fragment key={part}>
+                <a href="https://github.com/ggmolly" target="_blank" rel="noopener noreferrer">
+                  ggmolly
+                </a>
+                {part}
+              </Fragment>
+            ) : (
+              part
+            ),
+          )}
       </span>
       <span className="footer-end">
         <span className="disclaimer">{t.footer.disclaimer}</span>
