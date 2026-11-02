@@ -3,7 +3,8 @@ import { createContext, type RefObject, use, useEffect, useRef, useState } from 
 import type { Account } from "./adb";
 import { catalogRevision } from "./catalog";
 import { MAX_JSON_SIZE, parseJsonDocument, type SaveDocumentV1 } from "./document";
-import { useT } from "./i18n";
+import { useFormat, useT } from "./i18n";
+import { errorText } from "./i18n/errors";
 import { calculateRanking } from "./metrics";
 import { applyPalette } from "./palettes";
 import type { Region, SaveArchive } from "./save";
@@ -19,9 +20,8 @@ import {
 
 export type Loaded = { document: SaveDocumentV1; archive?: SaveArchive; playerId?: string };
 
-export function message(error: unknown) {
-  return error instanceof Error ? error.message : String(error);
-}
+/** Anything thrown, as text in the page's language (see AppError). */
+export const message = (error: unknown) => errorText(error);
 
 interface SaveContextValue {
   loaded?: Loaded;
@@ -75,6 +75,7 @@ export function useSave(): SaveContextValue {
 
 export function SaveProvider({ children }: { children: React.ReactNode }) {
   const t = useT();
+  const format = useFormat();
   const navigate = useNavigate();
   const [loaded, setLoaded] = useState<Loaded>();
   const [chartKey, setChartKey] = useState("");
@@ -111,7 +112,7 @@ export function SaveProvider({ children }: { children: React.ReactNode }) {
   // biome-ignore lint/correctness/useExhaustiveDependencies: mount-only effect; refresh/say aren't wrapped in useCallback (the project relies on the React Compiler instead), so listing them would re-run this every render.
   useEffect(() => {
     void refresh()
-      .catch((error) => say(`✗ Snapshot storage unavailable: ${message(error)}`))
+      .catch((error) => say(`✗ ${t.save.storageUnavailable(message(error))}`))
       .finally(() => setStorageReady(true));
     return () => {
       clearTimeout(usbCloseTimer.current);
@@ -148,11 +149,7 @@ export function SaveProvider({ children }: { children: React.ReactNode }) {
     );
     await refresh();
     lastStored.current = saved;
-    say(
-      saved
-        ? "Saved snapshot locally in IndexedDB."
-        : "This save is already in your local history.",
-    );
+    say(saved ? t.save.snapshotSaved : t.save.alreadySaved);
     return saved;
   }
   function showSave(next: Loaded) {
@@ -165,24 +162,24 @@ export function SaveProvider({ children }: { children: React.ReactNode }) {
   async function imported(next: Loaded): Promise<boolean> {
     showSave(next);
     if (!next.playerId) {
-      say("Save opened, but no player ID was assigned; it was not archived.");
+      say(t.save.noPlayerId);
       return false;
     }
     try {
       return await storeSave(next);
     } catch (error) {
-      say(`✗ Save loaded, but local history could not be saved: ${message(error)}`);
+      say(`✗ ${t.save.historyFailed(message(error))}`);
       return false;
     }
   }
   function localPlayer(): string | undefined {
     const value = prompt(
-      "Player ID for this local save (needed to group its history):",
+      t.save.playerPrompt,
       selectedPlayer || snapshots.find((s) => s.playerId)?.playerId || "",
     );
     const playerId = value?.trim();
     if (!playerId) return undefined;
-    if (playerId.length > 128) throw new Error("Player ID is too long");
+    if (playerId.length > 128) throw new Error(t.save.playerIdTooLong);
     return playerId;
   }
   async function ingestZip(
@@ -201,15 +198,12 @@ export function SaveProvider({ children }: { children: React.ReactNode }) {
       setLoaded(undefined);
       setChartKey("");
       setUnsupportedZip({ name: options.name || "unsupported-save.zip", bytes: archive.rawZip });
-      throw new Error(`Semantic parsing stopped: ${message(error)}`);
+      throw new Error(t.save.parseStopped(message(error)));
     }
     signal?.throwIfAborted();
     const owner = playerId ?? (options.kind === "zip" ? localPlayer() : undefined);
     const stored = await imported({ document, archive, playerId: owner });
-    if (stored)
-      say(
-        `Loaded ${document.songs.length} songs from ${archive.fingerprint.slice(0, 12)}… Saved to local history.`,
-      );
+    if (stored) say(t.save.loadedSongs(document.songs.length, archive.fingerprint.slice(0, 12)));
   }
   async function cloudImport(
     getSession: () => Promise<{ token: string; account?: Account; region?: Region }>,
@@ -225,7 +219,7 @@ export function SaveProvider({ children }: { children: React.ReactNode }) {
       const identity = await api.identifyPlayer(session.token, session.region, signal);
       signal?.throwIfAborted();
       if (session.account?.objectId && session.account.objectId !== identity.objectId)
-        throw new Error("The device account does not match this token");
+        throw new Error(t.save.accountMismatch);
       await saveCredential({
         playerId: identity.objectId,
         nickname: identity.nickname ?? session.account?.nickname,
@@ -233,20 +227,20 @@ export function SaveProvider({ children }: { children: React.ReactNode }) {
         region: identity.region,
       });
       await refresh();
-      report("Checking cloud saves …");
+      report(t.save.checking);
       const save = api.latestSave(
         await api.listSaves(session.token, identity.region, signal),
         identity.objectId,
       );
-      if (!save) throw new Error("That account has no cloud saves yet");
-      report(`Fetching “${save.name}” from ${new URL(save.gameFile.url).host}…`);
+      if (!save) throw new Error(t.save.noCloudSaves);
+      report(t.save.fetching(save.name, new URL(save.gameFile.url).host));
       await ingestZip(
         await api.fetchSaveBytes(save, signal),
         { kind: "cloud", name: save.name, cloudUpdatedAt: save.updatedAt, summary: save.summary },
         identity.objectId,
         signal,
       );
-      report("✓ Save loaded. Ready to go.");
+      report(`✓ ${t.save.ready}`);
       return true;
     } catch (error) {
       if (!signal?.aborted) report(`✗ ${message(error)}`);
@@ -293,7 +287,7 @@ export function SaveProvider({ children }: { children: React.ReactNode }) {
     const controller = new AbortController();
     usbController.current = controller;
     setUsbPhase("connecting");
-    setUsbEvents(["Waiting for your phone…"]);
+    setUsbEvents([t.save.waitingPhone]);
     usbDialog.current?.showModal();
     const report = (text: string) => {
       if (controller.signal.aborted) return;
@@ -301,7 +295,7 @@ export function SaveProvider({ children }: { children: React.ReactNode }) {
       setUsbEvents((events) => [...events, text]);
     };
     const success = await cloudImport(
-      async () => (await import("./adb")).readSessionToken(report, controller.signal),
+      async () => (await import("./adb")).readSessionToken(report, t.save.usb, controller.signal),
       report,
       controller.signal,
     );
@@ -315,7 +309,7 @@ export function SaveProvider({ children }: { children: React.ReactNode }) {
     setBusy(true);
     try {
       if (file.size > MAX_JSON_SIZE)
-        throw new Error(`Import exceeds the ${MAX_JSON_SIZE / 1_000_000} MB limit`);
+        throw new Error(t.save.tooLarge(format.number(MAX_JSON_SIZE / 1_000_000)));
       const bytes = new Uint8Array(await file.arrayBuffer());
       if (bytes[0] === 0x50 && bytes[1] === 0x4b)
         await ingestZip(bytes, { kind: "zip", name: file.name });

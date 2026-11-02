@@ -5,6 +5,7 @@ import {
   AdbDaemonWebUsbDevice,
   AdbDaemonWebUsbDeviceManager,
 } from "@yume-chan/adb-daemon-webusb";
+import type { Messages } from "./i18n/messages";
 
 const PKG = "com.PigeonGames.Phigros";
 const USERDATA = `/sdcard/Android/data/${PKG}/files/.userdata`;
@@ -54,41 +55,36 @@ function describeAccount(account: Account): string {
  * The browser becomes the ADB host, so the phone shows its normal
  * "Allow USB debugging?" prompt; the RSA key lives in IndexedDB.
  */
-export async function readSessionToken(log: Log, signal?: AbortSignal): Promise<Session> {
+export async function readSessionToken(
+  log: Log,
+  text: Messages["save"]["usb"],
+  signal?: AbortSignal,
+): Promise<Session> {
   const manager = AdbDaemonWebUsbDeviceManager.BROWSER;
   if (!manager) {
-    throw new Error("WebUSB is unavailable. Use desktop Chrome/Edge over https:// or localhost.");
+    throw new Error(text.unavailable);
   }
 
   // Reconnects after the first grant skip the picker entirely.
   const granted = await manager.getDevices();
-  log(
-    granted.length === 1
-      ? "Reusing the phone you already allowed…"
-      : "Waiting for you to pick your phone in the browser's USB prompt…",
-  );
+  log(granted.length === 1 ? text.reusing : text.picking);
   const device = granted.length === 1 ? granted[0] : await manager.requestDevice();
-  if (!device) throw new Error("No device selected.");
+  if (!device) throw new Error(text.noDevice);
   signal?.throwIfAborted();
   const closeOnAbort = () => {
     void device.raw.close().catch(() => undefined);
   };
   signal?.addEventListener("abort", closeOnAbort, { once: true });
   try {
-    log(`Selected ${device.name} (${device.serial}).`);
+    log(text.selected(device.name, device.serial));
 
-    log("Handshaking — accept “Allow USB debugging?” on the phone.");
+    log(text.handshaking);
     let connection: AdbDaemonWebUsbConnection;
     try {
       connection = await device.connect();
     } catch (error) {
       if (error instanceof AdbDaemonWebUsbDevice.DeviceBusyError) {
-        throw new Error(
-          "Another program is holding the phone's USB interface. The ADB server is the usual " +
-            "culprit (`adb kill-server`); Android Studio, scrcpy and Phone Link do it too. " +
-            "Close it, unplug/replug the phone, then retry.",
-          { cause: error },
-        );
+        throw new Error(text.busy, { cause: error });
       }
       throw error;
     }
@@ -102,7 +98,7 @@ export async function readSessionToken(log: Log, signal?: AbortSignal): Promise<
     try {
       signal?.throwIfAborted();
       const adb = new Adb(transport);
-      log(`Connected to ${adb.serial}, reading Phigros login data…`);
+      log(text.connected(adb.serial));
       const timeout = AbortSignal.timeout(30_000);
       const stop = signal ? AbortSignal.any([signal, timeout]) : timeout;
       let removeAbort: () => void = () => undefined;
@@ -122,32 +118,22 @@ export async function readSessionToken(log: Log, signal?: AbortSignal): Promise<
           interrupted,
         ]);
       } catch (error) {
-        if (timeout.aborted && !signal?.aborted)
-          throw new Error(
-            "Reading Phigros login data timed out. Check the USB connection and try again.",
-            { cause: error },
-          );
+        if (timeout.aborted && !signal?.aborted) throw new Error(text.timeout, { cause: error });
         throw error;
       } finally {
         removeAbort();
       }
       signal?.throwIfAborted();
       if (!userdata.trim()) {
-        throw new Error(
-          `${USERDATA} is empty or missing. Open Phigros once and log in with TapTap, ` +
-            `or paste a token by hand.`,
-        );
+        throw new Error(text.empty(USERDATA));
       }
       const { token, account } = parseUserdata(userdata);
       if (!token) {
-        throw new Error(
-          `Found ${USERDATA} (${userdata.length} bytes) but no sessionToken in it. ` +
-            `Log in to TapTap in the game, or paste a token by hand.`,
-        );
+        throw new Error(text.noToken(USERDATA, String(userdata.length)));
       }
-      log(`Read ${USERDATA} (${userdata.length} bytes).`);
-      log(`Logged in as ${describeAccount(account)}.`);
-      log(`sessionToken: ${token.length} chars.`);
+      log(text.read(USERDATA, String(userdata.length)));
+      log(text.loggedIn(describeAccount(account)));
+      log(text.tokenLength(token.length));
       return { token, account };
     } finally {
       await transport.close();

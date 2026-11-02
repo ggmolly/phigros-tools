@@ -1,24 +1,36 @@
 import { catalogSong } from "../catalog";
+import { useFormat, useT } from "../i18n";
 import { rksSeries, snapshotProgress } from "../snapshots";
 import type { SnapshotV1 } from "../store";
 import { Arrow } from "./arrow";
 import { Difficulty, signed } from "./primitives";
 
+// toLocaleDateString rejects timeStyle, so the time is asked for field by field.
+export const DATE_TIME: Intl.DateTimeFormatOptions = {
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+  hour: "numeric",
+  minute: "2-digit",
+};
+
 export function SnapshotProgress({ history }: { history: SnapshotV1[] }) {
+  const t = useT();
+  const format = useFormat();
   const [latest, previous] = history;
   const progress = latest && previous ? snapshotProgress(previous, latest) : undefined;
   return (
     <section className="panel progress-panel" aria-labelledby="progress-heading">
       <div className="panel-head">
         <h2 id="progress-heading" className="panel-title">
-          Since Last Snapshot
+          {t.history.sinceLast}
         </h2>
       </div>
       {progress ? (
         <>
           <p className="progress-period">
-            {new Date(previous.capturedAt).toLocaleString()} →{" "}
-            {new Date(latest.capturedAt).toLocaleString()}
+            {format.date(previous.capturedAt, DATE_TIME)} →{" "}
+            {format.date(latest.capturedAt, DATE_TIME)}
           </p>
           <div className="stat-row progress-stats">
             {(
@@ -39,11 +51,9 @@ export function SnapshotProgress({ history }: { history: SnapshotV1[] }) {
             ))}
           </div>
           {progress.rks === undefined && (
-            <p className="progress-period">
-              RKS can’t be compared across catalog revisions or ranking rules.
-            </p>
+            <p className="progress-period">{t.history.rksIncomparable}</p>
           )}
-          <p className="progress-subhead">{progress.improvements.length} new or improved records</p>
+          <p className="progress-subhead">{t.history.improved(progress.improvements.length)}</p>
           {progress.improvements.length > 0 && (
             <ol className="progress-records">
               {progress.improvements.slice(0, 5).map((change) => {
@@ -62,19 +72,15 @@ export function SnapshotProgress({ history }: { history: SnapshotV1[] }) {
         <div className="progress-empty">
           <div className="progress-status">
             <strong>{history.length} / 2</strong>
-            <span>Saves to compare</span>
+            <span>{t.history.savesToCompare}</span>
           </div>
-          <p>
-            {history.length
-              ? "Import another save from this player to compare RKS, FC and AP."
-              : "Import two saves from the same player to compare RKS, FC and AP."}
-          </p>
+          <p>{history.length ? t.history.importAnother : t.history.importTwo}</p>
           <button
             type="button"
             className="arrow-row"
             onClick={() => document.querySelector<HTMLDialogElement>("#importDialog")?.showModal()}
           >
-            Import save
+            {t.menu.importSave}
             <span className="arrow-chip">
               <Arrow />
             </span>
@@ -86,6 +92,8 @@ export function SnapshotProgress({ history }: { history: SnapshotV1[] }) {
 }
 
 export function RksHistory({ history }: { history: SnapshotV1[] }) {
+  const t = useT();
+  const format = useFormat();
   const series = rksSeries(history);
   const values = series.map((point) => point.rks);
   const delta = values.length > 1 ? values.at(-1)! - values[0]! : 0;
@@ -100,12 +108,12 @@ export function RksHistory({ history }: { history: SnapshotV1[] }) {
     <section className="panel" aria-labelledby="rks-history-heading">
       <div className="panel-head">
         <h2 id="rks-history-heading" className="panel-title">
-          RKS History
+          {t.history.rksHistory}
         </h2>
       </div>
       {series.length < 3 ? (
         <>
-          <p className="meta rks-hint">Save a third time to unlock the trend line.</p>
+          <p className="meta rks-hint">{t.history.thirdTime}</p>
           {series.length === 2 && range}
         </>
       ) : (
@@ -121,14 +129,22 @@ export function RksHistory({ history }: { history: SnapshotV1[] }) {
           // Each change sits halfway between the last snapshot before it and the first after.
           const changes = series.flatMap((point, index) =>
             point.versionChange
-              ? [{ label: point.versionChange, x: (coords[index - 1]![0] + coords[index]![0]) / 2 }]
+              ? [
+                  {
+                    label:
+                      point.versionChange === "catalog"
+                        ? t.history.catalogUpdate
+                        : point.versionChange,
+                    x: (coords[index - 1]![0] + coords[index]![0]) / 2,
+                  },
+                ]
               : [],
           );
           return (
             <>
               <p className="progress-period">
-                {new Date(series[0]!.capturedAt).toLocaleString()} →{" "}
-                {new Date(series.at(-1)!.capturedAt).toLocaleString()}
+                {format.date(series[0]!.capturedAt, DATE_TIME)} →{" "}
+                {format.date(series.at(-1)!.capturedAt, DATE_TIME)}
               </p>
               <div className="rks-plot">
                 <svg
@@ -136,7 +152,11 @@ export function RksHistory({ history }: { history: SnapshotV1[] }) {
                   viewBox="0 0 100 100"
                   preserveAspectRatio="none"
                   role="img"
-                  aria-label={`RKS trend across ${series.length} snapshots: from ${values[0]!.toFixed(3)} to ${values.at(-1)!.toFixed(3)}`}
+                  aria-label={t.history.trend(
+                    series.length,
+                    values[0]!.toFixed(3),
+                    values.at(-1)!.toFixed(3),
+                  )}
                 >
                   <polygon className="rks-area" points={`0,100 ${points} 100,100`} />
                   {changes.map(({ label, x }) => (

@@ -86,7 +86,8 @@ export function compareDocuments(older: Comparable, newer: Comparable): Snapshot
 export interface RksPoint {
   capturedAt: string;
   rks: number;
-  /** Set when this snapshot's catalog revision or ranking rules differ from the previous point's. */
+  /** Set when this snapshot's catalog revision or ranking rules differ from the previous point's: the new
+   * ruleset, the new game version, or "catalog" for a catalog revision within the same version. */
   versionChange?: string;
 }
 
@@ -107,7 +108,7 @@ export function rksSeries(history: SnapshotV1[]): RksPoint[] {
           : "B19"
         : previous.catalogRevision !== snapshot.catalogRevision
           ? previous.catalogRevision.split("-")[0] === version
-            ? "Catalog update"
+            ? "catalog"
             : `v${version}`
           : undefined;
     return {

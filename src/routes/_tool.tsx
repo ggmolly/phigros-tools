@@ -2,8 +2,10 @@ import { createFileRoute, Outlet, useNavigate, useRouterState } from "@tanstack/
 import { useEffect, useRef } from "react";
 import { Arrow, SyncIcon } from "../components/arrow";
 import { SiteHeader, TAB_KEY, type TabId, toolTabs } from "../components/chrome";
+import { DATE_TIME } from "../components/history-panels";
 import { ImportOptions, TapTapDialog } from "../components/import";
 import { Avatar } from "../components/primitives";
+import { Rich, useFormat, useT } from "../i18n";
 import { calculateRanking } from "../metrics";
 import { message, useSave } from "../save-context";
 import { headT, pageLinks } from "../seo";
@@ -53,6 +55,8 @@ function ToolLayout() {
     selectedPlayer,
     setSelectedPlayer,
   } = useSave();
+  const t = useT();
+  const format = useFormat();
   const navigate = useNavigate();
   const importDialog = useRef<HTMLDialogElement>(null);
   const openImport = () => importDialog.current?.showModal();
@@ -74,7 +78,7 @@ function ToolLayout() {
   return (
     <>
       <a className="skip-link" href="#results">
-        Skip to content
+        {t.tool.skip}
       </a>
       <SiteHeader>
         {loaded && (
@@ -85,11 +89,11 @@ function ToolLayout() {
                 className={`arrow-row sync-row${sync?.playerId === loadedCredential.playerId ? ` sync-${sync.state}` : ""}`}
                 disabled={busy}
                 aria-live="polite"
-                title={`Fetch the newest cloud save · last fetched ${new Date(loaded.document.source.importedAt).toLocaleString()}`}
+                title={t.tool.syncTitle(format.date(loaded.document.source.importedAt, DATE_TIME))}
                 onClick={() => void syncPlayer(loadedCredential)}
               >
                 <span className="sync-label">
-                  {syncLabel(loadedCredential.playerId, "Sync Now")}
+                  {syncLabel(loadedCredential.playerId, t.menu.syncNow)}
                 </span>
                 <span className="arrow-chip">
                   <SyncIcon spinning={sync?.state === "syncing"} />
@@ -102,20 +106,20 @@ function ToolLayout() {
                 className="sync-fix"
                 onClick={() => dialog.current?.showModal()}
               >
-                Re-enter token
+                {t.tool.reenterToken}
               </button>
             )}
             {/* Overview's hero is this same profile strip, larger; one is enough per screen. */}
             {activeTab !== "/" && (
               <div
                 className="player-tag"
-                title={loaded.playerId ? `Player ${loaded.playerId}` : undefined}
+                title={loaded.playerId ? t.tool.player(loaded.playerId) : undefined}
               >
                 <Avatar
                   className="player-avatar"
                   name={loaded.document.profile?.avatar || loaded.document.summary?.avatar || ""}
                 />
-                <span className="player-name">{playerName || "Local save"}</span>
+                <span className="player-name">{playerName || t.tool.localSave}</span>
                 <span className="player-rks">
                   <span className="sr-only">RKS </span>
                   {calculateRanking(loaded.document).rankingScore.toFixed(2)}
@@ -123,7 +127,7 @@ function ToolLayout() {
               </div>
             )}
             <button type="button" className="btn btn-ghost import-open" onClick={openImport}>
-              Import
+              {t.menu.import}
             </button>
           </div>
         )}
@@ -134,21 +138,21 @@ function ToolLayout() {
         {!loaded && unsupportedZip && (
           <section id="import" className="import-band" aria-labelledby="import-heading">
             <div className="import-heading">
-              <h2 id="import-heading">Import Save</h2>
-              <p>Load your Phigros progress</p>
+              <h2 id="import-heading">{t.menu.importSave}</h2>
+              <p>{t.tool.importTagline}</p>
             </div>
             <ImportOptions />
           </section>
         )}
         <dialog ref={importDialog} id="importDialog" aria-labelledby="import-dialog-heading">
           <form method="dialog" className="dialog-head">
-            <h2 id="import-dialog-heading">Import Save</h2>
+            <h2 id="import-dialog-heading">{t.menu.importSave}</h2>
             {/* biome-ignore lint/a11y/useButtonType: the default submit type is intentional; submitting a method="dialog" form is how this button closes the dialog without JS. */}
-            <button className="dialog-close" aria-label="Close import dialog">
+            <button className="dialog-close" aria-label={t.tool.closeImport}>
               ×
             </button>
           </form>
-          <p className="meta">Load newer progress, or another player's save.</p>
+          <p className="meta">{t.tool.importDialogText}</p>
           {/* Each option opens its own dialog or picker: close this one first (capture runs before their click). */}
           <div className="import-list" onClickCapture={() => importDialog.current?.close()}>
             <ImportOptions />
@@ -175,16 +179,15 @@ function ToolLayout() {
           aria-describedby="usb-help"
           onClose={resetUsbDialog}
         >
-          <h2 id="usb-heading">Connect Android</h2>
+          <h2 id="usb-heading">{t.tool.usbTitle}</h2>
           <p id="usb-help" className="meta">
-            Select your phone in the browser prompt. On your Android device, tap{" "}
-            <strong>Allow USB debugging</strong> when asked.
+            <Rich text={t.tool.usbHelp} />
           </p>
           <div
             ref={usbLog}
             className="usb-progress"
             role="log"
-            aria-label="Connection progress"
+            aria-label={t.tool.usbProgress}
             aria-live="polite"
           >
             {usbEvents.map((event, index) => (
@@ -192,30 +195,27 @@ function ToolLayout() {
               <p key={index}>{event}</p>
             ))}
           </div>
-          {usbPhase === "done" && <p className="usb-done meta">Closing in 5 seconds…</p>}
+          {usbPhase === "done" && <p className="usb-done meta">{t.tool.closing}</p>}
           <div className="dialog-actions">
             <button type="button" className="btn" onClick={closeUsb}>
-              {usbPhase === "connecting" ? "Cancel import" : "Close"}
+              {usbPhase === "connecting" ? t.tool.cancelImport : t.tool.close}
             </button>
           </div>
         </dialog>
         <TapTapDialog />
         <dialog ref={dialog} id="tokenDialog">
           <form method="dialog" className="dialog-head">
-            <h2>Session Token</h2>
+            <h2>{t.tool.tokenTitle}</h2>
             {/* biome-ignore lint/a11y/useButtonType: the default submit type is intentional; submitting a method="dialog" form is how this button closes the dialog without JS. */}
-            <button className="dialog-close" aria-label="Close session token dialog">
+            <button className="dialog-close" aria-label={t.tool.closeToken}>
               ×
             </button>
           </form>
-          <p className="meta">
-            Your token is sent straight from this browser to the game’s own TapTap cloud
-            (tapapis.com).
-          </p>
+          <p className="meta">{t.tool.tokenNote}</p>
           {credentials.length > 0 && (
             <div className="dialog-field">
               <label htmlFor="remembered" className="field-label">
-                Remembered player
+                {t.tool.remembered}
               </label>
               <div className="dialog-row">
                 <select
@@ -243,32 +243,27 @@ function ToolLayout() {
                     }
                   }}
                 >
-                  Reconnect
+                  {t.tool.reconnect}
                 </button>
                 <button
                   type="button"
                   className="btn btn-ghost btn-danger"
                   onClick={() => {
                     const id = rememberedId;
-                    if (
-                      id &&
-                      confirm(
-                        "Forget this player's saved session token? Your local snapshots will remain.",
-                      )
-                    )
+                    if (id && confirm(t.tool.forgetConfirm))
                       void deleteCredential(id)
                         .then(refresh)
                         .catch((e) => say(`✗ ${message(e)}`));
                   }}
                 >
-                  Forget saved token
+                  {t.tool.forget}
                 </button>
               </div>
             </div>
           )}
           <div className="dialog-field">
             <label htmlFor="token" className="field-label">
-              Session token
+              {t.import.token}
             </label>
             <div className="dialog-row">
               <input
@@ -278,7 +273,7 @@ function ToolLayout() {
                 type="password"
                 autoComplete="off"
                 spellCheck={false}
-                placeholder="Paste session token"
+                placeholder={t.tool.tokenPlaceholder}
                 value={token}
                 onChange={(e) => setToken(e.target.value)}
               />
@@ -296,7 +291,7 @@ function ToolLayout() {
                   void cloudImport(async () => ({ token: value }));
                 }}
               >
-                Fetch save <Arrow />
+                {t.tool.fetchSave} <Arrow />
               </button>
             </div>
           </div>
@@ -310,13 +305,13 @@ function ToolLayout() {
           ) : undefined}
           {unsupportedZip ? (
             <div className="panel">
-              <p className="warning">This ZIP uses an unsupported save format.</p>
+              <p className="warning">{t.tool.unsupportedZip}</p>
               <button
                 type="button"
                 className="btn"
                 onClick={() => download(unsupportedZip.name, unsupportedZip.bytes)}
               >
-                Download original ZIP
+                {t.tool.downloadZip}
               </button>
             </div>
           ) : (

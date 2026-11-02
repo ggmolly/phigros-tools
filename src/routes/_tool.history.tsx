@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Arrow } from "../components/arrow";
-import { RksHistory, SnapshotProgress } from "../components/history-panels";
+import { DATE_TIME, RksHistory, SnapshotProgress } from "../components/history-panels";
+import { useFormat, useT } from "../i18n";
 import { calculateRanking } from "../metrics";
 import { message, useSave } from "../save-context";
 import { headT, pageMeta } from "../seo";
@@ -39,6 +40,8 @@ function HistoryRoute() {
     refresh,
     say,
   } = useSave();
+  const t = useT();
+  const format = useFormat();
   const [compareId, setCompareId] = useState<string>();
   if (!loaded && snapshots.length === 0) return null; // _tool.tsx redirects to "/" in this case
   const compared = snapshots.find((snapshot) => snapshot.id === compareId);
@@ -64,7 +67,7 @@ function HistoryRoute() {
       <section id="snapshots" className="panel snapshot-panel" aria-labelledby="snapshots-heading">
         <div className="panel-head">
           <h2 id="snapshots-heading" className="panel-title">
-            Snapshots
+            {t.history.snapshots}
           </h2>
           <div className="panel-actions">
             <button
@@ -74,7 +77,7 @@ function HistoryRoute() {
               disabled={!loaded?.playerId}
               onClick={() => loaded && void storeSave(loaded).catch((e) => say(`✗ ${message(e)}`))}
             >
-              Save current <Arrow />
+              {t.history.saveCurrent} <Arrow />
             </button>
             <button
               id="clearSnapshots"
@@ -82,13 +85,13 @@ function HistoryRoute() {
               className="btn btn-ghost btn-danger"
               disabled={!snapshots.length}
               onClick={() => {
-                if (confirm("Delete every local snapshot?"))
+                if (confirm(t.history.clearConfirm))
                   void clearSnapshots()
                     .then(refresh)
                     .catch((e) => say(`✗ ${message(e)}`));
               }}
             >
-              Delete all
+              {t.history.deleteAll}
             </button>
           </div>
         </div>
@@ -96,7 +99,7 @@ function HistoryRoute() {
           {snapshots.length ? (
             <>
               <label className="select player-select">
-                <span className="select-label">Player history</span>
+                <span className="select-label">{t.history.playerHistory}</span>
                 <select
                   id="player-group"
                   className="select-field"
@@ -107,7 +110,7 @@ function HistoryRoute() {
                   }}
                 >
                   <option value="" disabled={!groups.includes("")}>
-                    Legacy / unknown player
+                    {t.history.legacy}
                   </option>
                   {groups.filter(Boolean).map((id) => (
                     <option key={id} value={id}>
@@ -121,10 +124,10 @@ function HistoryRoute() {
                   <li className="snapshot" key={snapshot.id}>
                     <p>
                       <span className="snapshot-date">
-                        {new Date(snapshot.capturedAt).toLocaleString()}
+                        {format.date(snapshot.capturedAt, DATE_TIME)}
                       </span>
                       <span className="snapshot-name">
-                        {snapshot.document.source.name ?? "save"}
+                        {snapshot.document.source.name ?? t.history.saveFallback}
                       </span>
                     </p>
                     <span className="snapshot-rks">
@@ -137,7 +140,7 @@ function HistoryRoute() {
                         className="btn"
                         onClick={() => void openSnapshot(snapshot)}
                       >
-                        Open
+                        {t.history.open}
                       </button>
                       <button
                         type="button"
@@ -145,7 +148,7 @@ function HistoryRoute() {
                         disabled={!snapshot.playerId || snapshot.playerId !== loaded?.playerId}
                         onClick={() => setCompareId(snapshot.id)}
                       >
-                        Compare current
+                        {t.history.compare}
                       </button>
                       <button
                         type="button"
@@ -156,7 +159,7 @@ function HistoryRoute() {
                             .catch((e) => say(`✗ ${message(e)}`))
                         }
                       >
-                        Delete
+                        {t.history.delete}
                       </button>
                     </div>
                   </li>
@@ -164,18 +167,21 @@ function HistoryRoute() {
               </ol>
             </>
           ) : (
-            <p className="meta">No snapshots saved. Import a save to start your local history.</p>
+            <p className="meta">{t.history.empty}</p>
           )}
         </div>
         <div id="comparison" aria-live="polite">
           {changes && (
             <>
-              <p className="meta">{changes.length} changed/new chart records</p>
+              <p className="meta">{t.history.changed(changes.length)}</p>
               {changes.slice(0, 100).map((change) => (
                 <p key={change.key} className="meta">
-                  {change.songId} {change.level}: {change.scoreDelta >= 0 ? "+" : ""}
-                  {change.scoreDelta} score, {change.accuracyDelta >= 0 ? "+" : ""}
-                  {change.accuracyDelta.toFixed(2)}%
+                  {t.history.change(
+                    change.songId,
+                    change.level,
+                    `${change.scoreDelta >= 0 ? "+" : ""}${format.number(change.scoreDelta)}`,
+                    `${change.accuracyDelta >= 0 ? "+" : ""}${format.number(change.accuracyDelta, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+                  )}
                 </p>
               ))}
             </>
