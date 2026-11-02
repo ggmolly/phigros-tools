@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { catalogSong, searchFold } from "../catalog";
 import type { SaveDocumentV1 } from "../document";
+import { useFormat, useT } from "../i18n";
 import { calculateRanking, chartRks, projectAccuracy } from "../metrics";
 import { LEVELS } from "../modules";
 import { Difficulty, DifficultyFilter, PhiSlot, Rank, score7 } from "./primitives";
@@ -31,6 +32,8 @@ function rowsFor(document: SaveDocumentV1) {
 }
 
 export function ChartTable({ document }: { document: SaveDocumentV1 }) {
+  const t = useT();
+  const format = useFormat();
   const [search, setSearch] = useState("");
   const [difficulty, setDifficulty] = useState("");
   const [sort, setSort] = useState("rks");
@@ -76,60 +79,71 @@ export function ChartTable({ document }: { document: SaveDocumentV1 }) {
     <section id="charts" className="panel records min-w-0" aria-labelledby="records-heading">
       <div className="panel-head">
         <h2 id="records-heading" className="panel-title">
-          Chart Records
+          {t.records.title}
         </h2>
-        <span className="panel-count">{all.length} records</span>
+        <span className="panel-count">
+          {(all.length === 1 ? t.records.countOne : t.records.countMany)(all.length)}
+        </span>
       </div>
       <div className="filters">
         <input
           className="field search-field"
           type="search"
-          placeholder="Search song or artist"
-          aria-label="Search charts"
+          placeholder={t.records.searchPlaceholder}
+          aria-label={t.records.searchLabel}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
         <DifficultyFilter value={difficulty} onChange={setDifficulty} />
         <label className="select">
-          <span className="select-label">Status</span>
+          <span className="select-label">{t.records.status}</span>
           <select
             className="select-field"
-            aria-label="Filter by clear status"
+            aria-label={t.records.statusLabel}
             value={status}
             onChange={(e) => setStatus(e.target.value)}
           >
-            <option value="">Any</option>
-            <option value="no-fc">Not Full Combo</option>
-            <option value="fc">Full Combo, not φ</option>
-            <option value="phi">All Perfect (φ)</option>
+            <option value="">{t.records.any}</option>
+            <option value="no-fc">{t.records.notFc}</option>
+            <option value="fc">{t.records.fcNotPhi}</option>
+            <option value="phi">{t.records.phi}</option>
           </select>
         </label>
         <label className="select">
-          <span className="select-label">Sort by</span>
+          <span className="select-label">{t.records.sortBy}</span>
           <select
             className="select-field"
-            aria-label="Sort charts"
+            aria-label={t.records.sortLabel}
             value={sort}
             onChange={(e) => setSort(e.target.value)}
           >
-            <option value="title">Title</option>
-            <option value="accuracy">Accuracy</option>
-            <option value="score">Score</option>
+            <option value="title">{t.records.sortTitle}</option>
+            <option value="accuracy">{t.records.sortAccuracy}</option>
+            <option value="score">{t.records.sortScore}</option>
             <option value="rks">RKS</option>
-            <option value="constant">Constant</option>
-            <option value="gain">RKS gain if φ</option>
+            <option value="constant">{t.records.sortConstant}</option>
+            <option value="gain">{t.records.sortGain}</option>
           </select>
         </label>
       </div>
       {/* biome-ignore lint/a11y/noNoninteractiveTabindex: keyboard users need to focus this region to scroll it. */}
-      <section className="table-scroll" tabIndex={0} aria-label="Scrollable chart records">
+      <section className="table-scroll" tabIndex={0} aria-label={t.records.scrollRegion}>
         <table>
           <caption className="sr-only">
-            {rows.length} of {all.length} chart records
+            {t.records.caption(format.number(rows.length), format.number(all.length))}
           </caption>
           <thead>
             <tr>
-              {["#", "Song", "Diff", "Const", "Score", "Acc", "Rank", "RKS"].map((name) => (
+              {[
+                "#",
+                t.records.colSong,
+                t.records.colDiff,
+                t.records.colConst,
+                t.records.colScore,
+                t.records.colAcc,
+                t.records.colRank,
+                "RKS",
+              ].map((name) => (
                 <th key={name} scope="col">
                   {name}
                 </th>
@@ -158,7 +172,7 @@ export function ChartTable({ document }: { document: SaveDocumentV1 }) {
                         to="/charts/$id"
                         params={{ id: record.songId }}
                         className="record-title record-pick"
-                        title="View this chart's details"
+                        title={t.common.viewChart}
                       >
                         {record.title}
                       </Link>
@@ -180,7 +194,7 @@ export function ChartTable({ document }: { document: SaveDocumentV1 }) {
                   <td className="num record-rks">
                     {record.rks?.toFixed(4) ?? "—"}
                     {sort === "gain" && (
-                      <span className="record-gain" title="Overall RKS gained by an All Perfect">
+                      <span className="record-gain" title={t.records.gainTitle}>
                         +{(gain.get(key) ?? 0).toFixed(4)}
                       </span>
                     )}
@@ -191,7 +205,7 @@ export function ChartTable({ document }: { document: SaveDocumentV1 }) {
             {rows.length === 0 && (
               <tr>
                 <td colSpan={8} className="meta empty-row">
-                  No chart records match these filters.
+                  {t.records.empty}
                 </td>
               </tr>
             )}

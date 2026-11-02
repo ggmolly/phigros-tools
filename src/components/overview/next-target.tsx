@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useChartSimilarity } from "../../chartSimilarity";
+import { useT } from "../../i18n";
+import type { Messages } from "../../i18n/messages";
 import { type RankingResult, type TargetSuggestion, targetSuggestions } from "../../metrics";
 import { Arrow } from "../arrow";
 import { Difficulty } from "../primitives";
@@ -9,19 +11,19 @@ const recommended = (suggestion: TargetSuggestion) =>
   suggestion.reach === "likely" && suggestion.similarTo !== undefined;
 
 /** Why a suggestion's expected accuracy is what it is, for its tooltip. */
-function expectation(suggestion: TargetSuggestion) {
+function expectation(t: Messages, suggestion: TargetSuggestion) {
   const { expectedAccuracy, similarTo, reach } = suggestion;
   if (expectedAccuracy === undefined) return undefined;
   return [
-    recommended(suggestion) && "Recommended",
-    suggestion.isNew && "Not played yet",
-    `You typically get about ${expectedAccuracy.toFixed(2)}% on charts like this`,
+    recommended(suggestion) && t.overview.recommended,
+    suggestion.isNew && t.common.notPlayedYet,
+    t.overview.typically(expectedAccuracy.toFixed(2)),
     similarTo &&
-      `Plays like ${similarTo.title} ${similarTo.level} (${similarTo.accuracy.toFixed(2)}%)`,
-    reach === "stretch" && "A bit of a stretch: needs more than you usually get",
+      t.overview.playsLike(similarTo.title, similarTo.level, similarTo.accuracy.toFixed(2)),
+    reach === "stretch" && t.overview.stretch,
   ]
     .filter(Boolean)
-    .join(". ");
+    .join(" ");
 }
 
 /** One-chart ways to reach a target RKS; picking one loads it into the simulator at the needed accuracy. */
@@ -32,6 +34,7 @@ export function NextTarget({
   ranking: RankingResult;
   onPick: (key: string, accuracy: string) => void;
 }) {
+  const t = useT();
   const [target, setTarget] = useState(
     Math.min(20, Math.ceil((ranking.rankingScore + 0.01) * 100) / 100).toFixed(2),
   );
@@ -42,14 +45,14 @@ export function NextTarget({
     <section className="panel target" aria-labelledby="target-heading">
       <div className="panel-head">
         <h2 id="target-heading" className="panel-title">
-          Next Target
+          {t.overview.nextTarget}
         </h2>
         <label className="target-input" htmlFor="target-rks">
-          <span>Target RKS</span>
+          <span>{t.overview.targetRks}</span>
           <input
             id="target-rks"
             className="field-white"
-            aria-label="Target overall RKS"
+            aria-label={t.overview.targetRksLabel}
             type="number"
             min="0"
             max="20"
@@ -60,7 +63,7 @@ export function NextTarget({
         </label>
       </div>
       {!valid ? (
-        <p className="meta">Enter a target RKS between 0 and 20.</p>
+        <p className="meta">{t.overview.targetRange}</p>
       ) : candidates.length ? (
         <ul className="target-list">
           {candidates.map((candidate) => (
@@ -68,7 +71,7 @@ export function NextTarget({
               <button
                 type="button"
                 className="arrow-row target-item"
-                title={expectation(candidate)}
+                title={expectation(t, candidate)}
                 onClick={() => onPick(candidate.key, candidate.targetAccuracy.toFixed(2))}
               >
                 <span
@@ -79,7 +82,7 @@ export function NextTarget({
                 <Difficulty level={candidate.level} />
                 <span className="target-accuracy">
                   <span className="target-from">
-                    {candidate.isNew ? "New" : `${candidate.accuracy.toFixed(2)}%`}
+                    {candidate.isNew ? t.overview.new : `${candidate.accuracy.toFixed(2)}%`}
                   </span>{" "}
                   → {candidate.targetAccuracy.toFixed(2)}%
                 </span>
@@ -92,9 +95,7 @@ export function NextTarget({
         </ul>
       ) : (
         <p className="meta">
-          {Number(target) <= ranking.rankingScore
-            ? "You have already reached this target."
-            : "No realistic one-chart improvement reaches that target yet. Try a smaller step."}
+          {Number(target) <= ranking.rankingScore ? t.overview.reached : t.overview.noImprovement}
         </p>
       )}
     </section>

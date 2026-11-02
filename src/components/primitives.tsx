@@ -1,4 +1,5 @@
 import type { CSSProperties, Ref } from "react";
+import { useFormat, useT } from "../i18n";
 import { LEVELS, type LevelName } from "../modules";
 
 export const LEVEL_NAMES: Record<LevelName, string> = {
@@ -32,8 +33,9 @@ export function rankOf(score: number, fc: boolean) {
 
 export function Rank({ score, fc }: { score: number; fc: boolean }) {
   const rank = rankOf(score, fc);
+  const t = useT();
   const kind = rank === "φ" ? "phi" : fc ? "fc" : "plain";
-  const label = rank === "φ" ? "All Perfect" : fc ? "Full Combo" : `Rank ${rank}`;
+  const label = rank === "φ" ? "All Perfect" : fc ? t.menu.fullCombo : t.common.rank(rank);
   return (
     <span className={`rank rank-${kind}`} role="img" aria-label={label} title={label}>
       {rank}
@@ -44,10 +46,11 @@ export function Rank({ score, fc }: { score: number; fc: boolean }) {
 /** Which Phi slot a chart fills, as a raised digit after its φ (φ¹ φ² φ³). A styled <sup> rather than ¹²³:
  * the subset Saira has no superscript glyphs. */
 export function PhiSlot({ index }: { index: number }) {
+  const label = useT().common.phiSlot(index + 1);
   return (
-    <sup className="phi-slot" title={`Phi slot ${index + 1}`}>
-      <span className="sr-only">Phi slot </span>
-      {index + 1}
+    <sup className="phi-slot" title={label}>
+      <span className="sr-only">{label}</span>
+      <span aria-hidden="true">{index + 1}</span>
     </sup>
   );
 }
@@ -64,22 +67,24 @@ export function DifficultyFilter({
   value: string;
   onChange: (value: string) => void;
 }) {
+  const t = useT();
   return (
     // biome-ignore lint/a11y/useSemanticElements: a fieldset's default browser styling (border/padding) would need a reset; role="group" is valid ARIA for a button group.
-    <div className="seg" role="group" aria-label="Difficulty">
-      {[["", "All"], ...LEVELS.map((level, index) => [String(index), level])].map(
-        ([optionValue, label]) => (
-          <button
-            key={label}
-            type="button"
-            className={`seg-option seg-${label!.toLowerCase()}`}
-            aria-pressed={value === optionValue}
-            onClick={() => onChange(optionValue!)}
-          >
-            {label}
-          </button>
-        ),
-      )}
+    <div className="seg" role="group" aria-label={t.common.difficulty}>
+      {[
+        ["", "all", t.common.all],
+        ...LEVELS.map((level, index) => [String(index), level, level]),
+      ].map(([optionValue, kind, label]) => (
+        <button
+          key={kind}
+          type="button"
+          className={`seg-option seg-${kind!.toLowerCase()}`}
+          aria-pressed={value === optionValue}
+          onClick={() => onChange(optionValue!)}
+        >
+          {label}
+        </button>
+      ))}
     </div>
   );
 }
@@ -95,12 +100,16 @@ export function Stat({
   total?: React.ReactNode;
   className?: string;
 }) {
+  const format = useFormat();
+  const shown = (part: React.ReactNode) => (typeof part === "number" ? format.number(part) : part);
   return (
     <div className={className ? `stat ${className}` : "stat"}>
       <p>
-        <span className="stat-value">{value}</span>
+        <span className="stat-value">{shown(value)}</span>
         {total !== undefined && (
-          <span className="stat-total">{typeof total === "number" ? `/${total}` : total}</span>
+          <span className="stat-total">
+            {typeof total === "number" ? `/${shown(total)}` : total}
+          </span>
         )}
       </p>
       <span className="stat-label">{label}</span>
@@ -116,16 +125,17 @@ export function LevelStats({
   count: { cleared: number; fc: number; phi: number };
   total: number;
 }) {
+  const t = useT();
   return (
     <div className="stat-row">
-      <Stat label="Cleared" value={count.cleared} total={total} />
-      <Stat label="Full Combo" value={count.fc} total={total} />
+      <Stat label={t.common.cleared} value={count.cleared} total={total} />
+      <Stat label={t.menu.fullCombo} value={count.fc} total={total} />
       <Stat label="Phi" value={count.phi} total={total} />
     </div>
   );
 }
 
-const CHALLENGE_COLOURS = ["White", "Green", "Blue", "Red", "Gold", "Rainbow"];
+const CHALLENGE_COLOURS = ["White", "Green", "Blue", "Red", "Gold", "Rainbow"] as const;
 
 /** Challenge Mode rank as stored in saves: hundreds = colour, rest = level (548 → Rainbow 48). Undefined if never played. */
 export function challengeRank(value: number) {

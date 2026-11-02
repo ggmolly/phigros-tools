@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { catalogCompatible, catalogSong, unknownSongIds } from "../../catalog";
 import type { SaveDocumentV1 } from "../../document";
+import { useT } from "../../i18n";
 import { blankChart, type ChartMetric, calculateRanking } from "../../metrics";
 import { countLevels, LEVELS, type LevelName } from "../../modules";
 import { useSave } from "../../save-context";
@@ -28,6 +29,7 @@ export function Overview({
   document: SaveDocumentV1;
   playerName?: string;
 }) {
+  const t = useT();
   const ranking = calculateRanking(document);
   const counts = countLevels(document.songs);
   const unknown = unknownSongIds(document.songs.map((song) => song.songId));
@@ -44,16 +46,17 @@ export function Overview({
   return (
     <>
       {document.summary && JSON.stringify(counts) !== JSON.stringify(document.summary.counts) && (
-        <p className="warning">Parsed chart counts differ from the server summary.</p>
+        <p className="warning">{t.overview.countsDiffer}</p>
       )}
       {!catalogCompatible(document.summary?.gameVersion) && (
-        <p className="warning">
-          Catalog game version differs from this save; derived RKS is not authoritative.
-        </p>
+        <p className="warning">{t.overview.catalogDiffers}</p>
       )}
       {unknown.length > 0 && (
         <p className="warning">
-          {unknown.length} unknown catalog ID{unknown.length === 1 ? "" : "s"}: {unknown.join(", ")}
+          {(unknown.length === 1 ? t.overview.unknownIdOne : t.overview.unknownIdMany)(
+            unknown.length,
+            unknown.join(", "),
+          )}
         </p>
       )}
 
@@ -75,7 +78,7 @@ export function Overview({
           </div>
         </div>
       ) : (
-        <p className="panel meta">No chart records with known constants yet.</p>
+        <p className="panel meta">{t.overview.noCharts}</p>
       )}
     </>
   );

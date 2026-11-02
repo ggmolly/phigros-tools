@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useT } from "../i18n";
 import type { RankingResult } from "../metrics";
 import type { SongRecord } from "../modules";
 import { currentPalette } from "../palettes";
@@ -11,11 +12,6 @@ export const CARD_SIZE: Record<CardFormat, { width: number; height: number }> = 
   b30: { width: 1600, height: 2150 },
   fc30: { width: 1600, height: 2150 },
 };
-const FORMATS: [CardFormat, string][] = [
-  ["info", "Player info"],
-  ["b30", "Best 30"],
-  ["fc30", "FC 30"],
-];
 
 function ShareIcon() {
   return (
@@ -48,6 +44,12 @@ export function ShareCard({
   /** In-game avatar name. */
   avatar: string;
 }) {
+  const t = useT();
+  const formats: [CardFormat, string][] = [
+    ["info", t.share.playerInfo],
+    ["b30", "Best 30"],
+    ["fc30", "FC 30"],
+  ];
   const dialog = useRef<HTMLDialogElement>(null);
   const [open, setOpen] = useState(false);
   const [name, setName] = useState(playerName ?? "");
@@ -58,7 +60,7 @@ export function ShareCard({
   const rks = ranking.rankingScore.toFixed(3);
   const file =
     image && new File([image.blob], `phigros-${format}-rks-${rks}.png`, { type: "image/png" });
-  const caption = `My Phigros RKS is ${rks}! Check yours at ${SITE_URL}`;
+  const caption = t.share.caption(rks, SITE_URL);
 
   useEffect(() => {
     if (!open) return;
@@ -85,7 +87,7 @@ export function ShareCard({
         );
       } catch (error) {
         console.error("share card:", error);
-        if (!cancelled) setStatus("Couldn't draw the card. Check your connection and try again.");
+        if (!cancelled) setStatus(t.share.drawFailed);
       }
     }, 150); // debounce typing in the name field
     return () => {
@@ -93,24 +95,23 @@ export function ShareCard({
       clearTimeout(timer);
       if (url) URL.revokeObjectURL(url);
     };
-  }, [open, name, format, ranking, songs, avatar, challenge]);
+  }, [open, name, format, ranking, songs, avatar, challenge, t]);
 
   async function copy() {
     if (!image) return;
     try {
       await navigator.clipboard.write([new ClipboardItem({ "image/png": image.blob })]);
-      setStatus("Image copied to clipboard.");
+      setStatus(t.share.copied);
     } catch {
-      setStatus("Your browser blocked copying images. Use Download instead.");
+      setStatus(t.share.copyBlocked);
     }
   }
   async function share() {
     if (!file) return;
     try {
-      await navigator.share({ files: [file], title: "My Phigros profile", text: caption });
+      await navigator.share({ files: [file], title: t.share.shareTitle, text: caption });
     } catch (error) {
-      if ((error as DOMException).name !== "AbortError")
-        setStatus("Sharing failed. Use Download instead.");
+      if ((error as DOMException).name !== "AbortError") setStatus(t.share.shareFailed);
     }
   }
 
@@ -125,7 +126,7 @@ export function ShareCard({
           dialog.current?.showModal();
         }}
       >
-        Share card <ShareIcon />
+        {t.share.open} <ShareIcon />
       </button>
       <dialog
         ref={dialog}
@@ -134,15 +135,15 @@ export function ShareCard({
         onClose={() => setOpen(false)}
       >
         <form method="dialog" className="dialog-head">
-          <h2 id="share-heading">Share Card</h2>
+          <h2 id="share-heading">{t.share.title}</h2>
           {/* biome-ignore lint/a11y/useButtonType: the default submit type is intentional; submitting a method="dialog" form is how this button closes the dialog without JS. */}
-          <button className="dialog-close" aria-label="Close share card dialog">
+          <button className="dialog-close" aria-label={t.share.close}>
             ×
           </button>
         </form>
         {/* biome-ignore lint/a11y/useSemanticElements: same button group as the import dialog's game version. */}
-        <div className="seg share-format" role="group" aria-label="Card format">
-          {FORMATS.map(([value, label]) => (
+        <div className="seg share-format" role="group" aria-label={t.share.format}>
+          {formats.map(([value, label]) => (
             <button
               key={value}
               type="button"
@@ -163,15 +164,15 @@ export function ShareCard({
               src={image.url}
               width={CARD_SIZE[format].width}
               height={CARD_SIZE[format].height}
-              alt={`Share card: ${name || DEFAULT_NAME}, RKS ${rks}, top charts`}
+              alt={t.share.alt(name || DEFAULT_NAME, rks)}
             />
           ) : (
-            <p className="meta">Drawing your card…</p>
+            <p className="meta">{t.share.drawing}</p>
           )}
         </div>
         <div className="share-controls">
           <label className="share-name">
-            <span className="field-label">Name on card</span>
+            <span className="field-label">{t.share.nameOnCard}</span>
             <input
               className="field"
               value={name}
@@ -183,7 +184,7 @@ export function ShareCard({
           <div className="share-actions">
             {canShare && (
               <button type="button" className="btn" disabled={!image} onClick={() => void share()}>
-                Share <ShareIcon />
+                {t.share.share} <ShareIcon />
               </button>
             )}
             <a
@@ -192,7 +193,7 @@ export function ShareCard({
               download={file?.name}
               aria-disabled={!image}
             >
-              Download PNG
+              {t.share.download}
             </a>
             <button
               type="button"
@@ -200,7 +201,7 @@ export function ShareCard({
               disabled={!image}
               onClick={() => void copy()}
             >
-              Copy image
+              {t.share.copy}
             </button>
           </div>
         </div>

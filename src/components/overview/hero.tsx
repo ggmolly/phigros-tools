@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { catalogChartTotals } from "../../catalog";
 import type { SaveDocumentV1 } from "../../document";
+import { useT } from "../../i18n";
 import type { RankingResult } from "../../metrics";
 import { countLevels, LEVELS } from "../../modules";
 import { Avatar, challengeRank, dataAmount, LevelStats, Stat } from "../primitives";
@@ -17,6 +18,7 @@ export function Hero({
   document: SaveDocumentV1;
   playerName?: string;
 }) {
+  const t = useT();
   const songs = document.songs;
   const challenge = challengeRank(document.gameProgress.challengeModeRank);
   const data = dataAmount(document.gameProgress.money);
@@ -27,6 +29,12 @@ export function Hero({
   const total = songs.reduce((sum, song) => sum + song.levels.filter(Boolean).length, 0);
   const fcTotal = counts.reduce((sum, count) => sum + count.fc, 0);
   const apTotal = counts.reduce((sum, count) => sum + count.phi, 0);
+  const challengeLabel =
+    challenge &&
+    t.common.challengeMode(
+      t.common.challenge[challenge.colour.toLowerCase() as Lowercase<typeof challenge.colour>],
+      String(challenge.level),
+    );
   return (
     <section className="hero" aria-labelledby="hero-name">
       <ShareCard
@@ -39,7 +47,7 @@ export function Hero({
       <div className="hero-id">
         <Avatar className="hero-avatar" name={avatar} />
         <h1 id="hero-name" className="hero-name">
-          <span className="hero-name-text">{playerName || "Local save"}</span>
+          <span className="hero-name-text">{playerName || t.overview.localSave}</span>
         </h1>
         <p className="hero-rks">
           <span className="hero-rks-label">RKS</span>
@@ -48,23 +56,23 @@ export function Hero({
         {challenge && (
           <p
             className={`challenge-badge challenge-${challenge.colour.toLowerCase()}`}
-            title={`Challenge Mode: ${challenge.colour} ${challenge.level}`}
+            title={challengeLabel}
           >
-            <span className="sr-only">Challenge Mode: {challenge.colour} </span>
-            {challenge.level}
+            <span className="sr-only">{challengeLabel}</span>
+            <span aria-hidden="true">{challenge.level}</span>
           </p>
         )}
       </div>
       <div className="hero-stats">
-        <Stat label="Played" value={total} />
-        <Stat label="Full Combo" value={fcTotal} total={total} />
+        <Stat label={t.menu.played} value={total} />
+        <Stat label={t.menu.fullCombo} value={fcTotal} total={total} />
         <Stat label="Phi" value={apTotal} total={total} />
-        <Stat label="Data" value={data.value} total={data.unit} />
+        <Stat label={t.overview.data} value={data.value} total={data.unit} />
       </div>
       {intro && <p className="hero-intro">{intro}</p>}
       <div className="stat-bar">
         {/* biome-ignore lint/a11y/useSemanticElements: a fieldset's default browser styling (border/padding) would need a reset; role="group" is valid ARIA for a button group. */}
-        <div className="level-switch" role="group" aria-label="Difficulty for completion stats">
+        <div className="level-switch" role="group" aria-label={t.overview.completionDifficulty}>
           {LEVELS.map((level, index) => (
             <button
               key={level}

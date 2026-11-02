@@ -1,10 +1,13 @@
 import type { CSSProperties } from "react";
 import { catalogChartTotals, missingCharts } from "../catalog";
 import type { SaveDocumentV1 } from "../document";
+import { useFormat, useT } from "../i18n";
 import { countLevels, LEVELS } from "../modules";
 import { Difficulty, LEVEL_NAMES, LevelStats } from "./primitives";
 
 export function CollectionTracker({ document }: { document: SaveDocumentV1 }) {
+  const t = useT();
+  const format = useFormat();
   const counts = countLevels(document.songs);
   const missing = missingCharts(document.songs);
   const rows = LEVELS.map((level, index) => ({
@@ -20,14 +23,14 @@ export function CollectionTracker({ document }: { document: SaveDocumentV1 }) {
     <section id="collection" className="panel collection" aria-labelledby="collection-heading">
       <div className="panel-head">
         <h2 id="collection-heading" className="panel-title">
-          Collection
+          {t.tabs.collection}
         </h2>
         <span className="panel-count">
-          {played} / {total} charts played
+          {t.collection.chartsPlayed(format.number(played), format.number(total))}
         </span>
       </div>
       <div className="collection-total">
-        <p className="collection-total-label">Total Completion</p>
+        <p className="collection-total-label">{t.collection.totalCompletion}</p>
         <p className="collection-total-value">
           {Math.floor(completion)}
           <small>%</small>
@@ -35,7 +38,7 @@ export function CollectionTracker({ document }: { document: SaveDocumentV1 }) {
         <div
           className="progress-track"
           role="img"
-          aria-label={`${Math.floor(completion)}% of all charts played`}
+          aria-label={t.collection.completionLabel(format.number(Math.floor(completion)))}
         >
           <span style={{ "--p": completion / 100 } as CSSProperties} />
         </div>
@@ -59,7 +62,11 @@ export function CollectionTracker({ document }: { document: SaveDocumentV1 }) {
                 <div
                   className="progress-track"
                   role="img"
-                  aria-label={`${row.level}: ${row.cleared} of ${row.total} charts played`}
+                  aria-label={t.collection.levelPlayed(
+                    row.level,
+                    format.number(row.cleared),
+                    format.number(row.total),
+                  )}
                 >
                   <span style={{ "--p": percent / 100 } as CSSProperties} />
                 </div>
@@ -72,14 +79,16 @@ export function CollectionTracker({ document }: { document: SaveDocumentV1 }) {
       {played < total && (
         <details className="collection-missing">
           <summary>
-            {total - played} chart{total - played === 1 ? "" : "s"} not played yet
+            {(total - played === 1 ? t.collection.notPlayedOne : t.collection.notPlayedMany)(
+              total - played,
+            )}
           </summary>
           {rows
             .filter((row) => row.missing.length > 0)
             .map((row) => (
               <div key={row.level}>
                 <h4>
-                  <Difficulty level={row.level} /> {row.missing.length} missing
+                  <Difficulty level={row.level} /> {t.collection.missing(row.missing.length)}
                 </h4>
                 <ul>
                   {row.missing.map((song) => (

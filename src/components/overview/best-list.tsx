@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useT } from "../../i18n";
 import type { RankingResult } from "../../metrics";
 import { PhiSlot, Rank } from "../primitives";
 
@@ -12,6 +13,7 @@ export function BestList({
   selectedKey: string;
   onPick: (key: string) => void;
 }) {
+  const t = useT();
   const entries: { record: (typeof ranking.best)[number]; slot: string; phi?: number }[] = [
     ...ranking.phi.map((record, index) => ({ record, slot: `φ${index + 1}`, phi: index })),
     ...ranking.best.map((record, index) => ({ record, slot: String(index + 1).padStart(2, "0") })),
@@ -30,7 +32,9 @@ export function BestList({
           Best {ranking.best.length}
         </h2>
         <span className="panel-count">
-          + {ranking.phi.length} Phi slot{ranking.phi.length === 1 ? "" : "s"}
+          {(ranking.phi.length === 1 ? t.overview.phiSlotOne : t.overview.phiSlotMany)(
+            ranking.phi.length,
+          )}
         </span>
       </div>
       <ol className="song-list">
