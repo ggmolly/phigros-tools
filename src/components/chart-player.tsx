@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useT } from "../i18n";
 import { type Chart, countUpTo } from "../player/chart";
 import { HitSounds } from "../player/hit-sounds";
 import { type Art, drawHud, drawScene, loadArt } from "../player/render";
@@ -41,6 +42,7 @@ export function ChartPlayer({
   level: string;
   startAt?: number;
 }) {
+  const t = useT();
   const canvas = useRef<HTMLCanvasElement>(null);
   const scrub = useRef<HTMLInputElement>(null);
   const scrubBox = useRef<HTMLDivElement>(null);
@@ -246,20 +248,20 @@ export function ChartPlayer({
       </div>
       <div className="chart-player-transport">
         <button type="button" className="btn chart-player-play" onClick={toggle}>
-          {playing ? "Pause" : "Play"}
+          {playing ? t.player.pause : t.player.play}
         </button>
         <button type="button" className="btn btn-ghost" onClick={jumpToFirstNote}>
-          First Note
+          {t.player.firstNote}
         </button>
         <button
           type="button"
           className="num chart-player-time chart-player-share"
-          title="Share a link to this moment"
+          title={t.player.share}
           onClick={copyLink}
         >
           <span ref={elapsed}>0:00</span>
           <span className="chart-player-copied" role="status">
-            {copied > 0 && <span key={copied}>Link copied</span>}
+            {copied > 0 && <span key={copied}>{t.player.linkCopied}</span>}
           </span>
         </button>
         <Slider
@@ -267,24 +269,24 @@ export function ChartPlayer({
           min={start}
           max={duration}
           step="any"
-          label="Position"
+          label={t.player.position}
           boxRef={scrubBox}
           inputRef={scrub}
           onChange={(t) => seek(t, playing)}
         />
         <span className="num chart-player-time">{clockTime(duration)}</span>
       </div>
-      <section className="panel chart-player-settings" aria-label="Playback settings">
+      <section className="panel chart-player-settings" aria-label={t.player.settings}>
         <div className="player-setting">
           <div className="player-setting-head">
-            <span>Speed</span>
+            <span>{t.player.speed}</span>
             <span className="num">{rate.toFixed(2)}×</span>
           </div>
           <div className="stepper">
             <button
               type="button"
               className="step"
-              aria-label="Slower"
+              aria-label={t.player.slower}
               disabled={rate <= SPEEDS[0]!}
               onClick={() => changeRate(SPEEDS.findLast((speed) => speed < rate) ?? rate)}
             >
@@ -295,13 +297,13 @@ export function ChartPlayer({
               min={0.1}
               max={2}
               step={0.05}
-              label="Speed"
+              label={t.player.speed}
               onChange={changeRate}
             />
             <button
               type="button"
               className="step"
-              aria-label="Faster"
+              aria-label={t.player.faster}
               disabled={rate >= SPEEDS.at(-1)!}
               onClick={() => changeRate(SPEEDS.find((speed) => speed > rate) ?? rate)}
             >
@@ -311,7 +313,7 @@ export function ChartPlayer({
         </div>
         <div className="player-setting">
           <div className="player-setting-head">
-            <span>Music Volume</span>
+            <span>{t.player.musicVolume}</span>
             <span className="num">{Math.round(volume * 100)}%</span>
           </div>
           <div className="slider-caps">
@@ -320,19 +322,19 @@ export function ChartPlayer({
               min={0}
               max={1}
               step={0.01}
-              label="Music volume"
+              label={t.player.musicVolume}
               onChange={changeVolume}
             />
           </div>
         </div>
         <div className="player-setting">
           <div className="player-setting-head">
-            <span>Hitsound</span>
-            <span className="num">{hitSoundsOn ? "On" : "Off"}</span>
+            <span>{t.player.hitsound}</span>
+            <span className="num">{hitSoundsOn ? t.player.on : t.player.off}</span>
           </div>
           <Switch
             checked={hitSoundsOn}
-            label="Hitsound"
+            label={t.player.hitsound}
             onChange={(on) => {
               hitSounds.enabled = on;
               setHitSoundsOn(on);
@@ -341,11 +343,11 @@ export function ChartPlayer({
         </div>
         <div className="player-setting">
           <div className="player-setting-head">
-            <span>Song</span>
+            <span>{t.player.song}</span>
           </div>
           <div className="player-song">
             <button type="button" className="btn btn-ghost" onClick={() => picker.current?.click()}>
-              {songName ? "Change" : "Load Song File"}
+              {songName ? t.player.change : t.player.loadSong}
             </button>
             {songName && <span className="meta">{songName}</span>}
           </div>
@@ -359,14 +361,14 @@ export function ChartPlayer({
         </div>
         <div className="player-setting">
           <div className="player-setting-head">
-            <span>Offset</span>
+            <span>{t.player.offset}</span>
             <span className="num">{offset > 0 ? `+${offset}` : offset} ms</span>
           </div>
           <div className="stepper">
             <button
               type="button"
               className="step"
-              aria-label="Notes earlier"
+              aria-label={t.player.earlier}
               onClick={() => changeOffset(offset - OFFSET_STEP)}
             >
               −
@@ -376,13 +378,13 @@ export function ChartPlayer({
               min={-offsetRange}
               max={offsetRange}
               step={1}
-              label="Offset"
+              label={t.player.offset}
               onChange={changeOffset}
             />
             <button
               type="button"
               className="step"
-              aria-label="Notes later"
+              aria-label={t.player.later}
               onClick={() => changeOffset(offset + OFFSET_STEP)}
             >
               +
@@ -395,19 +397,15 @@ export function ChartPlayer({
               disabled={!songName || sync === "busy"}
               onClick={() => void autoSync()}
             >
-              {sync === "busy" ? "Syncing…" : "Auto-Sync"}
+              {sync === "busy" ? t.player.syncing : t.player.autoSync}
             </button>
             {offset !== 0 && (
               <button type="button" className="btn btn-ghost" onClick={() => changeOffset(0)}>
-                Reset
+                {t.player.reset}
               </button>
             )}
             <span className="meta" role="status">
-              {!songName
-                ? "Load a song file to line it up with the chart."
-                : sync === "failed"
-                  ? "Couldn't match this file to the chart."
-                  : ""}
+              {!songName ? t.player.loadHint : sync === "failed" ? t.player.syncFailed : ""}
             </span>
           </div>
         </div>

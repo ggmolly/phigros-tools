@@ -5,8 +5,9 @@ import { type ChartStats, getSongDetails } from "../chartStats";
 import { Arrow } from "../components/arrow";
 import { SiteHeader } from "../components/chrome";
 import { Difficulty, Rank, score7 } from "../components/primitives";
+import { useT } from "../i18n";
 import type { Locale } from "../i18n/locales";
-import { MESSAGES } from "../i18n/messages";
+import { MESSAGES, type Messages } from "../i18n/messages";
 import { calculateRanking } from "../metrics";
 import { LEVELS } from "../modules";
 import { useSave } from "../save-context";
@@ -18,76 +19,40 @@ function mmss(totalSeconds: number) {
   return `${m}:${String(s).padStart(2, "0")}`;
 }
 
-/** Row label + formatter (+ optional "(?)" explanation) for the chart-stats table; every field comes from the game's own chart files (see scripts/build-chart-stats.ts). */
-const STAT_ROWS: [string, (s: ChartStats) => string, string?][] = [
-  ["Notes", (s) => String(s.notes)],
-  ["Tap", (s) => String(s.tap)],
-  ["Drag", (s) => String(s.drag)],
-  ["Hold", (s) => String(s.hold)],
-  ["Flick", (s) => String(s.flick)],
-  ["Chart length", (s) => mmss(s.lengthSec)],
+/** Stat key + formatter (+ whether it has a "(?)" explanation) for the chart-stats table; every field comes from the game's own chart files (see scripts/build-chart-stats.ts). */
+const STAT_ROWS: [
+  keyof Messages["song"]["stats"],
+  (s: ChartStats, t: Messages) => string,
+  boolean?,
+][] = [
+  ["notes", (s) => String(s.notes)],
+  ["tap", (s) => String(s.tap)],
+  ["drag", (s) => String(s.drag)],
+  ["hold", (s) => String(s.hold)],
+  ["flick", (s) => String(s.flick)],
+  ["length", (s) => mmss(s.lengthSec)],
+  ["avgDensity", (s) => `${s.avgNps.toFixed(1)}/s`, true],
+  ["peakDensity", (s) => `${s.peakNps}/s`, true],
   [
-    "Avg. density",
-    (s) => `${s.avgNps.toFixed(1)}/s`,
-    "Average notes per second across the whole chart.",
+    "largestChord",
+    (s, t) => (s.maxChord === 1 ? t.song.chordOne : t.song.chordMany)(s.maxChord),
+    true,
   ],
+  ["chords", (s) => String(s.chordCount), true],
   [
-    "Peak density",
-    (s) => `${s.peakNps}/s`,
-    "The most notes packed into any single one-second window of the chart.",
-  ],
-  [
-    "Largest chord",
-    (s) => `${s.maxChord} note${s.maxChord === 1 ? "" : "s"}`,
-    "The most notes the chart ever asks you to hit at the exact same instant.",
-  ],
-  [
-    "Chords (2+ notes)",
-    (s) => String(s.chordCount),
-    "How many moments have two or more notes landing within 10ms of each other.",
-  ],
-  [
-    "Hold time",
+    "holdTime",
     (s) =>
       `${mmss(s.holdSec)} (${s.lengthSec > 0 ? Math.round((s.holdSec / s.lengthSec) * 100) : 0}%)`,
-    "Total time spent holding a note, and what share of the chart's length that is.",
+    true,
   ],
-  [
-    "Longest gap",
-    (s) => `${s.longestGapSec.toFixed(1)}s`,
-    "The longest stretch anywhere in the chart with no note to hit, the biggest pause.",
-  ],
-  [
-    "Notes / line",
-    (s) => (s.notes / s.lines).toFixed(1),
-    "Average notes per judge line: low means choreography is spread across many lines, high means it's concentrated on a few.",
-  ],
-  ["BPM", (s) => (s.bpmMin === s.bpmMax ? String(s.bpm) : `${s.bpmMin}–${s.bpmMax}`)],
-  [
-    "Scroll speed",
-    (s) => `${s.speedMin}×–${s.speedMax}×`,
-    "How fast notes fall towards the judge line, as a multiplier. Higher means less reaction time.",
-  ],
-  [
-    "Speed changes",
-    (s) => String(s.speedChanges),
-    "How many times the scroll speed changes during the chart.",
-  ],
-  [
-    "Judge lines",
-    (s) => String(s.lines),
-    "The independent moving/rotating lines the chart's notes are attached to. More lines usually means more visual choreography.",
-  ],
-  [
-    "Above / below",
-    (s) => `${s.above} / ${s.below}`,
-    "Notes attached to the upper vs. lower side of their judge line.",
-  ],
-  [
-    "Motion events",
-    (s) => String(s.motionEvents),
-    "Combined count of line movement, rotation and disappearance keyframes: a rough proxy for how much the chart's visuals move.",
-  ],
+  ["longestGap", (s) => `${s.longestGapSec.toFixed(1)}s`, true],
+  ["notesPerLine", (s) => (s.notes / s.lines).toFixed(1), true],
+  ["bpm", (s) => (s.bpmMin === s.bpmMax ? String(s.bpm) : `${s.bpmMin}–${s.bpmMax}`)],
+  ["scrollSpeed", (s) => `${s.speedMin}×–${s.speedMax}×`, true],
+  ["speedChanges", (s) => String(s.speedChanges), true],
+  ["judgeLines", (s) => String(s.lines), true],
+  ["aboveBelow", (s) => `${s.above} / ${s.below}`, true],
+  ["motionEvents", (s) => String(s.motionEvents), true],
 ];
 
 /** "a", "a and b", "a, b and c", in the page's language. */
@@ -223,22 +188,26 @@ export const Route = createFileRoute("/charts/$id")({
       ],
     };
   },
-  notFoundComponent: () => (
+  notFoundComponent: SongNotFound,
+  component: SongPage,
+});
+
+function SongNotFound() {
+  const t = useT();
+  return (
     <>
       <SiteHeader />
       <main className="app-shell">
         <section className="panel">
-          <h1 className="panel-title">Song Not Found</h1>
+          <h1 className="panel-title">{t.seo.songNotFound}</h1>
           <p className="meta">
-            No song with this ID is in the catalog. <Link to="/charts">Back to the chart list</Link>
-            .
+            {t.song.notFoundBody} <Link to="/charts">{t.song.backToList}</Link>
           </p>
         </section>
       </main>
     </>
-  ),
-  component: SongPage,
-});
+  );
+}
 
 /** Up to `limit` other songs, starting after `song` in catalog order so neighbouring pages link to different ones. */
 function related(song: CatalogSong, match: (other: CatalogSong) => boolean, limit = 8) {
@@ -273,6 +242,7 @@ function SongLinks({ heading, songs }: { heading: string; songs: CatalogSong[] }
  * a save is loaded. */
 function SongCharts({ song }: { song: CatalogSong }) {
   const { loaded } = useSave();
+  const t = useT();
   const ranking = loaded && calculateRanking(loaded.document);
   const bestIndex = new Map(
     ranking ? ranking.best.map((chart, index) => [chart.key, index + 1]) : [],
@@ -281,16 +251,16 @@ function SongCharts({ song }: { song: CatalogSong }) {
     ? ranking.charts.filter((chart) => canonicalSongId(chart.songId) === song.id)
     : [];
   const columns = [
-    "Difficulty",
-    "Constant",
-    "Charter",
-    ...(ranking ? ["Score", "Acc", "Rank", "RKS"] : []),
+    t.song.difficulty,
+    t.song.constant,
+    t.song.charter,
+    ...(ranking ? [t.song.score, t.song.acc, t.song.rank, "RKS"] : []),
     "",
   ];
   return (
     <section className="panel your-records">
       <div className="panel-head">
-        <h2 className="panel-title">{ranking ? "Your Records" : "Charts"}</h2>
+        <h2 className="panel-title">{ranking ? t.song.yourRecords : t.tabs.charts}</h2>
       </div>
       <div className="chart-stats-scroll">
         <table className="song-diff-table">
@@ -298,7 +268,7 @@ function SongCharts({ song }: { song: CatalogSong }) {
             <tr>
               {columns.map((name) => (
                 <th key={name} scope="col">
-                  {name || <span className="sr-only">Preview</span>}
+                  {name || <span className="sr-only">{t.song.preview}</span>}
                 </th>
               ))}
             </tr>
@@ -325,12 +295,12 @@ function SongCharts({ song }: { song: CatalogSong }) {
                         </td>
                         <td className="num">
                           {record.rks.toFixed(2)}
-                          {best && <span className="meta"> · Best #{best}</span>}
+                          {best && <span className="meta"> · {t.song.best(best)}</span>}
                         </td>
                       </>
                     ) : (
                       <td className="meta" colSpan={4}>
-                        Not played
+                        {t.song.notPlayed}
                       </td>
                     ))}
                   <td>
@@ -339,7 +309,7 @@ function SongCharts({ song }: { song: CatalogSong }) {
                       params={{ id: song.id, level }}
                       className="link-button"
                     >
-                      Preview
+                      {t.song.preview}
                     </Link>
                   </td>
                 </tr>
@@ -362,6 +332,7 @@ function SongPage() {
   const sameChapter = related(song, (other) => other.chapter === song.chapter);
   const sameArtist = related(song, (other) => other.artist === song.artist);
   const navigate = useNavigate();
+  const t = useT();
   // ← / → step through the catalog like the pager below, unless a field or a modified shortcut wants the key.
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
@@ -388,7 +359,7 @@ function SongPage() {
       <SiteHeader />
       <main className="app-shell">
         <p className="meta breadcrumb">
-          <Link to="/charts">Charts</Link> /{" "}
+          <Link to="/charts">{t.tabs.charts}</Link> /{" "}
           <Link to="/charts" search={{ chapter: song.chapter }}>
             {song.chapter}
           </Link>{" "}
@@ -404,7 +375,11 @@ function SongPage() {
                   src={`/covers/${song.id}.avif`}
                   width={1024}
                   height={540}
-                  alt={`Cover art for ${song.title}${song.illustrator ? `, illustrated by ${song.illustrator}` : ""}`}
+                  alt={
+                    song.illustrator
+                      ? t.seo.coverAltBy(song.title, song.illustrator)
+                      : t.seo.coverAlt(song.title)
+                  }
                   decoding="async"
                 />
               </div>
@@ -419,26 +394,28 @@ function SongPage() {
                     {song.chapter}
                   </Link>
                 </p>
-                {song.illustrator && <p className="meta">Illustrated by {song.illustrator}</p>}
+                {song.illustrator && (
+                  <p className="meta">{t.song.illustratedBy(song.illustrator)}</p>
+                )}
               </div>
             </section>
-            <SongLinks heading={`More From ${song.chapter}`} songs={sameChapter} />
-            <SongLinks heading={`More By ${song.artist}`} songs={sameArtist} />
+            <SongLinks heading={t.song.moreFrom(song.chapter)} songs={sameChapter} />
+            <SongLinks heading={t.song.moreBy(song.artist)} songs={sameArtist} />
           </div>
           <div className="song-side">
-            <section className="song-scroll" aria-label="Charts, records and chart stats">
+            <section className="song-scroll" aria-label={t.song.scrollLabel}>
               <SongCharts song={song} />
               {stats && (
                 <section className="panel chart-stats">
                   <div className="panel-head">
-                    <h2 className="panel-title">Chart Stats</h2>
+                    <h2 className="panel-title">{t.song.chartStats}</h2>
                   </div>
                   <div className="chart-stats-scroll">
                     <table className="song-diff-table">
                       <thead>
                         <tr>
                           <th scope="col">
-                            <span className="sr-only">Metric</span>
+                            <span className="sr-only">{t.song.metric}</span>
                           </th>
                           {LEVELS.map(
                             (level, levelIndex) =>
@@ -451,12 +428,15 @@ function SongPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {STAT_ROWS.map(([label, format, help]) => (
-                          <tr key={label}>
+                        {STAT_ROWS.map(([key, format, help]) => (
+                          <tr key={key}>
                             <td className="meta">
-                              {label}
+                              {t.song.stats[key]}
                               {help && (
-                                <abbr className="stat-help" title={help}>
+                                <abbr
+                                  className="stat-help"
+                                  title={t.song.help[key as keyof Messages["song"]["help"]]}
+                                >
                                   ?
                                 </abbr>
                               )}
@@ -465,7 +445,7 @@ function SongPage() {
                               (level, levelIndex) =>
                                 song.constants[levelIndex] != null && (
                                   <td key={level} className="num">
-                                    {stats[levelIndex] ? format(stats[levelIndex]!) : "-"}
+                                    {stats[levelIndex] ? format(stats[levelIndex]!, t) : "-"}
                                   </td>
                                 ),
                             )}
@@ -478,7 +458,7 @@ function SongPage() {
               )}
             </section>
             {/* Outside the scroll area so it stays put from one song to the next (← and → follow it too). */}
-            <nav className="song-pager" aria-label="Adjacent songs">
+            <nav className="song-pager" aria-label={t.song.adjacent}>
               <Link
                 to="/charts/$id"
                 params={{ id: previous.id }}
@@ -488,7 +468,7 @@ function SongPage() {
                   <Arrow />
                 </span>
                 <span>
-                  <span className="import-description">Previous</span>
+                  <span className="import-description">{t.song.previous}</span>
                   <strong>{previous.title}</strong>
                 </span>
               </Link>
@@ -498,7 +478,7 @@ function SongPage() {
                 className="arrow-row import-option song-pager-next"
               >
                 <span>
-                  <span className="import-description">Next</span>
+                  <span className="import-description">{t.song.next}</span>
                   <strong>{next.title}</strong>
                 </span>
                 <span className="arrow-chip">

@@ -10,6 +10,7 @@ import {
 } from "../catalog";
 import { SiteHeader } from "../components/chrome";
 import { Difficulty, DifficultyFilter } from "../components/primitives";
+import { useFormat, useT } from "../i18n";
 import { LEVELS } from "../modules";
 import { breadcrumbs, chartsImage, headT, jsonLd, localeUrl, pageLinks, pageMeta } from "../seo";
 
@@ -77,6 +78,8 @@ function ChartsPage() {
   const setFilter = (key: "q" | "chapter" | "view", value: string) =>
     void navigate({ search: (prev) => ({ ...prev, [key]: value || undefined }), replace: true });
   const [difficulty, setDifficulty] = useState("");
+  const t = useT();
+  const format = useFormat();
   const query = searchFold(search);
   const rows = catalogSongs.filter(
     (song) =>
@@ -91,35 +94,34 @@ function ChartsPage() {
       (!chapter || song.chapter === chapter) &&
       (difficulty === "" || song.constants[Number(difficulty)] != null),
   );
+  const count = t.charts.count(format.number(rows.length), format.number(catalogSongs.length));
   return (
     <>
       <SiteHeader />
       <main className="app-shell">
         <section className="panel min-w-0">
           <div className="panel-head">
-            <h1 className="panel-title">Chart & Difficulty List</h1>
-            <span className="panel-count">
-              {rows.length} of {catalogSongs.length} songs
-            </span>
+            <h1 className="panel-title">{t.seo.chartsTitle}</h1>
+            <span className="panel-count">{count}</span>
           </div>
           <div className="filters">
             <input
               className="field search-field"
               type="search"
-              placeholder="Search title, artist, illustrator or chapter"
-              aria-label="Search songs"
+              placeholder={t.charts.searchPlaceholder}
+              aria-label={t.charts.searchLabel}
               value={search}
               onChange={(e) => setFilter("q", e.target.value)}
             />
             <label className="select">
-              <span className="select-label">Chapter</span>
+              <span className="select-label">{t.charts.chapter}</span>
               <select
                 className="select-field"
-                aria-label="Filter by chapter"
+                aria-label={t.charts.chapterFilter}
                 value={chapter}
                 onChange={(e) => setFilter("chapter", e.target.value)}
               >
-                <option value="">All chapters</option>
+                <option value="">{t.charts.allChapters}</option>
                 {CHAPTERS.map((name) => (
                   <option key={name} value={name}>
                     {name}
@@ -129,7 +131,7 @@ function ChartsPage() {
             </label>
             <DifficultyFilter value={difficulty} onChange={setDifficulty} />
             {/* biome-ignore lint/a11y/useSemanticElements: same button group as DifficultyFilter. */}
-            <div className="seg" role="group" aria-label="View">
+            <div className="seg" role="group" aria-label={t.charts.view}>
               {(["", "gallery"] as const).map((option) => (
                 <button
                   key={option}
@@ -138,13 +140,13 @@ function ChartsPage() {
                   aria-pressed={(view ?? "") === option}
                   onClick={() => setFilter("view", option)}
                 >
-                  {option ? "Gallery" : "List"}
+                  {option ? t.charts.gallery : t.charts.list}
                 </button>
               ))}
             </div>
           </div>
           {view === "gallery" ? (
-            <ul className="gallery" aria-label="Song covers">
+            <ul className="gallery" aria-label={t.charts.covers}>
               {rows.map((song) => (
                 <li key={song.id}>
                   <Link to="/charts/$id" params={{ id: song.id }} className="gallery-card">
@@ -162,7 +164,9 @@ function ChartsPage() {
                       <span className="gallery-title">{song.title}</span>
                       <span className="gallery-line">{song.artist}</span>
                       {song.illustrator && (
-                        <span className="gallery-line">Illustration: {song.illustrator}</span>
+                        <span className="gallery-line">
+                          {t.charts.illustration(song.illustrator)}
+                        </span>
                       )}
                       {LEVELS.map(
                         (level, index) =>
@@ -176,21 +180,17 @@ function ChartsPage() {
                   </Link>
                 </li>
               ))}
-              {rows.length === 0 && (
-                <li className="meta empty-row">No songs match these filters.</li>
-              )}
+              {rows.length === 0 && <li className="meta empty-row">{t.charts.empty}</li>}
             </ul>
           ) : (
             <>
               {/* biome-ignore lint/a11y/noNoninteractiveTabindex: keyboard users need to focus this region to scroll it. */}
-              <section className="table-scroll" tabIndex={0} aria-label="Scrollable chart list">
+              <section className="table-scroll" tabIndex={0} aria-label={t.charts.scrollable}>
                 <table>
-                  <caption className="sr-only">
-                    {rows.length} of {catalogSongs.length} songs
-                  </caption>
+                  <caption className="sr-only">{count}</caption>
                   <thead>
                     <tr>
-                      {["", "Song", "Chapter", "EZ", "HD", "IN", "AT"].map((name) => (
+                      {["", t.charts.song, t.charts.chapter, ...LEVELS].map((name) => (
                         <th key={name} scope="col">
                           {name}
                         </th>
@@ -224,7 +224,7 @@ function ChartsPage() {
                               to="/charts"
                               search={{ q: song.artist }}
                               className="record-artist artist-link"
-                              title={`Show songs by ${song.artist}`}
+                              title={t.charts.songsBy(song.artist)}
                             >
                               {song.artist}
                             </Link>
@@ -255,7 +255,7 @@ function ChartsPage() {
                     {rows.length === 0 && (
                       <tr>
                         <td colSpan={7} className="meta empty-row">
-                          No songs match these filters.
+                          {t.charts.empty}
                         </td>
                       </tr>
                     )}
