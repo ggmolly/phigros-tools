@@ -6387,8 +6387,8 @@
         "bpmMax": 202,
         "speedMin": -999,
         "speedMax": 9999,
-        "speedChanges": 1160,
-        "motionEvents": 140731,
+        "speedChanges": 1172,
+        "motionEvents": 140963,
         "longestGapSec": 1.34
       }
     ],
@@ -7976,7 +7976,7 @@
         "avgNps": 5.66,
         "peakNps": 28,
         "maxChord": 2,
-        "chordCount": 142,
+        "chordCount": 141,
         "holdSec": 52.75,
         "bpm": 207,
         "bpmMin": 207,
@@ -14967,19 +14967,19 @@
         "longestGapSec": 3.31
       },
       {
-        "notes": 779,
+        "notes": 777,
         "tap": 417,
-        "drag": 263,
+        "drag": 261,
         "hold": 66,
         "flick": 33,
-        "above": 772,
+        "above": 770,
         "below": 7,
         "lines": 24,
         "lengthSec": 163.44,
-        "avgNps": 4.77,
-        "peakNps": 25,
+        "avgNps": 4.75,
+        "peakNps": 24,
         "maxChord": 4,
-        "chordCount": 84,
+        "chordCount": 82,
         "holdSec": 53.65,
         "bpm": 163,
         "bpmMin": 163,
@@ -15035,7 +15035,7 @@
         "speedMin": -999,
         "speedMax": 999,
         "speedChanges": 785,
-        "motionEvents": 134900,
+        "motionEvents": 134805,
         "longestGapSec": 5.89
       }
     ],
@@ -20479,7 +20479,7 @@
         "bpmMax": 219,
         "speedMin": -2.35,
         "speedMax": 999,
-        "speedChanges": 107,
+        "speedChanges": 108,
         "motionEvents": 81848,
         "longestGapSec": 2.19
       }
@@ -21639,11 +21639,11 @@
         "above": 1365,
         "below": 32,
         "lines": 66,
-        "lengthSec": 170.95,
+        "lengthSec": 170.92,
         "avgNps": 8.17,
         "peakNps": 26,
         "maxChord": 4,
-        "chordCount": 215,
+        "chordCount": 216,
         "holdSec": 65.05,
         "bpm": 220.5,
         "bpmMin": 220.5,
@@ -21651,7 +21651,7 @@
         "speedMin": -48,
         "speedMax": 1000,
         "speedChanges": 1533,
-        "motionEvents": 62842,
+        "motionEvents": 62838,
         "longestGapSec": 7.14
       }
     ],

@@ -1,10 +1,10 @@
 {
   "manifest": {
     "schemaVersion": 1,
-    "gameVersion": 157,
+    "gameVersion": 160,
     "source": "Phigros APK: level0 GameInformation (extract/export_game_info.py)",
-    "sourceRevision": "ae15fceed1ea2cd1aa58695def0d65c93834f9aa6f2a5ddc1c2e19cf8aa0ad4e",
-    "sourceHash": "ae15fceed1ea2cd1aa58695def0d65c93834f9aa6f2a5ddc1c2e19cf8aa0ad4e"
+    "sourceRevision": "a2e920127cf2091a2c479590c8bb91590cf076091306ce7164524187f4480b68",
+    "sourceHash": "a2e920127cf2091a2c479590c8bb91590cf076091306ce7164524187f4480b68"
   },
   "aliases": {},
   "chapterAliases": {
@@ -1077,7 +1077,7 @@
       "artist": "Camellia",
       "illustrator": "神居冰绘 feat. 祈莲",
       "chapter": "Chapter 9 Solivault",
-      "constants": [8.7, 13.4, 16.8, 17.9],
+      "constants": [8.7, 13.4, 16.9, 17.9],
       "charters": [
         "Orbital Velocity: 7.900 km/s",
         "Orbital Velocity: 11.200 km/s",
