@@ -2,7 +2,7 @@ import { Database } from "bun:sqlite";
 import { mkdirSync } from "node:fs";
 
 mkdirSync("./data", { recursive: true });
-const sqlite = new Database("./data/db.sqlite3");
+export const sqlite = new Database("./data/db.sqlite3");
 sqlite.run("PRAGMA journal_mode = WAL;");
 sqlite.run("PRAGMA busy_timeout = 5000;");
 
@@ -22,7 +22,10 @@ sqlite.run(`
   )
 `);
 const eventColumns = new Set(
-  sqlite.query<{ name: string }, []>("PRAGMA table_info(events)").all().map((c) => c.name),
+  sqlite
+    .query<{ name: string }, []>("PRAGMA table_info(events)")
+    .all()
+    .map((c) => c.name),
 );
 if (!eventColumns.has("bot_ua")) sqlite.run("ALTER TABLE events ADD COLUMN bot_ua TEXT");
 if (!eventColumns.has("bot_match")) sqlite.run("ALTER TABLE events ADD COLUMN bot_match TEXT");
