@@ -7,6 +7,7 @@ export const zh = {
     collection: "收集",
     history: "历史",
     charts: "谱面",
+    leaderboard: "排行榜",
     label: "栏目",
   },
   header: {
@@ -170,6 +171,13 @@ export const zh = {
     unsupportedZip: "此 ZIP 使用了不受支持的存档格式。",
     downloadZip: "下载原始 ZIP",
   },
+  leaderboard: {
+    players: "玩家",
+    searchPlayers: "搜索名称或 名称#0042",
+    noPlayers: "没有玩家叫这个名字",
+    description:
+      "按 RKS 排名的 Phigros 玩家，以及每张谱面的最佳成绩，来自使用 Phigros++ 同步的玩家。",
+  },
   song: {
     notFoundBody: "曲库中没有这个 ID 的曲目。",
     backToList: "返回谱面列表",
@@ -183,6 +191,20 @@ export const zh = {
     preview: "预览",
     best: (n: number) => `Best #${n}`,
     notPlayed: "未游玩",
+    plays: "游玩记录",
+    watch: "观看",
+    top: "最佳",
+    recent: "最近",
+    player: "玩家",
+    played: "时间",
+    status: "状态",
+    replayStatus: {
+      pending: "待验证",
+      verified: "已验证",
+      unverified: "验证未通过",
+      imported: "已导入",
+    },
+    pageOf: (page: string, pages: string) => `第 ${page} / ${pages} 页`,
     illustratedBy: (name: string) => `画师：${name}`,
     moreFrom: (chapter: string) => `更多来自 ${chapter} 的曲目`,
     moreBy: (artist: string) => `更多 ${artist} 的曲目`,

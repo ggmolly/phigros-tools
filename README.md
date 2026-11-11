@@ -62,6 +62,16 @@ Watch any chart play out right in the browser from its **Preview** link, no save
 
 ![A dense IN chart mid-playback, with judge lines, combo and score](docs/screenshots/12-play.png)
 
+### Leaderboard
+
+Players who sync from the game with [Phigros++](../mod) are ranked by RKS, and every chart has its own ranking. A
+player's page shows their uploaded save like the Overview, their plays sorted by top or recent, and a **Watch** link on
+each play with a replay: the chart plays back with their fingers and their real judgements, score and combo.
+
+Records the game declares are marked **Imported**. A replay is **Pending** until the worker has judged it with a port of
+the game's judgement (`src/judge.ts`): **Verified** when its touches give the result the game recorded, **Unverified**
+otherwise.
+
 Screenshots use a fictional demo save; regenerate them with `scripts/screenshots.ts` (see its header).
 
 ## Develop
@@ -71,7 +81,9 @@ bun install
 bun run dev
 ```
 
-Production: `bun run build && bun run start`.
+Production: `bun run build && bun run start`, with the replay worker beside it: `bun .output/worker.mjs`. They share
+`data/` and a RabbitMQ queue (`AMQP_URL`, `amqp://localhost` by default), and the worker reads charts from
+`CHART_DIR` (`./public/chart-data`).
 
 ## Data
 

@@ -7,6 +7,7 @@ export const it = {
     collection: "Collezione",
     history: "Cronologia",
     charts: "Chart",
+    leaderboard: "Classifica",
     label: "Sezioni",
   },
   header: {
@@ -175,6 +176,13 @@ export const it = {
     unsupportedZip: "Questo ZIP usa un formato di salvataggio non supportato.",
     downloadZip: "Scarica lo ZIP originale",
   },
+  leaderboard: {
+    players: "Giocatori",
+    searchPlayers: "Cerca un nome o nome#0042",
+    noPlayers: "Nessun giocatore ha questo nome",
+    description:
+      "I giocatori di Phigros ordinati per RKS e le migliori partite di ogni chart, inviate da chi sincronizza con Phigros++.",
+  },
   song: {
     notFoundBody: "Nessun brano con questo ID nel catalogo.",
     backToList: "Torna all'elenco dei chart",
@@ -188,6 +196,20 @@ export const it = {
     preview: "Anteprima",
     best: (n: number) => `Best n. ${n}`,
     notPlayed: "Non giocato",
+    plays: "Partite",
+    watch: "Guarda",
+    top: "Migliori",
+    recent: "Recenti",
+    player: "Giocatore",
+    played: "Giocata",
+    status: "Stato",
+    replayStatus: {
+      pending: "In attesa",
+      verified: "Verificata",
+      unverified: "Non verificata",
+      imported: "Importato",
+    },
+    pageOf: (page: string, pages: string) => `Pagina ${page} di ${pages}`,
     illustratedBy: (name: string) => `Illustrazione di ${name}`,
     moreFrom: (chapter: string) => `Altro da ${chapter}`,
     moreBy: (artist: string) => `Altro di ${artist}`,

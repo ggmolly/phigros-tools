@@ -23,7 +23,20 @@ const NOTES = [
   "hold-body-hl",
   "hold-end",
 ] as const;
-export type Art = Record<(typeof NOTES)[number], HTMLImageElement> & { hit: HTMLCanvasElement };
+export type Art = Record<(typeof NOTES)[number], HTMLImageElement> & {
+  hit: HTMLCanvasElement;
+  good: HTMLCanvasElement;
+};
+
+/**
+ * A played chart, from a replay's judgement: each note's judgement and when it happened (hit or missed), and the
+ * combo and score at a time. Without one, every note is drawn as hit on time.
+ */
+export interface Play {
+  /** hit: when it was hit (a hold: its head, also when dropped later), end: when its judgement came */
+  judged: Map<Note, { judgement: "perfect" | "good" | "bad" | "miss"; hit?: number; end: number }>;
+  state: (t: number) => { combo: number; score: number };
+}
 
 const NOTE_W = 989;
 const HOLD_CAP = 50;
@@ -35,6 +48,8 @@ const HIT_LIFE = 0.5;
 const HIT_FRAMES = 30;
 const HIT_CELL = 256;
 const HIT_TINT = "rgb(255 236 160)";
+const GOOD_TINT = "rgb(160 225 255)";
+const MISSED_LIFE = 0.25; // a missed note fades out past its line
 const HIT_ALPHA = 0.88;
 const HIT_SCALE = 6;
 
@@ -66,6 +81,7 @@ export function loadArt() {
     Promise.all([
       ...NOTES.map(async (name) => [name, await image(`/player/${name}.png`)] as const),
       image("/player/hit.png").then((sheet) => ["hit", tint(sheet, HIT_TINT)] as const),
+      image("/player/hit.png").then((sheet) => ["good", tint(sheet, GOOD_TINT)] as const),
     ]),
     document.fonts.load(`40px ${HUD_FONT}`),
   ]).then(([entries]) => Object.fromEntries(entries) as Art);
@@ -92,6 +108,7 @@ function drawHit(
   p: number,
   unit: number,
   seed: number,
+  color: string,
 ) {
   const frame = Math.min(HIT_FRAMES - 1, Math.floor(p * HIT_FRAMES));
   const size = HIT_CELL * unit;
@@ -109,7 +126,7 @@ function drawHit(
     size,
   );
   ctx.globalAlpha = 1 - p;
-  ctx.fillStyle = HIT_TINT;
+  ctx.fillStyle = color;
   const side = 30 * (((0.2078 * p - 1.6524) * p + 1.6399) * p + 0.4988) * unit;
   for (let i = 0; i < 4; i++) {
     const reach = (185 + 80 * noise(seed + i)) * ((9 * p) / (8 * p + 1)) * unit;
@@ -130,6 +147,7 @@ export function drawScene(
   t: number,
   W: number,
   H: number,
+  play?: Play,
 ) {
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.clearRect(0, 0, W, H);
@@ -145,14 +163,15 @@ export function drawScene(
       img.width * k,
       img.height * k,
     );
-  const hits: { x: number; y: number; p: number; seed: number }[] = [];
-  const hitAt = (line: Line, n: Note, when: number) => {
+  const hits: { x: number; y: number; p: number; seed: number; good: boolean }[] = [];
+  const hitAt = (line: Line, n: Note, when: number, good = false) => {
     const at = pose(line, when, W, H);
     hits.push({
       x: at.x + at.cos * n.x * unitX,
       y: at.y + at.sin * n.x * unitX,
       p: (t - when) / HIT_LIFE,
       seed: noise(when + n.x),
+      good,
     });
   };
   for (const line of chart.lines) {
@@ -172,12 +191,30 @@ export function drawScene(
     // god help me please
     for (const n of line.notes) {
       const since = t - n.sec;
-      if (n.type === 3 && since >= 0 && since < n.holdSec + HIT_LIFE) {
-        const last = Math.floor(Math.min(since, n.holdSec) / every);
-        for (let i = Math.max(0, Math.ceil((since - HIT_LIFE) / every)); i <= last; i++)
-          hitAt(line, n, n.sec + i * every);
-      } else if (n.type !== 3 && since >= 0 && since < HIT_LIFE) hitAt(line, n, n.sec);
-      if (since >= n.holdSec) continue; // hit (holds: released)
+      // played: effects where and when the note was hit, a hold bursts while held, a note never hit fades out
+      const judged = play?.judged.get(n);
+      const good = judged?.judgement === "good";
+      const hit = play ? (judged?.judgement === "bad" ? undefined : judged?.hit) : n.sec;
+      const release = Math.min(
+        n.sec + n.holdSec,
+        judged?.judgement === "miss" ? judged.end : Number.POSITIVE_INFINITY,
+      );
+      if (hit !== undefined && n.type === 3 && t >= hit && t < release + HIT_LIFE) {
+        const last = Math.floor((Math.min(t, release) - hit) / every);
+        for (let i = Math.max(0, Math.ceil((t - hit - HIT_LIFE) / every)); i <= last; i++)
+          hitAt(line, n, hit + i * every, good);
+      } else if (hit !== undefined && n.type !== 3 && t >= hit && t - hit < HIT_LIFE)
+        hitAt(line, n, hit, good);
+      const fading = play && hit === undefined && since > 0;
+      if (
+        fading
+          ? since > MISSED_LIFE
+          : n.type === 3
+            ? since >= n.holdSec
+            : hit !== undefined && t >= hit
+      )
+        continue;
+      ctx.globalAlpha = fading ? 1 - since / MISSED_LIFE : 1;
       // notes below the line are drawn in a frame turned half a turn, so "up" points away from the line (if that makes any sense)
       const sign = n.above ? 1 : -1;
       const x = sign * n.x * unitX;
@@ -203,12 +240,23 @@ export function drawScene(
         continue;
       }
       const y = (n.fp - floor) * n.speed;
-      if (y < -0.001) continue;
+      if (y < -0.001 && !fading) continue;
       const name = ({ 1: "tap", 2: "drag", 4: "flick" } as const)[n.type];
       put(art[n.multi ? (`${name}-hl` as const) : name], x, -y * unitY);
     }
   }
-  for (const hit of hits) drawHit(ctx, art.hit, hit.x, hit.y, hit.p, HIT_SCALE * k, hit.seed);
+  ctx.globalAlpha = 1;
+  for (const hit of hits)
+    drawHit(
+      ctx,
+      hit.good ? art.good : art.hit,
+      hit.x,
+      hit.y,
+      hit.p,
+      HIT_SCALE * k,
+      hit.seed,
+      hit.good ? GOOD_TINT : HIT_TINT,
+    );
   ctx.globalAlpha = 1;
 }
 
@@ -245,10 +293,12 @@ export function drawHud(
   H: number,
   title: string,
   level: string,
+  play?: Play,
 ) {
   const px = H / 1080;
   const right = W / px;
-  const combo = countUpTo(chart.judged, t, (x) => x);
+  const state = play?.state(t);
+  const combo = state ? state.combo : countUpTo(chart.judged, t, (x) => x);
   const text = (
     str: string,
     x: number,
@@ -271,7 +321,13 @@ export function drawHud(
   ctx.fillRect(progress - 2 * px, 0, 2 * px, 11 * px); // the progress bar's tip
   ctx.fillRect(30 * px, 1009 * px, 7 * px, 36 * px); // bar before the title
   ctx.textBaseline = "alphabetic";
-  text(score7((1_000_000 * combo) / chart.noteCount), right - 40.5, 79.2, 60.6, "right");
+  text(
+    score7(state ? state.score : (1_000_000 * combo) / chart.noteCount),
+    right - 40.5,
+    79.2,
+    60.6,
+    "right",
+  );
   // title & level stop short of the center (cuz we have our cute watermark here!!)
   text(title, 48.4, 1043, 42.7, "left", { maxWidth: right / 2 - 190 });
   text(level, right - 43.2, 1041, 37.75, "right", { maxWidth: right / 2 - 190 });

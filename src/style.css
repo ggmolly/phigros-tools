@@ -3617,3 +3617,47 @@ dialog strong {
     padding: 18px 16px 20px;
   }
 }
+
+.plays-pager {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.leaderboard-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+/* narrow enough to fit the width, so long titles wrap instead of pushing the counts off screen */
+.leaderboard-layout .chart-stats-scroll table {
+  min-width: 0;
+  width: 100%;
+}
+.leaderboard-layout td {
+  white-space: normal;
+}
+.leaderboard-layout .search-field {
+  width: 100%;
+  margin-bottom: 12px;
+}
+@media (min-width: 1101px) {
+  .leaderboard-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+.leaderboard-player {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.leaderboard-avatar {
+  width: 28px;
+  height: 28px;
+  flex: none;
+}

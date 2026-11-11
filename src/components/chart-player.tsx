@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useT } from "../i18n";
 import { type Chart, countUpTo } from "../player/chart";
 import { HitSounds } from "../player/hit-sounds";
-import { type Art, drawHud, drawScene, loadArt } from "../player/render";
+import { type Art, drawHud, drawScene, loadArt, type Play } from "../player/render";
 import { findShift } from "../player/sync";
 import { Slider, Switch } from "./primitives";
 
@@ -35,12 +35,18 @@ export function ChartPlayer({
   title,
   level,
   startAt = 0,
+  overlay,
+  play,
 }: {
   chart: Chart;
   background: string;
   title: string;
   level: string;
   startAt?: number;
+  /** drawn over the chart each frame, at chart time t on a W×H canvas */
+  overlay?: (ctx: CanvasRenderingContext2D, t: number, W: number, H: number) => void;
+  /** a replay's judged play: the chart is drawn as it was played, its hit sounds where notes were hit */
+  play?: Play & { hits: Chart["hits"] };
 }) {
   const t = useT();
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -132,15 +138,17 @@ export function ChartPlayer({
       // notes passed since the last frame get their hit sound, unless that jump was a seek
       const prev = lastT.current;
       lastT.current = t;
+      const hits = play?.hits ?? chart.hits;
       if (clock.current.playing && t > prev && t - prev < 0.25)
         for (
-          let i = countUpTo(chart.hits, prev, (hit) => hit.sec);
-          i < chart.hits.length && chart.hits[i]!.sec <= t;
+          let i = countUpTo(hits, prev, (hit) => hit.sec);
+          i < hits.length && hits[i]!.sec <= t;
           i++
         )
-          hitSounds.play(chart.hits[i]!.type);
-      drawScene(ctx, art, chart, t, W, H);
-      drawHud(ctx, chart, t, duration, W, H, title, level);
+          hitSounds.play(hits[i]!.type);
+      drawScene(ctx, art, chart, t, W, H, play);
+      drawHud(ctx, chart, t, duration, W, H, title, level, play);
+      overlay?.(ctx, t, W, H);
       // the seek bar and clock follow playback without re-rendering React every frame
       if (scrub.current && document.activeElement !== scrub.current)
         scrub.current.value = String(t);
@@ -149,7 +157,7 @@ export function ChartPlayer({
     };
     tick();
     return () => cancelAnimationFrame(frame);
-  }, [chart, duration, start, title, level, art, hitSounds]);
+  }, [chart, duration, start, title, level, art, hitSounds, overlay, play]);
 
   const toggle = () => {
     hitSounds.start();

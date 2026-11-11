@@ -7,6 +7,7 @@ export const ko = {
     collection: "컬렉션",
     history: "기록 내역",
     charts: "채보",
+    leaderboard: "리더보드",
     label: "섹션",
   },
   header: {
@@ -173,6 +174,13 @@ export const ko = {
     unsupportedZip: "이 ZIP은 지원하지 않는 세이브 형식입니다.",
     downloadZip: "원본 ZIP 다운로드",
   },
+  leaderboard: {
+    players: "플레이어",
+    searchPlayers: "이름 또는 이름#0042 검색",
+    noPlayers: "이 이름의 플레이어가 없습니다",
+    description:
+      "RKS 순 Phigros 플레이어 순위와 각 채보의 최고 기록입니다. Phigros++로 동기화하는 플레이어의 기록입니다.",
+  },
   song: {
     notFoundBody: "카탈로그에 이 ID의 곡이 없습니다.",
     backToList: "채보 목록으로 돌아가기",
@@ -186,6 +194,20 @@ export const ko = {
     preview: "미리보기",
     best: (n: number) => `Best #${n}`,
     notPlayed: "플레이 안 함",
+    plays: "플레이",
+    watch: "보기",
+    top: "최고",
+    recent: "최근",
+    player: "플레이어",
+    played: "날짜",
+    status: "상태",
+    replayStatus: {
+      pending: "검증 대기",
+      verified: "검증됨",
+      unverified: "검증 실패",
+      imported: "가져옴",
+    },
+    pageOf: (page: string, pages: string) => `${pages}페이지 중 ${page}페이지`,
     illustratedBy: (name: string) => `일러스트: ${name}`,
     moreFrom: (chapter: string) => `${chapter}의 다른 곡`,
     moreBy: (artist: string) => `${artist}의 다른 곡`,

@@ -7,6 +7,7 @@ export const vi = {
     collection: "Bộ sưu tập",
     history: "Lịch sử",
     charts: "Chart",
+    leaderboard: "Bảng xếp hạng",
     label: "Mục",
   },
   header: {
@@ -175,6 +176,13 @@ export const vi = {
     unsupportedZip: "Tệp ZIP này dùng định dạng save không được hỗ trợ.",
     downloadZip: "Tải xuống ZIP gốc",
   },
+  leaderboard: {
+    players: "Người chơi",
+    searchPlayers: "Tìm tên hoặc tên#0042",
+    noPlayers: "Không có người chơi nào tên này",
+    description:
+      "Người chơi Phigros xếp theo RKS và lượt chơi tốt nhất của từng chart, từ những người đồng bộ bằng Phigros++.",
+  },
   song: {
     notFoundBody: "Không có bài nào có ID này trong danh mục.",
     backToList: "Quay lại danh sách chart",
@@ -188,6 +196,20 @@ export const vi = {
     preview: "Xem trước",
     best: (n: number) => `Best #${n}`,
     notPlayed: "Chưa chơi",
+    plays: "Lượt chơi",
+    watch: "Xem",
+    top: "Cao nhất",
+    recent: "Gần đây",
+    player: "Người chơi",
+    played: "Ngày chơi",
+    status: "Trạng thái",
+    replayStatus: {
+      pending: "Đang chờ",
+      verified: "Đã xác minh",
+      unverified: "Không khớp",
+      imported: "Đã nhập",
+    },
+    pageOf: (page: string, pages: string) => `Trang ${page}/${pages}`,
     illustratedBy: (name: string) => `Minh họa bởi ${name}`,
     moreFrom: (chapter: string) => `Thêm từ ${chapter}`,
     moreBy: (artist: string) => `Thêm của ${artist}`,

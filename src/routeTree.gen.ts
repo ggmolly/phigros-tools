@@ -10,16 +10,25 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ToolRouteImport } from './routes/_tool'
+import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as ToolIndexRouteImport } from './routes/_tool.index'
 import { Route as ToolCollectionRouteImport } from './routes/_tool.collection'
 import { Route as ToolHistoryRouteImport } from './routes/_tool.history'
 import { Route as ToolRecordsRouteImport } from './routes/_tool.records'
 import { Route as ChartsIndexRouteImport } from './routes/charts.index'
 import { Route as ChartsIdRouteImport } from './routes/charts.$id'
+import { Route as PlayersIdRouteImport } from './routes/players.$id'
+import { Route as ReplaysIdRouteImport } from './routes/replays.$id'
 import { Route as ChartsIdPlayLevelRouteImport } from './routes/charts.$id_.play.$level'
+import { Route as ChartsIdPlaysLevelRouteImport } from './routes/charts.$id_.plays.$level'
 
 const ToolRoute = ToolRouteImport.update({
   id: '/_tool',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LeaderboardRoute = LeaderboardRouteImport.update({
+  id: '/leaderboard',
+  path: '/leaderboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolIndexRoute = ToolIndexRouteImport.update({
@@ -52,77 +61,120 @@ const ChartsIdRoute = ChartsIdRouteImport.update({
   path: '/charts/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PlayersIdRoute = PlayersIdRouteImport.update({
+  id: '/players/$id',
+  path: '/players/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReplaysIdRoute = ReplaysIdRouteImport.update({
+  id: '/replays/$id',
+  path: '/replays/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ChartsIdPlayLevelRoute = ChartsIdPlayLevelRouteImport.update({
   id: '/charts/$id_/play/$level',
   path: '/charts/$id/play/$level',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChartsIdPlaysLevelRoute = ChartsIdPlaysLevelRouteImport.update({
+  id: '/charts/$id_/plays/$level',
+  path: '/charts/$id/plays/$level',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof ToolIndexRoute
+  '/leaderboard': typeof LeaderboardRoute
   '/collection': typeof ToolCollectionRoute
   '/history': typeof ToolHistoryRoute
   '/records': typeof ToolRecordsRoute
   '/charts/$id': typeof ChartsIdRoute
+  '/players/$id': typeof PlayersIdRoute
+  '/replays/$id': typeof ReplaysIdRoute
   '/charts/': typeof ChartsIndexRoute
   '/charts/$id/play/$level': typeof ChartsIdPlayLevelRoute
+  '/charts/$id/plays/$level': typeof ChartsIdPlaysLevelRoute
 }
 export interface FileRoutesByTo {
+  '/leaderboard': typeof LeaderboardRoute
   '/collection': typeof ToolCollectionRoute
   '/history': typeof ToolHistoryRoute
   '/records': typeof ToolRecordsRoute
   '/charts/$id': typeof ChartsIdRoute
+  '/players/$id': typeof PlayersIdRoute
+  '/replays/$id': typeof ReplaysIdRoute
   '/': typeof ToolIndexRoute
   '/charts': typeof ChartsIndexRoute
   '/charts/$id/play/$level': typeof ChartsIdPlayLevelRoute
+  '/charts/$id/plays/$level': typeof ChartsIdPlaysLevelRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_tool': typeof ToolRouteWithChildren
+  '/leaderboard': typeof LeaderboardRoute
   '/_tool/collection': typeof ToolCollectionRoute
   '/_tool/history': typeof ToolHistoryRoute
   '/_tool/records': typeof ToolRecordsRoute
   '/charts/$id': typeof ChartsIdRoute
+  '/players/$id': typeof PlayersIdRoute
+  '/replays/$id': typeof ReplaysIdRoute
   '/_tool/': typeof ToolIndexRoute
   '/charts/': typeof ChartsIndexRoute
   '/charts/$id_/play/$level': typeof ChartsIdPlayLevelRoute
+  '/charts/$id_/plays/$level': typeof ChartsIdPlaysLevelRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/leaderboard'
     | '/collection'
     | '/history'
     | '/records'
     | '/charts/$id'
+    | '/players/$id'
+    | '/replays/$id'
     | '/charts/'
     | '/charts/$id/play/$level'
+    | '/charts/$id/plays/$level'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/leaderboard'
     | '/collection'
     | '/history'
     | '/records'
     | '/charts/$id'
+    | '/players/$id'
+    | '/replays/$id'
     | '/'
     | '/charts'
     | '/charts/$id/play/$level'
+    | '/charts/$id/plays/$level'
   id:
     | '__root__'
     | '/_tool'
+    | '/leaderboard'
     | '/_tool/collection'
     | '/_tool/history'
     | '/_tool/records'
     | '/charts/$id'
+    | '/players/$id'
+    | '/replays/$id'
     | '/_tool/'
     | '/charts/'
     | '/charts/$id_/play/$level'
+    | '/charts/$id_/plays/$level'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   ToolRoute: typeof ToolRouteWithChildren
+  LeaderboardRoute: typeof LeaderboardRoute
   ChartsIdRoute: typeof ChartsIdRoute
+  PlayersIdRoute: typeof PlayersIdRoute
+  ReplaysIdRoute: typeof ReplaysIdRoute
   ChartsIndexRoute: typeof ChartsIndexRoute
   ChartsIdPlayLevelRoute: typeof ChartsIdPlayLevelRoute
+  ChartsIdPlaysLevelRoute: typeof ChartsIdPlaysLevelRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -132,6 +184,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof ToolRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/leaderboard': {
+      id: '/leaderboard'
+      path: '/leaderboard'
+      fullPath: '/leaderboard'
+      preLoaderRoute: typeof LeaderboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_tool/': {
@@ -176,11 +235,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChartsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/players/$id': {
+      id: '/players/$id'
+      path: '/players/$id'
+      fullPath: '/players/$id'
+      preLoaderRoute: typeof PlayersIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/replays/$id': {
+      id: '/replays/$id'
+      path: '/replays/$id'
+      fullPath: '/replays/$id'
+      preLoaderRoute: typeof ReplaysIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/charts/$id_/play/$level': {
       id: '/charts/$id_/play/$level'
       path: '/charts/$id/play/$level'
       fullPath: '/charts/$id/play/$level'
       preLoaderRoute: typeof ChartsIdPlayLevelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/charts/$id_/plays/$level': {
+      id: '/charts/$id_/plays/$level'
+      path: '/charts/$id/plays/$level'
+      fullPath: '/charts/$id/plays/$level'
+      preLoaderRoute: typeof ChartsIdPlaysLevelRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -204,9 +284,13 @@ const ToolRouteWithChildren = ToolRoute._addFileChildren(ToolRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   ToolRoute: ToolRouteWithChildren,
+  LeaderboardRoute: LeaderboardRoute,
   ChartsIdRoute: ChartsIdRoute,
+  PlayersIdRoute: PlayersIdRoute,
+  ReplaysIdRoute: ReplaysIdRoute,
   ChartsIndexRoute: ChartsIndexRoute,
   ChartsIdPlayLevelRoute: ChartsIdPlayLevelRoute,
+  ChartsIdPlaysLevelRoute: ChartsIdPlaysLevelRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

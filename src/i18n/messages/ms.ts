@@ -7,6 +7,7 @@ export const ms = {
     collection: "Koleksi",
     history: "Sejarah",
     charts: "Chart",
+    leaderboard: "Papan pendahulu",
     label: "Bahagian",
   },
   header: {
@@ -175,6 +176,13 @@ export const ms = {
     unsupportedZip: "ZIP ini menggunakan format save yang tidak disokong.",
     downloadZip: "Muat turun ZIP asal",
   },
+  leaderboard: {
+    players: "Pemain",
+    searchPlayers: "Cari nama atau nama#0042",
+    noPlayers: "Tiada pemain dengan nama ini",
+    description:
+      "Pemain Phigros disusun mengikut RKS dan permainan terbaik bagi setiap carta, daripada pemain yang menyegerak dengan Phigros++.",
+  },
   song: {
     notFoundBody: "Tiada lagu dengan ID ini dalam katalog.",
     backToList: "Kembali ke senarai chart",
@@ -188,6 +196,20 @@ export const ms = {
     preview: "Pratonton",
     best: (n: number) => `Best #${n}`,
     notPlayed: "Belum dimainkan",
+    plays: "Permainan",
+    watch: "Tonton",
+    top: "Teratas",
+    recent: "Terkini",
+    player: "Pemain",
+    played: "Dimainkan",
+    status: "Status",
+    replayStatus: {
+      pending: "Menunggu",
+      verified: "Disahkan",
+      unverified: "Tidak disahkan",
+      imported: "Diimport",
+    },
+    pageOf: (page: string, pages: string) => `Halaman ${page} daripada ${pages}`,
     illustratedBy: (name: string) => `Ilustrasi oleh ${name}`,
     moreFrom: (chapter: string) => `Lagi daripada ${chapter}`,
     moreBy: (artist: string) => `Lagi oleh ${artist}`,

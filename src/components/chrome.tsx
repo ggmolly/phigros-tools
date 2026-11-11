@@ -56,7 +56,7 @@ function GithubLink() {
   );
 }
 
-export type TabId = "/" | "/records" | "/collection" | "/history" | "/charts";
+export type TabId = "/" | "/records" | "/collection" | "/history" | "/charts" | "/leaderboard";
 /** The tab ids double as their message keys. */
 export const TAB_KEY = {
   "/": "overview",
@@ -64,6 +64,7 @@ export const TAB_KEY = {
   "/collection": "collection",
   "/history": "history",
   "/charts": "charts",
+  "/leaderboard": "leaderboard",
 } as const satisfies Record<TabId, string>;
 const slug = (id: TabId) => TAB_KEY[id];
 
@@ -99,10 +100,21 @@ export function SiteHeader({ children }: { children?: React.ReactNode }) {
   const t = useT();
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (state) => state.location.pathname });
-  const tabIds = [...toolTabs(!!loaded, snapshots.length > 0), "/charts" as const];
-  const activeTab: TabId = pathname.startsWith("/charts")
-    ? "/charts"
-    : (tabIds.find((id) => id === pathname) ?? "/");
+  const tabIds = [
+    ...toolTabs(!!loaded, snapshots.length > 0),
+    "/charts" as const,
+    "/leaderboard" as const,
+  ];
+  // a chart's ranking, a player's page and a replay are reached from the leaderboard
+  const activeTab: TabId =
+    pathname.startsWith("/leaderboard") ||
+    pathname.startsWith("/players/") ||
+    pathname.startsWith("/replays/") ||
+    /^\/charts\/[^/]+\/plays\//.test(pathname)
+      ? "/leaderboard"
+      : pathname.startsWith("/charts")
+        ? "/charts"
+        : (tabIds.find((id) => id === pathname) ?? "/");
   function tabKeys(event: KeyboardEvent) {
     const step = event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
     if (!step) return;
@@ -127,7 +139,11 @@ export function SiteHeader({ children }: { children?: React.ReactNode }) {
             role="tab"
             className="tab"
             aria-selected={activeTab === id}
-            aria-controls={activeTab === id && id !== "/charts" ? `panel-${slug(id)}` : undefined}
+            aria-controls={
+              activeTab === id && id !== "/charts" && id !== "/leaderboard"
+                ? `panel-${slug(id)}`
+                : undefined
+            }
             tabIndex={activeTab === id ? 0 : -1}
           >
             {t.tabs[TAB_KEY[id]]}

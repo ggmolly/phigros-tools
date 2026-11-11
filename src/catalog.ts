@@ -1,5 +1,5 @@
 import data from "./catalog.json";
-import { LEVELS } from "./modules";
+import { LEVELS, type LevelName } from "./modules";
 
 export interface CatalogSong {
   id: string;
@@ -55,6 +55,12 @@ export function canonicalSongId(id: string): string {
 export function catalogSong(id: string): CatalogSong | undefined {
   return songs.get(canonicalSongId(id));
 }
+
+/** The difficulties a song has charts for. */
+export const songLevels = (id: string) =>
+  LEVELS.filter((_, index) => catalogSong(id)?.constants[index] != null);
+
+export const isLevel = (level: string): level is LevelName => LEVELS.includes(level as LevelName);
 
 export function catalogCompatible(gameVersion?: number): boolean {
   return gameVersion === undefined || gameVersion === data.manifest.gameVersion;

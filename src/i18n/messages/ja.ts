@@ -7,6 +7,7 @@ export const ja = {
     collection: "コレクション",
     history: "履歴",
     charts: "譜面",
+    leaderboard: "ランキング",
     label: "セクション",
   },
   header: {
@@ -174,6 +175,13 @@ export const ja = {
     unsupportedZip: "この ZIP は対応していないセーブ形式です。",
     downloadZip: "元の ZIP をダウンロード",
   },
+  leaderboard: {
+    players: "プレイヤー",
+    searchPlayers: "名前 または 名前#0042 で検索",
+    noPlayers: "この名前のプレイヤーはいません",
+    description:
+      "RKS 順の Phigros プレイヤーと、各譜面のベストプレイ。Phigros++ で同期しているプレイヤーのデータです。",
+  },
   song: {
     notFoundBody: "この ID の楽曲はカタログにありません。",
     backToList: "譜面一覧に戻る",
@@ -187,6 +195,20 @@ export const ja = {
     preview: "プレビュー",
     best: (n: number) => `Best #${n}`,
     notPlayed: "未プレイ",
+    plays: "プレイ",
+    watch: "見る",
+    top: "ベスト",
+    recent: "最近",
+    player: "プレイヤー",
+    played: "日時",
+    status: "状態",
+    replayStatus: {
+      pending: "検証待ち",
+      verified: "検証済み",
+      unverified: "検証不一致",
+      imported: "インポート",
+    },
+    pageOf: (page: string, pages: string) => `${page} / ${pages} ページ`,
     illustratedBy: (name: string) => `イラスト：${name}`,
     moreFrom: (chapter: string) => `${chapter} の他の楽曲`,
     moreBy: (artist: string) => `${artist} の他の楽曲`,

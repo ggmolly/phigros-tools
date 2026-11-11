@@ -5,6 +5,7 @@ export const en = {
     collection: "Collection",
     history: "History",
     charts: "Charts",
+    leaderboard: "Leaderboard",
     label: "Sections",
   },
   header: {
@@ -172,6 +173,13 @@ export const en = {
     unsupportedZip: "This ZIP uses an unsupported save format.",
     downloadZip: "Download original ZIP",
   },
+  leaderboard: {
+    players: "Players",
+    searchPlayers: "Search name or name#0042",
+    noPlayers: "No player has this name",
+    description:
+      "Phigros players ranked by RKS, and the best plays on each chart, from players who sync their plays with Phigros++.",
+  },
   song: {
     notFoundBody: "No song with this ID is in the catalog.",
     backToList: "Back to the chart list",
@@ -185,6 +193,20 @@ export const en = {
     preview: "Preview",
     best: (n: number) => `Best #${n}`,
     notPlayed: "Not played",
+    plays: "Plays",
+    watch: "Watch",
+    top: "Top",
+    recent: "Recent",
+    player: "Player",
+    played: "Played",
+    status: "Status",
+    replayStatus: {
+      pending: "Pending",
+      verified: "Verified",
+      unverified: "Unverified",
+      imported: "Imported",
+    },
+    pageOf: (page: string, pages: string) => `Page ${page} of ${pages}`,
     illustratedBy: (name: string) => `Illustrated by ${name}`,
     moreFrom: (chapter: string) => `More From ${chapter}`,
     moreBy: (artist: string) => `More By ${artist}`,

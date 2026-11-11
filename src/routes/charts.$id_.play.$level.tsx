@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import * as v from "valibot";
-import { catalogSong } from "../catalog";
+import { catalogSong, isLevel, songLevels } from "../catalog";
 import { getSongDetails } from "../chartStats";
 import { Arrow } from "../components/arrow";
 import { ChartPlayer } from "../components/chart-player";
@@ -12,11 +12,6 @@ import { LEVELS, type LevelName } from "../modules";
 import { type Chart, parseChart } from "../player/chart";
 import { decodePhc } from "../player/phc";
 import { headT, pageLinks, pageMeta, SITE } from "../seo";
-
-const songLevels = (id: string) =>
-  LEVELS.filter((_, index) => catalogSong(id)?.constants[index] != null);
-
-const isLevel = (level: string): level is LevelName => LEVELS.includes(level as LevelName);
 
 const PlaySearch = v.object({
   t: v.fallback(
