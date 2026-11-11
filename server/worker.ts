@@ -58,6 +58,8 @@ snapshotHistory();
 setInterval(snapshotHistory, 3_600_000);
 
 const channel = await openQueue();
+// the broker went away: exit so the container restarts and reconnects, the queue keeps what came meanwhile
+channel.on("close", () => process.exit(1));
 await channel.prefetch(1);
 // what was uploaded while no worker ran, then what comes
 for (const { sha256 } of pending.all()) attempt(sha256);
