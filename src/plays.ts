@@ -52,26 +52,49 @@ export interface ChartCount {
   count: number;
 }
 
-/** A player's page, from `GET /api/players/<id>`. */
+/** A chart a player played, as their page lists it. */
+export interface PlayedChart {
+  song: string;
+  level: string;
+  score: number;
+  accuracy: number;
+  fc: boolean;
+  /** When it was played, in ms, null for an imported record. */
+  date: number | null;
+  /** The verified replay to watch, if there's one. */
+  replay: string | null;
+}
+
+/** A player's page, from `GET /api/players/<id>`: their profile, stats and plays, like an osu! profile. */
 export interface PlayerProfile {
   player: PlayerName;
   intro: string;
-  background: string;
   rks: number;
-  unlisted: boolean;
-  /** When their save was uploaded, in ms, null when it wasn't. */
-  save: number | null;
-  /** Each chart's best, highest score first. */
-  bests: {
-    song: string;
-    level: string;
-    score: number;
-    accuracy: number;
-    fc: boolean;
-    status: PlayStatus;
-    date: number | null;
-    replay: string | null;
-  }[];
+  /** Among listed players by RKS, null while unlisted or without RKS. */
+  rank: number | null;
+  /** When they joined and were last seen, in ms. */
+  joined: number;
+  seen: number;
+  stats: {
+    plays: number;
+    /** Seconds spent playing. */
+    time: number;
+    /** Perfects, goods and bads. */
+    notes: number;
+    /** The average accuracy of their plays, null before any. */
+    accuracy: number | null;
+    maxcombo: number;
+    cleared: number;
+    fc: number;
+    phi: number;
+  };
+  /** Every best by its chart RKS, saying which count towards their RKS (best 27, then the 3 best Phi). */
+  top: (PlayedChart & { status: PlayStatus; rks: number; counted: boolean })[];
+  recent: PlayedChart[];
+  /** The rank their new bests took on a chart. */
+  activity: { song: string; level: string; score: number; rank: number; date: number }[];
+  /** Their RKS and rank once a day, oldest first. */
+  history: { day: string; rks: number; rank: number }[];
 }
 
 export const PLAYS_PAGE = 50;

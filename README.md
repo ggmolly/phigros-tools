@@ -64,9 +64,11 @@ Watch any chart play out right in the browser from its **Preview** link, no save
 
 ### Leaderboard
 
-Players who sync from the game with [Phigros++](../mod) are ranked by RKS, and every chart has its own ranking. A
-player's page shows their uploaded save like the Overview, their plays sorted by top or recent, and a **Watch** link on
-each play with a replay: the chart plays back with their fingers and their real judgements, score and combo.
+Players who sync from the game with [Phigros++](../mod) are ranked by RKS, and every chart has its own ranking, counting
+all plays or verified replays only. A player's page is their profile: global rank, play count and time, notes hit,
+accuracy, RKS history, top plays (with what each adds to their RKS), the ranks their new bests took, and recent plays,
+with a **Watch** link on each verified one: the chart plays back with their fingers and their real judgements, score and
+combo.
 
 Records the game declares are marked **Imported**. An uploaded replay counts once the worker has judged it with a port
 of the game's judgement (`src/judge.ts`) and its touches give the result the game recorded: it's then **Verified**. A

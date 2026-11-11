@@ -20,6 +20,7 @@ sqlite.run(`
     rks_verified REAL NOT NULL DEFAULT 0,
     rks_verified_at INTEGER NOT NULL DEFAULT 0,
     created INTEGER NOT NULL,
+    seen INTEGER NOT NULL DEFAULT 0,
     UNIQUE (fold, number)
   )
 `);

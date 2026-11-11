@@ -3664,3 +3664,148 @@ main > .seg {
   height: 28px;
   flex: none;
 }
+
+.profile-card .hero-id {
+  margin-right: 0;
+}
+/* a grid rather than the overview's row, the profile has more stats */
+.profile-card .hero-stats {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+}
+.profile-card .stat-label {
+  white-space: normal;
+}
+.profile-number {
+  color: var(--faint);
+  font-size: 0.55em;
+  margin-left: 6px;
+}
+.profile-dates {
+  grid-column: 1 / -1;
+}
+.profile-columns {
+  display: grid;
+  gap: 18px;
+  margin-top: 18px;
+  align-items: start;
+}
+.profile-side {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+@media (min-width: 1101px) {
+  .profile-columns {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  }
+}
+.profile-list,
+.profile-activity {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.profile-list li,
+.profile-activity li {
+  display: grid;
+  align-items: center;
+  gap: 4px 14px;
+  padding: 10px 4px;
+  border-bottom: 1px solid var(--hairline);
+}
+.profile-top li {
+  grid-template-columns: minmax(0, 1fr) 5.2em 4.8em 24px 6.8em 5.8em 48px;
+}
+.profile-recent li {
+  grid-template-columns: minmax(0, 1fr) 5.2em 4.8em 24px 6em 48px;
+}
+.profile-activity li {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+.profile-uncounted {
+  opacity: 0.55;
+}
+.profile-chart {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.profile-chart a {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.profile-more {
+  margin-top: 12px;
+}
+@media (max-width: 700px) {
+  .profile-top li,
+  .profile-recent li {
+    grid-template-columns: minmax(0, 1fr) 5.6em 28px 52px;
+  }
+  .profile-activity li {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .profile-top li > :nth-child(3),
+  .profile-top li > :nth-child(5),
+  .profile-top li > :nth-child(6),
+  .profile-recent li > :nth-child(3),
+  .profile-recent li > :nth-child(5) {
+    display: none;
+  }
+}
+.rks-history {
+  position: relative;
+}
+.rks-history svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  touch-action: pan-y;
+}
+.rks-history-grid {
+  stroke: var(--hairline);
+  stroke-width: 1;
+}
+.rks-history-label {
+  fill: var(--dim);
+  font-size: 13px;
+}
+.rks-history-line {
+  fill: none;
+  stroke: var(--glow);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.rks-history-cross {
+  stroke: var(--faint);
+  stroke-width: 1;
+}
+.rks-history-dot {
+  fill: var(--glow);
+  stroke: var(--glass-strong);
+  stroke-width: 2;
+}
+.rks-history-tip {
+  position: absolute;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 8px 10px;
+  transform: translateX(-50%);
+  background: var(--glass-strong);
+  pointer-events: none;
+  white-space: nowrap;
+}
+/* the chart shrinks with the screen, its labels stay readable */
+@media (max-width: 700px) {
+  .rks-history-label {
+    font-size: 26px;
+  }
+}

@@ -80,12 +80,14 @@ export interface Best {
   sha256: string | null;
 }
 
-/** A record counts for all, a verified replay for both scopes. */
+/** A record counts for all, a verified replay for both scopes. Whether it became the player's best counting all. */
 export function raiseBest(key: Uint8Array, song: string, level: string, best: Best) {
   const { score, accuracy, fc, played, sha256 } = best;
   const now = Date.now();
-  for (const scope of sha256 ? ([0, 1] as const) : ([0] as const))
-    raise.run(key, song, level, scope, score, accuracy, fc ? 1 : 0, played, now, sha256);
+  const raised =
+    raise.run(key, song, level, 0, score, accuracy, fc ? 1 : 0, played, now, sha256).changes > 0;
+  if (sha256) raise.run(key, song, level, 1, score, accuracy, fc ? 1 : 0, played, now, sha256);
+  return raised;
 }
 const playerBests = sqlite.prepare<
   { song: string; level: LevelName; score: number; accuracy: number },
@@ -121,11 +123,14 @@ const verified = sqlite.prepare<{ key: Uint8Array; song: string; level: string }
   "SELECT key, song, level FROM replays WHERE sha256 = ?",
 );
 
-/** A replay the worker verified counts: it can become its player's best on the chart, and their RKS follows. */
+/**
+ * A replay the worker verified counts: it can become its player's best on the chart, and their RKS follows. The
+ * player and chart, and whether it became their best.
+ */
 export function countReplay(sha256: string, header: ReplayHeader) {
   const { key, song, level } = verified.get(sha256)!;
-  sqlite.transaction(() => {
-    raiseBest(key, song, level, {
+  return sqlite.transaction(() => {
+    const raised = raiseBest(key, song, level, {
       score: header.score,
       accuracy: header.accuracy,
       fc: header.bad + header.miss === 0,
@@ -133,6 +138,7 @@ export function countReplay(sha256: string, header: ReplayHeader) {
       sha256,
     });
     updateRks(key);
+    return { key, song, level, raised };
   })();
 }
 

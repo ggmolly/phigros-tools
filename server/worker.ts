@@ -4,11 +4,13 @@ import { judge } from "../src/judge";
 import { decodeReplay } from "../src/pigeon";
 import { decodePhc } from "../src/player/phc";
 import { sqlite } from "./db";
+import { addAchievement, snapshotHistory } from "./profiles";
 import { openQueue, VERIFY_QUEUE } from "./queue";
 import { countReplay, REPLAY_DIR } from "./replays";
 
 // judges uploaded replays like the game did and marks them verified when the game's recorded result is what their
-// touches give, unverified otherwise (with both results). only a verified one counts on the leaderboard. a replay of a game version whose charts the site doesn't
+// touches give, unverified otherwise (with both results). only a verified one counts on the leaderboard. it also keeps
+// the players' daily RKS history. a replay of a game version whose charts the site doesn't
 // have stays pending. run beside the server: bun worker.mjs
 const CHARTS = process.env.CHART_DIR ?? "./public/chart-data";
 const RESULT = ["score", "maxcombo", "perfect", "good", "bad", "miss", "early", "late"] as const;
@@ -37,7 +39,9 @@ function verify(sha256: string) {
   const replayed = Object.fromEntries(RESULT.map((field) => [field, judged[field]]));
   const same = RESULT.every((field) => recorded[field] === replayed[field]);
   settle.run(same ? "verified" : "unverified", JSON.stringify({ recorded, replayed }), sha256);
-  if (same) countReplay(sha256, header);
+  if (!same) return;
+  const { key, song, level, raised } = countReplay(sha256, header);
+  if (raised) addAchievement(key, song, level, header.score);
   console.log(`${sha256} ${row.song} ${row.level}: ${same ? "verified" : "unverified"}`);
 }
 
@@ -48,6 +52,10 @@ function attempt(sha256: string) {
     console.error(`${sha256} could not be judged:`, error);
   }
 }
+
+// every player's RKS and rank of the day, kept hourly so the day's last one stays
+snapshotHistory();
+setInterval(snapshotHistory, 3_600_000);
 
 const channel = await openQueue();
 await channel.prefetch(1);
