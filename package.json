@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && tsc --noEmit",
+    "build": "vite build && tsc --noEmit && bun build server/worker.ts --target=bun --outfile=.output/worker.mjs",
     "preview": "vite preview",
     "start": "bun .output/server/index.mjs",
     "lint": "biome check .",
