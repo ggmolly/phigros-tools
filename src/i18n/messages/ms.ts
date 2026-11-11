@@ -205,8 +205,7 @@ export const ms = {
     status: "Status",
     replayStatus: { verified: "Disahkan", imported: "Diimport" },
     replayStatusHelp: {
-      verified:
-        "Main semulanya dimainkan dengan penilaian permainan dan memberi keputusan yang sama.",
+      verified: "Kami telah menyemak permainan ini dan ia konsisten.",
       imported: "Dilaporkan oleh permainan pemain, tanpa main semula sebagai bukti.",
     },
     pageOf: (page: string, pages: string) => `Halaman ${page} daripada ${pages}`,

@@ -205,8 +205,7 @@ export const vi = {
     status: "Trạng thái",
     replayStatus: { verified: "Đã xác minh", imported: "Đã nhập" },
     replayStatusHelp: {
-      verified:
-        "Bản phát lại đã được chạy lại bằng cách chấm của trò chơi và cho đúng kết quả này.",
+      verified: "Chúng tôi đã kiểm tra lượt chơi này và nó hợp lệ.",
       imported: "Do trò chơi của người chơi khai báo, không có bản phát lại để chứng minh.",
     },
     pageOf: (page: string, pages: string) => `Trang ${page}/${pages}`,

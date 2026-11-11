@@ -205,8 +205,7 @@ export const id = {
     status: "Status",
     replayStatus: { verified: "Terverifikasi", imported: "Diimpor" },
     replayStatusHelp: {
-      verified:
-        "Replay-nya diputar ulang dengan penilaian game dan memberi hasil yang persis sama.",
+      verified: "Kami sudah memeriksa permainan ini dan hasilnya konsisten.",
       imported: "Dilaporkan oleh game pemain, tanpa replay sebagai bukti.",
     },
     pageOf: (page: string, pages: string) => `Halaman ${page} dari ${pages}`,

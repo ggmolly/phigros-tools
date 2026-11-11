@@ -205,8 +205,7 @@ export const de = {
     status: "Status",
     replayStatus: { verified: "Verifiziert", imported: "Importiert" },
     replayStatusHelp: {
-      verified:
-        "Die Wiederholung wurde mit der Bewertung des Spiels abgespielt und ergibt genau dieses Ergebnis.",
+      verified: "Wir haben dieses Spiel geprüft und es ist stimmig.",
       imported: "Vom Spiel des Spielers gemeldet, ohne Wiederholung als Beleg.",
     },
     pageOf: (page: string, pages: string) => `Seite ${page} von ${pages}`,

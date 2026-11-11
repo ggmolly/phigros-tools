@@ -205,8 +205,7 @@ export const it = {
     status: "Stato",
     replayStatus: { verified: "Verificata", imported: "Importato" },
     replayStatusHelp: {
-      verified:
-        "Il suo replay è stato rigiocato con il giudizio del gioco e dà esattamente questo risultato.",
+      verified: "Abbiamo controllato questa partita ed è coerente.",
       imported: "Dichiarato dal gioco del giocatore, senza replay che lo provi.",
     },
     pageOf: (page: string, pages: string) => `Pagina ${page} di ${pages}`,

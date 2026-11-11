@@ -200,7 +200,7 @@ export const zh = {
     status: "状态",
     replayStatus: { verified: "已验证", imported: "已导入" },
     replayStatusHelp: {
-      verified: "其回放已按游戏的判定重新演算，结果与此完全一致。",
+      verified: "我们检查过这次游玩，结果可信。",
       imported: "由玩家的游戏申报，没有回放可以证明。",
     },
     pageOf: (page: string, pages: string) => `第 ${page} / ${pages} 页`,

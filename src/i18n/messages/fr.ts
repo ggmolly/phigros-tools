@@ -206,7 +206,7 @@ export const fr = {
     status: "Statut",
     replayStatus: { verified: "Vérifiée", imported: "Importé" },
     replayStatusHelp: {
-      verified: "Sa replay a été rejouée avec le jugement du jeu et donne exactement ce résultat.",
+      verified: "Nous avons vérifié cette partie et elle est cohérente.",
       imported: "Déclaré par le jeu du joueur, sans replay pour le prouver.",
     },
     pageOf: (page: string, pages: string) => `Page ${page} sur ${pages}`,

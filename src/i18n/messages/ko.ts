@@ -203,7 +203,7 @@ export const ko = {
     status: "상태",
     replayStatus: { verified: "검증됨", imported: "가져옴" },
     replayStatusHelp: {
-      verified: "리플레이를 게임의 판정으로 재생해 정확히 이 결과가 나왔습니다.",
+      verified: "이 플레이를 확인했으며 일관성이 있습니다.",
       imported: "플레이어의 게임이 신고한 기록으로, 증명할 리플레이가 없습니다.",
     },
     pageOf: (page: string, pages: string) => `${pages}페이지 중 ${page}페이지`,

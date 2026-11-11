@@ -204,7 +204,7 @@ export const ja = {
     status: "状態",
     replayStatus: { verified: "検証済み", imported: "インポート" },
     replayStatusHelp: {
-      verified: "リプレイをゲームの判定で再生し、この結果と完全に一致しました。",
+      verified: "このプレイを確認し、整合性が取れていました。",
       imported: "プレイヤーのゲームが申告した記録で、裏付けるリプレイはありません。",
     },
     pageOf: (page: string, pages: string) => `${page} / ${pages} ページ`,
