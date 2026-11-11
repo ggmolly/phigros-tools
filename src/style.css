@@ -3626,6 +3626,9 @@ dialog strong {
   margin-top: 1rem;
 }
 
+main > .seg {
+  margin-bottom: 18px;
+}
 .leaderboard-layout {
   display: flex;
   flex-direction: column;

@@ -102,12 +102,34 @@ export function Pager({ page, pages }: { page: number; pages: number }) {
   );
 }
 
-/** ?page= from 1, anything else is the first page. */
-export const PageSearch = v.object({
+/** A ranking's search: ?page= from 1 (anything else is the first page), and ?verified=true counting verified replays only. */
+export const RankingSearch = v.object({
   page: v.fallback(
     v.optional(
       v.pipe(v.unknown(), v.transform(Number), v.finite(), v.minValue(1), v.transform(Math.floor)),
     ),
     undefined,
   ),
+  verified: v.fallback(v.optional(v.boolean()), undefined),
 });
+
+/** All counts verified replays and imported records, Verified only verified replays. Switching starts at page 1. */
+export function ScopeSwitch({ verified }: { verified: boolean }) {
+  const t = useT();
+  return (
+    // biome-ignore lint/a11y/useSemanticElements: like DifficultyFilter, a fieldset would need a style reset
+    <div className="seg" role="group" aria-label={t.song.status}>
+      {([false, true] as const).map((option) => (
+        <Link
+          key={String(option)}
+          to="."
+          search={(search) => ({ ...search, verified: option || undefined, page: undefined })}
+          className="seg-option"
+          aria-pressed={verified === option}
+        >
+          {option ? t.song.replayStatus.verified : t.common.all}
+        </Link>
+      ))}
+    </div>
+  );
+}

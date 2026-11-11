@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { catalogSong, isLevel, songLevels } from "../catalog";
 import { Arrow } from "../components/arrow";
 import { SiteHeader } from "../components/chrome";
-import { Pager, PageSearch, PlayCells, PlayHeadings } from "../components/plays";
+import { Pager, PlayCells, PlayHeadings, RankingSearch, ScopeSwitch } from "../components/plays";
 import { Difficulty } from "../components/primitives";
 import { useFormat, useT } from "../i18n";
 import { LEVELS, type LevelName } from "../modules";
@@ -11,7 +11,7 @@ import { type ChartPlays, PLAYS_PAGE } from "../plays";
 import { headT, pageLinks, pageMeta } from "../seo";
 
 export const Route = createFileRoute("/charts/$id_/plays/$level")({
-  validateSearch: PageSearch,
+  validateSearch: RankingSearch,
   loader: ({ params }) => {
     if (!isLevel(params.level) || !songLevels(params.id).includes(params.level)) throw notFound();
   },
@@ -34,7 +34,7 @@ export const Route = createFileRoute("/charts/$id_/plays/$level")({
 
 function PlaysPage() {
   const params = Route.useParams();
-  const { page = 1 } = Route.useSearch();
+  const { page = 1, verified = false } = Route.useSearch();
   const t = useT();
   const format = useFormat();
   const song = catalogSong(params.id)!; // the loader 404s unknown songs and levels
@@ -43,10 +43,12 @@ function PlaysPage() {
 
   useEffect(() => {
     setChart(undefined);
-    fetch(`/api/charts/${encodeURIComponent(song.id)}/${level}?page=${page}`)
+    fetch(
+      `/api/charts/${encodeURIComponent(song.id)}/${level}?page=${page}${verified ? "&verified=1" : ""}`,
+    )
       .then((response) => response.json())
       .then(setChart);
-  }, [song.id, level, page]);
+  }, [song.id, level, page, verified]);
 
   const pages = Math.max(1, Math.ceil((chart?.count ?? 0) / PLAYS_PAGE));
   const constant = song.constants[LEVELS.indexOf(level)] ?? 0;
@@ -55,7 +57,11 @@ function PlaysPage() {
       <SiteHeader />
       <main className="app-shell">
         <div className="chart-player-bar">
-          <Link to="/leaderboard" className="btn btn-ghost">
+          <Link
+            to="/leaderboard"
+            search={{ verified: verified || undefined }}
+            className="btn btn-ghost"
+          >
             <span className="chart-player-back">
               <Arrow />
             </span>
@@ -87,6 +93,7 @@ function PlaysPage() {
         <section className="panel">
           <div className="panel-head">
             <h2 className="panel-title">{t.song.plays}</h2>
+            <ScopeSwitch verified={verified} />
           </div>
           <div className="chart-stats-scroll">
             <table className="song-diff-table">

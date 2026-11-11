@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import * as v from "valibot";
 import { catalogSong, searchFold } from "../catalog";
 import { SiteHeader } from "../components/chrome";
-import { Pager, PageSearch, PlayerTag } from "../components/plays";
+import { Pager, PlayerTag, RankingSearch, ScopeSwitch } from "../components/plays";
 import { Difficulty } from "../components/primitives";
 import { useFormat, useT } from "../i18n";
 import { type ChartCount, PLAYS_PAGE, type PlayerRanking } from "../plays";
@@ -11,7 +11,7 @@ import { headT, pageLinks, pageMeta } from "../seo";
 
 export const Route = createFileRoute("/leaderboard")({
   validateSearch: v.object({
-    ...PageSearch.entries,
+    ...RankingSearch.entries,
     q: v.fallback(v.optional(v.string()), undefined),
   }),
   head: ({ match }) => {
@@ -31,15 +31,15 @@ export const Route = createFileRoute("/leaderboard")({
 
 /** Players by RKS, a page at a time, searchable by name or name#0042. */
 function Players() {
-  const { page = 1, q = "" } = Route.useSearch();
+  const { page = 1, q = "", verified = false } = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
   const t = useT();
   const [ranking, setRanking] = useState<PlayerRanking>();
   useEffect(() => {
-    fetch(`/api/players?page=${page}&q=${encodeURIComponent(q)}`)
+    fetch(`/api/players?page=${page}&q=${encodeURIComponent(q)}${verified ? "&verified=1" : ""}`)
       .then((response) => response.json())
       .then(setRanking);
-  }, [page, q]);
+  }, [page, q, verified]);
   return (
     <section className="panel">
       <div className="panel-head">
@@ -87,15 +87,16 @@ function Players() {
 
 /** Every chart with uploaded plays, most players first, each opening its own ranking. */
 function Charts() {
+  const { verified = false } = Route.useSearch();
   const t = useT();
   const format = useFormat();
   const [charts, setCharts] = useState<ChartCount[]>([]);
   const [query, setQuery] = useState("");
   useEffect(() => {
-    fetch("/api/charts")
+    fetch(`/api/charts${verified ? "?verified=1" : ""}`)
       .then((response) => response.json())
       .then(setCharts);
-  }, []);
+  }, [verified]);
   const folded = searchFold(query);
   const shown = charts.flatMap((chart) => {
     const song = catalogSong(chart.song);
@@ -138,6 +139,7 @@ function Charts() {
                   <Link
                     to="/charts/$id/plays/$level"
                     params={{ id: chart.song.id, level: chart.level }}
+                    search={{ verified: verified || undefined }}
                   >
                     <span className="record-title">{chart.song.title}</span>
                   </Link>
@@ -155,11 +157,13 @@ function Charts() {
 
 function LeaderboardPage() {
   const t = useT();
+  const { verified = false } = Route.useSearch();
   return (
     <>
       <SiteHeader />
       <main className="app-shell">
         <h1 className="sr-only">{t.tabs.leaderboard}</h1>
+        <ScopeSwitch verified={verified} />
         <div className="leaderboard-layout">
           <Players />
           <Charts />

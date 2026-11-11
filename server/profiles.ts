@@ -29,7 +29,7 @@ const bestsOf = sqlite.prepare<
   [Uint8Array]
 >(
   `SELECT b.song, b.level, b.score, b.accuracy, b.fc, b.played, r.status, b.sha256 FROM bests b
-   LEFT JOIN replays r ON r.sha256 = b.sha256 WHERE b.key = ? ORDER BY b.score DESC`,
+   LEFT JOIN replays r ON r.sha256 = b.sha256 WHERE b.key = ? AND b.scope = 0 ORDER BY b.score DESC`,
 );
 const hasSave = sqlite.prepare<{ updated: number }, [string]>(
   "SELECT updated FROM saves WHERE id = ?",

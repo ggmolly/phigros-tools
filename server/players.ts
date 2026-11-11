@@ -17,11 +17,16 @@ sqlite.run(`
     unlisted INTEGER NOT NULL DEFAULT 0,
     rks REAL NOT NULL DEFAULT 0,
     rks_at INTEGER NOT NULL DEFAULT 0,
+    rks_verified REAL NOT NULL DEFAULT 0,
+    rks_verified_at INTEGER NOT NULL DEFAULT 0,
     created INTEGER NOT NULL,
     UNIQUE (fold, number)
   )
 `);
 sqlite.run("CREATE INDEX IF NOT EXISTS idx_players_rank ON players(rks DESC, rks_at)");
+sqlite.run(
+  "CREATE INDEX IF NOT EXISTS idx_players_rank_verified ON players(rks_verified DESC, rks_verified_at)",
+);
 
 const NUMBERS = 9999;
 const NAME_LENGTH = 32;
@@ -122,10 +127,18 @@ export function setLook(
   );
 }
 
-const updateRks = sqlite.prepare<unknown, [number, number, Uint8Array, number]>(
-  "UPDATE players SET rks = ?, rks_at = ? WHERE key = ? AND rks != ?",
+// each RKS keeps when it last changed, so the earlier player to reach it ranks first
+const updateRks = sqlite.prepare<unknown, [number, number, Uint8Array]>(
+  `UPDATE players SET rks_at = CASE WHEN rks != ?1 THEN ?2 ELSE rks_at END, rks = ?1 WHERE key = ?3`,
+);
+const updateVerifiedRks = sqlite.prepare<unknown, [number, number, Uint8Array]>(
+  `UPDATE players SET rks_verified_at = CASE WHEN rks_verified != ?1 THEN ?2 ELSE rks_verified_at END,
+   rks_verified = ?1 WHERE key = ?3`,
 );
 
-export function setRks(key: Uint8Array, rks: number) {
-  updateRks.run(rks, Date.now(), key, rks);
+/** The player's RKS counting all their bests, and counting verified replays only. */
+export function setRks(key: Uint8Array, rks: number, verified: number) {
+  const now = Date.now();
+  updateRks.run(rks, now, key);
+  updateVerifiedRks.run(verified, now, key);
 }
