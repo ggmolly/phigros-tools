@@ -30,13 +30,23 @@ export const Route = createFileRoute("/players/$id")({
 
 const TOP_SHOWN = 10;
 
-/** The player's card: avatar, name#0042, intro, global rank, RKS, when they joined and were last seen, and stats. */
+/**
+ * The player's card, laid out like the Overview's: who they are, their headline numbers beside the Cleared, Full
+ * Combo and Phi bar, their intro, then the smaller numbers.
+ */
 function Card({ profile }: { profile: PlayerProfile }) {
   const t = useT();
   const format = useFormat();
   const { stats } = profile;
   const hours = Math.floor(stats.time / 3600);
   const minutes = Math.floor((stats.time % 3600) / 60);
+  const details = [
+    [t.profile.playTime, t.profile.duration(String(hours), String(minutes))],
+    [t.profile.notesHit, format.number(stats.notes)],
+    [t.profile.maxCombo, format.number(stats.maxcombo)],
+    [t.profile.joined, format.date(profile.joined)],
+    [t.profile.seen, format.date(profile.seen)],
+  ];
   return (
     <section className="hero profile-card">
       <div className="hero-id">
@@ -59,26 +69,28 @@ function Card({ profile }: { profile: PlayerProfile }) {
           label={t.profile.globalRank}
           value={profile.rank ? `#${format.number(profile.rank)}` : "-"}
         />
-        <Stat label={t.profile.playCount} value={stats.plays} />
         <Stat
-          label={t.profile.playTime}
-          value={t.profile.duration(String(hours), String(minutes))}
-        />
-        <Stat label={t.profile.notesHit} value={stats.notes} />
-        <Stat
-          label={t.song.acc}
+          label={t.profile.accuracy}
           value={stats.accuracy === null ? "-" : `${stats.accuracy.toFixed(2)}%`}
         />
-        <Stat label={t.profile.maxCombo} value={stats.maxcombo} />
-        <Stat label={t.profile.cleared} value={stats.cleared} />
-        <Stat label={t.menu.fullCombo} value={stats.fc} />
-        <Stat label="Phi" value={stats.phi} />
+        <Stat label={t.profile.playCount} value={stats.plays} />
+      </div>
+      <div className="stat-bar">
+        <div className="stat-row">
+          <Stat label={t.common.cleared} value={stats.cleared} />
+          <Stat label={t.menu.fullCombo} value={stats.fc} className="profile-fc" />
+          <Stat label="Phi" value={stats.phi} className="profile-phi" />
+        </div>
       </div>
       {profile.intro && <p className="hero-intro">{profile.intro}</p>}
-      <p className="meta profile-dates">
-        {t.profile.joined(format.date(profile.joined))} ·{" "}
-        {t.profile.seen(format.date(profile.seen))}
-      </p>
+      <dl className="profile-details">
+        {details.map(([label, value]) => (
+          <div key={label}>
+            <dt>{label}</dt>
+            <dd>{value}</dd>
+          </div>
+        ))}
+      </dl>
     </section>
   );
 }

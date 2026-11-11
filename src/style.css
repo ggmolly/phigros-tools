@@ -3668,22 +3668,33 @@ main > .seg {
 .profile-card .hero-id {
   margin-right: 0;
 }
-/* a grid rather than the overview's row, the profile has more stats */
-.profile-card .hero-stats {
-  display: grid;
-  grid-column: 1 / -1;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+.profile-fc .stat-value {
+  color: var(--fc);
 }
-.profile-card .stat-label {
-  white-space: normal;
+.profile-phi .stat-value {
+  color: var(--phi);
+}
+.profile-details {
+  display: flex;
+  flex-wrap: wrap;
+  grid-column: 1 / -1;
+  gap: 10px 40px;
+  margin: 0;
+  padding: 18px 8px 0;
+  border-top: 1px solid var(--hairline);
+}
+.profile-details dt {
+  color: var(--dim);
+  font-size: 14px;
+}
+.profile-details dd {
+  margin: 0;
+  font-size: 20px;
 }
 .profile-number {
   color: var(--faint);
   font-size: 0.55em;
   margin-left: 6px;
-}
-.profile-dates {
-  grid-column: 1 / -1;
 }
 .profile-columns {
   display: grid;
@@ -3807,5 +3818,28 @@ main > .seg {
 @media (max-width: 700px) {
   .rks-history-label {
     font-size: 26px;
+  }
+}
+@media (max-width: 720px) {
+  .profile-card .stat-bar {
+    flex-direction: row;
+  }
+  .profile-card .stat-bar::before {
+    inset: 8px 0;
+    transform: skewX(var(--skew));
+  }
+  .profile-card .hero-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .profile-card .hero-stats .stat-label {
+    text-align: left;
+    white-space: normal;
+  }
+  .profile-details {
+    gap: 10px 28px;
+    padding: 14px 4px 0;
+  }
+  .profile-details dd {
+    font-size: 17px;
   }
 }
