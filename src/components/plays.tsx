@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import * as v from "valibot";
 import { useFormat, useT } from "../i18n";
-import type { Play, PlayerName } from "../plays";
+import type { Play, PlayerName, PlayStatus } from "../plays";
 import { Avatar, Rank, score7 } from "./primitives";
 
 /** The player's avatar and name#0042, linking to their page, the number dimmed so the name reads first. */
@@ -17,9 +17,21 @@ export function PlayerTag({ player }: { player: PlayerName }) {
   );
 }
 
+/** Verified or Imported, with what it means on hover. */
+export function PlayStatusLabel({ status }: { status: PlayStatus }) {
+  const t = useT();
+  return (
+    <>
+      {t.song.replayStatus[status]}
+      <abbr className="stat-help" title={t.song.replayStatusHelp[status]}>
+        ?
+      </abbr>
+    </>
+  );
+}
+
 /** A play's rank, player, score, accuracy and grade, as cells of a table row. */
 export function PlayCells({ play }: { play: Play }) {
-  const t = useT();
   return (
     <>
       <td className="num meta">{play.rank}</td>
@@ -31,7 +43,9 @@ export function PlayCells({ play }: { play: Play }) {
       <td>
         <Rank score={play.score} fc={play.fc} />
       </td>
-      <td className="meta">{t.song.replayStatus[play.status]}</td>
+      <td className="meta">
+        <PlayStatusLabel status={play.status} />
+      </td>
     </>
   );
 }

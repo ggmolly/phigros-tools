@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { catalogSong } from "../catalog";
 import { SiteHeader } from "../components/chrome";
 import { Overview } from "../components/overview";
+import { PlayStatusLabel } from "../components/plays";
 import { Avatar, Difficulty, Rank, score7 } from "../components/primitives";
 import type { SaveDocumentV1 } from "../document";
 import { useFormat, useT } from "../i18n";
@@ -129,7 +130,9 @@ function Plays({ profile }: { profile: PlayerProfile }) {
                   <td>
                     <Rank score={best.score} fc={best.fc} />
                   </td>
-                  <td className="meta">{t.song.replayStatus[best.status]}</td>
+                  <td className="meta">
+                    <PlayStatusLabel status={best.status} />
+                  </td>
                   <td className="meta">{best.date ? format.date(best.date) : "-"}</td>
                   <td>
                     {best.replay && (

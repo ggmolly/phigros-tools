@@ -200,11 +200,11 @@ export const en = {
     player: "Player",
     played: "Played",
     status: "Status",
-    replayStatus: {
-      pending: "Pending",
-      verified: "Verified",
-      unverified: "Unverified",
-      imported: "Imported",
+    replayStatus: { verified: "Verified", imported: "Imported" },
+    replayStatusHelp: {
+      verified:
+        "Its replay was played back through the game's judgement and gives exactly this result.",
+      imported: "Declared by the player's game, with no replay to prove it.",
     },
     pageOf: (page: string, pages: string) => `Page ${page} of ${pages}`,
     illustratedBy: (name: string) => `Illustrated by ${name}`,

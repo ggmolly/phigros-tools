@@ -203,11 +203,11 @@ export const id = {
     player: "Pemain",
     played: "Dimainkan",
     status: "Status",
-    replayStatus: {
-      pending: "Menunggu",
-      verified: "Terverifikasi",
-      unverified: "Tidak terverifikasi",
-      imported: "Diimpor",
+    replayStatus: { verified: "Terverifikasi", imported: "Diimpor" },
+    replayStatusHelp: {
+      verified:
+        "Replay-nya diputar ulang dengan penilaian game dan memberi hasil yang persis sama.",
+      imported: "Dilaporkan oleh game pemain, tanpa replay sebagai bukti.",
     },
     pageOf: (page: string, pages: string) => `Halaman ${page} dari ${pages}`,
     illustratedBy: (name: string) => `Ilustrasi oleh ${name}`,

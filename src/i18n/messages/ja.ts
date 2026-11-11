@@ -202,11 +202,10 @@ export const ja = {
     player: "プレイヤー",
     played: "日時",
     status: "状態",
-    replayStatus: {
-      pending: "検証待ち",
-      verified: "検証済み",
-      unverified: "検証不一致",
-      imported: "インポート",
+    replayStatus: { verified: "検証済み", imported: "インポート" },
+    replayStatusHelp: {
+      verified: "リプレイをゲームの判定で再生し、この結果と完全に一致しました。",
+      imported: "プレイヤーのゲームが申告した記録で、裏付けるリプレイはありません。",
     },
     pageOf: (page: string, pages: string) => `${page} / ${pages} ページ`,
     illustratedBy: (name: string) => `イラスト：${name}`,

@@ -25,8 +25,8 @@ sqlite.run(`
   )
 `);
 sqlite.run("CREATE INDEX IF NOT EXISTS idx_replays_key ON replays(key)");
-// each player's best on each chart, so a chart's ranking is read in order from the index: a replay (sha256), or a
-// record their game declared (imported, no sha256, no date). created is when it became the best, for ties
+// each player's best on each chart, so a chart's ranking is read in order from the index: a verified replay (sha256),
+// or a record their game declared (imported, no sha256, no date). created is when it became the best, for ties
 sqlite.run(`
   CREATE TABLE IF NOT EXISTS bests (
     key BLOB NOT NULL,
@@ -96,12 +96,20 @@ export function updateRks(key: Uint8Array) {
   setRks(key, calculateRanking({ songs: [...songs.values()] }, "b30").rankingScore);
 }
 
+/** Keeps an uploaded replay, pending until the worker judged it (server/worker.ts). */
 export function addReplay(sha256: string, key: Uint8Array, song: string, header: ReplayHeader) {
-  const now = Date.now();
+  const json = JSON.stringify(header);
+  insert.run(sha256, key, song, header.difficulty, header.score, header.game, json, Date.now());
+}
+
+const verified = sqlite.prepare<{ key: Uint8Array; song: string; level: string }, [string]>(
+  "SELECT key, song, level FROM replays WHERE sha256 = ?",
+);
+
+/** A replay the worker verified counts: it can become its player's best on the chart, and their RKS follows. */
+export function countReplay(sha256: string, header: ReplayHeader) {
+  const { key, song, level } = verified.get(sha256)!;
   sqlite.transaction(() => {
-    const level = header.difficulty;
-    const json = JSON.stringify(header);
-    if (!insert.run(sha256, key, song, level, header.score, header.game, json, now).changes) return;
     raiseBest(key, song, level, {
       score: header.score,
       accuracy: header.accuracy,

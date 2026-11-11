@@ -198,11 +198,10 @@ export const zhHant = {
     player: "玩家",
     played: "時間",
     status: "狀態",
-    replayStatus: {
-      pending: "待驗證",
-      verified: "已驗證",
-      unverified: "驗證未通過",
-      imported: "已匯入",
+    replayStatus: { verified: "已驗證", imported: "已匯入" },
+    replayStatusHelp: {
+      verified: "其回放已按遊戲的判定重新演算，結果與此完全一致。",
+      imported: "由玩家的遊戲申報，沒有回放可以證明。",
     },
     pageOf: (page: string, pages: string) => `第 ${page} / ${pages} 頁`,
     illustratedBy: (name: string) => `畫師：${name}`,

@@ -5,10 +5,10 @@ import { decodeReplay } from "../src/pigeon";
 import { decodePhc } from "../src/player/phc";
 import { sqlite } from "./db";
 import { openQueue, VERIFY_QUEUE } from "./queue";
-import { REPLAY_DIR } from "./replays";
+import { countReplay, REPLAY_DIR } from "./replays";
 
 // judges uploaded replays like the game did and marks them verified when the game's recorded result is what their
-// touches give, unverified otherwise (with both results). a replay of a game version whose charts the site doesn't
+// touches give, unverified otherwise (with both results). only a verified one counts on the leaderboard. a replay of a game version whose charts the site doesn't
 // have stays pending. run beside the server: bun worker.mjs
 const CHARTS = process.env.CHART_DIR ?? "./public/chart-data";
 const RESULT = ["score", "maxcombo", "perfect", "good", "bad", "miss", "early", "late"] as const;
@@ -37,6 +37,7 @@ function verify(sha256: string) {
   const replayed = Object.fromEntries(RESULT.map((field) => [field, judged[field]]));
   const same = RESULT.every((field) => recorded[field] === replayed[field]);
   settle.run(same ? "verified" : "unverified", JSON.stringify({ recorded, replayed }), sha256);
+  if (same) countReplay(sha256, header);
   console.log(`${sha256} ${row.song} ${row.level}: ${same ? "verified" : "unverified"}`);
 }
 

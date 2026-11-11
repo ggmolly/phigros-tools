@@ -203,11 +203,11 @@ export const vi = {
     player: "Người chơi",
     played: "Ngày chơi",
     status: "Trạng thái",
-    replayStatus: {
-      pending: "Đang chờ",
-      verified: "Đã xác minh",
-      unverified: "Không khớp",
-      imported: "Đã nhập",
+    replayStatus: { verified: "Đã xác minh", imported: "Đã nhập" },
+    replayStatusHelp: {
+      verified:
+        "Bản phát lại đã được chạy lại bằng cách chấm của trò chơi và cho đúng kết quả này.",
+      imported: "Do trò chơi của người chơi khai báo, không có bản phát lại để chứng minh.",
     },
     pageOf: (page: string, pages: string) => `Trang ${page}/${pages}`,
     illustratedBy: (name: string) => `Minh họa bởi ${name}`,

@@ -203,11 +203,11 @@ export const ms = {
     player: "Pemain",
     played: "Dimainkan",
     status: "Status",
-    replayStatus: {
-      pending: "Menunggu",
-      verified: "Disahkan",
-      unverified: "Tidak disahkan",
-      imported: "Diimport",
+    replayStatus: { verified: "Disahkan", imported: "Diimport" },
+    replayStatusHelp: {
+      verified:
+        "Main semulanya dimainkan dengan penilaian permainan dan memberi keputusan yang sama.",
+      imported: "Dilaporkan oleh permainan pemain, tanpa main semula sebagai bukti.",
     },
     pageOf: (page: string, pages: string) => `Halaman ${page} daripada ${pages}`,
     illustratedBy: (name: string) => `Ilustrasi oleh ${name}`,

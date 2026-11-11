@@ -204,11 +204,10 @@ export const fr = {
     player: "Joueur",
     played: "Jouée",
     status: "Statut",
-    replayStatus: {
-      pending: "En attente",
-      verified: "Vérifiée",
-      unverified: "Non vérifiée",
-      imported: "Importé",
+    replayStatus: { verified: "Vérifiée", imported: "Importé" },
+    replayStatusHelp: {
+      verified: "Sa replay a été rejouée avec le jugement du jeu et donne exactement ce résultat.",
+      imported: "Déclaré par le jeu du joueur, sans replay pour le prouver.",
     },
     pageOf: (page: string, pages: string) => `Page ${page} sur ${pages}`,
     illustratedBy: (name: string) => `Illustré par ${name}`,

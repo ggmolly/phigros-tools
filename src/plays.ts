@@ -9,8 +9,8 @@ export interface PlayerName {
   avatar: string;
 }
 
-/** A replay's check, or imported for a record the player's game declared, with no replay. */
-export type PlayStatus = "pending" | "verified" | "unverified" | "imported";
+/** What counts on the leaderboard: a verified replay, or a record the player's game declared, with no replay. */
+export type PlayStatus = "verified" | "imported";
 
 /** A player's best on a chart: an uploaded replay, or an imported record. */
 export interface Play {

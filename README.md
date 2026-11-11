@@ -68,9 +68,9 @@ Players who sync from the game with [Phigros++](../mod) are ranked by RKS, and e
 player's page shows their uploaded save like the Overview, their plays sorted by top or recent, and a **Watch** link on
 each play with a replay: the chart plays back with their fingers and their real judgements, score and combo.
 
-Records the game declares are marked **Imported**. A replay is **Pending** until the worker has judged it with a port of
-the game's judgement (`src/judge.ts`): **Verified** when its touches give the result the game recorded, **Unverified**
-otherwise.
+Records the game declares are marked **Imported**. An uploaded replay counts once the worker has judged it with a port
+of the game's judgement (`src/judge.ts`) and its touches give the result the game recorded: it's then **Verified**. A
+replay that gives another result doesn't count.
 
 Screenshots use a fictional demo save; regenerate them with `scripts/screenshots.ts` (see its header).
 

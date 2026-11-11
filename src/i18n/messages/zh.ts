@@ -198,11 +198,10 @@ export const zh = {
     player: "玩家",
     played: "时间",
     status: "状态",
-    replayStatus: {
-      pending: "待验证",
-      verified: "已验证",
-      unverified: "验证未通过",
-      imported: "已导入",
+    replayStatus: { verified: "已验证", imported: "已导入" },
+    replayStatusHelp: {
+      verified: "其回放已按游戏的判定重新演算，结果与此完全一致。",
+      imported: "由玩家的游戏申报，没有回放可以证明。",
     },
     pageOf: (page: string, pages: string) => `第 ${page} / ${pages} 页`,
     illustratedBy: (name: string) => `画师：${name}`,
