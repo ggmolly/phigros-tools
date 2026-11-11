@@ -66,6 +66,25 @@ export interface PlayedChart {
 }
 
 /** A player's page, from `GET /api/players/<id>`: their profile, stats and plays, like an osu! profile. */
+/** Some of a list, and whether more follow. */
+export interface Page<T> {
+  items: T[];
+  more: boolean;
+}
+
+/** The rank a player's new best took on a chart. */
+export interface Activity {
+  song: string;
+  level: string;
+  score: number;
+  rank: number;
+  date: number;
+}
+
+/** A profile's lists show this many first, then this many more each time. */
+export const LIST_FIRST = 12;
+export const LIST_MORE = 30;
+
 export interface PlayerProfile {
   player: PlayerName;
   intro: string;
@@ -90,9 +109,8 @@ export interface PlayerProfile {
   };
   /** Every best by its chart RKS, saying which count towards their RKS (best 27, then the 3 best Phi). */
   top: (PlayedChart & { status: PlayStatus; rks: number; counted: boolean })[];
-  recent: PlayedChart[];
-  /** The rank their new bests took on a chart. */
-  activity: { song: string; level: string; score: number; rank: number; date: number }[];
+  recent: Page<PlayedChart>;
+  activity: Page<Activity>;
   /** Their RKS and rank once a day, oldest first. */
   history: { day: string; rks: number; rank: number }[];
 }

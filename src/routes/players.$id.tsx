@@ -6,7 +6,14 @@ import { PlayStatusLabel } from "../components/plays";
 import { Avatar, Difficulty, Rank, Stat, score7 } from "../components/primitives";
 import { RksHistory } from "../components/rks-history";
 import { useFormat, useT } from "../i18n";
-import type { PlayedChart, PlayerProfile } from "../plays";
+import {
+  type Activity,
+  LIST_FIRST,
+  LIST_MORE,
+  type Page,
+  type PlayedChart,
+  type PlayerProfile,
+} from "../plays";
 import { headT, pageMeta } from "../seo";
 
 // players' pages change with every upload and unlisted ones must stay out of search results, so none are indexed
@@ -27,8 +34,6 @@ export const Route = createFileRoute("/players/$id")({
   },
   component: PlayerPage,
 });
-
-const TOP_SHOWN = 10;
 
 /**
  * The player's card, laid out like the Overview's: who they are, their headline numbers beside the Cleared, Full
@@ -128,38 +133,43 @@ function Result({ play }: { play: PlayedChart }) {
   );
 }
 
-/** The bests by chart RKS: the ones counting towards the player's RKS show what they add, the others are dimmed. */
-function TopPlays({ profile }: { profile: PlayerProfile }) {
+/** A panel listing the first page, and more on each "Show more" while there are. */
+function List<T>({
+  title,
+  first,
+  load,
+  className,
+  row,
+}: {
+  title: string;
+  first: Page<T>;
+  load: (offset: number) => Promise<Page<T>>;
+  className: string;
+  row: (item: T) => React.ReactNode;
+}) {
   const t = useT();
-  const [all, setAll] = useState(false);
-  if (!profile.top.length) return null;
-  const shown = all ? profile.top : profile.top.slice(0, TOP_SHOWN);
+  const [shown, setShown] = useState(first);
+  const [loading, setLoading] = useState(false);
+  if (!shown.items.length) return null;
+  const more = () => {
+    setLoading(true);
+    load(shown.items.length)
+      .then((next) => setShown({ items: [...shown.items, ...next.items], more: next.more }))
+      .finally(() => setLoading(false));
+  };
   return (
     <section className="panel">
       <div className="panel-head">
-        <h2 className="panel-title">{t.profile.topPlays}</h2>
+        <h2 className="panel-title">{title}</h2>
       </div>
-      <ol className="profile-list profile-top">
-        {shown.map((play) => (
-          <li
-            key={`${play.song}:${play.level}`}
-            className={play.counted ? undefined : "profile-uncounted"}
-          >
-            <ChartName chart={play} />
-            <Result play={play} />
-            <span className="num">
-              {play.rks.toFixed(2)}
-              {play.counted && <span className="meta"> +{(play.rks / 30).toFixed(3)}</span>}
-            </span>
-            <span className="meta">
-              <PlayStatusLabel status={play.status} />
-            </span>
-            <Watch replay={play.replay} />
-          </li>
-        ))}
-      </ol>
-      {!all && profile.top.length > TOP_SHOWN && (
-        <button type="button" className="btn btn-ghost profile-more" onClick={() => setAll(true)}>
+      <ol className={`profile-list ${className}`}>{shown.items.map(row)}</ol>
+      {shown.more && (
+        <button
+          type="button"
+          className="btn btn-ghost profile-more"
+          disabled={loading}
+          onClick={more}
+        >
           {t.profile.showMore}
         </button>
       )}
@@ -167,27 +177,68 @@ function TopPlays({ profile }: { profile: PlayerProfile }) {
   );
 }
 
+const slice = <T,>(items: T[], offset: number, limit: number): Page<T> => ({
+  items: items.slice(offset, offset + limit),
+  more: items.length > offset + limit,
+});
+
+/** The bests by chart RKS: the ones counting towards the player's RKS show what they add, the others are dimmed. */
+function TopPlays({ profile }: { profile: PlayerProfile }) {
+  const t = useT();
+  return (
+    <List
+      title={t.profile.topPlays}
+      first={slice(profile.top, 0, LIST_FIRST)}
+      load={async (offset) => slice(profile.top, offset, LIST_MORE)}
+      className="profile-top"
+      row={(play) => (
+        <li
+          key={`${play.song}:${play.level}`}
+          className={play.counted ? undefined : "profile-uncounted"}
+        >
+          <ChartName chart={play} />
+          <Result play={play} />
+          <span className="num">
+            {play.rks.toFixed(2)}
+            {play.counted && <span className="meta"> +{(play.rks / 30).toFixed(3)}</span>}
+          </span>
+          <span className="meta">
+            <PlayStatusLabel status={play.status} />
+          </span>
+          <Watch replay={play.replay} />
+        </li>
+      )}
+    />
+  );
+}
+
+// the rest of a list the server pages, after what's shown
+const fetchMore =
+  <T,>(id: string, list: string) =>
+  (offset: number): Promise<Page<T>> =>
+    fetch(`/api/players/${encodeURIComponent(id)}/${list}?offset=${offset}`).then((response) =>
+      response.json(),
+    );
+
 /** The rank each new verified best took on its chart, most recent first. */
-function Activity({ profile }: { profile: PlayerProfile }) {
+function RecentActivity({ profile }: { profile: PlayerProfile }) {
   const t = useT();
   const format = useFormat();
-  if (!profile.activity.length) return null;
   return (
-    <section className="panel">
-      <div className="panel-head">
-        <h2 className="panel-title">{t.profile.recentActivity}</h2>
-      </div>
-      <ul className="profile-activity">
-        {profile.activity.map((event) => (
-          <li key={`${event.date}:${event.song}:${event.level}`}>
-            <span>
-              {t.profile.achieved(format.number(event.rank))} <ChartName chart={event} />
-            </span>
-            <span className="meta">{format.date(event.date)}</span>
-          </li>
-        ))}
-      </ul>
-    </section>
+    <List
+      title={t.profile.recentActivity}
+      first={profile.activity}
+      load={fetchMore<Activity>(profile.player.id, "activity")}
+      className="profile-activity"
+      row={(event) => (
+        <li key={`${event.date}:${event.song}:${event.level}`}>
+          <span>
+            {t.profile.achieved(format.number(event.rank))} <ChartName chart={event} />
+          </span>
+          <span className="meta">{format.date(event.date)}</span>
+        </li>
+      )}
+    />
   );
 }
 
@@ -195,23 +246,21 @@ function Activity({ profile }: { profile: PlayerProfile }) {
 function RecentPlays({ profile }: { profile: PlayerProfile }) {
   const t = useT();
   const format = useFormat();
-  if (!profile.recent.length) return null;
   return (
-    <section className="panel">
-      <div className="panel-head">
-        <h2 className="panel-title">{t.profile.recentPlays}</h2>
-      </div>
-      <ol className="profile-list profile-recent">
-        {profile.recent.map((play) => (
-          <li key={`${play.date}:${play.song}:${play.level}`}>
-            <ChartName chart={play} />
-            <Result play={play} />
-            <span className="meta">{play.date ? format.date(play.date) : "-"}</span>
-            <Watch replay={play.replay} />
-          </li>
-        ))}
-      </ol>
-    </section>
+    <List
+      title={t.profile.recentPlays}
+      first={profile.recent}
+      load={fetchMore<PlayedChart>(profile.player.id, "recent")}
+      className="profile-recent"
+      row={(play) => (
+        <li key={`${play.date}:${play.song}:${play.level}`}>
+          <ChartName chart={play} />
+          <Result play={play} />
+          <span className="meta">{play.date ? format.date(play.date) : "-"}</span>
+          <Watch replay={play.replay} />
+        </li>
+      )}
+    />
   );
 }
 
@@ -243,13 +292,9 @@ function PlayerPage() {
           <>
             <Card profile={profile} />
             <RksHistory history={profile.history} />
-            <div className="profile-columns">
-              <TopPlays profile={profile} />
-              <div className="profile-side">
-                <Activity profile={profile} />
-                <RecentPlays profile={profile} />
-              </div>
-            </div>
+            <TopPlays profile={profile} />
+            <RecentActivity profile={profile} />
+            <RecentPlays profile={profile} />
           </>
         )}
       </main>

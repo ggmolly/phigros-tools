@@ -2,7 +2,15 @@ import { HTTPError } from "nitro/h3";
 import { canonicalSongId, catalogSong } from "../src/catalog";
 import { chartRks } from "../src/metrics";
 import { LEVELS, type LevelName } from "../src/modules";
-import type { PlayerName, PlayerProfile, PlayStatus } from "../src/plays";
+import {
+  type Activity,
+  LIST_FIRST,
+  type Page,
+  type PlayedChart,
+  type PlayerName,
+  type PlayerProfile,
+  type PlayStatus,
+} from "../src/plays";
 import { sqlite } from "./db";
 import "./replays"; // the bests and replays tables
 
@@ -194,20 +202,58 @@ const recentOf = sqlite.prepare<
     played: number;
     replay: string | null;
   },
-  [Uint8Array]
+  [Uint8Array, number, number]
 >(
   `SELECT p.song, p.level, p.score, p.accuracy, p.bad, p.miss, p.played,
    (SELECT r.sha256 FROM replays r WHERE r.key = p.key AND r.song = p.song AND r.level = p.level
     AND r.score = p.score AND r.status = 'verified' LIMIT 1) AS replay
-   FROM plays p WHERE p.key = ? ORDER BY p.played DESC LIMIT 20`,
+   FROM plays p WHERE p.key = ? ORDER BY p.played DESC LIMIT ? OFFSET ?`,
 );
 const activityOf = sqlite.prepare<
   { song: string; level: string; score: number; rank: number; at: number },
-  [Uint8Array]
->("SELECT song, level, score, rank, at FROM activity WHERE key = ? ORDER BY at DESC LIMIT 20");
+  [Uint8Array, number, number]
+>(
+  "SELECT song, level, score, rank, at FROM activity WHERE key = ? ORDER BY at DESC LIMIT ? OFFSET ?",
+);
 const historyOf = sqlite.prepare<{ day: string; rks: number; rank: number }, [Uint8Array]>(
   "SELECT day, rks, rank FROM history WHERE key = ? ORDER BY day DESC LIMIT 365",
 );
+
+const keyOf = sqlite.prepare<{ key: Uint8Array }, [string]>("SELECT key FROM players WHERE id = ?");
+
+// one row past the page tells whether there's another
+function page<T>(rows: T[], limit: number): Page<T> {
+  return { items: rows.slice(0, limit), more: rows.length > limit };
+}
+
+function recentPlays(key: Uint8Array, offset: number, limit: number): Page<PlayedChart> {
+  const rows = recentOf.all(key, limit + 1, offset).map((play) => ({
+    song: play.song,
+    level: play.level,
+    score: play.score,
+    accuracy: play.accuracy,
+    fc: play.bad + play.miss === 0,
+    date: play.played,
+    replay: play.replay,
+  }));
+  return page(rows, limit);
+}
+
+function activities(key: Uint8Array, offset: number, limit: number): Page<Activity> {
+  const rows = activityOf
+    .all(key, limit + 1, offset)
+    .map(({ at, ...rest }) => ({ ...rest, date: at }));
+  return page(rows, limit);
+}
+
+const LISTS = { recent: recentPlays, activity: activities };
+
+/** More of a player's recent plays or activity, after the ones already shown. */
+export function profileList(id: string, list: string, offset: number, limit: number) {
+  const key = keyOf.get(id)?.key;
+  const read = LISTS[list as keyof typeof LISTS];
+  return key && read ? read(key, offset, limit) : undefined;
+}
 
 const BEST = 27;
 const PHI = 3;
@@ -251,16 +297,8 @@ export function profilePage(id: string): PlayerProfile | undefined {
       phi: top.filter((best) => best.score >= 1_000_000).length,
     },
     top,
-    recent: recentOf.all(row.key).map((play) => ({
-      song: play.song,
-      level: play.level,
-      score: play.score,
-      accuracy: play.accuracy,
-      fc: play.bad + play.miss === 0,
-      date: play.played,
-      replay: play.replay,
-    })),
-    activity: activityOf.all(row.key).map(({ at, ...rest }) => ({ ...rest, date: at })),
+    recent: recentPlays(row.key, 0, LIST_FIRST),
+    activity: activities(row.key, 0, LIST_FIRST),
     history: historyOf.all(row.key).reverse(),
   };
 }
