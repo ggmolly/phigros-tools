@@ -119,12 +119,6 @@ export function calculateRanking(
   return rankCharts(chartMetrics(document), ruleset);
 }
 
-/** The best `count` Full Combo charts by RKS, and their average: what the ranking would be counting FCs only. */
-export function fullComboBest(result: RankingResult, count = 30) {
-  const charts = result.charts.filter((chart) => chart.fc).slice(0, count);
-  return { charts, average: charts.reduce((sum, chart) => sum + chart.rks, 0) / count };
-}
-
 export function projectAccuracy(
   result: RankingResult,
   key: string,

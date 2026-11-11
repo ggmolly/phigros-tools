@@ -1,29 +1,47 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { canonicalSongId, catalogSong } from "../catalog";
 import { Arrow } from "../components/arrow";
 import { ChartPlayer } from "../components/chart-player";
 import { SiteHeader } from "../components/chrome";
+import { PlayerTag } from "../components/plays";
 import { Rank, score7 } from "../components/primitives";
 import { useFormat, useT } from "../i18n";
-import { judge, type Result } from "../judge";
+import { CHALLENGE, judge, type Result, WINDOWS } from "../judge";
 import { LEVELS, type LevelName } from "../modules";
 import { decodeReplay, type ReplayFrame, type ReplayHeader } from "../pigeon";
 import { type Chart, countUpTo, parseChart, type RawChart } from "../player/chart";
 import { decodePhc } from "../player/phc";
 import type { Play } from "../player/render";
-import { headT, pageMeta } from "../seo";
+import { CARDS, getReplayInfo } from "../plays";
+import { headT, pageMeta, SITE } from "../seo";
 
+// link previews show who played what (server/card.tsx)
 export const Route = createFileRoute("/replays/$id")({
-  head: ({ params, match }) => {
-    const { locale, t } = headT(match);
+  loader: async ({ params }) => {
+    const info = await getReplayInfo({ data: params.id });
+    if (!info) throw notFound();
+    return info;
+  },
+  head: ({ params, loaderData: info, match }) => {
+    const { locale } = headT(match);
+    const song = info && catalogSong(info.song);
+    if (!info || !song) return {};
+    const constant = song.constants[LEVELS.indexOf(info.level as LevelName)] ?? 0;
+    const tag = `${info.player.name}#${String(info.player.number).padStart(4, "0")}`;
     return {
       meta: [
         ...pageMeta({
-          title: t.song.watch,
-          description: t.leaderboard.description,
+          title: `${tag} · ${song.title} (${info.level})`,
+          description: `${song.artist} · ${info.level} ${constant.toFixed(1)} · ${score7(info.score)} · ${info.accuracy.toFixed(2)}%`,
           path: `/replays/${params.id}`,
           locale,
+          themeColor: info.themeColor,
+          image: {
+            url: `${SITE}/og/replay/${params.id}.jpg`,
+            ...CARDS.replay,
+            alt: `${tag}, ${song.title} (${info.level}), ${score7(info.score)}`,
+          },
         }),
         { name: "robots", content: "noindex" },
       ],
@@ -87,7 +105,12 @@ function drawFingers(header: ReplayHeader, frames: ReplayFrame[]) {
 }
 
 /** The judged play laid on the parsed chart's notes: a line's notes are its notes above, then below. */
-function toPlay(raw: RawChart, chart: Chart, result: Result): Play & { hits: Chart["hits"] } {
+function toPlay(
+  raw: RawChart,
+  chart: Chart,
+  result: Result,
+  challenge: boolean,
+): Play & { hits: Chart["hits"] } {
   const judged: Play["judged"] = new Map();
   const hits: Chart["hits"] = [];
   for (const hit of result.hits) {
@@ -99,15 +122,44 @@ function toPlay(raw: RawChart, chart: Chart, result: Result): Play & { hits: Cha
       hits.push({ sec: hit.hit, type: note.type });
   }
   hits.sort((a, b) => a.sec - b.sec);
+  // the judgements in the order they came, each with the counts and the max combo up to it
+  const KINDS = ["perfect", "good", "bad", "miss"] as const;
+  const byTime = [...result.hits].sort((a, b) => a.t - b.t);
+  const counts: [number, number, number, number][] = [];
+  for (const hit of byTime) {
+    const next = [...(counts.at(-1) ?? [0, 0, 0, 0])] as [number, number, number, number];
+    next[KINDS.indexOf(hit.judgement)]!++;
+    counts.push(next);
+  }
+  const maxcombo: number[] = [];
+  for (const [, combo] of result.timeline) maxcombo.push(Math.max(maxcombo.at(-1) ?? 0, combo));
   const state = (t: number) => {
-    const entry = result.timeline[countUpTo(result.timeline, t, ([time]) => time) - 1];
-    return { combo: entry?.[1] ?? 0, score: entry?.[2] ?? 0 };
+    const step = countUpTo(result.timeline, t, ([time]) => time) - 1;
+    const entry = result.timeline[step];
+    return {
+      combo: entry?.[1] ?? 0,
+      score: entry?.[2] ?? 0,
+      maxcombo: maxcombo[step] ?? 0,
+      counts: counts[countUpTo(byTime, t, (hit) => hit.t) - 1] ?? [0, 0, 0, 0],
+    };
   };
-  return { judged, state, hits };
+  // drags and flicks are judged on time, they have no timing to show
+  const timing: Play["timing"] = [];
+  let average = 0;
+  for (const hit of [...result.hits].sort((a, b) => (a.hit ?? a.t) - (b.hit ?? b.t))) {
+    if (!hit.offset || hit.judgement === "miss") continue;
+    average = average * 0.9 + hit.offset * 1000 * 0.1;
+    timing.push({ at: hit.hit ?? hit.t, ms: hit.offset * 1000, judgement: hit.judgement, average });
+  }
+  const windows = (challenge ? CHALLENGE : WINDOWS).map(
+    (window) => window * 1000,
+  ) as Play["windows"];
+  return { judged, state, hits, timing, windows };
 }
 
 function ReplayPage() {
   const { id } = Route.useParams();
+  const info = Route.useLoaderData();
   const t = useT();
   const format = useFormat();
   const [replay, setReplay] = useState<{ header: ReplayHeader; frames: ReplayFrame[] }>();
@@ -145,7 +197,12 @@ function ReplayPage() {
     () =>
       replay &&
       chart &&
-      toPlay(chart.raw, chart.parsed, judge(chart.raw, replay.frames, replay.header)),
+      toPlay(
+        chart.raw,
+        chart.parsed,
+        judge(chart.raw, replay.frames, replay.header),
+        replay.header.challenge === 1,
+      ),
     [replay, chart],
   );
 
@@ -168,8 +225,9 @@ function ReplayPage() {
             <div className="chart-player-heading">
               <h1 className="panel-title">{song.title}</h1>
               <p className="meta">
-                {level} {constant.toFixed(1)} · {score7(header.score)} ·{" "}
-                {header.accuracy.toFixed(2)}% · {format.date(header.date * 1000)}
+                <PlayerTag player={info.player} /> · {level} {constant.toFixed(1)} ·{" "}
+                {score7(header.score)} · {header.accuracy.toFixed(2)}% ·{" "}
+                {format.date(header.date * 1000)}
               </p>
             </div>
             <Rank score={header.score} fc={header.bad + header.miss === 0} />
@@ -181,6 +239,7 @@ function ReplayPage() {
             key={id}
             chart={chart.parsed}
             background={`/covers/${song.id}.avif`}
+            music={`/music/${song.id}.webm`}
             title={song.title}
             level={`${level}  Lv.${Math.floor(constant)}`}
             overlay={overlay}

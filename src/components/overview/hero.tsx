@@ -5,7 +5,6 @@ import { useT } from "../../i18n";
 import type { RankingResult } from "../../metrics";
 import { countLevels, LEVELS } from "../../modules";
 import { Avatar, challengeRank, dataAmount, LevelStats, Stat } from "../primitives";
-import { ShareCard } from "../share";
 
 /** The in-game profile strip (avatar, name, RKS tag, Challenge Mode badge), overall totals, self-intro and
  * per-difficulty completion. */
@@ -37,13 +36,6 @@ export function Hero({
     );
   return (
     <section className="hero" aria-labelledby="hero-name">
-      <ShareCard
-        ranking={ranking}
-        songs={songs}
-        playerName={playerName}
-        avatar={avatar}
-        challenge={document.gameProgress.challengeModeRank}
-      />
       <div className="hero-id">
         <Avatar className="hero-avatar" name={avatar} />
         <h1 id="hero-name" className="hero-name">

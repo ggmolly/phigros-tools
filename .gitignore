@@ -8,6 +8,8 @@ dist/
 
 # Local-only: deploys happen from this machine, which keeps these (see scripts/build-cover-og.ts)
 public/covers/*.og.jpg
+# the songs' music, encoded from the game (see scripts/build-music.ts)
+public/music/
 scripts/
 
 # local SQLite DB + secret config

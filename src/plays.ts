@@ -1,3 +1,6 @@
+import { createServerFn } from "@tanstack/react-start";
+import { serverFetch } from "nitro/app";
+import accents from "./accents.json";
 /** The leaderboard, from players' uploaded bests: `GET /api/players`, `GET /api/charts` and `GET /api/charts/<id>/<level>`. */
 
 /** A player as the site shows them: their avatar and name#number, and the id their page is at. */
@@ -25,6 +28,24 @@ export interface Play {
   date: number | null;
   /** The replay to watch, null for an imported record. */
   replay: string | null;
+}
+
+/** Who played a replay and what they got, from `GET /api/replays/<id>/info`. */
+export interface ReplayInfo {
+  player: PlayerName;
+  song: string;
+  level: string;
+  status: "pending" | "verified" | "unverified";
+  /** When it was played, in ms. */
+  date: number;
+  score: number;
+  accuracy: number;
+  fc: boolean;
+  maxcombo: number;
+  perfect: number;
+  good: number;
+  bad: number;
+  miss: number;
 }
 
 /** How many players a chart has and the best ones. */
@@ -88,6 +109,8 @@ export const LIST_MORE = 30;
 export interface PlayerProfile {
   player: PlayerName;
   intro: string;
+  /** The illustration they show in Phigros, a song id ("Introduction" by default, empty when not shared). */
+  background: string;
   rks: number;
   /** Among listed players by RKS, null while unlisted or without RKS. */
   rank: number | null;
@@ -96,8 +119,6 @@ export interface PlayerProfile {
   seen: number;
   stats: {
     plays: number;
-    /** Seconds spent playing. */
-    time: number;
     /** Perfects, goods and bads. */
     notes: number;
     /** The average accuracy of their plays, null before any. */
@@ -116,3 +137,37 @@ export interface PlayerProfile {
 }
 
 export const PLAYS_PAGE = 50;
+
+/** The sizes of the link preview images of players and replays (server/card.tsx). */
+export const CARDS = { player: { width: 1600, height: 900 }, replay: { width: 1200, height: 630 } };
+
+// the API read inside the server, during the server render too, so link previews show what the page does
+async function api<T>(path: string): Promise<T | null> {
+  const response = await serverFetch(path);
+  return response.ok ? response.json() : null;
+}
+
+// a song's cover colour (scripts/build-accents.ts), the stripe of its link previews like on the chart pages
+const accentOf = (song: string | undefined): string | undefined =>
+  song && (accents as Record<string, string>)[song];
+
+/** A player's page with the colour of their illustration, else of their top chart, null for an unknown id. */
+export const getProfile = createServerFn({ method: "GET" })
+  .validator((id: string) => id)
+  .handler(async ({ data: id }) => {
+    const profile = await api<PlayerProfile>(`/api/players/${encodeURIComponent(id)}`);
+    return (
+      profile && {
+        ...profile,
+        themeColor: accentOf(profile.background) ?? accentOf(profile.top[0]?.song),
+      }
+    );
+  });
+
+/** Who played a replay with the colour of its song, null for an unknown one. */
+export const getReplayInfo = createServerFn({ method: "GET" })
+  .validator((id: string) => id)
+  .handler(async ({ data: id }) => {
+    const info = await api<ReplayInfo>(`/api/replays/${encodeURIComponent(id)}/info`);
+    return info && { ...info, themeColor: accentOf(info.song) };
+  });

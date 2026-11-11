@@ -1,4 +1,4 @@
-import type { CSSProperties, Ref } from "react";
+import type { CSSProperties, ReactNode, Ref } from "react";
 import { useFormat, useT } from "../i18n";
 import { LEVELS, type LevelName } from "../modules";
 
@@ -191,6 +191,7 @@ export function Slider({
   className = "",
   boxRef,
   inputRef,
+  children,
 }: {
   value?: number;
   min: number;
@@ -201,6 +202,8 @@ export function Slider({
   className?: string;
   boxRef?: Ref<HTMLDivElement>;
   inputRef?: Ref<HTMLInputElement>;
+  /** drawn on the track, under the thumb */
+  children?: ReactNode;
 }) {
   const style =
     value === undefined ? undefined : ({ "--p": (value - min) / (max - min) } as CSSProperties);
@@ -218,6 +221,7 @@ export function Slider({
         onChange={(event) => onChange(Number(event.currentTarget.value))}
       />
       <span className="slider-fill" aria-hidden="true" />
+      {children}
       <span className="slider-thumb" aria-hidden="true" />
     </div>
   );

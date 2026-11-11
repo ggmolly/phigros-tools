@@ -1,9 +1,15 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
 import { catalogSong, isLevel, songLevels } from "../catalog";
 import { Arrow } from "../components/arrow";
 import { SiteHeader } from "../components/chrome";
-import { Pager, PlayCells, PlayHeadings, RankingSearch, ScopeSwitch } from "../components/plays";
+import {
+  Pager,
+  PlayCells,
+  PlayHeadings,
+  RankingSearch,
+  ScopeSwitch,
+  useJson,
+} from "../components/plays";
 import { Difficulty } from "../components/primitives";
 import { useFormat, useT } from "../i18n";
 import { LEVELS, type LevelName } from "../modules";
@@ -39,16 +45,9 @@ function PlaysPage() {
   const format = useFormat();
   const song = catalogSong(params.id)!; // the loader 404s unknown songs and levels
   const level = params.level as LevelName;
-  const [chart, setChart] = useState<ChartPlays>();
-
-  useEffect(() => {
-    setChart(undefined);
-    fetch(
-      `/api/charts/${encodeURIComponent(song.id)}/${level}?page=${page}${verified ? "&verified=1" : ""}`,
-    )
-      .then((response) => response.json())
-      .then(setChart);
-  }, [song.id, level, page, verified]);
+  const chart = useJson<ChartPlays>(
+    `/api/charts/${encodeURIComponent(song.id)}/${level}?page=${page}${verified ? "&verified=1" : ""}`,
+  );
 
   const pages = Math.max(1, Math.ceil((chart?.count ?? 0) / PLAYS_PAGE));
   const constant = song.constants[LEVELS.indexOf(level)] ?? 0;
@@ -83,6 +82,7 @@ function PlaysPage() {
                 key={name}
                 to="/charts/$id/plays/$level"
                 params={{ id: song.id, level: name }}
+                search={{ verified: verified || undefined }}
                 aria-current={name === level ? "page" : undefined}
               >
                 <Difficulty level={name} />

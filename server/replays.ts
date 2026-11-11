@@ -2,7 +2,14 @@ import { mkdirSync } from "node:fs";
 import { calculateRanking } from "../src/metrics";
 import { LEVELS, type LevelName, type SongRecord } from "../src/modules";
 import type { ReplayHeader } from "../src/pigeon";
-import type { ChartCount, ChartPlays, PlayerName, PlayerRanking, PlayStatus } from "../src/plays";
+import type {
+  ChartCount,
+  ChartPlays,
+  PlayerName,
+  PlayerRanking,
+  PlayStatus,
+  ReplayInfo,
+} from "../src/plays";
 import { sqlite } from "./db";
 import { fold, setRks } from "./players";
 
@@ -140,6 +147,36 @@ export function countReplay(sha256: string, header: ReplayHeader) {
     updateRks(key);
     return { key, song, level, raised };
   })();
+}
+
+const about = sqlite.prepare<
+  PlayerName & { song: string; level: string; header: string; status: ReplayInfo["status"] },
+  [string]
+>(
+  `SELECT r.song, r.level, r.header, r.status, p.id, p.name, p.number, p.avatar FROM replays r JOIN players p ON p.key = r.key
+   WHERE r.sha256 = ?`,
+);
+
+/** Who played a replay and what they got. */
+export function replayInfo(sha256: string): ReplayInfo | undefined {
+  const row = about.get(sha256);
+  if (!row) return undefined;
+  const header = JSON.parse(row.header) as ReplayHeader;
+  return {
+    player: { id: row.id, name: row.name, number: row.number, avatar: row.avatar },
+    song: row.song,
+    level: row.level,
+    status: row.status,
+    date: header.date * 1000,
+    score: header.score,
+    accuracy: header.accuracy,
+    fc: header.bad + header.miss === 0,
+    maxcombo: header.maxcombo,
+    perfect: header.perfect,
+    good: header.good,
+    bad: header.bad,
+    miss: header.miss,
+  };
 }
 
 const chartPage = sqlite.prepare<

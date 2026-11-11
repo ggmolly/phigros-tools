@@ -1,4 +1,4 @@
-import { score7 } from "../components/primitives";
+import { rankOf, score7 } from "../components/primitives";
 import {
   type Chart,
   countUpTo,
@@ -35,7 +35,17 @@ export type Art = Record<(typeof NOTES)[number], HTMLImageElement> & {
 export interface Play {
   /** hit: when it was hit (a hold: its head, also when dropped later), end: when its judgement came */
   judged: Map<Note, { judgement: "perfect" | "good" | "bad" | "miss"; hit?: number; end: number }>;
-  state: (t: number) => { combo: number; score: number };
+  /** counts: the perfects, goods, bads and misses judged so far */
+  state: (t: number) => {
+    combo: number;
+    score: number;
+    maxcombo: number;
+    counts: [number, number, number, number];
+  };
+  /** the hits with a timing (drags and flicks have none) by time: ms late (negative early), and osu!'s running average */
+  timing: { at: number; ms: number; judgement: "perfect" | "good" | "bad"; average: number }[];
+  /** the perfect, good and bad windows in ms */
+  windows: [number, number, number];
 }
 
 const NOTE_W = 989;
@@ -48,6 +58,9 @@ const HIT_LIFE = 0.5;
 const HIT_FRAMES = 30;
 const HIT_CELL = 256;
 const HIT_TINT = "rgb(255 236 160)";
+// the timing bar, like the Phigros++ HUD (mod/mods/hud.lua) scaled to this score font
+const JUDGE_COLORS = { perfect: "#ffeca0", good: "#a2eeff", bad: "#e2696d" };
+const BAR = { length: 510, thickness: 3.6, tick: 19.4, ticks: 50, y: 985 };
 const GOOD_TINT = "rgb(160 225 255)";
 const MISSED_LIFE = 0.25; // a missed note fades out past its line
 const HIT_ALPHA = 0.88;
@@ -336,4 +349,68 @@ export function drawHud(
     text(String(combo), right / 2, 80, 82, "center");
     text("combo", right / 2, 117.4, 39, "center", { family: "Saira, sans-serif" });
   }
+  if (play && state) drawJudgements(ctx, play, state, t, px, right, text);
+}
+
+const outQuint = (x: number) => 1 - (1 - x) ** 5;
+
+// a replay's accuracy and the grade it's heading for under the score, and the hits' timings on a bar
+function drawJudgements(
+  ctx: CanvasRenderingContext2D,
+  play: Play,
+  state: ReturnType<Play["state"]>,
+  t: number,
+  px: number,
+  right: number,
+  text: (str: string, x: number, y: number, size: number, align: CanvasTextAlign) => void,
+) {
+  const [perfect, good, bad, miss] = state.counts;
+  const judged = perfect + good + bad + miss;
+  if (judged > 0) {
+    const exact = (perfect + 0.65 * good) / judged;
+    const fc = bad + miss === 0;
+    // the grade if the rest of the chart goes like it went so far
+    const pace = 900_000 * exact + (fc ? 100_000 : (100_000 * state.maxcombo) / judged);
+    const rank = rankOf(Math.round(pace), fc);
+    const accuracy = `${(Math.floor(exact * 10_000) / 100).toFixed(2)}%`;
+    const size = 33.3;
+    const y = 120;
+    text(accuracy, right - 40.5, y, size, "right");
+    const grade = right - 40.5 - ctx.measureText(accuracy).width / px - size * 0.35;
+    ctx.fillStyle = rank === "φ" ? "#f5f25b" : fc ? "#4f8df5" : "#fff";
+    text(rank, grade, rank === "φ" ? y - size * 0.12 : y, size, "right"); // φ sits low in this font
+    ctx.fillStyle = "#fff";
+  }
+
+  const centre = right / 2;
+  const x = (ms: number) => (Math.max(-1, Math.min(1, ms / play.windows[2])) * BAR.length) / 2;
+  const rect = (cx: number, cy: number, w: number, h: number) =>
+    ctx.fillRect((cx - w / 2) * px, (cy - h / 2) * px, w * px, h * px);
+  (["bad", "good", "perfect"] as const).forEach((kind, i) => {
+    ctx.fillStyle = JUDGE_COLORS[kind];
+    rect(centre, BAR.y, x(play.windows[2 - i]!) * 2, BAR.thickness);
+  });
+  ctx.fillStyle = "#fff";
+  rect(centre, BAR.y, 2, BAR.tick * 0.6);
+  // osu! BarHitErrorMeter: a tick fades in over 100 ms, then fades and shrinks over 5 s
+  const shown = countUpTo(play.timing, t, (hit) => hit.at);
+  for (let i = shown - 1; i >= Math.max(0, shown - BAR.ticks); i--) {
+    const hit = play.timing[i]!;
+    const age = (t - hit.at) * 1000;
+    if (age >= 5100) break;
+    const fade = age < 100 ? outQuint(age / 100) : 1 - (age - 100) / 5000;
+    const length = age < 100 ? outQuint(age / 100) : 1 - ((age - 100) / 5000) ** 5;
+    ctx.globalAlpha = 0.6 * fade;
+    ctx.fillStyle = JUDGE_COLORS[hit.judgement];
+    rect(centre + x(hit.ms), BAR.y, BAR.thickness, BAR.tick * length);
+  }
+  ctx.globalAlpha = 1;
+  // the running average, a small diamond under the bar
+  const average = play.timing[shown - 1]?.average ?? 0;
+  ctx.fillStyle = "#fff";
+  ctx.save();
+  ctx.translate((centre + x(average)) * px, (BAR.y + BAR.tick * 0.75) * px);
+  ctx.rotate(Math.PI / 4);
+  ctx.fillRect(-3.5 * px, -3.5 * px, 7 * px, 7 * px);
+  ctx.restore();
 }

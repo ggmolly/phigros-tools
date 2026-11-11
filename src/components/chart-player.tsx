@@ -1,9 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import { useT } from "../i18n";
 import { type Chart, countUpTo } from "../player/chart";
 import { HitSounds } from "../player/hit-sounds";
 import { type Art, drawHud, drawScene, loadArt, type Play } from "../player/render";
-import { findShift } from "../player/sync";
 import { Slider, Switch } from "./primitives";
 
 const SPEEDS = [0.1, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
@@ -17,9 +16,9 @@ function savedVolume() {
   try {
     const saved = localStorage.getItem(VOLUME_KEY);
     const volume = Number(saved);
-    return saved !== null && volume >= 0 && volume <= 1 ? volume : 1;
+    return saved !== null && volume >= 0 && volume <= 1 ? volume : 0.5;
   } catch {
-    return 1;
+    return 0.5;
   }
 }
 
@@ -32,6 +31,7 @@ function clockTime(seconds: number) {
 export function ChartPlayer({
   chart,
   background,
+  music,
   title,
   level,
   startAt = 0,
@@ -40,6 +40,8 @@ export function ChartPlayer({
 }: {
   chart: Chart;
   background: string;
+  /** the song's music, streamed (public/music, see scripts/build-music.ts) */
+  music: string;
   title: string;
   level: string;
   startAt?: number;
@@ -53,7 +55,6 @@ export function ChartPlayer({
   const scrub = useRef<HTMLInputElement>(null);
   const scrubBox = useRef<HTMLDivElement>(null);
   const elapsed = useRef<HTMLSpanElement>(null);
-  const picker = useRef<HTMLInputElement>(null);
   const clock = useRef({ base: 0, wall: 0, playing: false, rate: 1 });
   const audio = useRef<HTMLAudioElement>(null);
   const [volume, setVolume] = useState(savedVolume);
@@ -67,12 +68,9 @@ export function ChartPlayer({
   const [playing, setPlaying] = useState(false);
   const [audioDuration, setAudioDuration] = useState(0);
   const [rate, setRate] = useState(1);
-  const [songName, setSongName] = useState<string>();
   const [hitSoundsOn, setHitSoundsOn] = useState(true);
   /** the user's offset in ms: positive makes the notes come later against the song */
   const [offset, setOffset] = useState(0);
-  const songFile = useRef<File>(undefined);
-  const [sync, setSync] = useState<"idle" | "busy" | "failed">("idle");
   /** seconds into the song where chart time 0 falls */
   const lead = chart.offset + offset / 1000;
   const leadRef = useRef(lead); // for the frame loop
@@ -85,14 +83,36 @@ export function ChartPlayer({
   const duration = Math.max(chart.duration, audioDuration - lead);
   const start = Math.min(0, -lead);
   const offsetRange = Math.max(1000, Math.ceil(Math.abs(offset) / 1000) * 1000);
+  // a replay's goods (blue, like in the game) and its bads and misses, marked on the seek bar where they happened.
+  // a chord's notes judged alike at once share one mark
+  const marks = useMemo(() => {
+    const unique = new Map<string, { at: number; good: boolean }>();
+    for (const note of play?.judged.values() ?? []) {
+      if (note.judgement === "perfect") continue;
+      const mark = { at: note.hit ?? note.end, good: note.judgement === "good" };
+      unique.set(`${mark.at}${mark.good}`, mark);
+    }
+    return [...unique];
+  }, [play]);
 
   useEffect(() => {
     void loadArt().then(setArt);
   }, []);
 
+  // the player is remounted per song, so its music is made once
+  // biome-ignore lint/correctness/useExhaustiveDependencies: volume and rate follow their setters afterwards.
+  useEffect(() => {
+    const song = new Audio(music);
+    song.volume = volume;
+    song.defaultPlaybackRate = rate;
+    song.onloadedmetadata = () => setAudioDuration(song.duration);
+    song.onended = () => setPlaying(false);
+    audio.current = song;
+    return () => song.pause();
+  }, [music]);
+
   useEffect(
     () => () => {
-      audio.current?.pause();
       hitSounds.close();
       window.clearTimeout(copiedTimer.current);
     },
@@ -177,30 +197,7 @@ export function ChartPlayer({
     seek(Math.max(start, first - FIRST_NOTE_LEAD), playing);
   };
 
-  const changeOffset = (ms: number) => {
-    setOffset(Math.round(ms));
-    setSync("idle");
-  };
-
-  const autoSync = async () => {
-    const file = songFile.current;
-    if (!file) return;
-    setSync("busy");
-    try {
-      const context = new OfflineAudioContext(1, 1, 44100);
-      const decoded = await context.decodeAudioData(await file.arrayBuffer());
-      if (songFile.current !== file) return; // another song was loaded meanwhile
-      const shift = findShift(
-        decoded,
-        chart.hits.map((hit) => hit.sec),
-      );
-      if (shift === undefined) return setSync("failed");
-      setOffset(Math.round((shift - chart.offset) * 1000));
-      setSync("idle");
-    } catch {
-      setSync("failed");
-    }
-  };
+  const changeOffset = (ms: number) => setOffset(Math.round(ms));
 
   const changeVolume = (next: number) => {
     setVolume(next);
@@ -225,27 +222,6 @@ export function ChartPlayer({
       window.clearTimeout(copiedTimer.current);
       copiedTimer.current = window.setTimeout(() => setCopied(0), 1800); // the note's animation length
     });
-  };
-
-  const loadSong = (file: File | undefined) => {
-    if (!file) return;
-    const at = now();
-    const previous = audio.current;
-    if (previous) {
-      previous.pause();
-      URL.revokeObjectURL(previous.src);
-    }
-    const song = new Audio(URL.createObjectURL(file));
-    song.volume = volume;
-    song.defaultPlaybackRate = rate;
-    song.playbackRate = rate;
-    song.onloadedmetadata = () => setAudioDuration(song.duration);
-    song.onended = () => setPlaying(false);
-    audio.current = song;
-    songFile.current = file;
-    setSongName(file.name);
-    setSync("idle");
-    seek(at, false);
   };
 
   return (
@@ -281,7 +257,16 @@ export function ChartPlayer({
           boxRef={scrubBox}
           inputRef={scrub}
           onChange={(t) => seek(t, playing)}
-        />
+        >
+          {marks.map(([key, mark]) => (
+            <span
+              key={key}
+              className={mark.good ? "seek-mark seek-mark-good" : "seek-mark"}
+              style={{ "--at": (mark.at - start) / (duration - start) } as CSSProperties}
+              aria-hidden="true"
+            />
+          ))}
+        </Slider>
         <span className="num chart-player-time">{clockTime(duration)}</span>
       </div>
       <section className="panel chart-player-settings" aria-label={t.player.settings}>
@@ -351,24 +336,6 @@ export function ChartPlayer({
         </div>
         <div className="player-setting">
           <div className="player-setting-head">
-            <span>{t.player.song}</span>
-          </div>
-          <div className="player-song">
-            <button type="button" className="btn btn-ghost" onClick={() => picker.current?.click()}>
-              {songName ? t.player.change : t.player.loadSong}
-            </button>
-            {songName && <span className="meta">{songName}</span>}
-          </div>
-          <input
-            ref={picker}
-            type="file"
-            accept="audio/*"
-            hidden
-            onChange={(event) => loadSong(event.currentTarget.files?.[0])}
-          />
-        </div>
-        <div className="player-setting">
-          <div className="player-setting-head">
             <span>{t.player.offset}</span>
             <span className="num">{offset > 0 ? `+${offset}` : offset} ms</span>
           </div>
@@ -398,24 +365,13 @@ export function ChartPlayer({
               +
             </button>
           </div>
-          <div className="player-song">
-            <button
-              type="button"
-              className="btn btn-ghost"
-              disabled={!songName || sync === "busy"}
-              onClick={() => void autoSync()}
-            >
-              {sync === "busy" ? t.player.syncing : t.player.autoSync}
-            </button>
-            {offset !== 0 && (
+          {offset !== 0 && (
+            <div className="player-song">
               <button type="button" className="btn btn-ghost" onClick={() => changeOffset(0)}>
                 {t.player.reset}
               </button>
-            )}
-            <span className="meta" role="status">
-              {!songName ? t.player.loadHint : sync === "failed" ? t.player.syncFailed : ""}
-            </span>
-          </div>
+            </div>
+          )}
         </div>
       </section>
     </div>

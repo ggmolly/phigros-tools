@@ -14,8 +14,8 @@ const C = f(16 / 9); // the aspect charts are laid out for, compared against
 const C2 = 1.7777780294418335; // and divided by
 // perfect, good and bad windows in seconds, normal play. challenge mode narrows them to these plus half the average
 // of the last 10 delta times
-const WINDOWS = [0.07999999821186066, 0.18000000715255737, 0.2199999988079071];
-const CHALLENGE = [0.03999999910593033, 0.09000000357627869, 0.14000000059604645];
+export const WINDOWS = [0.07999999821186066, 0.18000000715255737, 0.2199999988079071];
+export const CHALLENGE = [0.03999999910593033, 0.09000000357627869, 0.14000000059604645];
 const NEAR = 0.009999999776482582; // notes this close in time compete by distance
 const TAP_REACH = 1.899999976158142; // world units along the line
 const REACH = 2.0999999046325684; // for drags and flicks

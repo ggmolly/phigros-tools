@@ -22,12 +22,6 @@ The background fog takes on the colours of the selected song's cover.
 
 ![Overview tinted with the selected song's colours](docs/screenshots/07-song-colours.png)
 
-### Share card
-
-A summary image of your RKS, counts and best charts, to download as PNG or copy.
-
-![Share card dialog](docs/screenshots/08-share-dialog.png)
-
 ### Records
 
 Every chart you've played, searchable, filterable by difficulty and clear status (not FC, FC but not φ, φ), and sortable, including by how much an All Perfect would raise your RKS.
@@ -71,8 +65,13 @@ with a **Watch** link on each verified one: the chart plays back with their fing
 combo.
 
 Records the game declares are marked **Imported**. An uploaded replay counts once the worker has judged it with a port
-of the game's judgement (`src/judge.ts`) and its touches give the result the game recorded: it's then **Verified**. A
-replay that gives another result doesn't count.
+of the game's judgement (`src/judge.ts`) and its touches give the result the game recorded: it's then **Verified**, and
+replaces an imported record of the same score, so a player can prove their records by playing them again. A replay that
+gives another result doesn't count.
+
+Links to a player or a replay show a preview on Discord and other apps, coloured like the song's cover: the player's
+card (their RKS, counts and best charts), or the replay's (score, rank, accuracy and judgements), both drawn by
+`server/card.tsx`.
 
 Screenshots use a fictional demo save; regenerate them with `scripts/screenshots.ts` (see its header).
 
@@ -100,6 +99,6 @@ The export reads the APKs' `assets/bin/Data` unzipped into `../extract/game_data
 
 ## Credits
 
-Saira, Noto Sans SC and Noto Sans Armenian fonts under the OFL, DejaVu Sans under its own license, see `LICENSES/`. The share card uses subsets of all four.
+Saira, Noto Sans SC and Noto Sans Armenian fonts under the OFL, DejaVu Sans under its own license, see `LICENSES/`. The player cards use subsets of all four.
 
 Unofficial third-party tool · Not affiliated with Pigeon Games.

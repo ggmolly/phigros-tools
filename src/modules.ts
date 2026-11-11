@@ -306,7 +306,7 @@ export function parseGameProgress(
   return result;
 }
 
-export function countLevels(songs: SongRecord[]) {
+export function countLevels(songs: Pick<SongRecord, "fc" | "levels">[]) {
   return LEVELS.map((_, level) => ({
     cleared: songs.filter((song) => (song.levels[level]?.accuracy ?? 0) > 0).length,
     fc: songs.filter((song) => (song.levels[level]?.accuracy ?? 0) > 0 && (song.fc >> level) & 1)

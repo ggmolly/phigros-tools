@@ -144,6 +144,7 @@ function PlayPage() {
             key={song.id}
             chart={chart}
             background={`/covers/${song.id}.avif`}
+            music={`/music/${song.id}.webm`}
             title={song.title}
             level={`${level}  Lv.${Math.floor(constant)}`}
             startAt={startAt}

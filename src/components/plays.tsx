@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import * as v from "valibot";
 import { useFormat, useT } from "../i18n";
 import type { Play, PlayerName, PlayStatus } from "../plays";
@@ -74,6 +75,21 @@ export function PlayHeadings({ before = [], after = [] }: { before?: string[]; a
       </tr>
     </thead>
   );
+}
+
+/** The JSON at a URL, refetched when it changes. The previous answer stays until the new one comes, and a late one is dropped. */
+export function useJson<T>(url: string) {
+  const [data, setData] = useState<T>();
+  useEffect(() => {
+    let current = true;
+    fetch(url)
+      .then((response) => response.json())
+      .then((json: T) => current && setData(json));
+    return () => {
+      current = false;
+    };
+  }, [url]);
+  return data;
 }
 
 /** Previous and next links around "Page X of Y", kept in the URL as ?page=. */

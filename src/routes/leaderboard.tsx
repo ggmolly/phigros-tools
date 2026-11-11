@@ -1,9 +1,9 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import * as v from "valibot";
 import { catalogSong, searchFold } from "../catalog";
 import { SiteHeader } from "../components/chrome";
-import { Pager, PlayerTag, RankingSearch, ScopeSwitch } from "../components/plays";
+import { Pager, PlayerTag, RankingSearch, ScopeSwitch, useJson } from "../components/plays";
 import { Difficulty } from "../components/primitives";
 import { useFormat, useT } from "../i18n";
 import { type ChartCount, PLAYS_PAGE, type PlayerRanking } from "../plays";
@@ -34,12 +34,9 @@ function Players() {
   const { page = 1, q = "", verified = false } = Route.useSearch();
   const navigate = useNavigate({ from: Route.fullPath });
   const t = useT();
-  const [ranking, setRanking] = useState<PlayerRanking>();
-  useEffect(() => {
-    fetch(`/api/players?page=${page}&q=${encodeURIComponent(q)}${verified ? "&verified=1" : ""}`)
-      .then((response) => response.json())
-      .then(setRanking);
-  }, [page, q, verified]);
+  const ranking = useJson<PlayerRanking>(
+    `/api/players?page=${page}&q=${encodeURIComponent(q)}${verified ? "&verified=1" : ""}`,
+  );
   return (
     <section className="panel">
       <div className="panel-head">
@@ -52,7 +49,14 @@ function Players() {
         aria-label={t.leaderboard.searchPlayers}
         value={q}
         onChange={(event) =>
-          void navigate({ search: { q: event.target.value || undefined }, replace: true })
+          void navigate({
+            search: (search) => ({
+              ...search,
+              q: event.target.value || undefined,
+              page: undefined,
+            }),
+            replace: true,
+          })
         }
       />
       <div className="chart-stats-scroll">
@@ -90,13 +94,8 @@ function Charts() {
   const { verified = false } = Route.useSearch();
   const t = useT();
   const format = useFormat();
-  const [charts, setCharts] = useState<ChartCount[]>([]);
+  const charts = useJson<ChartCount[]>(`/api/charts${verified ? "?verified=1" : ""}`) ?? [];
   const [query, setQuery] = useState("");
-  useEffect(() => {
-    fetch(`/api/charts${verified ? "?verified=1" : ""}`)
-      .then((response) => response.json())
-      .then(setCharts);
-  }, [verified]);
   const folded = searchFold(query);
   const shown = charts.flatMap((chart) => {
     const song = catalogSong(chart.song);

@@ -1,5 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { useState } from "react";
 import { catalogSong } from "../catalog";
 import { SiteHeader } from "../components/chrome";
 import { PlayStatusLabel } from "../components/plays";
@@ -8,25 +8,51 @@ import { RksHistory } from "../components/rks-history";
 import { useFormat, useT } from "../i18n";
 import {
   type Activity,
+  CARDS,
+  getProfile,
   LIST_FIRST,
   LIST_MORE,
   type Page,
   type PlayedChart,
   type PlayerProfile,
 } from "../plays";
-import { headT, pageMeta } from "../seo";
+import { headT, pageMeta, SITE } from "../seo";
 
-// players' pages change with every upload and unlisted ones must stay out of search results, so none are indexed
+// players' pages change with every upload and unlisted ones must stay out of search results, so none are indexed. their
+// link previews show the player's card (server/card.tsx)
 export const Route = createFileRoute("/players/$id")({
-  head: ({ params, match }) => {
+  loader: async ({ params }) => {
+    const profile = await getProfile({ data: params.id });
+    if (!profile) throw notFound();
+    return profile;
+  },
+  head: ({ params, loaderData: profile, match }) => {
     const { locale, t } = headT(match);
+    if (!profile) return {};
+    const { stats } = profile;
+    const tag = `${profile.player.name}#${String(profile.player.number).padStart(4, "0")}`;
+    const rks = `RKS ${profile.rks.toFixed(3)}`;
     return {
       meta: [
         ...pageMeta({
-          title: t.leaderboard.players,
-          description: t.leaderboard.description,
+          title: tag,
+          description: [
+            rks,
+            profile.rank && `${t.profile.globalRank} #${profile.rank}`,
+            `${t.common.cleared} ${stats.cleared} · FC ${stats.fc} · φ ${stats.phi}`,
+            stats.accuracy !== null && `${t.profile.accuracy} ${stats.accuracy.toFixed(2)}%`,
+            profile.intro,
+          ]
+            .filter(Boolean)
+            .join(" · "),
           path: `/players/${params.id}`,
           locale,
+          themeColor: profile.themeColor,
+          image: {
+            url: `${SITE}/og/player/${params.id}.jpg?rks=${profile.rks.toFixed(3)}`,
+            ...CARDS.player,
+            alt: `${tag}, ${rks}`,
+          },
         }),
         { name: "robots", content: "noindex" },
       ],
@@ -43,17 +69,16 @@ function Card({ profile }: { profile: PlayerProfile }) {
   const t = useT();
   const format = useFormat();
   const { stats } = profile;
-  const hours = Math.floor(stats.time / 3600);
-  const minutes = Math.floor((stats.time % 3600) / 60);
   const details = [
-    [t.profile.playTime, t.profile.duration(String(hours), String(minutes))],
     [t.profile.notesHit, format.number(stats.notes)],
     [t.profile.maxCombo, format.number(stats.maxcombo)],
     [t.profile.joined, format.date(profile.joined)],
     [t.profile.seen, format.date(profile.seen)],
   ];
+  const banner = catalogSong(profile.background);
   return (
     <section className="hero profile-card">
+      {banner && <img className="profile-banner" src={`/covers/${banner.id}.avif`} alt="" />}
       <div className="hero-id">
         <Avatar className="hero-avatar" name={profile.player.avatar} />
         <h1 className="hero-name">
@@ -82,7 +107,7 @@ function Card({ profile }: { profile: PlayerProfile }) {
       </div>
       <div className="stat-bar">
         <div className="stat-row">
-          <Stat label={t.common.cleared} value={stats.cleared} />
+          <Stat label={t.common.cleared} value={stats.cleared} className="profile-cleared" />
           <Stat label={t.menu.fullCombo} value={stats.fc} className="profile-fc" />
           <Stat label="Phi" value={stats.phi} className="profile-phi" />
         </div>
@@ -265,38 +290,16 @@ function RecentPlays({ profile }: { profile: PlayerProfile }) {
 }
 
 function PlayerPage() {
-  const { id } = Route.useParams();
-  const t = useT();
-  const [profile, setProfile] = useState<PlayerProfile | null>();
-
-  useEffect(() => {
-    setProfile(undefined);
-    fetch(`/api/players/${encodeURIComponent(id)}`)
-      .then((response) => (response.ok ? response.json() : null))
-      .then(setProfile);
-  }, [id]);
-
+  const profile = Route.useLoaderData();
   return (
     <>
       <SiteHeader />
       <main className="app-shell">
-        {profile === null && (
-          <section className="panel">
-            <h1 className="panel-title">{t.notFound.title}</h1>
-            <p className="meta">
-              {t.notFound.body} <Link to="/leaderboard">{t.tabs.leaderboard}</Link>
-            </p>
-          </section>
-        )}
-        {profile && (
-          <>
-            <Card profile={profile} />
-            <RksHistory history={profile.history} />
-            <TopPlays profile={profile} />
-            <RecentActivity profile={profile} />
-            <RecentPlays profile={profile} />
-          </>
-        )}
+        <Card profile={profile} />
+        <RksHistory history={profile.history} />
+        <TopPlays profile={profile} />
+        <RecentActivity profile={profile} />
+        <RecentPlays profile={profile} />
       </main>
     </>
   );

@@ -155,20 +155,21 @@ const card = sqlite.prepare<
     unlisted: number;
     created: number;
     seen: number;
+    background: string;
   },
   [string]
 >(
-  "SELECT key, id, name, number, avatar, intro, rks, unlisted, created, seen FROM players WHERE id = ?",
+  "SELECT key, id, name, number, avatar, intro, rks, unlisted, created, seen, background FROM players WHERE id = ?",
 );
 const rankOf = sqlite.prepare<{ rank: number }, [Uint8Array]>(
   `SELECT rank FROM (SELECT key, ROW_NUMBER() OVER (ORDER BY rks DESC, rks_at) AS rank FROM players
    WHERE rks > 0 AND unlisted = 0) WHERE key = ?`,
 );
 const totals = sqlite.prepare<
-  { plays: number; time: number; notes: number; accuracy: number | null; maxcombo: number },
+  { plays: number; notes: number; accuracy: number | null; maxcombo: number },
   [Uint8Array]
 >(
-  `SELECT COUNT(*) AS plays, COALESCE(SUM(duration), 0) AS time, COALESCE(SUM(perfect + good + bad), 0) AS notes,
+  `SELECT COUNT(*) AS plays, COALESCE(SUM(perfect + good + bad), 0) AS notes,
    AVG(accuracy) AS accuracy, COALESCE(MAX(maxcombo), 0) AS maxcombo FROM plays WHERE key = ?`,
 );
 const bestsOf = sqlite.prepare<
@@ -282,6 +283,7 @@ export function profilePage(id: string): PlayerProfile | undefined {
   return {
     player: { id: row.id, name: row.name, number: row.number, avatar: row.avatar },
     intro: row.intro,
+    background: row.background,
     rks: row.rks,
     rank: row.unlisted ? null : (rankOf.get(row.key)?.rank ?? null),
     joined: row.created,

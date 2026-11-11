@@ -7,7 +7,8 @@ import { player } from "../../players";
 import { queueVerify } from "../../queue";
 import { addReplay, REPLAY_DIR } from "../../replays";
 
-// a registered player's replay of a new record, signed by the same key as the request. sending it again changes nothing
+// a registered player's replay that beat or tied their record, signed by the same key as the request. a verified one
+// replaces an imported record of the same score. sending it again changes nothing
 export default defineHandler(async (event) => {
   const { key, body } = await signed(event);
   if (!player(key)) throw HTTPError.status(403, "Not registered");
