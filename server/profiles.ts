@@ -75,9 +75,6 @@ const insertPlay = sqlite.prepare<
   `INSERT INTO plays (key, song, level, score, accuracy, maxcombo, perfect, good, bad, miss, duration, played)
    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT DO NOTHING`,
 );
-const markSeen = sqlite.prepare<unknown, [number, Uint8Array]>(
-  "UPDATE players SET seen = ? WHERE key = ?",
-);
 
 /** Songs a player finished, one JSON object per line as the game sends them. Sending one again changes nothing. */
 export function addPlays(key: Uint8Array, text: string): number {
@@ -123,7 +120,6 @@ export function addPlays(key: Uint8Array, text: string): number {
         p.duration,
         p.played,
       );
-    markSeen.run(Date.now(), key);
   })();
   return plays.length;
 }

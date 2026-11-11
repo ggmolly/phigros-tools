@@ -29,6 +29,11 @@ sqlite.run(
   "CREATE INDEX IF NOT EXISTS idx_players_rank_verified ON players(rks_verified DESC, rks_verified_at)",
 );
 
+const touch = sqlite.prepare<unknown, [number, Uint8Array]>("UPDATE players SET seen = ? WHERE key = ?");
+
+/** The player was just online: any request their game signed says so. */
+export const markSeen = (key: Uint8Array) => touch.run(Date.now(), key);
+
 const NUMBERS = 9999;
 const NAME_LENGTH = 32;
 const INTRO_LENGTH = 500;

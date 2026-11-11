@@ -1,6 +1,7 @@
 import { createPublicKey, verify } from "node:crypto";
 import { type H3Event, HTTPError } from "nitro/h3";
 import { sqlite } from "./db";
+import { markSeen } from "./players";
 
 // spki der header of a raw ed25519 public key
 const SPKI = Buffer.from("302a300506032b6570032100", "hex");
@@ -52,5 +53,6 @@ export async function signed(event: H3Event): Promise<{ key: Uint8Array; body: U
   const last = lastTime.get(key)?.last_time ?? 0;
   if (time <= last) throw new HTTPError({ status: 409, message: "Old time", body: { last } });
   setTime.run(key, time);
+  markSeen(key);
   return { key, body: message.subarray(8) };
 }
