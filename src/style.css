@@ -736,16 +736,6 @@
 .sync-error .arrow-chip::before {
   background: var(--negative);
 }
-.sync-fix {
-  color: var(--dim);
-  font-size: 14px;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  white-space: nowrap;
-}
-.sync-fix:hover {
-  color: var(--text);
-}
 .sync-icon.spinning {
   animation: spin 0.9s linear infinite;
 }
@@ -1241,6 +1231,14 @@
   display: grid;
   gap: 2px;
   min-width: 0;
+}
+.menu-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-left: auto;
 }
 .menu-text {
   flex: 1;
@@ -2725,20 +2723,6 @@ dialog > .meta {
   display: grid;
   gap: 10px;
 }
-.guide-more {
-  margin-top: 4px;
-  color: var(--dim);
-}
-.guide-more summary {
-  cursor: pointer;
-}
-.guide-more summary:hover {
-  color: var(--text);
-}
-.guide-more .guide-steps {
-  margin-top: 10px;
-  color: var(--text);
-}
 #taptapDialog .seg {
   padding: 0;
 }
@@ -2773,15 +2757,9 @@ dialog > .meta {
   font-weight: 500;
   letter-spacing: 0.12em;
 }
-#guideDialog {
-  text-align: left;
-}
 dialog strong {
   color: var(--text);
   font-weight: 500;
-}
-#guideDialog .seg {
-  padding: 0;
 }
 .dialog-actions {
   display: flex;
@@ -2939,7 +2917,8 @@ dialog strong {
     display: none;
   }
 }
-@media (max-width: 1250px) {
+/* eight tabs and a player don't share one row below this */
+@media (max-width: 1720px) {
   .topbar {
     flex-wrap: wrap;
     height: auto;
@@ -3090,8 +3069,7 @@ dialog strong {
   .player-rks {
     margin-bottom: 0;
   }
-  .sync-row .sync-label,
-  .sync-fix {
+  .sync-row .sync-label {
     display: none;
   }
   .sync-row .arrow-chip {
@@ -3743,7 +3721,8 @@ main > .seg {
   font-size: 0.55em;
   margin-left: 6px;
 }
-.profile-card ~ .panel {
+.profile-card ~ .panel,
+.profile-card ~ .select-screen {
   margin-top: 18px;
 }
 .profile-list {
@@ -3801,40 +3780,10 @@ main > .seg {
     display: none;
   }
 }
-.rks-history {
-  position: relative;
-}
-.rks-history svg {
-  display: block;
-  width: 100%;
-  height: auto;
+.rks-plot {
   touch-action: pan-y;
 }
-.rks-history-grid {
-  stroke: var(--hairline);
-  stroke-width: 1;
-}
-.rks-history-label {
-  fill: var(--dim);
-  font-size: 13px;
-}
-.rks-history-line {
-  fill: none;
-  stroke: var(--glow);
-  stroke-width: 2;
-  stroke-linejoin: round;
-  stroke-linecap: round;
-}
-.rks-history-cross {
-  stroke: var(--faint);
-  stroke-width: 1;
-}
-.rks-history-dot {
-  fill: var(--glow);
-  stroke: var(--glass-strong);
-  stroke-width: 2;
-}
-.rks-history-tip {
+.rks-tip {
   position: absolute;
   top: 0;
   display: flex;
@@ -3842,16 +3791,13 @@ main > .seg {
   gap: 2px;
   margin: 0;
   padding: 8px 10px;
-  transform: translateX(-50%);
+  translate: 8px;
   background: var(--glass-strong);
   pointer-events: none;
   white-space: nowrap;
 }
-/* the chart shrinks with the screen, its labels stay readable */
-@media (max-width: 700px) {
-  .rks-history-label {
-    font-size: 26px;
-  }
+.rks-tip.end {
+  translate: calc(-100% - 8px);
 }
 @media (max-width: 720px) {
   .profile-card .stat-bar {
@@ -3875,4 +3821,156 @@ main > .seg {
   .profile-details dd {
     font-size: 17px;
   }
+}
+
+/* ---------- Phigros++ ---------- */
+.text-link {
+  color: var(--dim);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.text-link:hover {
+  color: var(--glow);
+}
+.small {
+  font-size: 14px;
+}
+.ppp-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 28px;
+  margin-bottom: 18px;
+}
+.ppp-bar-text {
+  flex: 1 1 320px;
+  font-size: 17px;
+}
+.ppp-bar-text .guide-steps {
+  margin: 10px 0 0;
+  color: var(--dim);
+  font-size: 15px;
+}
+.ppp-bar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.sign-in {
+  display: grid;
+  gap: 8px;
+}
+.code-field {
+  height: 52px;
+  font-size: 24px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.phrase-field {
+  height: auto;
+  padding: 10px 14px;
+  resize: vertical;
+  font: inherit;
+}
+.sign-in-actions {
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+.devices-head {
+  justify-content: space-between;
+}
+.device-invite {
+  display: grid;
+  gap: 6px;
+  margin: 18px 0;
+  padding: 16px 20px;
+  background: rgb(0 0 0 / 0.4);
+}
+.invite-code {
+  font-size: 40px;
+  letter-spacing: 0.15em;
+}
+.device-list li {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0;
+  border-top: 1px solid rgb(255 255 255 / 0.09);
+}
+.device-text {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+.device-name {
+  font-size: 19px;
+}
+.device-rename {
+  width: min(360px, 100%);
+  height: 36px;
+  font-size: 17px;
+}
+.device-pen {
+  padding: 0 18px;
+}
+.device-pen svg {
+  width: 18px;
+  height: 18px;
+}
+.device-text .meta {
+  font-size: 14px;
+}
+.ppp-page strong,
+.ppp-bar strong,
+.device-invite strong {
+  color: var(--text);
+  font-weight: 500;
+}
+.ppp-cta {
+  margin: 0 0 18px;
+  color: var(--dim);
+}
+.ppp-page {
+  display: grid;
+  gap: 18px;
+}
+.ppp-title {
+  font-size: 56px;
+  font-weight: 400;
+  line-height: 1.1;
+}
+.ppp-lead {
+  max-width: 60ch;
+  margin: 12px 0 22px;
+  font-size: 19px;
+}
+.ppp-download {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 22px;
+}
+.ppp-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+.ppp-features .panel-title {
+  margin-bottom: 8px;
+}
+.ppp-cases {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+  margin: 18px 0 22px;
+}
+.ppp-case {
+  padding: 16px 20px;
+  background: rgb(0 0 0 / 0.35);
+}
+.ppp-case h3 {
+  margin-bottom: 6px;
+  font-size: 18px;
+  font-weight: 400;
 }

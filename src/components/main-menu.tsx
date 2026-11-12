@@ -7,7 +7,7 @@ import { countLevels } from "../modules";
 import { useSave } from "../save-context";
 import type { Credential, SnapshotV1 } from "../store";
 import { Arrow, SyncIcon } from "./arrow";
-import { ImportGuide, ImportOptions } from "./import";
+import { ImportOptions } from "./import";
 import { Stat } from "./primitives";
 
 function MenuArt({ song }: { song?: string }) {
@@ -142,7 +142,10 @@ export function MainMenu() {
                   <div className="menu-import">
                     <ImportOptions />
                   </div>
-                  <ImportGuide className="btn menu-play" />
+                  <p className="menu-text">{t.ppp.pitch}</p>
+                  <Link to="/phigrospp" className="btn menu-play">
+                    {t.ppp.get} <Arrow />
+                  </Link>
                 </div>
               </>
             ) : (
@@ -171,12 +174,44 @@ function PlayerCard({
 }: {
   player: { credential: Credential; latest?: SnapshotV1; ranking?: RankingResult };
 }) {
-  const { sync, busy, syncPlayer, syncLabel } = useSave();
+  const { sync, busy, syncPlayer, syncLabel, openSnapshot, openSignIn, credentials } = useSave();
   const t = useT();
   const format = useFormat();
   const songs = latest?.document.songs ?? [];
   const counts = countLevels(songs);
   const syncing = sync && sync.playerId === credential.playerId ? sync.state : undefined;
+  // TapTap's cloud is gone: its logins open the copy this browser kept, to send it to Phigros++
+  if (credential.token)
+    return (
+      <>
+        <MenuHead kicker={t.menu.welcomeBack} title={credential.nickname ?? credential.playerId} />
+        <div className="menu-strip">
+          <p className="menu-text">
+            {latest ? t.ppp.taptapCard(format.date(latest.capturedAt)) : t.ppp.taptapCardNone}
+          </p>
+          <div className="menu-actions">
+            {!credentials.some((c) => c.signer) && (
+              <button
+                type="button"
+                className="btn btn-ghost"
+                onClick={() => openSignIn.current?.()}
+              >
+                {t.ppp.signInTitle}
+              </button>
+            )}
+            {latest && (
+              <button
+                type="button"
+                className="btn menu-play"
+                onClick={() => void openSnapshot(latest)}
+              >
+                {t.ppp.openSave} <Arrow />
+              </button>
+            )}
+          </div>
+        </div>
+      </>
+    );
   return (
     <>
       <MenuHead

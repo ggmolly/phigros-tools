@@ -3,7 +3,7 @@ import { signed } from "../../auth";
 import { player } from "../../players";
 import { storeSave } from "../../saves";
 
-// a registered player's whole save, replacing the one they sent before
+// a registered player's whole save and its summary, replacing the one they sent before
 export default defineHandler(async (event) => {
   const { key, body } = await signed(event);
   const found = player(key);

@@ -8,6 +8,9 @@ export const de = {
     history: "Verlauf",
     charts: "Charts",
     leaderboard: "Rangliste",
+    devices: "Geräte",
+    phigrospp: "Phigros++",
+    profile: "Profil",
     label: "Bereiche",
   },
   header: {
@@ -68,22 +71,6 @@ export const de = {
     code: "Code",
     newCode: "Neuer Code",
     openTapTap: "TapTap öffnen",
-    guideButton: "So importierst du",
-    guideTitle: "So importierst du",
-    guideClose: "Import-Anleitung schließen",
-    guideIntro:
-      "phigros.tools liest deinen **TapTap-Cloud-Spielstand**, synchronisiere ihn also zuerst: Öffne in Phigros **Einstellungen → Profil**, melde dich mit TapTap an und tippe auf **Jetzt synchronisieren**. Die globale und die chinesische Version funktionieren beide.",
-    step1: "Wähle **TapTap-Login** und deine Spielversion.",
-    step2:
-      "Scanne den QR-Code mit deinem Handy oder tippe auf **TapTap öffnen**, wenn du schon am Handy bist, und bestätige mit dem TapTap-Konto, mit dem du spielst.",
-    step3:
-      "Dein Spielstand wird geladen, und dieser Browser merkt sich den Login, damit **Synchronisieren** später neuere Spielstände lädt.",
-    usbSummary: "Stattdessen Android per USB",
-    usb1: "Öffne auf dem Handy **Einstellungen → Über das Telefon** und tippe siebenmal auf **Build-Nummer**, um die Entwickleroptionen freizuschalten.",
-    usb2: "Aktiviere in den **Entwickleroptionen** das **USB-Debugging**.",
-    usb3: "Schließe das Handy an einen Computer an und öffne diese Seite in **Chrome** oder **Edge** (Firefox und Safari können nicht mit USB-Geräten kommunizieren).",
-    usb4: "Wähle **Android (USB)**, dann dein Handy, und tippe auf dem Handy auf **Zulassen**.",
-    loginWithTapTap: "Mit TapTap anmelden",
   },
   seo: {
     siteDescription:
@@ -149,7 +136,6 @@ export const de = {
   tool: {
     skip: "Zum Inhalt springen",
     syncTitle: (date: string) => `Neuesten Cloud-Spielstand abrufen · zuletzt abgerufen ${date}`,
-    reenterToken: "Token erneut eingeben",
     player: (id: string) => `Spieler ${id}`,
     localSave: "Lokaler Spielstand",
     importTagline: "Lade deinen Phigros-Fortschritt",
@@ -196,7 +182,7 @@ export const de = {
     searchPlayers: "Name oder Name#0042 suchen",
     noPlayers: "Kein Spieler hat diesen Namen",
     noRanked: "Noch kein Spieler in der Rangliste",
-    noCharts: "Noch kein Chart hat Spiele",
+    noCharts: "Noch kein Chart hat Spiele. Spiel eins mit Phigros++, um der Erste zu sein.",
     description:
       "Phigros-Spieler nach RKS geordnet und die besten Runs jedes Charts, von Spielern, die mit Phigros++ synchronisieren.",
   },
@@ -486,6 +472,126 @@ export const de = {
     downloadFailed: (status: string) => `Spielstand-Download: HTTP ${status}`,
     jsonTooLarge: (mb: string) => `Das JSON überschreitet das Importlimit von ${mb} MB`,
     invalidJson: "Ungültiges JSON",
+    pppRemoved:
+      "Dieser Browser wurde aus dem Profil entfernt. Melde dich erneut an, um es zu öffnen.",
+    pppNoCode:
+      "Dieser Code funktioniert nicht, weil er schon benutzt wurde oder älter als 10 Minuten ist. Lass dir einen neuen geben.",
+    pppNoProfile:
+      "Mit diesen Wörtern wurde kein phigros.tools-Profil erstellt. Prüfe jedes Wort und ihre Reihenfolge.",
+    pppServer: (status: string) =>
+      `phigros.tools konnte nicht antworten (HTTP ${status}). Versuch es noch einmal.`,
+    pppWord: (word: string) => `„${word}“ ist keines der Wiederherstellungswörter.`,
+    pppWords: (count: string) =>
+      `Das sind ${count} Wörter, die Wiederherstellungsphrase hat aber 16.`,
+    pppNoSave:
+      "Phigros++ hat deinen Spielstand noch nicht hochgeladen. Aktiviere Upload my save unter Settings → Profile im Spiel.",
+    pppUnsupported:
+      "Mit diesem Browser kannst du dich nicht anmelden. Aktualisiere ihn oder nutze ein aktuelles Chrome, Firefox oder Safari.",
+  },
+  ppp: {
+    profile: "Phigros++-Profil",
+    profileDesc: "Melde dich über das Spiel an, um deinen Spielstand zu öffnen",
+    otherWays: "Andere Wege",
+    otherWaysDesc: "TapTap-Login, Android (USB), Session-Token",
+    taptapGone:
+      "Der Cloud-Spielstand von TapTap antwortet seit November 2026 nicht mehr, daher können diese Wege scheitern. Phigros++ speichert deinen Spielstand stattdessen auf phigros.tools.",
+    pitch:
+      "Phigros++ ergänzt das Spiel um Replays, ein HUD und Mods und bewahrt deinen Spielstand und deine Runs hier auf.",
+    get: "Phigros++ holen",
+    signInTitle: "Über Phigros++ anmelden",
+    signInStep1:
+      "Öffne in Phigros++ **Settings → Profile** und wähle **Sign in another device**, oder **Open in browser**, um nichts tippen zu müssen.",
+    signInStep2: "Gib hier den angezeigten Code ein.",
+    code: "Code",
+    signIn: "Anmelden",
+    signingIn: "Anmeldung läuft…",
+    usePhrase: "Stattdessen meine Wiederherstellungsphrase verwenden",
+    useCode: "Stattdessen einen Code aus dem Spiel verwenden",
+    phraseTitle: "Mit deiner Wiederherstellungsphrase anmelden",
+    phraseText:
+      "Gib die 16 Wörter, die Phigros++ unter **Settings → Profile → Show recovery phrase** angezeigt hat, in der richtigen Reihenfolge ein.",
+    phrase: "Wiederherstellungsphrase",
+    phraseNote:
+      "Die Wörter werden in diesem Browser zu deinem Schlüssel und nie verschickt. Danach bekommt dieser Browser einen eigenen Schlüssel, den du unter Geräte entfernen kannst.",
+    close: "Schließen",
+    signOut: "Abmelden",
+    signOutConfirm:
+      "Diesen Browser von deinem Phigros++-Profil abmelden? Seine Snapshots bleiben im Verlauf.",
+    move: "Dieser Spielstand existiert nur in diesem Browser. Schick ihn an Phigros++, um damit weiterzuspielen, mit Replays und deinen Runs in der Rangliste.",
+    send: "An Phigros++ senden",
+    sendConfirm: (name: string) =>
+      `Diesen Spielstand an das Phigros++ von ${name} senden? Beim nächsten Start bietet das Spiel an, ihn zu laden, und sagt, was er ersetzt.`,
+    sent: "Gesendet. Öffne Phigros++, um ihn zu laden.",
+    moveStep1:
+      "Installiere Phigros++ und aktiviere **Sync to phigros.tools** unter **Settings → Profile**.",
+    moveStep2:
+      "Wähle dort **Sign in another device** und dann **Open in browser**, oder melde dich hier mit dem angezeigten Code an.",
+    moveStep3: "Komm zu diesem Spielstand zurück und wähle **An Phigros++ senden**.",
+    taptapCard: (date: string) =>
+      `Die Cloud von TapTap antwortet nicht mehr, aber dieser Browser hat deinen Spielstand vom ${date} aufbewahrt. Öffne ihn, um ihn an Phigros++ zu senden.`,
+    taptapCardNone:
+      "Die Cloud von TapTap antwortet nicht mehr, und dieser Browser hat keine Kopie dieses Spielstands.",
+    openSave: "Meinen Spielstand öffnen",
+    olderSave: (date: string, rks: string) =>
+      `Dieser Browser hat außerdem einen Spielstand vom ${date} mit RKS ${rks} aufbewahrt, den du an Phigros++ senden kannst.`,
+    openIt: "Öffnen",
+    devicesTitle: "Geräte",
+    devicesText: (tag: string) =>
+      `Alles, was als ${tag} angemeldet ist. Ein entferntes Gerät kann deinen Spielstand nicht mehr synchronisieren, hoch- oder herunterladen, behält aber, was es schon heruntergeladen hat.`,
+    addDevice: "Gerät hinzufügen",
+    addDeviceText:
+      "Öffne in Phigros++ auf dem anderen Gerät **Settings → Profile**, wähle **Sign in to my profile** und gib diesen Code ein. Er funktioniert einmal, 10 Minuten lang.",
+    phraseRow: "Wiederherstellungsphrase",
+    phraseRowDesc:
+      "Deine 16 Wörter holen das Profil immer zurück, deshalb lassen sie sich nicht entfernen.",
+    thisBrowser: "Dieser Browser",
+    seen: (date: string) => `zuletzt gesehen am ${date}`,
+    added: (date: string) => `hinzugefügt am ${date}`,
+    remove: "Entfernen",
+    rename: "Umbenennen",
+    removeConfirm: (name: string) =>
+      `${name} entfernen? Es kann deinen Spielstand dann nicht mehr synchronisieren oder herunterladen.`,
+    signingInFromLink: "Anmeldung mit dem Code aus Phigros++…",
+    leaderboardCta: "Hier spielen alle mit Phigros++, das ihre Runs und Replays sendet.",
+    leaderboardJoin: "In die Rangliste kommen",
+  },
+  pppPage: {
+    description:
+      "Phigros mit Replays, einem HUD und Lua-Mods, installiert als eigene App neben dem Spiel. Es bewahrt deinen Spielstand, deine Rekorde und Replays auf phigros.tools auf, wo deine Runs in der Rangliste zählen.",
+    download: "Installer herunterladen",
+    downloadNote: "Für Android 7 und neuer, mit Phigros aus dem Play Store",
+    replays: "Replays",
+    replaysText:
+      "Jeder Run wird aufgezeichnet und lässt sich aus der Songliste abspielen, mit Spulen, Pause und Geschwindigkeitsregler.",
+    hud: "HUD",
+    hudText:
+      "Die Note und Genauigkeit, auf die dein Run zusteuert, eine Trefferabweichungsleiste und eine Option, die Ladepausen des Spiels zu überspringen.",
+    sync: "phigros.tools-Synchronisierung",
+    syncText:
+      "Ein freiwilliges Profil mit deinen Rekorden, Replays und Spielstatistiken, in der Rangliste gewertet, und dein Spielstand zum Öffnen hier.",
+    install: "Installation",
+    install1: "Installiere Phigros aus dem Play Store.",
+    install2:
+      "Lade **phigrospp-installer.apk** aus dem neuesten Release des Installers herunter und öffne die Datei.",
+    install3:
+      "Tippe auf **Install**: Der Installer macht aus deinem Phigros das Phigros++, eine eigene App neben dem Spiel, und hält es später aktuell.",
+    install4:
+      "Öffne in Phigros++ **Settings → Profile**, aktiviere **Sync to phigros.tools** und bewahre die 16 angezeigten Wörter auf.",
+    installNote:
+      "Mods laufen mit deinem phigros.tools-Schlüssel, installiere also nur Mods, denen du vertraust.",
+    bring: "Spielstand mitnehmen",
+    bringText:
+      "Phigros++ startet mit einem leeren Spielstand, und da die TapTap-Cloud nicht mehr antwortet, kann es deinen nicht von dort holen.",
+    browser: "Du hast deinen Spielstand schon einmal auf phigros.tools geöffnet",
+    browserText:
+      "Dieser Browser hat eine Kopie behalten. Melde dich über Phigros++ an, öffne diesen Spielstand im Verlauf und wähle **An Phigros++ senden**: Beim nächsten Start bietet das Spiel an, ihn zu laden.",
+    device: "Du nutzt Phigros++ schon auf einem anderen Gerät",
+    deviceText:
+      "Wähle dort **Sign in another device**, danach auf dem neuen Gerät **Sign in to my profile** und gib dessen Code oder deine 16 Wörter ein. Phigros++ bietet dir dann den Spielstand an, den dein anderes Gerät hochgeladen hat.",
+    game: "Dein Spielstand existiert nur im Spiel",
+    gameText:
+      "Phigros++ wird als eigene App neben Phigros installiert, dein Spielstand bleibt also im Originalspiel und du kannst ihn dort weiterspielen. Vorerst beginnt Phigros++ mit einem eigenen Spielstand, und wir arbeiten an einem Weg, deinen zu übernehmen.",
+    source: "Quellcode",
   },
   history: {
     snapshots: "Snapshots",

@@ -9,6 +9,7 @@ import {
 import type { CSSProperties } from "react";
 import { useEffect } from "react";
 import { Backdrop, SiteFooter, SiteHeader } from "../components/chrome";
+import { getHome } from "../home";
 import { I18nProvider, useT } from "../i18n";
 import type { Locale } from "../i18n/locales";
 import { fogStyle } from "../palettes";
@@ -39,10 +40,10 @@ function Analytics() {
 // Shared by every page (the save-analyzer tabs and the /charts reference pages): the fog backdrop, the
 // footer, and the loaded save, so following a song link and coming back keeps it. The tool's layout is in routes/_tool.tsx.
 function Root() {
-  const { locale } = Route.useLoaderData();
+  const { locale, home } = Route.useLoaderData();
   return (
     <I18nProvider locale={locale}>
-      <SaveProvider>
+      <SaveProvider home={home}>
         <Backdrop />
         <Analytics />
         <Outlet />
@@ -58,6 +59,7 @@ export const Route = createRootRouteWithContext<{ i18n: { locale: Locale } }>()(
   loader: async ({ context }) => ({
     stars: await getStars().catch(() => null),
     locale: context.i18n.locale,
+    home: await getHome().catch(() => null),
   }),
   staleTime: Number.POSITIVE_INFINITY,
   head: ({ match }) => ({

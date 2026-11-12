@@ -9,65 +9,67 @@ import { Arrow } from "./arrow";
 /** The import methods as arrow rows, shared by the import band and the main menu's Import entry.
  * "Local file" clicks the page's one hidden #file input (rendered by the tool layout). */
 export function ImportOptions() {
-  const { dialog, busy, connectAndroid, fileInput, openTapTap } = useSave();
+  const { busy, fileInput, openSignIn, openOtherWays } = useSave();
   const t = useT();
+  const option = (title: string, description: string, onClick: () => void, disabled = false) => (
+    <button className="arrow-row import-option" type="button" disabled={disabled} onClick={onClick}>
+      <span>
+        <strong>{title}</strong>
+        <span className="import-description">{description}</span>
+      </span>
+      <span className="arrow-chip">
+        <Arrow />
+      </span>
+    </button>
+  );
   return (
     <>
-      <button
-        className="arrow-row import-option"
-        type="button"
-        disabled={busy}
-        onClick={() => openTapTap.current?.()}
-      >
-        <span>
-          <strong>{t.import.taptap}</strong>
-          <span className="import-description">{t.import.taptapDesc}</span>
-        </span>
-        <span className="arrow-chip">
-          <Arrow />
-        </span>
-      </button>
-      <button
-        className="arrow-row import-option"
-        type="button"
-        disabled={busy}
-        onClick={() => void connectAndroid()}
-      >
-        <span>
-          <strong>{t.import.usb}</strong>
-          <span className="import-description">{t.import.usbDesc}</span>
-        </span>
-        <span className="arrow-chip">
-          <Arrow />
-        </span>
-      </button>
-      <button
-        className="arrow-row import-option"
-        type="button"
-        onClick={() => dialog.current?.showModal()}
-      >
-        <span>
-          <strong>{t.import.token}</strong>
-          <span className="import-description">{t.import.tokenDesc}</span>
-        </span>
-        <span className="arrow-chip">
-          <Arrow />
-        </span>
-      </button>
-      <button
-        className="arrow-row import-option"
-        type="button"
-        onClick={() => fileInput.current?.click()}
-      >
-        <span>
-          <strong>{t.import.file}</strong>
-          <span className="import-description">{t.import.fileDesc}</span>
-        </span>
-        <span className="arrow-chip">
-          <Arrow />
-        </span>
-      </button>
+      {option(t.ppp.profile, t.ppp.profileDesc, () => openSignIn.current?.(), busy)}
+      {option(t.import.file, t.import.fileDesc, () => fileInput.current?.click())}
+      {option(t.ppp.otherWays, t.ppp.otherWaysDesc, () => openOtherWays.current?.showModal())}
     </>
+  );
+}
+
+/** The ways to import that went through TapTap, which no longer answers: one dialog for the tool, `openOtherWays`. */
+export function OtherWaysDialog() {
+  const { dialog, busy, connectAndroid, openTapTap, openOtherWays } = useSave();
+  const t = useT();
+  const option = (title: string, description: string, onClick: () => void, disabled = false) => (
+    <button
+      className="arrow-row import-option"
+      type="button"
+      disabled={disabled}
+      onClick={() => {
+        openOtherWays.current?.close();
+        onClick();
+      }}
+    >
+      <span>
+        <strong>{title}</strong>
+        <span className="import-description">{description}</span>
+      </span>
+      <span className="arrow-chip">
+        <Arrow />
+      </span>
+    </button>
+  );
+  return (
+    <dialog ref={openOtherWays} aria-labelledby="other-ways-heading">
+      <form method="dialog" className="dialog-head">
+        <h2 id="other-ways-heading">{t.ppp.otherWays}</h2>
+        {/* biome-ignore lint/a11y/useButtonType: the default submit type closes the method="dialog" form. */}
+        <button className="dialog-close" aria-label={t.ppp.close}>
+          ×
+        </button>
+      </form>
+      <p className="meta">{t.ppp.taptapGone}</p>
+      <div className="import-list">
+        {option(t.import.taptap, t.import.taptapDesc, () => openTapTap.current?.(), busy)}
+        {option(t.import.usb, t.import.usbDesc, () => void connectAndroid(), busy)}
+        {option(t.import.token, t.import.tokenDesc, () => dialog.current?.showModal())}
+      </div>
+    </dialog>
   );
 }
 
@@ -192,72 +194,5 @@ export function TapTapDialog() {
         </div>
       </div>
     </dialog>
-  );
-}
-
-/** Opt-in walkthrough of the import methods. Nothing forces it open: the site is browsable without a save. */
-export function ImportGuide({ className = "btn btn-ghost" }: { className?: string }) {
-  const { openTapTap, busy } = useSave();
-  const guide = useRef<HTMLDialogElement>(null);
-  const t = useT();
-  return (
-    <>
-      <button type="button" className={className} onClick={() => guide.current?.showModal()}>
-        {t.import.guideButton} <Arrow />
-      </button>
-      <dialog ref={guide} id="guideDialog" aria-labelledby="guide-heading">
-        <form method="dialog" className="dialog-head">
-          <h2 id="guide-heading">{t.import.guideTitle}</h2>
-          {/* biome-ignore lint/a11y/useButtonType: the default submit type closes the method="dialog" form. */}
-          <button className="dialog-close" aria-label={t.import.guideClose}>
-            ×
-          </button>
-        </form>
-        <p className="meta">
-          <Rich text={t.import.guideIntro} />
-        </p>
-        <ol className="guide-steps">
-          <li>
-            <Rich text={t.import.step1} />
-          </li>
-          <li>
-            <Rich text={t.import.step2} />
-          </li>
-          <li>
-            <Rich text={t.import.step3} />
-          </li>
-        </ol>
-        <details className="guide-more">
-          <summary>{t.import.usbSummary}</summary>
-          <ol className="guide-steps">
-            <li>
-              <Rich text={t.import.usb1} />
-            </li>
-            <li>
-              <Rich text={t.import.usb2} />
-            </li>
-            <li>
-              <Rich text={t.import.usb3} />
-            </li>
-            <li>
-              <Rich text={t.import.usb4} />
-            </li>
-          </ol>
-        </details>
-        <div className="dialog-actions">
-          <button
-            type="button"
-            className="btn"
-            disabled={busy}
-            onClick={() => {
-              guide.current?.close();
-              openTapTap.current?.();
-            }}
-          >
-            {t.import.loginWithTapTap} <Arrow />
-          </button>
-        </div>
-      </dialog>
-    </>
   );
 }

@@ -8,6 +8,9 @@ export const fr = {
     history: "Historique",
     charts: "Charts",
     leaderboard: "Classement",
+    devices: "Appareils",
+    phigrospp: "Phigros++",
+    profile: "Profil",
     label: "Sections",
   },
   header: {
@@ -68,22 +71,6 @@ export const fr = {
     code: "Code",
     newCode: "Nouveau code",
     openTapTap: "Ouvrir TapTap",
-    guideButton: "Comment importer",
-    guideTitle: "Comment importer",
-    guideClose: "Fermer le guide d'import",
-    guideIntro:
-      "phigros.tools lit votre **save cloud TapTap**, synchronisez-la d'abord : dans Phigros, ouvrez **Paramètres → Profil**, connectez-vous avec TapTap et touchez **Synchroniser**. Les versions internationale et chinoise du jeu fonctionnent toutes les deux.",
-    step1: "Choisissez **Connexion TapTap** et sélectionnez votre version du jeu.",
-    step2:
-      "Scannez le QR code avec votre téléphone, ou touchez **Ouvrir TapTap** si vous êtes déjà sur le téléphone, puis validez avec le compte TapTap avec lequel vous jouez.",
-    step3:
-      "Votre save se charge, et ce navigateur garde la connexion pour que **Synchro** récupère les saves plus récentes ensuite.",
-    usbSummary: "Android en USB à la place",
-    usb1: "Sur le téléphone, ouvrez **Paramètres → À propos du téléphone** et touchez sept fois **Numéro de build** pour activer les options pour les développeurs.",
-    usb2: "Dans les **Options pour les développeurs**, activez le **Débogage USB**.",
-    usb3: "Branchez le téléphone à un ordinateur et ouvrez ce site dans **Chrome** ou **Edge** (Firefox et Safari ne savent pas communiquer avec les appareils USB).",
-    usb4: "Choisissez **Android (USB)**, sélectionnez votre téléphone, puis touchez **Autoriser** sur le téléphone.",
-    loginWithTapTap: "Se connecter avec TapTap",
   },
   seo: {
     siteDescription:
@@ -150,7 +137,6 @@ export const fr = {
     skip: "Aller au contenu",
     syncTitle: (date: string) =>
       `Récupérer la dernière save cloud · dernière récupération le ${date}`,
-    reenterToken: "Saisir à nouveau le token",
     player: (id: string) => `Joueur ${id}`,
     localSave: "Save locale",
     importTagline: "Chargez votre progression Phigros",
@@ -197,7 +183,7 @@ export const fr = {
     searchPlayers: "Chercher un nom ou nom#0042",
     noPlayers: "Aucun joueur ne porte ce nom",
     noRanked: "Aucun joueur n'est encore classé",
-    noCharts: "Aucun chart n'a encore de partie",
+    noCharts: "Aucun chart n'a encore de partie. Jouez-en un avec Phigros++ pour être le premier.",
     description:
       "Les joueurs de Phigros classés par RKS, et les meilleures parties de chaque chart, envoyées par les joueurs qui synchronisent avec Phigros++.",
   },
@@ -489,6 +475,124 @@ export const fr = {
     downloadFailed: (status: string) => `Téléchargement de la save : HTTP ${status}`,
     jsonTooLarge: (mb: string) => `Le JSON dépasse la limite d'import de ${mb} Mo`,
     invalidJson: "JSON invalide",
+    pppRemoved: "Ce navigateur a été retiré du profil. Reconnectez-vous pour l’ouvrir.",
+    pppNoCode:
+      "Ce code ne fonctionne pas, car il a déjà servi ou date de plus de 10 minutes. Demandez-en un nouveau.",
+    pppNoProfile:
+      "Aucun profil phigros.tools n’a été créé avec ces mots. Vérifiez chaque mot et leur ordre.",
+    pppServer: (status: string) => `phigros.tools n’a pas pu répondre (HTTP ${status}). Réessayez.`,
+    pppWord: (word: string) => `« ${word} » ne fait pas partie des mots de récupération.`,
+    pppWords: (count: string) =>
+      `Vous avez saisi ${count} mots, alors que la phrase de récupération en compte 16.`,
+    pppNoSave:
+      "Phigros++ n’a pas encore envoyé votre save. Activez Upload my save dans Settings → Profile du jeu.",
+    pppUnsupported:
+      "Ce navigateur ne permet pas de se connecter. Mettez-le à jour, ou utilisez une version récente de Chrome, Firefox ou Safari.",
+  },
+  ppp: {
+    profile: "Profil Phigros++",
+    profileDesc: "Connectez-vous depuis le jeu pour ouvrir votre save",
+    otherWays: "Autres méthodes",
+    otherWaysDesc: "Connexion TapTap, Android (USB), token de session",
+    taptapGone:
+      "La save cloud de TapTap ne répond plus depuis novembre 2026, ces méthodes peuvent donc échouer. Phigros++ garde plutôt votre save sur phigros.tools.",
+    pitch:
+      "Phigros++ ajoute des replays, un HUD et des mods au jeu, et garde ici votre save et vos parties.",
+    get: "Obtenir Phigros++",
+    signInTitle: "Se connecter depuis Phigros++",
+    signInStep1:
+      "Dans Phigros++, ouvrez **Settings → Profile** et choisissez **Sign in another device**, ou **Open in browser** pour ne rien avoir à taper.",
+    signInStep2: "Saisissez ici le code affiché.",
+    code: "Code",
+    signIn: "Se connecter",
+    signingIn: "Connexion…",
+    usePhrase: "Utiliser plutôt ma phrase de récupération",
+    useCode: "Utiliser plutôt un code du jeu",
+    phraseTitle: "Se connecter avec votre phrase de récupération",
+    phraseText:
+      "Saisissez dans l’ordre les 16 mots que Phigros++ a affichés dans **Settings → Profile → Show recovery phrase**.",
+    phrase: "Phrase de récupération",
+    phraseNote:
+      "Les mots deviennent votre clé dans ce navigateur et ne sont jamais envoyés. Ce navigateur reçoit ensuite sa propre clé, que vous pouvez retirer dans Appareils.",
+    close: "Fermer",
+    signOut: "Se déconnecter",
+    signOutConfirm:
+      "Déconnecter ce navigateur de votre profil Phigros++ ? Ses snapshots restent dans l’historique.",
+    move: "Cette save n’existe que dans ce navigateur. Envoyez-la à Phigros++ pour continuer à y jouer, avec les replays et vos parties au classement.",
+    send: "Envoyer à Phigros++",
+    sendConfirm: (name: string) =>
+      `Envoyer cette save au Phigros++ de ${name} ? Au prochain lancement, le jeu propose de la charger et indique ce qu’elle remplace.`,
+    sent: "Envoyée. Ouvrez Phigros++ pour la charger.",
+    moveStep1:
+      "Installez Phigros++ et activez **Sync to phigros.tools** dans ses **Settings → Profile**.",
+    moveStep2:
+      "Choisissez-y **Sign in another device**, puis **Open in browser**, ou connectez-vous ici avec le code affiché.",
+    moveStep3: "Revenez sur cette save et choisissez **Envoyer à Phigros++**.",
+    taptapCard: (date: string) =>
+      `Le cloud de TapTap ne répond plus, mais ce navigateur a gardé votre save du ${date}. Ouvrez-la pour l’envoyer à Phigros++.`,
+    taptapCardNone:
+      "Le cloud de TapTap ne répond plus, et ce navigateur n’a aucune copie de cette save.",
+    openSave: "Ouvrir ma save",
+    olderSave: (date: string, rks: string) =>
+      `Ce navigateur a aussi gardé une save du ${date} avec un RKS de ${rks}, que vous pouvez envoyer à Phigros++.`,
+    openIt: "L’ouvrir",
+    devicesTitle: "Appareils",
+    devicesText: (tag: string) =>
+      `Tout ce qui est connecté en tant que ${tag}. Un appareil retiré ne peut plus synchroniser, envoyer ni télécharger votre save, mais garde ce qu’il a déjà téléchargé.`,
+    addDevice: "Ajouter un appareil",
+    addDeviceText:
+      "Dans Phigros++ sur l’autre appareil, ouvrez **Settings → Profile**, choisissez **Sign in to my profile** et saisissez ce code. Il ne sert qu’une fois, pendant 10 minutes.",
+    phraseRow: "Phrase de récupération",
+    phraseRowDesc:
+      "Vos 16 mots permettent toujours de récupérer le profil, ils ne peuvent donc pas être retirés.",
+    thisBrowser: "Ce navigateur",
+    seen: (date: string) => `vu le ${date}`,
+    added: (date: string) => `ajouté le ${date}`,
+    remove: "Retirer",
+    rename: "Renommer",
+    removeConfirm: (name: string) =>
+      `Retirer ${name} ? Il ne pourra plus synchroniser ni télécharger votre save.`,
+    signingInFromLink: "Connexion avec le code de Phigros++…",
+    leaderboardCta: "Tout le monde ici joue avec Phigros++, qui envoie ses parties et ses replays.",
+    leaderboardJoin: "Apparaître au classement",
+  },
+  pppPage: {
+    description:
+      "Phigros avec des replays, un HUD et des mods Lua, installé comme une app à part à côté du jeu. Il garde votre save, vos records et vos replays sur phigros.tools, où vos parties comptent au classement.",
+    download: "Obtenir l’installateur",
+    downloadNote: "Pour Android 7 et plus récent, avec Phigros du Play Store",
+    replays: "Replays",
+    replaysText:
+      "Chaque partie est enregistrée et se rejoue depuis la liste des morceaux, avec avance, pause et réglage de la vitesse.",
+    hud: "HUD",
+    hudText:
+      "La note et la précision vers lesquelles se dirige votre partie, une barre d’écart des frappes, et une option pour passer les temps de chargement du jeu.",
+    sync: "Synchro phigros.tools",
+    syncText:
+      "Un profil facultatif avec vos records, replays et statistiques de jeu, classé au classement, et votre save à ouvrir ici.",
+    install: "Installation",
+    install1: "Installez Phigros depuis le Play Store.",
+    install2:
+      "Téléchargez **phigrospp-installer.apk** depuis la dernière version de l’installateur et ouvrez-le.",
+    install3:
+      "Touchez **Install** : il transforme votre Phigros en Phigros++, une app à part à côté du jeu, et le met à jour par la suite.",
+    install4:
+      "Dans Phigros++, ouvrez **Settings → Profile**, activez **Sync to phigros.tools** et conservez les 16 mots affichés.",
+    installNote:
+      "Les mods tournent avec votre clé phigros.tools, n’ajoutez donc que des mods de confiance.",
+    bring: "Récupérer votre save",
+    bringText:
+      "Phigros++ démarre avec une save vide, et comme le cloud de TapTap ne répond plus, il ne peut pas y récupérer la vôtre.",
+    browser: "Vous avez déjà ouvert votre save sur phigros.tools",
+    browserText:
+      "Ce navigateur en a gardé une copie. Connectez-vous depuis Phigros++, ouvrez cette save depuis l’historique et choisissez **Envoyer à Phigros++** : le jeu propose de la charger à son prochain lancement.",
+    device: "Vous utilisez déjà Phigros++ sur un autre appareil",
+    deviceText:
+      "Choisissez **Sign in another device** sur celui-ci, puis **Sign in to my profile** sur le nouveau et saisissez son code ou vos 16 mots. Phigros++ propose alors la save envoyée par votre autre appareil.",
+    game: "Votre save n’existe que dans le jeu",
+    gameText:
+      "Phigros++ s’installe comme une app séparée à côté de Phigros : votre save reste dans le jeu d’origine et vous pouvez continuer à y jouer. Pour l’instant, Phigros++ commence avec sa propre save, et nous travaillons à un moyen d’y transférer la vôtre.",
+    source: "Code source",
   },
   history: {
     snapshots: "Snapshots",

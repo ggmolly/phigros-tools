@@ -109,6 +109,12 @@ function LeaderboardPage() {
       <main className="app-shell">
         <h1 className="sr-only">{t.tabs.leaderboard}</h1>
         <ScopeSwitch verified={verified} />
+        <p className="ppp-cta">
+          {t.ppp.leaderboardCta}{" "}
+          <Link to="/phigrospp" className="text-link">
+            {t.ppp.leaderboardJoin}
+          </Link>
+        </p>
         <div className="leaderboard-layout">
           <Outlet />
           <Charts />

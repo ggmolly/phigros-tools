@@ -8,9 +8,14 @@ Analyze your Phigros save (ranking score, Best charts, records, progress) privat
 
 ### Import a save
 
-Log in with TapTap by scanning a QR code (any device, global or China version), connect an Android phone over USB, paste a session token, or open a ZIP/JSON save file. The main menu remembers every player you've synced before, laid out as a carousel like the game's own.
+Sign in from [Phigros++](../mod) to open the save it uploads: the game shows a code to type here (or opens the site
+already signed in), or type the profile's 16-word recovery phrase. The browser makes its own key for the profile,
+listed in **Devices** with every phone signed in, each removable. A ZIP or JSON save file opens too. The main menu
+remembers every player you've opened before, laid out as a carousel like the game's own.
 
-![Main menu carousel with the four import methods open](docs/screenshots/01-start.png)
+A save that only lives in this browser can be sent to Phigros++, which offers to load it at its next start.
+
+![Main menu carousel with the import options open](docs/screenshots/01-start.png)
 
 ### Overview
 

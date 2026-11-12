@@ -1,4 +1,5 @@
 import type { SaveDocumentV1 } from "./document";
+import type { Signer } from "./phigrospp";
 import type { Region, SaveArchive } from "./save";
 
 export interface SnapshotV1 {
@@ -11,11 +12,13 @@ export interface SnapshotV1 {
   playerId?: string; // v1 snapshots have no known owner
 }
 
+/** A remembered player: a TapTap session token, or this browser's key on a Phigros++ profile (playerId is its id). */
 export interface Credential {
   playerId: string;
   nickname?: string;
-  token: string;
+  token?: string;
   region?: Region; // absent on credentials saved before China support: those are global
+  signer?: Signer;
 }
 
 const DATABASE = "phigros-web-save";

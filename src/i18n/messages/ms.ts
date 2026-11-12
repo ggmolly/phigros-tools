@@ -8,6 +8,9 @@ export const ms = {
     history: "Sejarah",
     charts: "Chart",
     leaderboard: "Papan pendahulu",
+    devices: "Peranti",
+    phigrospp: "Phigros++",
+    profile: "Profil",
     label: "Bahagian",
   },
   header: {
@@ -68,22 +71,6 @@ export const ms = {
     code: "Kod",
     newCode: "Kod baharu",
     openTapTap: "Buka TapTap",
-    guideButton: "Cara import",
-    guideTitle: "Cara Import",
-    guideClose: "Tutup panduan import",
-    guideIntro:
-      "phigros.tools membaca **save awan TapTap** anda, jadi segerakkannya dahulu: dalam Phigros, buka **Tetapan → Profil**, log masuk dengan TapTap dan ketik **Segerakkan Sekarang**. Versi global dan China kedua-duanya berfungsi.",
-    step1: "Pilih **Log masuk TapTap** dan pilih versi permainan anda.",
-    step2:
-      "Imbas kod QR dengan telefon anda, atau ketik **Buka TapTap** jika anda sudah berada di telefon, kemudian luluskan dengan akaun TapTap yang anda gunakan.",
-    step3:
-      "Save anda dimuatkan, dan pelayar ini mengingati log masuk supaya **Segerak** boleh mendapatkan save yang lebih baharu kemudian.",
-    usbSummary: "Atau Android melalui USB",
-    usb1: "Pada telefon, buka **Tetapan → Perihal telefon** dan ketik **Nombor binaan** tujuh kali untuk membuka Pilihan pembangun.",
-    usb2: "Dalam **Pilihan pembangun**, hidupkan **Penyahpepijatan USB**.",
-    usb3: "Sambungkan telefon ke komputer dan buka laman ini dalam **Chrome** atau **Edge** (Firefox dan Safari tidak boleh berhubung dengan peranti USB).",
-    usb4: "Pilih **Android (USB)**, pilih telefon anda, kemudian ketik **Benarkan** pada telefon.",
-    loginWithTapTap: "Log masuk dengan TapTap",
   },
   seo: {
     siteDescription:
@@ -150,7 +137,6 @@ export const ms = {
   tool: {
     skip: "Langkau ke kandungan",
     syncTitle: (date: string) => `Ambil save awan terkini · kali terakhir diambil ${date}`,
-    reenterToken: "Masukkan semula token",
     player: (id: string) => `Pemain ${id}`,
     localSave: "Save setempat",
     importTagline: "Muatkan kemajuan Phigros anda",
@@ -196,7 +182,8 @@ export const ms = {
     searchPlayers: "Cari nama atau nama#0042",
     noPlayers: "Tiada pemain dengan nama ini",
     noRanked: "Belum ada pemain yang disenaraikan",
-    noCharts: "Belum ada carta yang dimainkan",
+    noCharts:
+      "Belum ada carta yang dimainkan. Mainkan satu dengan Phigros++ untuk menjadi yang pertama.",
     description:
       "Pemain Phigros disusun mengikut RKS dan permainan terbaik bagi setiap carta, daripada pemain yang menyegerak dengan Phigros++.",
   },
@@ -483,6 +470,123 @@ export const ms = {
     downloadFailed: (status: string) => `Muat turun save: HTTP ${status}`,
     jsonTooLarge: (mb: string) => `JSON melebihi had import ${mb} MB`,
     invalidJson: "JSON tidak sah",
+    pppRemoved: "Pelayar ini telah dibuang daripada profil. Log masuk semula untuk membukanya.",
+    pppNoCode:
+      "Kod ini tidak berfungsi kerana sudah digunakan atau melebihi 10 minit. Minta kod baharu.",
+    pppNoProfile:
+      "Tiada profil phigros.tools yang dibuat dengan perkataan ini. Semak setiap perkataan dan susunannya.",
+    pppServer: (status: string) =>
+      `phigros.tools tidak dapat menjawab (HTTP ${status}). Cuba lagi.`,
+    pppWord: (word: string) => `“${word}” bukan salah satu perkataan pemulihan.`,
+    pppWords: (count: string) => `Itu ${count} perkataan, sedangkan frasa pemulihan ada 16.`,
+    pppNoSave:
+      "Phigros++ belum memuat naik save anda. Hidupkan Upload my save dalam Tetapan → Profil permainan.",
+    pppUnsupported:
+      "Pelayar ini tidak boleh log masuk. Kemas kininya, atau gunakan Chrome, Firefox atau Safari versi terkini.",
+  },
+  ppp: {
+    profile: "Profil Phigros++",
+    profileDesc: "Log masuk dari permainan untuk membuka save anda",
+    otherWays: "Cara lain",
+    otherWaysDesc: "Log masuk TapTap, Android (USB), session token",
+    taptapGone:
+      "Save awan TapTap berhenti menjawab pada November 2026, jadi cara ini mungkin gagal. Phigros++ menyimpan save anda di phigros.tools sebagai gantinya.",
+    pitch:
+      "Phigros++ menambah main semula, HUD dan mod pada permainan, serta menyimpan save dan permainan anda di sini.",
+    get: "Dapatkan Phigros++",
+    signInTitle: "Log masuk dari Phigros++",
+    signInStep1:
+      "Dalam Phigros++, buka **Tetapan → Profil** dan pilih **Sign in another device**, atau **Open in browser** supaya tidak perlu menaip.",
+    signInStep2: "Taip kod yang dipaparkan di sini.",
+    code: "Kod",
+    signIn: "Log masuk",
+    signingIn: "Sedang log masuk…",
+    usePhrase: "Guna frasa pemulihan saya",
+    useCode: "Guna kod daripada permainan",
+    phraseTitle: "Log masuk dengan frasa pemulihan anda",
+    phraseText:
+      "Taip 16 perkataan yang dipaparkan oleh Phigros++ dalam **Tetapan → Profil → Show recovery phrase**, mengikut susunan.",
+    phrase: "Frasa pemulihan",
+    phraseNote:
+      "Perkataan ini menjadi kunci anda dalam pelayar ini dan tidak pernah dihantar. Pelayar ini kemudian mendapat kuncinya sendiri, yang boleh anda buang dalam Peranti.",
+    close: "Tutup",
+    signOut: "Log keluar",
+    signOutConfirm:
+      "Log keluar pelayar ini daripada profil Phigros++ anda? Snapshotnya kekal dalam Sejarah.",
+    move: "Save ini hanya wujud dalam pelayar ini. Hantar ke Phigros++ untuk terus memainkannya, dengan main semula dan permainan anda di papan pendahulu.",
+    send: "Hantar ke Phigros++",
+    sendConfirm: (name: string) =>
+      `Hantar save ini ke Phigros++ milik ${name}? Apabila permainan dibuka seterusnya, ia akan menawarkan untuk memuatkannya dan memberitahu apa yang akan diganti.`,
+    sent: "Dihantar. Buka Phigros++ untuk memuatkannya.",
+    moveStep1:
+      "Pasang Phigros++ dan hidupkan **Sync to phigros.tools** dalam **Tetapan → Profil**.",
+    moveStep2:
+      "Di situ, pilih **Sign in another device** kemudian **Open in browser**, atau log masuk di sini dengan kod yang dipaparkan.",
+    moveStep3: "Kembali ke save ini dan pilih **Hantar ke Phigros++**.",
+    taptapCard: (date: string) =>
+      `Awan TapTap tidak lagi menjawab, tetapi pelayar ini menyimpan save anda dari ${date}. Bukanya untuk menghantarnya ke Phigros++.`,
+    taptapCardNone: "Awan TapTap tidak lagi menjawab, dan pelayar ini tiada salinan save ini.",
+    openSave: "Buka save saya",
+    olderSave: (date: string, rks: string) =>
+      `Pelayar ini juga menyimpan save dari ${date} dengan RKS ${rks}, yang boleh anda hantar ke Phigros++.`,
+    openIt: "Bukanya",
+    devicesTitle: "Peranti",
+    devicesText: (tag: string) =>
+      `Semua yang log masuk sebagai ${tag}. Peranti yang dibuang tidak lagi boleh menyegerak, memuat naik atau memuat turun save anda, tetapi menyimpan apa yang sudah dimuat turunnya.`,
+    addDevice: "Tambah peranti",
+    addDeviceText:
+      "Dalam Phigros++ pada peranti lain, buka **Tetapan → Profil**, pilih **Sign in to my profile** dan taip kod ini. Kod ini berfungsi sekali sahaja, selama 10 minit.",
+    phraseRow: "Frasa pemulihan",
+    phraseRowDesc: "16 perkataan anda. Ia sentiasa memulihkan profil, jadi ia tidak boleh dibuang.",
+    thisBrowser: "Pelayar ini",
+    seen: (date: string) => `kali terakhir dilihat ${date}`,
+    added: (date: string) => `ditambah ${date}`,
+    remove: "Buang",
+    rename: "Tukar nama",
+    removeConfirm: (name: string) =>
+      `Buang ${name}? Ia tidak lagi boleh menyegerak atau memuat turun save anda.`,
+    signingInFromLink: "Log masuk dengan kod daripada Phigros++…",
+    leaderboardCta:
+      "Semua pemain di sini bermain dengan Phigros++, yang menghantar permainan dan main semula mereka.",
+    leaderboardJoin: "Masuk papan pendahulu",
+  },
+  pppPage: {
+    description:
+      "Phigros dengan main semula, HUD dan mod Lua, dipasang sebagai aplikasi tersendiri di sebelah permainan. Ia menyimpan save, rekod dan main semula anda di phigros.tools, tempat permainan anda dikira di papan pendahulu.",
+    download: "Dapatkan pemasang",
+    downloadNote: "Untuk Android 7 dan ke atas, dengan Phigros dari Play Store",
+    replays: "Main semula",
+    replaysText:
+      "Setiap permainan dirakam dan boleh dimainkan semula dari senarai lagu, dengan lompat, jeda dan kawalan kelajuan.",
+    hud: "HUD",
+    hudText:
+      "Gred dan ketepatan yang sedang dituju permainan anda, bar ralat pukulan, dan pilihan untuk melangkau tempoh memuatkan permainan.",
+    sync: "Segerak phigros.tools",
+    syncText:
+      "Profil pilihan dengan rekod, main semula dan statistik permainan anda, disenaraikan di papan pendahulu, serta save anda untuk dibuka di sini.",
+    install: "Cara Memasang",
+    install1: "Pasang Phigros dari Play Store.",
+    install2:
+      "Muat turun **phigrospp-installer.apk** daripada keluaran terkini pemasang dan bukanya.",
+    install3:
+      "Ketik **Install**: ia menukar Phigros anda menjadi Phigros++, aplikasi tersendiri di sebelah permainan, dan mengemas kininya kemudian.",
+    install4:
+      "Dalam Phigros++, buka **Tetapan → Profil**, hidupkan **Sync to phigros.tools** dan simpan 16 perkataan yang dipaparkan.",
+    installNote:
+      "Mod berjalan dengan kunci phigros.tools anda, jadi tambah hanya mod yang anda percayai.",
+    bring: "Bawa Save Anda",
+    bringText:
+      "Phigros++ bermula dengan save kosong, dan awan TapTap tidak lagi menjawab, jadi ia tidak dapat mengambil save anda dari sana.",
+    browser: "Anda pernah membuka save anda di phigros.tools",
+    browserText:
+      "Pelayar ini menyimpan salinannya. Log masuk dari Phigros++, buka save itu dari Sejarah dan pilih **Hantar ke Phigros++**: permainan akan menawarkan untuk memuatkannya apabila dibuka seterusnya.",
+    device: "Anda sudah menggunakan Phigros++ pada peranti lain",
+    deviceText:
+      "Pilih **Sign in another device** di sana, lalu **Sign in to my profile** pada peranti baharu dan taip kodnya atau 16 perkataan anda. Phigros++ kemudian menawarkan save yang dimuat naik oleh peranti lain anda.",
+    game: "Save anda hanya wujud dalam permainan",
+    gameText:
+      "Phigros++ dipasang sebagai aplikasi berasingan di sebelah Phigros, jadi save anda kekal dalam permainan asal dan anda boleh terus bermain di sana. Buat masa ini Phigros++ bermula dengan save sendiri, dan kami sedang mengusahakan cara untuk memindahkan save anda.",
+    source: "Kod sumber",
   },
   history: {
     snapshots: "Snapshot",

@@ -56,15 +56,25 @@ function GithubLink() {
   );
 }
 
-export type TabId = "/" | "/records" | "/collection" | "/history" | "/charts" | "/leaderboard";
+export type TabId =
+  | "/"
+  | "/records"
+  | "/collection"
+  | "/history"
+  | "/devices"
+  | "/charts"
+  | "/leaderboard"
+  | "/phigrospp";
 /** The tab ids double as their message keys. */
 export const TAB_KEY = {
   "/": "overview",
   "/records": "records",
   "/collection": "collection",
   "/history": "history",
+  "/devices": "devices",
   "/charts": "charts",
   "/leaderboard": "leaderboard",
+  "/phigrospp": "phigrospp",
 } as const satisfies Record<TabId, string>;
 const slug = (id: TabId) => TAB_KEY[id];
 
@@ -88,22 +98,27 @@ function LanguageSwitch() {
   );
 }
 
-/** The save-analyzer tabs that have something to show right now. */
-export function toolTabs(hasSave: boolean, hasSnapshots: boolean): TabId[] {
-  if (hasSave) return ["/", "/records", "/collection", "/history"];
+/** The save-analyzer tabs that have something to show right now: a Phigros++ profile's save has Devices, and the
+ * server keeps its history, while History holds the snapshots of saves kept in this browser. */
+export function toolTabs(hasSave: boolean, hasSnapshots: boolean, signedIn: boolean): TabId[] {
+  if (hasSave) return ["/", "/records", "/collection", signedIn ? "/devices" : "/history"];
   return hasSnapshots ? ["/", "/history"] : ["/"];
 }
 
 /** Every page's header: brand mark, the tabs (the tool's sections plus Charts), the page's own actions, then the GitHub link at the far right. */
 export function SiteHeader({ children }: { children?: React.ReactNode }) {
-  const { loaded, snapshots } = useSave();
+  const { loaded, snapshots, account } = useSave();
   const t = useT();
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const signedIn = !!account && account === loaded?.playerId;
+  // a Phigros++ player has the app already
+  const hasApp = !!account;
   const tabIds = [
-    ...toolTabs(!!loaded, snapshots.length > 0),
+    ...toolTabs(!!loaded, snapshots.length > 0, signedIn),
     "/charts" as const,
     "/leaderboard" as const,
+    ...(hasApp ? [] : ["/phigrospp" as const]),
   ];
   // a chart's ranking, a player's page and a replay are reached from the leaderboard
   const activeTab: TabId =
@@ -140,13 +155,14 @@ export function SiteHeader({ children }: { children?: React.ReactNode }) {
             className="tab"
             aria-selected={activeTab === id}
             aria-controls={
-              activeTab === id && id !== "/charts" && id !== "/leaderboard"
+              activeTab === id && id !== "/charts" && id !== "/leaderboard" && id !== "/phigrospp"
                 ? `panel-${slug(id)}`
                 : undefined
             }
             tabIndex={activeTab === id ? 0 : -1}
           >
-            {t.tabs[TAB_KEY[id]]}
+            {/* a Phigros++ save's Overview is its player's profile */}
+            {id === "/" && signedIn ? t.tabs.profile : t.tabs[TAB_KEY[id]]}
           </Link>
         ))}
       </div>

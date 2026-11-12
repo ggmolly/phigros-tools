@@ -8,6 +8,9 @@ export const es = {
     history: "Historial",
     charts: "Charts",
     leaderboard: "Clasificación",
+    devices: "Dispositivos",
+    phigrospp: "Phigros++",
+    profile: "Perfil",
     label: "Secciones",
   },
   header: {
@@ -69,22 +72,6 @@ export const es = {
     code: "Código",
     newCode: "Nuevo código",
     openTapTap: "Abrir TapTap",
-    guideButton: "Cómo importar",
-    guideTitle: "Cómo importar",
-    guideClose: "Cerrar la guía de importación",
-    guideIntro:
-      "phigros.tools lee tu **partida en la nube de TapTap**, así que sincronízala primero: en Phigros, abre **Ajustes → Perfil**, inicia sesión con TapTap y toca **Sincronizar ahora**. Funcionan tanto la versión global como la china.",
-    step1: "Elige **Inicio de sesión TapTap** y selecciona tu versión del juego.",
-    step2:
-      "Escanea el código QR con tu teléfono, o toca **Abrir TapTap** si ya estás en el teléfono, y aprueba con la cuenta de TapTap con la que juegas.",
-    step3:
-      "Tu partida se carga, y este navegador recuerda el inicio de sesión para que **Sincronizar** obtenga partidas más nuevas después.",
-    usbSummary: "Android por USB en su lugar",
-    usb1: "En el teléfono, abre **Ajustes → Acerca del teléfono** y toca siete veces **Número de compilación** para activar las opciones de desarrollador.",
-    usb2: "En **Opciones de desarrollador**, activa la **Depuración USB**.",
-    usb3: "Conecta el teléfono a un ordenador y abre este sitio en **Chrome** o **Edge** (Firefox y Safari no pueden comunicarse con dispositivos USB).",
-    usb4: "Elige **Android (USB)**, selecciona tu teléfono y toca **Permitir** en el teléfono.",
-    loginWithTapTap: "Iniciar sesión con TapTap",
   },
   seo: {
     siteDescription:
@@ -151,7 +138,6 @@ export const es = {
     skip: "Saltar al contenido",
     syncTitle: (date: string) =>
       `Descargar la partida guardada más reciente de la nube · última descarga: ${date}`,
-    reenterToken: "Volver a introducir el token",
     player: (id: string) => `Jugador ${id}`,
     localSave: "Partida local",
     importTagline: "Carga tu progreso de Phigros",
@@ -198,7 +184,7 @@ export const es = {
     searchPlayers: "Buscar nombre o nombre#0042",
     noPlayers: "Ningún jugador tiene este nombre",
     noRanked: "Aún no hay jugadores clasificados",
-    noCharts: "Aún no hay charts con partidas",
+    noCharts: "Aún no hay charts con partidas. Juega uno con Phigros++ para ser el primero.",
     description:
       "Jugadores de Phigros ordenados por RKS y las mejores partidas de cada chart, enviadas por quienes sincronizan con Phigros++.",
   },
@@ -486,6 +472,121 @@ export const es = {
     downloadFailed: (status: string) => `Descarga de la partida: HTTP ${status}`,
     jsonTooLarge: (mb: string) => `El JSON supera el límite de importación de ${mb} MB`,
     invalidJson: "JSON no válido",
+    pppRemoved: "Este navegador se quitó del perfil. Vuelve a iniciar sesión para abrirlo.",
+    pppNoCode: "Este código no funciona: ya se usó o tiene más de 10 minutos. Pide uno nuevo.",
+    pppNoProfile:
+      "Ningún perfil de phigros.tools se creó con estas palabras. Revisa cada palabra y su orden.",
+    pppServer: (status: string) =>
+      `phigros.tools no pudo responder (HTTP ${status}). Inténtalo de nuevo.`,
+    pppWord: (word: string) => `“${word}” no es una de las palabras de recuperación.`,
+    pppWords: (count: string) =>
+      `Has escrito ${count} palabras, y la frase de recuperación tiene 16.`,
+    pppNoSave:
+      "Phigros++ aún no ha subido tu partida. Activa Upload my save en Ajustes → Perfil dentro del juego.",
+    pppUnsupported:
+      "Este navegador no puede iniciar sesión. Actualízalo o usa una versión reciente de Chrome, Firefox o Safari.",
+  },
+  ppp: {
+    profile: "Perfil de Phigros++",
+    profileDesc: "Inicia sesión desde el juego para abrir tu partida",
+    otherWays: "Otras opciones",
+    otherWaysDesc: "Inicio de sesión TapTap, Android (USB), session token",
+    taptapGone:
+      "La nube de TapTap dejó de responder en noviembre de 2026, así que estas opciones pueden fallar. Phigros++ guarda tu partida en phigros.tools en su lugar.",
+    pitch:
+      "Phigros++ añade repeticiones, un HUD y mods al juego, y guarda aquí tu partida y tus jugadas.",
+    get: "Consigue Phigros++",
+    signInTitle: "Inicia sesión desde Phigros++",
+    signInStep1:
+      "En Phigros++, abre **Ajustes → Perfil** y elige **Sign in another device**, u **Open in browser** para no tener que escribir.",
+    signInStep2: "Escribe aquí el código que aparece.",
+    code: "Código",
+    signIn: "Iniciar sesión",
+    signingIn: "Iniciando sesión…",
+    usePhrase: "Usar mi frase de recuperación",
+    useCode: "Usar un código del juego",
+    phraseTitle: "Inicia sesión con tu frase de recuperación",
+    phraseText:
+      "Escribe en orden las 16 palabras que Phigros++ mostró en **Ajustes → Perfil → Show recovery phrase**.",
+    phrase: "Frase de recuperación",
+    phraseNote:
+      "Las palabras se convierten en tu clave dentro de este navegador y nunca se envían. Después, este navegador recibe su propia clave, que puedes quitar en Dispositivos.",
+    close: "Cerrar",
+    signOut: "Cerrar sesión",
+    signOutConfirm:
+      "¿Cerrar la sesión de tu perfil de Phigros++ en este navegador? Sus instantáneas se quedan en el Historial.",
+    move: "Esta partida solo existe en este navegador. Envíala a Phigros++ para seguir jugándola, con repeticiones y tus jugadas en la clasificación.",
+    send: "Enviar a Phigros++",
+    sendConfirm: (name: string) =>
+      `¿Enviar esta partida al Phigros++ de ${name}? La próxima vez que se abra el juego, ofrecerá cargarla y dirá qué reemplaza.`,
+    sent: "Enviada. Abre Phigros++ para cargarla.",
+    moveStep1: "Instala Phigros++ y activa **Sync to phigros.tools** en **Ajustes → Perfil**.",
+    moveStep2:
+      "Elige ahí **Sign in another device** y luego **Open in browser**, o inicia sesión aquí con el código que aparece.",
+    moveStep3: "Vuelve a esta partida y elige **Enviar a Phigros++**.",
+    taptapCard: (date: string) =>
+      `La nube de TapTap ya no responde, pero este navegador guardó tu partida del ${date}. Ábrela para enviarla a Phigros++.`,
+    taptapCardNone:
+      "La nube de TapTap ya no responde y este navegador no tiene ninguna copia de esta partida.",
+    openSave: "Abrir mi partida",
+    olderSave: (date: string, rks: string) =>
+      `Este navegador también guardó una partida del ${date} con RKS ${rks}, que puedes enviar a Phigros++.`,
+    openIt: "Abrirla",
+    devicesTitle: "Dispositivos",
+    devicesText: (tag: string) =>
+      `Todo lo que tiene la sesión iniciada como ${tag}. Un dispositivo quitado ya no puede sincronizar, subir ni descargar tu partida, pero conserva lo que ya descargó.`,
+    addDevice: "Añadir un dispositivo",
+    addDeviceText:
+      "En Phigros++, en el otro dispositivo, abre **Ajustes → Perfil**, elige **Sign in to my profile** y escribe este código. Funciona una sola vez, durante 10 minutos.",
+    phraseRow: "Frase de recuperación",
+    phraseRowDesc: "Tus 16 palabras. Siempre recuperan el perfil, así que no se pueden quitar.",
+    thisBrowser: "Este navegador",
+    seen: (date: string) => `visto por última vez el ${date}`,
+    added: (date: string) => `añadido el ${date}`,
+    remove: "Quitar",
+    rename: "Cambiar nombre",
+    removeConfirm: (name: string) =>
+      `¿Quitar ${name}? Ya no podrá sincronizar ni descargar tu partida.`,
+    signingInFromLink: "Iniciando sesión con el código de Phigros++…",
+    leaderboardCta: "Todos aquí juegan con Phigros++, que envía sus jugadas y repeticiones.",
+    leaderboardJoin: "Entra en la clasificación",
+  },
+  pppPage: {
+    description:
+      "Phigros con repeticiones, un HUD y mods en Lua, instalado como una app propia junto al juego. Guarda tu partida, tus récords y tus repeticiones en phigros.tools, donde tus jugadas cuentan en la clasificación.",
+    download: "Descargar el instalador",
+    downloadNote: "Para Android 7 o posterior, con Phigros de la Play Store",
+    replays: "Repeticiones",
+    replaysText:
+      "Cada partida se graba y se puede volver a ver desde la lista de canciones, con avance, pausa y control de velocidad.",
+    hud: "HUD",
+    hudText:
+      "La nota y la precisión hacia las que va tu partida, una barra de error de golpes y una opción para saltar las esperas de carga del juego.",
+    sync: "Sincronización con phigros.tools",
+    syncText:
+      "Un perfil opcional con tus récords, repeticiones y estadísticas de juego, que cuenta en la clasificación, y tu partida para abrirla aquí.",
+    install: "Instálalo",
+    install1: "Instala Phigros desde la Play Store.",
+    install2: "Descarga **phigrospp-installer.apk** de la última versión del instalador y ábrelo.",
+    install3:
+      "Toca **Install**: convierte tu Phigros en Phigros++, una app propia junto al juego, y lo actualiza más adelante.",
+    install4:
+      "En Phigros++, abre **Ajustes → Perfil**, activa **Sync to phigros.tools** y guarda las 16 palabras que muestra.",
+    installNote:
+      "Los mods se ejecutan con tu clave de phigros.tools, así que añade solo mods de confianza.",
+    bring: "Trae tu partida",
+    bringText:
+      "Phigros++ empieza con una partida vacía, y la nube de TapTap ya no responde, así que no puede traer la tuya desde allí.",
+    browser: "Ya abriste tu partida en phigros.tools",
+    browserText:
+      "Este navegador guardó una copia. Inicia sesión desde Phigros++, abre esa partida desde el Historial y elige **Enviar a Phigros++**: el juego ofrecerá cargarla la próxima vez que se abra.",
+    device: "Ya usas Phigros++ en otro dispositivo",
+    deviceText:
+      "Elige **Sign in another device** allí, luego **Sign in to my profile** en el nuevo y escribe su código o tus 16 palabras. Después, Phigros++ te ofrece la partida que subió tu otro dispositivo.",
+    game: "Tu partida solo existe en el juego",
+    gameText:
+      "Phigros++ se instala como una app aparte junto a Phigros, así que tu partida se queda en el juego original y puedes seguir jugándola allí. Por ahora Phigros++ empieza con su propia partida, y estamos trabajando en una forma de traer la tuya.",
+    source: "Código fuente",
   },
   history: {
     snapshots: "Instantáneas",

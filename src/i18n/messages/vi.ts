@@ -8,6 +8,9 @@ export const vi = {
     history: "Lịch sử",
     charts: "Chart",
     leaderboard: "Bảng xếp hạng",
+    devices: "Thiết bị",
+    phigrospp: "Phigros++",
+    profile: "Hồ sơ",
     label: "Mục",
   },
   header: {
@@ -68,22 +71,6 @@ export const vi = {
     code: "Mã",
     newCode: "Mã mới",
     openTapTap: "Mở TapTap",
-    guideButton: "Cách nhập",
-    guideTitle: "Cách nhập",
-    guideClose: "Đóng hướng dẫn nhập",
-    guideIntro:
-      "phigros.tools đọc **save đám mây TapTap** của bạn, nên hãy đồng bộ trước: trong Phigros, mở **Cài đặt → Hồ sơ**, đăng nhập bằng TapTap và nhấn **Đồng bộ ngay**. Cả bản quốc tế và bản Trung Quốc đều dùng được.",
-    step1: "Chọn **Đăng nhập TapTap** và chọn phiên bản game.",
-    step2:
-      "Quét mã QR bằng điện thoại, hoặc nhấn **Mở TapTap** nếu bạn đang ở trên điện thoại, rồi xác nhận bằng tài khoản TapTap bạn dùng để chơi.",
-    step3:
-      "Save được tải, và trình duyệt này ghi nhớ đăng nhập để **Đồng bộ** tải các save mới hơn sau này.",
-    usbSummary: "Hoặc dùng Android qua USB",
-    usb1: "Trên điện thoại, mở **Cài đặt → Giới thiệu về điện thoại** và nhấn **Số hiệu bản dựng** bảy lần để mở Tùy chọn cho nhà phát triển.",
-    usb2: "Trong **Tùy chọn cho nhà phát triển**, bật **Gỡ lỗi USB**.",
-    usb3: "Cắm điện thoại vào máy tính và mở trang này bằng **Chrome** hoặc **Edge** (Firefox và Safari không giao tiếp được với thiết bị USB).",
-    usb4: "Chọn **Android (USB)**, chọn điện thoại của bạn, rồi nhấn **Cho phép** trên điện thoại.",
-    loginWithTapTap: "Đăng nhập bằng TapTap",
   },
   seo: {
     siteDescription:
@@ -149,7 +136,6 @@ export const vi = {
   tool: {
     skip: "Bỏ qua đến nội dung",
     syncTitle: (date: string) => `Lấy save đám mây mới nhất · lần lấy gần nhất ${date}`,
-    reenterToken: "Nhập lại token",
     player: (id: string) => `Người chơi ${id}`,
     localSave: "Save cục bộ",
     importTagline: "Tải tiến trình Phigros của bạn",
@@ -196,7 +182,8 @@ export const vi = {
     searchPlayers: "Tìm tên hoặc tên#0042",
     noPlayers: "Không có người chơi nào tên này",
     noRanked: "Chưa có người chơi nào được xếp hạng",
-    noCharts: "Chưa có chart nào có lượt chơi",
+    noCharts:
+      "Chưa có chart nào có lượt chơi. Hãy chơi một chart với Phigros++ để là người đầu tiên.",
     description:
       "Người chơi Phigros xếp theo RKS và lượt chơi tốt nhất của từng chart, từ những người đồng bộ bằng Phigros++.",
   },
@@ -481,6 +468,121 @@ export const vi = {
     downloadFailed: (status: string) => `Tải save: HTTP ${status}`,
     jsonTooLarge: (mb: string) => `JSON vượt quá giới hạn nhập ${mb} MB`,
     invalidJson: "JSON không hợp lệ",
+    pppRemoved: "Trình duyệt này đã bị gỡ khỏi hồ sơ. Hãy đăng nhập lại để mở.",
+    pppNoCode: "Mã này không dùng được vì đã được dùng hoặc đã quá 10 phút. Hãy xin một mã mới.",
+    pppNoProfile:
+      "Không có hồ sơ phigros.tools nào được tạo bằng các từ này. Hãy kiểm tra từng từ và thứ tự của chúng.",
+    pppServer: (status: string) =>
+      `phigros.tools không phản hồi được (HTTP ${status}). Hãy thử lại.`,
+    pppWord: (word: string) => `“${word}” không phải là một từ khôi phục.`,
+    pppWords: (count: string) => `Bạn đã nhập ${count} từ, còn cụm từ khôi phục có 16 từ.`,
+    pppNoSave:
+      "Phigros++ chưa tải save của bạn lên. Hãy bật Upload my save trong Settings → Profile của game.",
+    pppUnsupported:
+      "Trình duyệt này không đăng nhập được. Hãy cập nhật nó, hoặc dùng Chrome, Firefox hay Safari bản mới.",
+  },
+  ppp: {
+    profile: "Hồ sơ Phigros++",
+    profileDesc: "Đăng nhập từ game để mở save của bạn",
+    otherWays: "Cách khác",
+    otherWaysDesc: "Đăng nhập TapTap, Android (USB), session token",
+    taptapGone:
+      "Save đám mây của TapTap đã ngừng phản hồi từ tháng 11 năm 2026, nên các cách này có thể thất bại. Thay vào đó, Phigros++ giữ save của bạn trên phigros.tools.",
+    pitch:
+      "Phigros++ thêm replay, HUD và mod vào game, đồng thời giữ save và lượt chơi của bạn tại đây.",
+    get: "Tải Phigros++",
+    signInTitle: "Đăng nhập từ Phigros++",
+    signInStep1:
+      "Trong Phigros++, mở **Settings → Profile** và chọn **Sign in another device**, hoặc chọn **Open in browser** để khỏi phải gõ.",
+    signInStep2: "Nhập mã hiện ra vào đây.",
+    code: "Mã",
+    signIn: "Đăng nhập",
+    signingIn: "Đang đăng nhập…",
+    usePhrase: "Dùng cụm từ khôi phục",
+    useCode: "Dùng mã từ game",
+    phraseTitle: "Đăng nhập bằng cụm từ khôi phục",
+    phraseText:
+      "Nhập đúng thứ tự 16 từ mà Phigros++ hiện trong **Settings → Profile → Show recovery phrase**.",
+    phrase: "Cụm từ khôi phục",
+    phraseNote:
+      "Các từ được chuyển thành khóa ngay trong trình duyệt này và không bao giờ được gửi đi. Sau đó trình duyệt này nhận một khóa riêng, bạn có thể gỡ nó trong Thiết bị.",
+    close: "Đóng",
+    signOut: "Đăng xuất",
+    signOutConfirm:
+      "Đăng xuất trình duyệt này khỏi hồ sơ Phigros++? Các snapshot của nó vẫn ở lại trong Lịch sử.",
+    move: "Save này chỉ có trong trình duyệt này. Hãy gửi nó sang Phigros++ để tiếp tục chơi, có replay và lượt chơi được đưa lên bảng xếp hạng.",
+    send: "Gửi sang Phigros++",
+    sendConfirm: (name: string) =>
+      `Gửi save này sang Phigros++ của ${name}? Lần tới khi khởi động, game sẽ đề nghị tải nó và cho biết nó thay thế những gì.`,
+    sent: "Đã gửi. Hãy mở Phigros++ để tải nó.",
+    moveStep1: "Cài Phigros++ và bật **Sync to phigros.tools** trong **Settings → Profile**.",
+    moveStep2:
+      "Tại đó, chọn **Sign in another device** rồi chọn **Open in browser**, hoặc đăng nhập ở đây bằng mã hiện ra.",
+    moveStep3: "Quay lại save này và chọn **Gửi sang Phigros++**.",
+    taptapCard: (date: string) =>
+      `Đám mây của TapTap không còn phản hồi, nhưng trình duyệt này vẫn giữ save của bạn lưu ngày ${date}. Hãy mở nó để gửi sang Phigros++.`,
+    taptapCardNone:
+      "Đám mây của TapTap không còn phản hồi, và trình duyệt này không có bản sao nào của save này.",
+    openSave: "Mở save của tôi",
+    olderSave: (date: string, rks: string) =>
+      `Trình duyệt này còn giữ một save lưu ngày ${date} với RKS ${rks}, bạn có thể gửi nó sang Phigros++.`,
+    openIt: "Mở nó",
+    devicesTitle: "Thiết bị",
+    devicesText: (tag: string) =>
+      `Mọi thứ đang đăng nhập dưới tên ${tag}. Thiết bị đã gỡ sẽ không thể đồng bộ, tải lên hay tải xuống save của bạn nữa, nhưng vẫn giữ những gì đã tải xuống.`,
+    addDevice: "Thêm thiết bị",
+    addDeviceText:
+      "Trong Phigros++ trên thiết bị kia, mở **Settings → Profile**, chọn **Sign in to my profile** và nhập mã này. Mã chỉ dùng được một lần, trong 10 phút.",
+    phraseRow: "Cụm từ khôi phục",
+    phraseRowDesc: "16 từ của bạn. Chúng luôn khôi phục được hồ sơ, nên không thể gỡ bỏ.",
+    thisBrowser: "Trình duyệt này",
+    seen: (date: string) => `hoạt động lần cuối ${date}`,
+    added: (date: string) => `thêm vào ${date}`,
+    remove: "Gỡ",
+    rename: "Đổi tên",
+    removeConfirm: (name: string) =>
+      `Gỡ ${name}? Thiết bị này sẽ không thể đồng bộ hay tải xuống save của bạn nữa.`,
+    signingInFromLink: "Đang đăng nhập bằng mã từ Phigros++…",
+    leaderboardCta:
+      "Mọi người ở đây đều chơi bằng Phigros++, công cụ gửi lượt chơi và replay của họ.",
+    leaderboardJoin: "Lên bảng xếp hạng",
+  },
+  pppPage: {
+    description:
+      "Phigros với replay, HUD và mod Lua, được cài như một ứng dụng riêng bên cạnh game. Nó giữ save, kỷ lục và replay của bạn trên phigros.tools, nơi lượt chơi của bạn được tính trên bảng xếp hạng.",
+    download: "Tải trình cài đặt",
+    downloadNote: "Dành cho Android 7 trở lên, với Phigros từ Play Store",
+    replays: "Replay",
+    replaysText:
+      "Mọi lượt chơi đều được ghi lại và có thể phát lại từ danh sách bài, với tua, tạm dừng và chỉnh tốc độ.",
+    hud: "HUD",
+    hudText:
+      "Hạng và độ chính xác mà lượt chơi đang hướng tới, thanh lệch phán định, và tùy chọn bỏ qua thời gian chờ tải của game.",
+    sync: "Đồng bộ phigros.tools",
+    syncText:
+      "Một hồ sơ tùy chọn chứa kỷ lục, replay và thống kê lượt chơi của bạn, được xếp hạng trên bảng xếp hạng, cùng save để mở tại đây.",
+    install: "Cài đặt",
+    install1: "Cài Phigros từ Play Store.",
+    install2:
+      "Tải **phigrospp-installer.apk** từ bản phát hành mới nhất của trình cài đặt rồi mở nó.",
+    install3:
+      "Nhấn **Install**: nó vá Phigros của bạn thành Phigros++, một ứng dụng riêng bên cạnh game, và cập nhật nó về sau.",
+    install4:
+      "Trong Phigros++, mở **Settings → Profile**, bật **Sync to phigros.tools** và giữ lại 16 từ hiện ra.",
+    installNote: "Mod chạy bằng khóa phigros.tools của bạn, nên chỉ thêm những mod bạn tin tưởng.",
+    bring: "Chuyển save của bạn sang",
+    bringText:
+      "Phigros++ bắt đầu với save trống, và đám mây TapTap không còn phản hồi, nên nó không thể lấy save của bạn từ đó.",
+    browser: "Bạn đã từng mở save trên phigros.tools",
+    browserText:
+      "Trình duyệt này đã giữ một bản sao. Hãy đăng nhập từ Phigros++, mở save đó trong Lịch sử và chọn **Gửi sang Phigros++**: game sẽ đề nghị tải nó ở lần khởi động tới.",
+    device: "Bạn đã dùng Phigros++ trên thiết bị khác",
+    deviceText:
+      "Chọn **Sign in another device** trên thiết bị đó, rồi chọn **Sign in to my profile** trên thiết bị mới và nhập mã của nó hoặc 16 từ của bạn. Sau đó Phigros++ sẽ đề nghị save mà thiết bị kia đã tải lên.",
+    game: "Save của bạn chỉ có trong game",
+    gameText:
+      "Phigros++ được cài thành một ứng dụng riêng bên cạnh Phigros, nên save của bạn vẫn nằm trong game gốc và bạn có thể tiếp tục chơi ở đó. Hiện tại Phigros++ bắt đầu với save riêng, và chúng tôi đang làm cách để chuyển save của bạn sang.",
+    source: "Mã nguồn",
   },
   history: {
     snapshots: "Snapshot",

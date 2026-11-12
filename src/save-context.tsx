@@ -3,13 +3,15 @@ import { createContext, type RefObject, use, useEffect, useRef, useState } from 
 import type { Account } from "./adb";
 import { catalogRevision } from "./catalog";
 import { MAX_JSON_SIZE, parseJsonDocument, type SaveDocumentV1 } from "./document";
+import type { Home } from "./home";
 import { useFormat, useT } from "./i18n";
-import { errorText } from "./i18n/errors";
+import { AppError, errorText } from "./i18n/errors";
 import { calculateRanking } from "./metrics";
 import { applyPalette } from "./palettes";
 import type { Region, SaveArchive } from "./save";
 import {
   type Credential,
+  deleteCredential,
   listCredentials,
   listSnapshots,
   makeSnapshot,
@@ -40,11 +42,19 @@ interface SaveContextValue {
   usbEvents: string[];
   unsupportedZip?: { name: string; bytes: Uint8Array };
   storageReady: boolean;
+  /** The Phigros++ profile this browser is signed in to: the page's cookie until storage is read, then its key. */
+  account?: string;
+  /** That profile's public page as the server rendered it with the page. */
+  home: Home | null;
   sync?: { playerId: string; state: "syncing" | "fresh" | "same" | "error" };
   dialog: RefObject<HTMLDialogElement | null>;
   usbDialog: RefObject<HTMLDialogElement | null>;
   /** Opens the TapTap QR login (set by <TapTapDialog>, which owns that flow's state). */
   openTapTap: RefObject<(() => void) | undefined>;
+  /** The dialog of the imports that went through TapTap (<OtherWaysDialog>). */
+  openOtherWays: RefObject<HTMLDialogElement | null>;
+  /** Opens the Phigros++ sign-in (set by <SignInDialog>). */
+  openSignIn: RefObject<(() => void) | undefined>;
   usbLog: RefObject<HTMLDivElement | null>;
   fileInput: RefObject<HTMLInputElement | null>;
   say: (text: string) => void;
@@ -56,6 +66,11 @@ interface SaveContextValue {
     signal?: AbortSignal,
   ) => Promise<boolean>;
   syncPlayer: (credential: Credential) => Promise<void>;
+  /** Signs this browser in to a Phigros++ profile with a code or the recovery phrase, then opens its save. */
+  signIn: (how: { code: string } | { phrase: string }) => Promise<void>;
+  signOut: (credential: Credential) => Promise<void>;
+  /** Sends a snapshot's original save to a Phigros++ profile, for its game to offer. */
+  sendToPhigrospp: (rawZip: Uint8Array, credential: Credential) => Promise<void>;
   syncLabel: (playerId: string, idle: string) => string;
   closeUsb: () => void;
   resetUsbDialog: () => void;
@@ -73,12 +88,17 @@ export function useSave(): SaveContextValue {
   return value;
 }
 
-export function SaveProvider({ children }: { children: React.ReactNode }) {
+export function SaveProvider({ children, home }: { children: React.ReactNode; home: Home | null }) {
   const t = useT();
   const format = useFormat();
   const navigate = useNavigate();
-  const [loaded, setLoaded] = useState<Loaded>();
-  const [chartKey, setChartKey] = useState("");
+  // a signed-in Phigros++ player's page renders with their save on the server (see getHome)
+  const [loaded, setLoaded] = useState<Loaded | undefined>(
+    home?.document && { document: home.document, playerId: home.id },
+  );
+  const [chartKey, setChartKey] = useState(
+    () => (home?.document && calculateRanking(home.document).charts[0]?.key) ?? "",
+  );
   const { id: pageSong } = useParams({ strict: false });
   const accentSong = pageSong ?? chartKey.slice(0, chartKey.lastIndexOf(":"));
   const [snapshots, setSnapshots] = useState<SnapshotV1[]>([]);
@@ -100,6 +120,8 @@ export function SaveProvider({ children }: { children: React.ReactNode }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const usbDialog = useRef<HTMLDialogElement>(null);
   const openTapTap = useRef<() => void>(undefined);
+  const openSignIn = useRef<() => void>(undefined);
+  const openOtherWays = useRef<HTMLDialogElement>(null);
   const usbLog = useRef<HTMLDivElement>(null);
   const usbCloseTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const usbController = useRef<AbortController>(undefined);
@@ -114,6 +136,15 @@ export function SaveProvider({ children }: { children: React.ReactNode }) {
     void refresh()
       .catch((error) => say(`✗ ${t.save.storageUnavailable(message(error))}`))
       .finally(() => setStorageReady(true));
+    // a Phigros++ player signed in before the cookie existed gets it, and their save
+    void listCredentials().then(async (list) => {
+      const signedIn = list.find((c) => c.signer);
+      // a cookie whose key this browser no longer has is forgotten too
+      if (!signedIn && home) await fetch("/api/session", { method: "DELETE" });
+      if (!signedIn || home?.id === signedIn.playerId) return;
+      await startSession(signedIn);
+      await syncPlayer(signedIn);
+    });
     return () => {
       clearTimeout(usbCloseTimer.current);
       usbController.current?.abort();
@@ -184,7 +215,12 @@ export function SaveProvider({ children }: { children: React.ReactNode }) {
   }
   async function ingestZip(
     bytes: Uint8Array,
-    options: { kind: "cloud" | "zip"; name?: string; cloudUpdatedAt?: string; summary?: string },
+    options: {
+      kind: "cloud" | "zip" | "phigrospp";
+      name?: string;
+      cloudUpdatedAt?: string;
+      summary?: string;
+    },
     playerId?: string,
     signal?: AbortSignal,
   ) {
@@ -204,6 +240,73 @@ export function SaveProvider({ children }: { children: React.ReactNode }) {
     const owner = playerId ?? (options.kind === "zip" ? localPlayer() : undefined);
     const stored = await imported({ document, archive, playerId: owner });
     if (stored) say(t.save.loadedSongs(document.songs.length, archive.fingerprint.slice(0, 12)));
+  }
+  /** The save a Phigros++ profile's game uploaded, opened like a cloud save. */
+  async function phigrosppImport(credential: Credential): Promise<boolean> {
+    setBusy(true);
+    try {
+      const ppp = await import("./phigrospp");
+      const response = await ppp.call(credential.signer!, "POST", "/api/save");
+      if (response.status === 404) throw new AppError("pppNoSave");
+      if (!response.ok) await ppp.answer(response);
+      const { updated, summary, ...modules } = ppp.unpack(
+        new Uint8Array(await response.arrayBuffer()),
+      );
+      const { zipSync } = await import("fflate");
+      const decode = (bytes?: Uint8Array) => bytes && new TextDecoder().decode(bytes);
+      await ingestZip(
+        zipSync(modules),
+        {
+          kind: "phigrospp",
+          cloudUpdatedAt: new Date(Number(decode(updated))).toISOString(),
+          summary: decode(summary),
+        },
+        credential.playerId,
+      );
+      return true;
+    } catch (error) {
+      if (error instanceof AppError && error.key === "pppRemoved") {
+        await deleteCredential(credential.playerId);
+        await refresh();
+      }
+      say(`✗ ${message(error)}`);
+      return false;
+    } finally {
+      setBusy(false);
+    }
+  }
+  /** The cookie the signed-in player's pages render with (server/session.ts). */
+  async function startSession(credential: Credential) {
+    const ppp = await import("./phigrospp");
+    await ppp.answer(await ppp.call(credential.signer!, "POST", "/api/session"));
+  }
+  async function signIn(how: { code: string } | { phrase: string }) {
+    const ppp = await import("./phigrospp");
+    const { signer, me } =
+      "code" in how ? await ppp.redeem(how.code) : await ppp.signInWithPhrase(how.phrase);
+    const credential = { playerId: me.id, nickname: me.name, signer };
+    await saveCredential(credential);
+    await refresh();
+    await startSession(credential);
+    await syncPlayer(credential);
+  }
+  async function signOut(credential: Credential) {
+    const ppp = await import("./phigrospp");
+    const signer = credential.signer!;
+    // the server forgets this browser's key too, it's only kept here otherwise
+    await ppp.call(signer, "DELETE", "/api/devices", signer.public.toHex()).catch(() => undefined);
+    await fetch("/api/session", { method: "DELETE" });
+    await deleteCredential(credential.playerId);
+    setLoaded(undefined);
+    await refresh();
+    void navigate({ to: "/" });
+  }
+  async function sendToPhigrospp(rawZip: Uint8Array, credential: Credential) {
+    const ppp = await import("./phigrospp");
+    const { unzipSync } = await import("fflate");
+    await ppp.answer(
+      await ppp.call(credential.signer!, "PUT", "/api/offer", ppp.pack(unzipSync(rawZip))),
+    );
   }
   async function cloudImport(
     getSession: () => Promise<{ token: string; account?: Account; region?: Region }>,
@@ -255,7 +358,9 @@ export function SaveProvider({ children }: { children: React.ReactNode }) {
     syncing.current = true;
     lastStored.current = false;
     setSync({ playerId: credential.playerId, state: "syncing" });
-    const ok = await cloudImport(async () => credential);
+    const ok = credential.signer
+      ? await phigrosppImport(credential)
+      : await cloudImport(async () => ({ ...credential, token: credential.token! }));
     syncing.current = false;
     setSync({
       playerId: credential.playerId,
@@ -360,10 +465,14 @@ export function SaveProvider({ children }: { children: React.ReactNode }) {
     usbEvents,
     unsupportedZip,
     storageReady,
+    account: storageReady ? credentials.find((c) => c.signer)?.playerId : home?.id,
+    home,
     sync,
     dialog,
     usbDialog,
     openTapTap,
+    openSignIn,
+    openOtherWays,
     usbLog,
     fileInput,
     say,
@@ -371,6 +480,9 @@ export function SaveProvider({ children }: { children: React.ReactNode }) {
     storeSave,
     cloudImport,
     syncPlayer,
+    signIn,
+    signOut,
+    sendToPhigrospp,
     syncLabel,
     closeUsb,
     resetUsbDialog,

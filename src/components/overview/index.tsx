@@ -4,7 +4,10 @@ import type { SaveDocumentV1 } from "../../document";
 import { useT } from "../../i18n";
 import { blankChart, type ChartMetric, calculateRanking } from "../../metrics";
 import { countLevels, LEVELS, type LevelName } from "../../modules";
+import type { PlayerProfile } from "../../plays";
 import { useSave } from "../../save-context";
+import { Card, RecentActivity, RecentPlays } from "../player";
+import { RksHistory } from "../rks-history";
 import { BestList } from "./best-list";
 import { ChartDetail } from "./chart-detail";
 import { Hero } from "./hero";
@@ -21,13 +24,29 @@ function unplayedChart(key: string): ChartMetric | undefined {
     : undefined;
 }
 
-/** The Overview tab's content: hero + Best list + accuracy simulator + Next Target. */
+/** The player's card with the save's RKS and counts, as the game shows them, over the server's. */
+function withSave(profile: PlayerProfile, document: SaveDocumentV1, rks: number): PlayerProfile {
+  const counts = countLevels(document.songs);
+  const sum = (key: "fc" | "phi") => counts.reduce((total, count) => total + count[key], 0);
+  const cleared = document.songs.reduce(
+    (total, song) => total + song.levels.filter(Boolean).length,
+    0,
+  );
+  return { ...profile, rks, stats: { ...profile.stats, cleared, fc: sum("fc"), phi: sum("phi") } };
+}
+
+/**
+ * The Overview tab's content: hero + Best list + accuracy simulator + Next Target. A Phigros++ player's public profile
+ * goes around it: their card in place of the hero, their RKS history, then their recent activity and plays.
+ */
 export function Overview({
   document,
   playerName,
+  profile,
 }: {
   document: SaveDocumentV1;
   playerName?: string;
+  profile?: PlayerProfile;
 }) {
   const t = useT();
   const ranking = calculateRanking(document);
@@ -60,7 +79,14 @@ export function Overview({
         </p>
       )}
 
-      <Hero ranking={ranking} document={document} playerName={playerName} />
+      {profile ? (
+        <>
+          <Card profile={withSave(profile, document, ranking.rankingScore)} />
+          <RksHistory history={profile.history} />
+        </>
+      ) : (
+        <Hero ranking={ranking} document={document} playerName={playerName} />
+      )}
 
       {chart ? (
         <div className="select-screen">
@@ -79,6 +105,12 @@ export function Overview({
         </div>
       ) : (
         <p className="panel meta">{t.overview.noCharts}</p>
+      )}
+      {profile && (
+        <>
+          <RecentActivity profile={profile} />
+          <RecentPlays profile={profile} />
+        </>
       )}
     </>
   );

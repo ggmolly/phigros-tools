@@ -8,6 +8,9 @@ export const ko = {
     history: "기록 내역",
     charts: "채보",
     leaderboard: "리더보드",
+    devices: "기기",
+    phigrospp: "Phigros++",
+    profile: "프로필",
     label: "섹션",
   },
   header: {
@@ -68,22 +71,6 @@ export const ko = {
     code: "코드",
     newCode: "새 코드",
     openTapTap: "TapTap 열기",
-    guideButton: "가져오는 방법",
-    guideTitle: "가져오는 방법",
-    guideClose: "가져오기 가이드 닫기",
-    guideIntro:
-      "phigros.tools는 **TapTap 클라우드 세이브**를 읽으므로 먼저 동기화하세요. Phigros에서 **설정 → 프로필**을 열고 TapTap으로 로그인한 뒤 **지금 동기화**를 누르세요. 글로벌 버전과 중국 버전 모두 지원합니다.",
-    step1: "**TapTap 로그인**을 선택하고 게임 버전을 고르세요.",
-    step2:
-      "휴대폰으로 QR 코드를 스캔하거나, 이미 휴대폰이라면 **TapTap 열기**를 누른 다음 플레이하는 TapTap 계정으로 승인하세요.",
-    step3:
-      "세이브가 불러와지고, 이 브라우저가 로그인을 기억하므로 나중에 **동기화**로 새 세이브를 가져올 수 있습니다.",
-    usbSummary: "대신 USB로 Android 연결",
-    usb1: "휴대폰에서 **설정 → 휴대전화 정보**를 열고 **빌드 번호**를 일곱 번 눌러 개발자 옵션을 켜세요.",
-    usb2: "**개발자 옵션**에서 **USB 디버깅**을 켜세요.",
-    usb3: "휴대폰을 컴퓨터에 연결하고 이 사이트를 **Chrome** 또는 **Edge**에서 여세요(Firefox와 Safari는 USB 기기와 통신할 수 없습니다).",
-    usb4: "**Android (USB)**를 선택하고 휴대폰을 고른 다음, 휴대폰에서 **허용**을 누르세요.",
-    loginWithTapTap: "TapTap으로 로그인",
   },
   seo: {
     siteDescription:
@@ -149,7 +136,6 @@ export const ko = {
   tool: {
     skip: "본문으로 건너뛰기",
     syncTitle: (date: string) => `최신 클라우드 세이브 가져오기 · 마지막으로 가져온 시각 ${date}`,
-    reenterToken: "토큰 다시 입력",
     player: (id: string) => `플레이어 ${id}`,
     localSave: "로컬 세이브",
     importTagline: "Phigros 진행 상황을 불러옵니다",
@@ -194,7 +180,8 @@ export const ko = {
     searchPlayers: "이름 또는 이름#0042 검색",
     noPlayers: "이 이름의 플레이어가 없습니다",
     noRanked: "아직 순위에 오른 플레이어가 없습니다",
-    noCharts: "아직 플레이 기록이 있는 채보가 없습니다",
+    noCharts:
+      "아직 플레이 기록이 있는 채보가 없습니다. Phigros++로 플레이해서 첫 번째가 되어 보세요.",
     description:
       "RKS 순 Phigros 플레이어 순위와 각 채보의 최고 기록입니다. Phigros++로 동기화하는 플레이어의 기록입니다.",
   },
@@ -478,6 +465,120 @@ export const ko = {
     downloadFailed: (status: string) => `세이브 다운로드: HTTP ${status}`,
     jsonTooLarge: (mb: string) => `JSON이 가져오기 제한 ${mb} MB를 초과합니다`,
     invalidJson: "잘못된 JSON",
+    pppRemoved: "이 브라우저는 프로필에서 삭제되었습니다. 열려면 다시 로그인하세요.",
+    pppNoCode:
+      "이 코드는 사용할 수 없습니다. 이미 사용되었거나 10분이 지났습니다. 새 코드를 요청하세요.",
+    pppNoProfile: "이 단어들로 만든 phigros.tools 프로필이 없습니다. 각 단어와 순서를 확인하세요.",
+    pppServer: (status: string) =>
+      `phigros.tools가 응답하지 못했습니다(HTTP ${status}). 다시 시도하세요.`,
+    pppWord: (word: string) => `“${word}”은(는) 복구 단어가 아닙니다.`,
+    pppWords: (count: string) => `입력한 단어는 ${count}개이며, 복구 문구는 16개 단어입니다.`,
+    pppNoSave:
+      "Phigros++가 아직 세이브를 업로드하지 않았습니다. 게임의 Settings → Profile에서 Upload my save를 켜세요.",
+    pppUnsupported:
+      "이 브라우저로는 로그인할 수 없습니다. 브라우저를 업데이트하거나 최신 Chrome, Firefox, Safari를 사용하세요.",
+  },
+  ppp: {
+    profile: "Phigros++ 프로필",
+    profileDesc: "게임에서 로그인해 세이브 열기",
+    otherWays: "다른 방법",
+    otherWaysDesc: "TapTap 로그인, Android (USB), 세션 토큰",
+    taptapGone:
+      "TapTap 클라우드 세이브가 2026년 11월부터 응답하지 않아 이 방법들은 실패할 수 있습니다. 대신 Phigros++가 세이브를 phigros.tools에 보관합니다.",
+    pitch:
+      "Phigros++는 게임에 리플레이, HUD, 모드를 더하고, 세이브와 플레이 기록을 이곳에 보관합니다.",
+    get: "Phigros++ 받기",
+    signInTitle: "Phigros++에서 로그인",
+    signInStep1:
+      "Phigros++에서 **Settings → Profile**을 열고 **Sign in another device**를 선택하세요. 입력을 건너뛰려면 **Open in browser**를 선택하세요.",
+    signInStep2: "표시된 코드를 여기에 입력하세요.",
+    code: "코드",
+    signIn: "로그인",
+    signingIn: "로그인하는 중…",
+    usePhrase: "복구 문구로 로그인",
+    useCode: "게임의 코드로 로그인",
+    phraseTitle: "복구 문구로 로그인",
+    phraseText:
+      "Phigros++의 **Settings → Profile → Show recovery phrase**에 표시된 16개 단어를 순서대로 입력하세요.",
+    phrase: "복구 문구",
+    phraseNote:
+      "단어는 이 브라우저 안에서 키로 바뀌며 전송되지 않습니다. 그다음 이 브라우저는 자체 키를 받으며, 기기에서 삭제할 수 있습니다.",
+    close: "닫기",
+    signOut: "로그아웃",
+    signOutConfirm:
+      "이 브라우저를 Phigros++ 프로필에서 로그아웃할까요? 스냅샷은 기록 내역에 그대로 남습니다.",
+    move: "이 세이브는 이 브라우저에만 있습니다. Phigros++로 보내면 리플레이와 함께 계속 플레이할 수 있고 플레이 기록이 리더보드에 올라갑니다.",
+    send: "Phigros++로 보내기",
+    sendConfirm: (name: string) =>
+      `이 세이브를 ${name}의 Phigros++로 보낼까요? 다음에 게임을 시작하면 불러올지 묻고, 무엇이 바뀌는지 알려줍니다.`,
+    sent: "보냈습니다. Phigros++를 열어 불러오세요.",
+    moveStep1:
+      "Phigros++를 설치하고 **Settings → Profile**에서 **Sync to phigros.tools**를 켜세요.",
+    moveStep2:
+      "그곳에서 **Sign in another device**를 선택한 뒤 **Open in browser**를 선택하거나, 표시된 코드로 여기서 로그인하세요.",
+    moveStep3: "이 세이브로 돌아와 **Phigros++로 보내기**를 선택하세요.",
+    taptapCard: (date: string) =>
+      `TapTap 클라우드는 더 이상 응답하지 않지만, 이 브라우저에 ${date}의 세이브가 남아 있습니다. 열어서 Phigros++로 보내세요.`,
+    taptapCardNone:
+      "TapTap 클라우드는 더 이상 응답하지 않으며, 이 브라우저에도 이 세이브의 사본이 없습니다.",
+    openSave: "내 세이브 열기",
+    olderSave: (date: string, rks: string) =>
+      `이 브라우저에는 ${date}의 RKS ${rks} 세이브도 남아 있으며, Phigros++로 보낼 수 있습니다.`,
+    openIt: "열기",
+    devicesTitle: "기기",
+    devicesText: (tag: string) =>
+      `${tag}(으)로 로그인된 모든 기기입니다. 삭제한 기기는 더 이상 세이브를 동기화, 업로드, 다운로드할 수 없지만 이미 다운로드한 것은 남습니다.`,
+    addDevice: "기기 추가",
+    addDeviceText:
+      "다른 기기의 Phigros++에서 **Settings → Profile**을 열고 **Sign in to my profile**을 선택한 다음 이 코드를 입력하세요. 코드는 10분 동안 한 번만 쓸 수 있습니다.",
+    phraseRow: "복구 문구",
+    phraseRowDesc: "내 16개 단어입니다. 언제든 프로필을 되살릴 수 있어서 삭제할 수 없습니다.",
+    thisBrowser: "이 브라우저",
+    seen: (date: string) => `마지막 접속 ${date}`,
+    added: (date: string) => `추가됨 ${date}`,
+    remove: "삭제",
+    rename: "이름 바꾸기",
+    removeConfirm: (name: string) =>
+      `${name}을(를) 삭제할까요? 더 이상 세이브를 동기화하거나 다운로드할 수 없습니다.`,
+    signingInFromLink: "Phigros++의 코드로 로그인하는 중…",
+    leaderboardCta: "이곳의 모든 플레이어는 플레이와 리플레이를 보내는 Phigros++로 플레이합니다.",
+    leaderboardJoin: "리더보드에 참여하기",
+  },
+  pppPage: {
+    description:
+      "리플레이, HUD, Lua 모드를 갖춘 Phigros로, 게임 옆에 별도의 앱으로 설치됩니다. 세이브, 기록, 리플레이를 phigros.tools에 보관하며, 플레이가 리더보드에 반영됩니다.",
+    download: "설치 프로그램 받기",
+    downloadNote: "Android 7 이상, Play 스토어에서 받은 Phigros 필요",
+    replays: "리플레이",
+    replaysText:
+      "모든 플레이가 녹화되어 곡 목록에서 다시 볼 수 있으며, 탐색, 일시정지, 속도 조절을 지원합니다.",
+    hud: "HUD",
+    hudText:
+      "플레이가 향하는 등급과 정확도, 판정 오차 막대, 그리고 게임의 로딩 지연을 건너뛰는 옵션을 제공합니다.",
+    sync: "phigros.tools 동기화",
+    syncText:
+      "선택해서 만드는 프로필에 기록, 리플레이, 플레이 통계가 담겨 리더보드에 순위가 매겨지고, 세이브도 이곳에서 열 수 있습니다.",
+    install: "설치하기",
+    install1: "Play 스토어에서 Phigros를 설치하세요.",
+    install2: "설치 프로그램의 최신 릴리스에서 **phigrospp-installer.apk**를 다운로드해 여세요.",
+    install3:
+      "**Install**을 누르면 Phigros를 패치해 게임 옆에 별도의 앱인 Phigros++를 만들고, 이후 업데이트도 해 줍니다.",
+    install4:
+      "Phigros++에서 **Settings → Profile**을 열고 **Sync to phigros.tools**를 켠 다음, 표시되는 16개 단어를 보관하세요.",
+    installNote: "모드는 내 phigros.tools 키로 실행되므로 믿을 수 있는 모드만 추가하세요.",
+    bring: "세이브 옮기기",
+    bringText:
+      "Phigros++는 빈 세이브로 시작하며, TapTap 클라우드가 더 이상 응답하지 않아 그곳에서 세이브를 가져올 수 없습니다.",
+    browser: "전에 phigros.tools에서 세이브를 연 적이 있다면",
+    browserText:
+      "이 브라우저에 사본이 남아 있습니다. Phigros++에서 로그인하고, 기록 내역에서 그 세이브를 연 다음 **Phigros++로 보내기**를 선택하세요. 다음에 시작할 때 게임이 불러오기를 제안합니다.",
+    device: "이미 다른 기기에서 Phigros++를 쓰고 있다면",
+    deviceText:
+      "그 기기에서 **Sign in another device**를 선택한 다음, 새 기기에서 **Sign in to my profile**을 선택하고 그 코드나 16개 단어를 입력하세요. 그러면 Phigros++가 다른 기기에서 업로드한 세이브를 제안합니다.",
+    game: "세이브가 게임 안에만 있다면",
+    gameText:
+      "Phigros++는 Phigros 옆에 별도의 앱으로 설치되므로, 세이브는 원래 게임에 그대로 남고 그곳에서 계속 플레이할 수 있습니다. 지금은 Phigros++가 자체 세이브로 시작하지만, 세이브를 옮겨 올 방법을 준비하고 있습니다.",
+    source: "소스 코드",
   },
   history: {
     snapshots: "스냅샷",

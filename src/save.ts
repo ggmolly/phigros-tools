@@ -183,7 +183,12 @@ const EMPTY_PROGRESS: GameProgress = {
 
 export function parseArchive(
   archive: SaveArchive,
-  options: { kind?: "cloud" | "zip"; name?: string; cloudUpdatedAt?: string; summary?: string },
+  options: {
+    kind?: "cloud" | "zip" | "phigrospp";
+    name?: string;
+    cloudUpdatedAt?: string;
+    summary?: string;
+  },
 ): SaveDocumentV1 {
   const warnings: string[] = [];
   const version = (name: ModuleName) => archive.entries[name].version;

@@ -6,6 +6,9 @@ export const en = {
     history: "History",
     charts: "Charts",
     leaderboard: "Leaderboard",
+    devices: "Devices",
+    phigrospp: "Phigros++",
+    profile: "Profile",
     label: "Sections",
   },
   header: {
@@ -66,22 +69,6 @@ export const en = {
     code: "Code",
     newCode: "New code",
     openTapTap: "Open TapTap",
-    guideButton: "How to import",
-    guideTitle: "How to Import",
-    guideClose: "Close import guide",
-    guideIntro:
-      "phigros.tools reads your **TapTap cloud save**, so sync it first: in Phigros, open **Settings → Profile**, log in with TapTap and tap **Sync Now**. Global and China versions of the game both work.",
-    step1: "Choose **TapTap login** and pick your game version.",
-    step2:
-      "Scan the QR code with your phone, or tap **Open TapTap** if you’re on the phone already, and approve with the TapTap account you play with.",
-    step3:
-      "Your save loads, and this browser remembers the login so **Sync** fetches newer saves later.",
-    usbSummary: "Android over USB instead",
-    usb1: "On the phone, open **Settings → About phone** and tap **Build number** seven times to unlock Developer options.",
-    usb2: "In **Developer options**, turn on **USB debugging**.",
-    usb3: "Plug the phone into a computer and open this site in **Chrome** or **Edge** (Firefox and Safari can’t talk to USB devices).",
-    usb4: "Choose **Android (USB)**, pick your phone, then tap **Allow** on the phone.",
-    loginWithTapTap: "Log in with TapTap",
   },
   seo: {
     siteDescription:
@@ -147,7 +134,6 @@ export const en = {
   tool: {
     skip: "Skip to content",
     syncTitle: (date: string) => `Fetch the newest cloud save · last fetched ${date}`,
-    reenterToken: "Re-enter token",
     player: (id: string) => `Player ${id}`,
     localSave: "Local save",
     importTagline: "Load your Phigros progress",
@@ -193,7 +179,7 @@ export const en = {
     searchPlayers: "Search name or name#0042",
     noPlayers: "No player has this name",
     noRanked: "No player is ranked yet",
-    noCharts: "No chart has plays yet",
+    noCharts: "No chart has plays yet. Play one with Phigros++ to be the first.",
     description:
       "Phigros players ranked by RKS, and the best plays on each chart, from players who sync their plays with Phigros++.",
   },
@@ -476,6 +462,119 @@ export const en = {
     downloadFailed: (status: string) => `Save download: HTTP ${status}`,
     jsonTooLarge: (mb: string) => `JSON exceeds the ${mb} MB import limit`,
     invalidJson: "Invalid JSON",
+    pppRemoved: "This browser was removed from the profile. Sign in again to open it.",
+    pppNoCode:
+      "This code doesn't work: it was already used or is older than 10 minutes. Ask for a new one.",
+    pppNoProfile:
+      "No phigros.tools profile was made with these words. Check each word and their order.",
+    pppServer: (status: string) => `phigros.tools couldn't answer (HTTP ${status}). Try again.`,
+    pppWord: (word: string) => `“${word}” isn't one of the recovery words.`,
+    pppWords: (count: string) => `That's ${count} words, the recovery phrase has 16.`,
+    pppNoSave:
+      "Phigros++ hasn't uploaded your save yet. Turn on Upload my save in the game's Settings → Profile.",
+    pppUnsupported:
+      "This browser can't sign in. Update it, or use a recent Chrome, Firefox or Safari.",
+  },
+  ppp: {
+    profile: "Phigros++ profile",
+    profileDesc: "Sign in from the game to open your save",
+    otherWays: "Other ways",
+    otherWaysDesc: "TapTap login, Android (USB), session token",
+    taptapGone:
+      "TapTap’s cloud save stopped answering in November 2026, so these may fail. Phigros++ keeps your save on phigros.tools instead.",
+    pitch:
+      "Phigros++ adds replays, a HUD and mods to the game, and keeps your save and plays here.",
+    get: "Get Phigros++",
+    signInTitle: "Sign in from Phigros++",
+    signInStep1:
+      "In Phigros++, open **Settings → Profile** and choose **Sign in another device**, or **Open in browser** to skip typing.",
+    signInStep2: "Type the code it shows here.",
+    code: "Code",
+    signIn: "Sign in",
+    signingIn: "Signing in…",
+    usePhrase: "Use my recovery phrase instead",
+    useCode: "Use a code from the game instead",
+    phraseTitle: "Sign in with your recovery phrase",
+    phraseText:
+      "Type the 16 words Phigros++ showed in **Settings → Profile → Show recovery phrase**, in order.",
+    phrase: "Recovery phrase",
+    phraseNote:
+      "The words turn into your key in this browser and are never sent. This browser then gets a key of its own, which you can remove in Devices.",
+    close: "Close",
+    signOut: "Sign out",
+    signOutConfirm:
+      "Sign this browser out of your Phigros++ profile? Its snapshots stay in History.",
+    move: "This save only lives in this browser. Send it to Phigros++ to keep playing it, with replays and your plays on the leaderboard.",
+    send: "Send to Phigros++",
+    sendConfirm: (name: string) =>
+      `Send this save to ${name}'s Phigros++? Next time the game starts it offers to load it, and says what it replaces.`,
+    sent: "Sent. Open Phigros++ to load it.",
+    moveStep1:
+      "Install Phigros++ and turn on **Sync to phigros.tools** in its **Settings → Profile**.",
+    moveStep2:
+      "Choose **Sign in another device** there, then **Open in browser** or sign in here with its code.",
+    moveStep3: "Come back to this save and choose **Send to Phigros++**.",
+    taptapCard: (date: string) =>
+      `TapTap’s cloud no longer answers, but this browser kept your save from ${date}. Open it to send it to Phigros++.`,
+    taptapCardNone: "TapTap’s cloud no longer answers, and this browser has no copy of this save.",
+    openSave: "Open my save",
+    olderSave: (date: string, rks: string) =>
+      `This browser also kept a save from ${date} with RKS ${rks}, which you can send to Phigros++.`,
+    openIt: "Open it",
+    devicesTitle: "Devices",
+    devicesText: (tag: string) =>
+      `Everything signed in as ${tag}. A removed device can’t sync, upload or download your save anymore, but keeps what it already downloaded.`,
+    addDevice: "Add a device",
+    addDeviceText:
+      "In Phigros++ on the other device, open **Settings → Profile**, choose **Sign in to my profile** and type this code. It works once, for 10 minutes.",
+    phraseRow: "Recovery phrase",
+    phraseRowDesc: "Your 16 words. They always bring the profile back, so they can’t be removed.",
+    thisBrowser: "This browser",
+    seen: (date: string) => `last seen ${date}`,
+    added: (date: string) => `added ${date}`,
+    remove: "Remove",
+    rename: "Rename",
+    removeConfirm: (name: string) => `Remove ${name}? It can’t sync or download your save anymore.`,
+    signingInFromLink: "Signing in with the code from Phigros++…",
+    leaderboardCta: "Everyone here plays with Phigros++, which sends their plays and replays.",
+    leaderboardJoin: "Get on the leaderboard",
+  },
+  pppPage: {
+    description:
+      "Phigros with replays, a HUD and Lua mods, installed as its own app next to the game. It keeps your save, records and replays on phigros.tools, where your plays count on the leaderboard.",
+    download: "Get the installer",
+    downloadNote: "For Android 7 and newer, with Phigros from the Play Store",
+    replays: "Replays",
+    replaysText:
+      "Every play is recorded and plays back from the song list, with seeking, pausing and speed control.",
+    hud: "HUD",
+    hudText:
+      "The grade and accuracy your play is heading for, a hit error bar, and an option to skip the game’s loading delays.",
+    sync: "phigros.tools sync",
+    syncText:
+      "An opt-in profile with your records, replays and play stats, ranked on the leaderboard, and your save to open here.",
+    install: "Install It",
+    install1: "Install Phigros from the Play Store.",
+    install2:
+      "Download **phigrospp-installer.apk** from the installer’s latest release and open it.",
+    install3:
+      "Tap **Install**: it patches your Phigros into Phigros++, an app of its own next to the game, and updates it later.",
+    install4:
+      "In Phigros++, open **Settings → Profile**, turn on **Sync to phigros.tools** and keep the 16 words it shows.",
+    installNote: "Mods run with your phigros.tools key, so only add mods you trust.",
+    bring: "Bring Your Save Over",
+    bringText:
+      "Phigros++ starts with an empty save, and TapTap’s cloud no longer answers, so it can’t fetch yours from there.",
+    browser: "You opened your save on phigros.tools before",
+    browserText:
+      "This browser kept a copy. Sign in from Phigros++, open that save from History and choose **Send to Phigros++**: the game offers to load it next time it starts.",
+    device: "You already use Phigros++ on another device",
+    deviceText:
+      "Choose **Sign in another device** there, then **Sign in to my profile** on the new one and type its code or your 16 words. Phigros++ then offers the save your other device uploaded.",
+    game: "Your save only lives in the game",
+    gameText:
+      "Phigros++ installs as a separate app next to Phigros, so your save stays in the original game and you can keep playing it there. Phigros++ starts with its own save for now, and we’re working on a way to bring yours over.",
+    source: "Source code",
   },
   history: {
     snapshots: "Snapshots",

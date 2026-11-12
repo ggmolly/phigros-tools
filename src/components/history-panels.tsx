@@ -4,6 +4,7 @@ import { rksSeries, snapshotProgress } from "../snapshots";
 import type { SnapshotV1 } from "../store";
 import { Arrow } from "./arrow";
 import { Difficulty, signed } from "./primitives";
+import { RksChart } from "./rks-history";
 
 // toLocaleDateString rejects timeStyle, so the time is asked for field by field.
 export const DATE_TIME: Intl.DateTimeFormatOptions = {
@@ -93,17 +94,7 @@ export function SnapshotProgress({ history }: { history: SnapshotV1[] }) {
 
 export function RksHistory({ history }: { history: SnapshotV1[] }) {
   const t = useT();
-  const format = useFormat();
   const series = rksSeries(history);
-  const values = series.map((point) => point.rks);
-  const delta = values.length > 1 ? values.at(-1)! - values[0]! : 0;
-  const range = (
-    <p className="rks-range">
-      <span className="meta">{values[0]?.toFixed(3)}</span>
-      <strong className={delta < 0 ? "negative" : ""}>{signed(delta, 3)}</strong>
-      <span className="meta">{values.at(-1)?.toFixed(3)}</span>
-    </p>
-  );
   return (
     <section className="panel" aria-labelledby="rks-history-heading">
       <div className="panel-head">
@@ -112,84 +103,24 @@ export function RksHistory({ history }: { history: SnapshotV1[] }) {
         </h2>
       </div>
       {series.length < 3 ? (
-        <>
-          <p className="meta rks-hint">{t.history.thirdTime}</p>
-          {series.length === 2 && range}
-        </>
+        <p className="meta rks-hint">{t.history.thirdTime}</p>
       ) : (
-        (() => {
-          const min = Math.min(...values);
-          const max = Math.max(...values);
-          const span = max - min || 1;
-          const coords = series.map(
-            (point, index) =>
-              [(index / (series.length - 1)) * 100, 92 - ((point.rks - min) / span) * 84] as const,
-          );
-          const points = coords.map(([x, y]) => `${x},${y}`).join(" ");
-          // Each change sits halfway between the last snapshot before it and the first after.
-          const changes = series.flatMap((point, index) =>
+        <RksChart
+          points={series.map((point) => ({ at: point.capturedAt, rks: point.rks }))}
+          marks={series.flatMap((point, index) =>
             point.versionChange
               ? [
                   {
+                    index,
                     label:
                       point.versionChange === "catalog"
                         ? t.history.catalogUpdate
                         : point.versionChange,
-                    x: (coords[index - 1]![0] + coords[index]![0]) / 2,
                   },
                 ]
               : [],
-          );
-          return (
-            <>
-              <p className="progress-period">
-                {format.date(series[0]!.capturedAt, DATE_TIME)} →{" "}
-                {format.date(series.at(-1)!.capturedAt, DATE_TIME)}
-              </p>
-              <div className="rks-plot">
-                <svg
-                  className="rks-chart"
-                  viewBox="0 0 100 100"
-                  preserveAspectRatio="none"
-                  role="img"
-                  aria-label={t.history.trend(
-                    series.length,
-                    values[0]!.toFixed(3),
-                    values.at(-1)!.toFixed(3),
-                  )}
-                >
-                  <polygon className="rks-area" points={`0,100 ${points} 100,100`} />
-                  {changes.map(({ label, x }) => (
-                    <line
-                      key={`${label}-${x}`}
-                      className="rks-version"
-                      x1={x}
-                      x2={x}
-                      y1={0}
-                      y2={100}
-                      vectorEffect="non-scaling-stroke"
-                    />
-                  ))}
-                  <polyline
-                    className="rks-line"
-                    points={points}
-                    vectorEffect="non-scaling-stroke"
-                  />
-                </svg>
-                {changes.map(({ label, x }) => (
-                  <span
-                    key={`${label}-${x}`}
-                    className={`rks-version-label${x > 70 ? " end" : ""}`}
-                    style={{ left: `${x}%` }}
-                  >
-                    {label}
-                  </span>
-                ))}
-              </div>
-              {range}
-            </>
-          );
-        })()
+          )}
+        />
       )}
     </section>
   );

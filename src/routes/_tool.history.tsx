@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Arrow } from "../components/arrow";
 import { DATE_TIME, RksHistory, SnapshotProgress } from "../components/history-panels";
+import { useSendToPhigrospp } from "../components/phigrospp";
 import { useFormat, useT } from "../i18n";
 import { calculateRanking } from "../metrics";
 import { message, useSave } from "../save-context";
@@ -42,6 +43,7 @@ function HistoryRoute() {
   } = useSave();
   const t = useT();
   const format = useFormat();
+  const send = useSendToPhigrospp();
   const [compareId, setCompareId] = useState<string>();
   if (!loaded && snapshots.length === 0) return null; // _tool.tsx redirects to "/" in this case
   const compared = snapshots.find((snapshot) => snapshot.id === compareId);
@@ -150,6 +152,17 @@ function HistoryRoute() {
                       >
                         {t.history.compare}
                       </button>
+                      {send &&
+                        snapshot.rawZip &&
+                        !credentials.some((c) => c.signer && c.playerId === snapshot.playerId) && (
+                          <button
+                            type="button"
+                            className="btn btn-ghost"
+                            onClick={() => send(snapshot.rawZip!)}
+                          >
+                            {t.ppp.send}
+                          </button>
+                        )}
                       <button
                         type="button"
                         className="btn btn-ghost btn-danger"

@@ -11,7 +11,22 @@ const MAX_BODY = 8 * 1024 * 1024;
 const DOMAIN = "phigros.tools request v1\0";
 
 sqlite.run("CREATE TABLE IF NOT EXISTS keys (key BLOB PRIMARY KEY, last_time INTEGER NOT NULL)");
-const lastTime = sqlite.prepare<{ last_time: number }, [Uint8Array]>(
+// a device signed in to a profile with a code (see devices.ts) signs with its own key, which acts as the owner's: the
+// key that made the profile, whose recovery phrase always brings it back. a removed device stays, refused
+sqlite.run(`
+  CREATE TABLE IF NOT EXISTS devices (
+    key BLOB PRIMARY KEY,
+    owner BLOB NOT NULL,
+    name TEXT NOT NULL,
+    added INTEGER NOT NULL,
+    removed INTEGER
+  )
+`);
+sqlite.run("CREATE INDEX IF NOT EXISTS idx_devices_owner ON devices(owner)");
+export const deviceOf = sqlite.prepare<{ owner: Uint8Array; removed: number | null }, [Uint8Array]>(
+  "SELECT owner, removed FROM devices WHERE key = ?",
+);
+export const lastTime = sqlite.prepare<{ last_time: number }, [Uint8Array]>(
   "SELECT last_time FROM keys WHERE key = ?",
 );
 const setTime = sqlite.prepare<unknown, [Uint8Array, number]>(
@@ -37,8 +52,12 @@ export function verifySignature(
  * signature (64) of `DOMAIN<METHOD> <path>\n<time><body>`, the time in ms (i64 LE), then the body. The time only goes
  * forward per key, so a request can't be sent again. A time not after the last one gets 409 with the last one, for a
  * device whose clock ran ahead once to catch up. A request over 8 MB gets 413 without being read to its end.
+ * `key` is the profile's key, `device` the one that signed: they differ for a device added with a code, and a removed
+ * device gets 403 `removed`.
  */
-export async function signed(event: H3Event): Promise<{ key: Uint8Array; body: Uint8Array }> {
+export async function signed(
+  event: H3Event,
+): Promise<{ key: Uint8Array; device: Uint8Array; body: Uint8Array }> {
   assertBodySize(event, MAX_BODY);
   const bytes = new Uint8Array(await event.req.arrayBuffer());
   if (bytes.length < 104) throw HTTPError.status(400);
@@ -54,7 +73,10 @@ export async function signed(event: H3Event): Promise<{ key: Uint8Array; body: U
   if (Math.abs(time - Date.now()) > DAY) throw HTTPError.status(401, "Bad time");
   const last = lastTime.get(key)?.last_time ?? 0;
   if (time <= last) throw new HTTPError({ status: 409, message: "Old time", body: { last } });
+  const device = deviceOf.get(key);
+  if (device?.removed) throw new HTTPError({ status: 403, body: { code: "removed" } });
   setTime.run(key, time);
-  markSeen(key);
-  return { key, body: message.subarray(8) };
+  const owner = device?.owner ?? key;
+  markSeen(owner);
+  return { key: owner, device: key, body: message.subarray(8) };
 }

@@ -8,6 +8,9 @@ export const zhHant = {
     history: "歷史",
     charts: "譜面",
     leaderboard: "排行榜",
+    devices: "裝置",
+    phigrospp: "Phigros++",
+    profile: "個人資料",
     label: "欄目",
   },
   header: {
@@ -68,21 +71,6 @@ export const zhHant = {
     code: "代碼",
     newCode: "新代碼",
     openTapTap: "開啟 TapTap",
-    guideButton: "如何匯入",
-    guideTitle: "如何匯入",
-    guideClose: "關閉匯入指南",
-    guideIntro:
-      "phigros.tools 讀取你的 **TapTap 雲端存檔**，請先同步：在 Phigros 中開啟**設定 → 個人資料**，用 TapTap 登入並點選**立即同步**。國際版和國服都支援。",
-    step1: "選擇 **TapTap 登入**並選擇你的遊戲版本。",
-    step2:
-      "用手機掃描 QR 碼，若已在手機上則點選**開啟 TapTap**，然後用你玩遊戲的 TapTap 帳號確認。",
-    step3: "存檔載入完成，此瀏覽器會記住登入，之後點選**同步**即可取得更新的存檔。",
-    usbSummary: "改用 Android USB",
-    usb1: "在手機上開啟**設定 → 關於手機**，連續點選**版本號碼**七次以開啟開發人員選項。",
-    usb2: "在**開發人員選項**中開啟 **USB 偵錯**。",
-    usb3: "將手機連接到電腦，並在 **Chrome** 或 **Edge** 中開啟本網站（Firefox 和 Safari 無法與 USB 裝置通訊）。",
-    usb4: "選擇 **Android（USB）**，選擇你的手機，然後在手機上點選**允許**。",
-    loginWithTapTap: "使用 TapTap 登入",
   },
   seo: {
     siteDescription:
@@ -147,7 +135,6 @@ export const zhHant = {
   tool: {
     skip: "跳到內容",
     syncTitle: (date: string) => `取得最新雲端存檔 · 上次取得於 ${date}`,
-    reenterToken: "重新輸入 token",
     player: (id: string) => `玩家 ${id}`,
     localSave: "本機存檔",
     importTagline: "載入你的 Phigros 進度",
@@ -191,7 +178,7 @@ export const zhHant = {
     searchPlayers: "搜尋名稱或 名稱#0042",
     noPlayers: "沒有玩家叫這個名字",
     noRanked: "還沒有玩家上榜",
-    noCharts: "還沒有譜面有遊玩記錄",
+    noCharts: "還沒有譜面有遊玩記錄。用 Phigros++ 玩一首，成為第一個。",
     description:
       "依 RKS 排名的 Phigros 玩家，以及每張譜面的最佳成績，來自使用 Phigros++ 同步的玩家。",
   },
@@ -466,6 +453,108 @@ export const zhHant = {
     downloadFailed: (status: string) => `存檔下載：HTTP ${status}`,
     jsonTooLarge: (mb: string) => `JSON 超過 ${mb} MB 匯入上限`,
     invalidJson: "無效的 JSON",
+    pppRemoved: "此瀏覽器已從個人資料中移除，請重新登入後再開啟。",
+    pppNoCode: "這個代碼無效：它已被使用過，或已超過 10 分鐘，請取得一個新的。",
+    pppNoProfile: "沒有用這些單字建立的 phigros.tools 個人資料，請檢查每個單字及其順序。",
+    pppServer: (status: string) => `phigros.tools 無法回應（HTTP ${status}），請重試。`,
+    pppWord: (word: string) => `「${word}」不是復原短語中的單字。`,
+    pppWords: (count: string) => `你輸入了 ${count} 個單字，復原短語共有 16 個。`,
+    pppNoSave: "Phigros++ 還沒有上傳你的存檔。請在遊戲的設定 → 個人資料中開啟 Upload my save。",
+    pppUnsupported: "此瀏覽器無法登入。請更新瀏覽器，或使用較新的 Chrome、Firefox 或 Safari。",
+  },
+  ppp: {
+    profile: "Phigros++ 個人資料",
+    profileDesc: "從遊戲中登入以開啟你的存檔",
+    otherWays: "其他方式",
+    otherWaysDesc: "TapTap 登入、Android（USB）、session token",
+    taptapGone:
+      "TapTap 雲端存檔自 2026 年 11 月起已無回應，因此這些方式可能會失敗。Phigros++ 改為把你的存檔保存在 phigros.tools 上。",
+    pitch: "Phigros++ 為遊戲加入回放、HUD 和模組，並把你的存檔和遊玩紀錄保存在這裡。",
+    get: "取得 Phigros++",
+    signInTitle: "從 Phigros++ 登入",
+    signInStep1:
+      "在 Phigros++ 中開啟**設定 → 個人資料**，選擇 **Sign in another device**，或選擇 **Open in browser** 免去輸入。",
+    signInStep2: "在這裡輸入遊戲中顯示的代碼。",
+    code: "代碼",
+    signIn: "登入",
+    signingIn: "正在登入…",
+    usePhrase: "改用我的復原短語",
+    useCode: "改用遊戲中的代碼",
+    phraseTitle: "用復原短語登入",
+    phraseText:
+      "依序輸入 Phigros++ 在**設定 → 個人資料 → Show recovery phrase** 中顯示的 16 個單字。",
+    phrase: "復原短語",
+    phraseNote:
+      "這些單字只在此瀏覽器中轉換為你的金鑰，從不會被傳送。之後此瀏覽器會取得自己的金鑰，你可以在裝置頁中移除它。",
+    close: "關閉",
+    signOut: "登出",
+    signOutConfirm: "要讓此瀏覽器登出你的 Phigros++ 個人資料嗎？它的快照會保留在歷史中。",
+    move: "此存檔只保存在這個瀏覽器中。把它傳送到 Phigros++ 即可繼續遊玩，還能錄製回放並讓你的成績登上排行榜。",
+    send: "傳送到 Phigros++",
+    sendConfirm: (name: string) =>
+      `要把此存檔傳送到 ${name} 的 Phigros++ 嗎？遊戲下次啟動時會提示載入它，並說明會取代哪些內容。`,
+    sent: "已傳送，開啟 Phigros++ 即可載入。",
+    moveStep1: "安裝 Phigros++，並在**設定 → 個人資料**中開啟 **Sync to phigros.tools**。",
+    moveStep2:
+      "在那裡選擇 **Sign in another device**，然後選擇 **Open in browser**，或用它顯示的代碼在這裡登入。",
+    moveStep3: "回到此存檔，選擇**傳送到 Phigros++**。",
+    taptapCard: (date: string) =>
+      `TapTap 雲端存檔已不再回應，但此瀏覽器保留了你 ${date} 的存檔。開啟它即可傳送到 Phigros++。`,
+    taptapCardNone: "TapTap 雲端存檔已不再回應，此瀏覽器中也沒有這份存檔的副本。",
+    openSave: "開啟我的存檔",
+    olderSave: (date: string, rks: string) =>
+      `此瀏覽器還保留了一份 ${date} 的存檔，RKS 為 ${rks}，你可以把它傳送到 Phigros++。`,
+    openIt: "開啟",
+    devicesTitle: "裝置",
+    devicesText: (tag: string) =>
+      `所有以 ${tag} 身分登入的裝置。被移除的裝置將無法再同步、上傳或下載你的存檔，但會保留已下載的內容。`,
+    addDevice: "新增裝置",
+    addDeviceText:
+      "在另一台裝置的 Phigros++ 中開啟**設定 → 個人資料**，選擇 **Sign in to my profile** 並輸入此代碼。它只能使用一次，有效期限為 10 分鐘。",
+    phraseRow: "復原短語",
+    phraseRowDesc: "你的 16 個單字。它們隨時可以找回個人資料，因此無法移除。",
+    thisBrowser: "此瀏覽器",
+    seen: (date: string) => `上次使用於 ${date}`,
+    added: (date: string) => `新增於 ${date}`,
+    remove: "移除",
+    rename: "重新命名",
+    removeConfirm: (name: string) => `要移除 ${name} 嗎？它將無法再同步或下載你的存檔。`,
+    signingInFromLink: "正在使用 Phigros++ 提供的代碼登入…",
+    leaderboardCta: "這裡的每位玩家都在使用 Phigros++，由它上傳成績和回放。",
+    leaderboardJoin: "登上排行榜",
+  },
+  pppPage: {
+    description:
+      "帶有回放、HUD 和 Lua 模組的 Phigros，作為獨立應用程式安裝在遊戲旁邊。它把你的存檔、成績和回放保存在 phigros.tools 上，你的成績會計入排行榜。",
+    download: "取得安裝程式",
+    downloadNote: "適用於 Android 7 以上版本，需要從 Play Store 安裝的 Phigros",
+    replays: "回放",
+    replaysText: "每次遊玩都會被錄製，可以在曲目列表中回放，支援拖曳進度、暫停和調整速度。",
+    hud: "HUD",
+    hudText: "顯示本次遊玩預計的評級和準確率、判定偏差條，還可以跳過遊戲的載入等待。",
+    sync: "phigros.tools 同步",
+    syncText:
+      "可選擇開啟的個人資料，包含你的成績、回放和遊玩統計，在排行榜上參與排名，存檔也能在這裡開啟。",
+    install: "安裝",
+    install1: "從 Play Store 安裝 Phigros。",
+    install2: "從安裝程式的最新版本發布中下載 **phigrospp-installer.apk** 並開啟。",
+    install3:
+      "點選 **Install**：它會把你的 Phigros 修補為 Phigros++，作為獨立應用程式安裝在遊戲旁邊，並在之後負責更新。",
+    install4:
+      "在 Phigros++ 中開啟**設定 → 個人資料**，開啟 **Sync to phigros.tools**，並保管好它顯示的 16 個單字。",
+    installNote: "模組會以你的 phigros.tools 金鑰執行，所以只加入你信任的模組。",
+    bring: "轉移你的存檔",
+    bringText: "Phigros++ 從空存檔開始，而 TapTap 雲端已不再回應，所以無法從那裡取得你的存檔。",
+    browser: "你以前在 phigros.tools 上開啟過存檔",
+    browserText:
+      "此瀏覽器保留了一份副本。從 Phigros++ 登入，在歷史中開啟該存檔並選擇**傳送到 Phigros++**，遊戲下次啟動時會提示載入它。",
+    device: "你已經在另一台裝置上使用 Phigros++",
+    deviceText:
+      "在那台裝置上選擇 **Sign in another device**，然後在新裝置上選擇 **Sign in to my profile**，輸入它的代碼或你的 16 個單字。之後 Phigros++ 會提供另一台裝置上傳的存檔。",
+    game: "你的存檔只在遊戲中",
+    gameText:
+      "Phigros++ 會作為獨立的應用程式安裝在 Phigros 旁邊，所以你的存檔仍留在原版遊戲中，你可以繼續在那裡遊玩。目前 Phigros++ 會以自己的存檔開始，我們正在研究把你的存檔轉過來的方法。",
+    source: "原始碼",
   },
   history: {
     snapshots: "快照",

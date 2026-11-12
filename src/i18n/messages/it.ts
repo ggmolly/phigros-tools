@@ -8,6 +8,9 @@ export const it = {
     history: "Cronologia",
     charts: "Chart",
     leaderboard: "Classifica",
+    devices: "Dispositivi",
+    phigrospp: "Phigros++",
+    profile: "Profilo",
     label: "Sezioni",
   },
   header: {
@@ -68,22 +71,6 @@ export const it = {
     code: "Codice",
     newCode: "Nuovo codice",
     openTapTap: "Apri TapTap",
-    guideButton: "Come importare",
-    guideTitle: "Come importare",
-    guideClose: "Chiudi la guida all'importazione",
-    guideIntro:
-      "phigros.tools legge il tuo **salvataggio cloud TapTap**, quindi sincronizzalo prima: in Phigros apri **Impostazioni → Profilo**, accedi con TapTap e tocca **Sincronizza ora**. Funzionano sia la versione globale sia quella cinese.",
-    step1: "Scegli **Accesso TapTap** e seleziona la tua versione del gioco.",
-    step2:
-      "Scansiona il codice QR con il telefono, oppure tocca **Apri TapTap** se sei già sul telefono, e approva con l'account TapTap con cui giochi.",
-    step3:
-      "Il salvataggio si carica e questo browser ricorda l'accesso, così **Sincronizza** scaricherà i salvataggi più recenti in seguito.",
-    usbSummary: "In alternativa, Android via USB",
-    usb1: "Sul telefono apri **Impostazioni → Info telefono** e tocca sette volte **Numero build** per sbloccare le Opzioni sviluppatore.",
-    usb2: "In **Opzioni sviluppatore**, attiva il **Debug USB**.",
-    usb3: "Collega il telefono a un computer e apri questo sito in **Chrome** o **Edge** (Firefox e Safari non comunicano con i dispositivi USB).",
-    usb4: "Scegli **Android (USB)**, seleziona il telefono, poi tocca **Consenti** sul telefono.",
-    loginWithTapTap: "Accedi con TapTap",
   },
   seo: {
     siteDescription:
@@ -149,7 +136,6 @@ export const it = {
     skip: "Vai al contenuto",
     syncTitle: (date: string) =>
       `Scarica il salvataggio cloud più recente · ultimo scaricamento ${date}`,
-    reenterToken: "Reinserisci il token",
     player: (id: string) => `Giocatore ${id}`,
     localSave: "Salvataggio locale",
     importTagline: "Carica i tuoi progressi in Phigros",
@@ -196,7 +182,7 @@ export const it = {
     searchPlayers: "Cerca un nome o nome#0042",
     noPlayers: "Nessun giocatore ha questo nome",
     noRanked: "Nessun giocatore è ancora in classifica",
-    noCharts: "Nessun chart ha ancora partite",
+    noCharts: "Nessun chart ha ancora partite. Giocane uno con Phigros++ per essere il primo.",
     description:
       "I giocatori di Phigros ordinati per RKS e le migliori partite di ogni chart, inviate da chi sincronizza con Phigros++.",
   },
@@ -486,6 +472,122 @@ export const it = {
     downloadFailed: (status: string) => `Download del salvataggio: HTTP ${status}`,
     jsonTooLarge: (mb: string) => `Il JSON supera il limite di importazione di ${mb} MB`,
     invalidJson: "JSON non valido",
+    pppRemoved: "Questo browser è stato rimosso dal profilo. Accedi di nuovo per aprirlo.",
+    pppNoCode:
+      "Questo codice non funziona perché è già stato usato o ha più di 10 minuti. Chiedine uno nuovo.",
+    pppNoProfile:
+      "Nessun profilo phigros.tools è stato creato con queste parole. Controlla ogni parola e il loro ordine.",
+    pppServer: (status: string) =>
+      `phigros.tools non è riuscito a rispondere (HTTP ${status}). Riprova.`,
+    pppWord: (word: string) => `“${word}” non è una delle parole di recupero.`,
+    pppWords: (count: string) => `Hai inserito ${count} parole, ma la frase di recupero ne ha 16.`,
+    pppNoSave:
+      "Phigros++ non ha ancora caricato il tuo salvataggio. Attiva Upload my save in Settings → Profile nel gioco.",
+    pppUnsupported:
+      "Con questo browser non puoi accedere. Aggiornalo, oppure usa una versione recente di Chrome, Firefox o Safari.",
+  },
+  ppp: {
+    profile: "Profilo Phigros++",
+    profileDesc: "Accedi dal gioco per aprire il tuo salvataggio",
+    otherWays: "Altri metodi",
+    otherWaysDesc: "Accesso TapTap, Android (USB), token di sessione",
+    taptapGone:
+      "Il salvataggio cloud di TapTap non risponde più da novembre 2026, quindi questi metodi potrebbero non funzionare. Phigros++ conserva invece il tuo salvataggio su phigros.tools.",
+    pitch:
+      "Phigros++ aggiunge al gioco replay, un HUD e mod, e conserva qui il tuo salvataggio e le tue partite.",
+    get: "Ottieni Phigros++",
+    signInTitle: "Accedi da Phigros++",
+    signInStep1:
+      "In Phigros++ apri **Settings → Profile** e scegli **Sign in another device**, oppure **Open in browser** per non dover digitare nulla.",
+    signInStep2: "Inserisci qui il codice che compare.",
+    code: "Codice",
+    signIn: "Accedi",
+    signingIn: "Accesso in corso…",
+    usePhrase: "Usa invece la mia frase di recupero",
+    useCode: "Usa invece un codice dal gioco",
+    phraseTitle: "Accedi con la tua frase di recupero",
+    phraseText:
+      "Inserisci in ordine le 16 parole che Phigros++ ha mostrato in **Settings → Profile → Show recovery phrase**.",
+    phrase: "Frase di recupero",
+    phraseNote:
+      "Le parole diventano la tua chiave in questo browser e non vengono mai inviate. Poi questo browser riceve una chiave tutta sua, che puoi rimuovere in Dispositivi.",
+    close: "Chiudi",
+    signOut: "Esci",
+    signOutConfirm:
+      "Disconnettere questo browser dal tuo profilo Phigros++? I suoi snapshot restano nella cronologia.",
+    move: "Questo salvataggio esiste solo in questo browser. Invialo a Phigros++ per continuare a giocarci, con i replay e le tue partite in classifica.",
+    send: "Invia a Phigros++",
+    sendConfirm: (name: string) =>
+      `Inviare questo salvataggio al Phigros++ di ${name}? Al prossimo avvio il gioco propone di caricarlo e indica cosa sostituisce.`,
+    sent: "Inviato. Apri Phigros++ per caricarlo.",
+    moveStep1: "Installa Phigros++ e attiva **Sync to phigros.tools** in **Settings → Profile**.",
+    moveStep2:
+      "Lì scegli **Sign in another device**, poi **Open in browser**, oppure accedi qui con il codice che compare.",
+    moveStep3: "Torna a questo salvataggio e scegli **Invia a Phigros++**.",
+    taptapCard: (date: string) =>
+      `Il cloud di TapTap non risponde più, ma questo browser ha conservato il tuo salvataggio del ${date}. Aprilo per inviarlo a Phigros++.`,
+    taptapCardNone:
+      "Il cloud di TapTap non risponde più e questo browser non ha alcuna copia di questo salvataggio.",
+    openSave: "Apri il mio salvataggio",
+    olderSave: (date: string, rks: string) =>
+      `Questo browser ha conservato anche un salvataggio del ${date} con RKS ${rks}, che puoi inviare a Phigros++.`,
+    openIt: "Aprilo",
+    devicesTitle: "Dispositivi",
+    devicesText: (tag: string) =>
+      `Tutto ciò che ha effettuato l’accesso come ${tag}. Un dispositivo rimosso non può più sincronizzare, caricare o scaricare il tuo salvataggio, ma tiene ciò che ha già scaricato.`,
+    addDevice: "Aggiungi un dispositivo",
+    addDeviceText:
+      "In Phigros++ sull’altro dispositivo apri **Settings → Profile**, scegli **Sign in to my profile** e inserisci questo codice. Funziona una sola volta, per 10 minuti.",
+    phraseRow: "Frase di recupero",
+    phraseRowDesc:
+      "Le tue 16 parole riportano sempre indietro il profilo, quindi non si possono rimuovere.",
+    thisBrowser: "Questo browser",
+    seen: (date: string) => `visto l’ultima volta il ${date}`,
+    added: (date: string) => `aggiunto il ${date}`,
+    remove: "Rimuovi",
+    rename: "Rinomina",
+    removeConfirm: (name: string) =>
+      `Rimuovere ${name}? Non potrà più sincronizzare né scaricare il tuo salvataggio.`,
+    signingInFromLink: "Accesso con il codice di Phigros++…",
+    leaderboardCta: "Qui tutti giocano con Phigros++, che invia le loro partite e i loro replay.",
+    leaderboardJoin: "Entra in classifica",
+  },
+  pppPage: {
+    description:
+      "Phigros con replay, un HUD e mod in Lua, installato come app a sé accanto al gioco. Conserva il tuo salvataggio, i record e i replay su phigros.tools, dove le tue partite contano in classifica.",
+    download: "Scarica l’installer",
+    downloadNote: "Per Android 7 o successivo, con Phigros dal Play Store",
+    replays: "Replay",
+    replaysText:
+      "Ogni partita viene registrata e si può rivedere dall’elenco dei brani, con avanzamento, pausa e controllo della velocità.",
+    hud: "HUD",
+    hudText:
+      "Il voto e la precisione verso cui sta andando la tua partita, una barra dell’errore dei colpi e un’opzione per saltare i caricamenti del gioco.",
+    sync: "Sincronizzazione phigros.tools",
+    syncText:
+      "Un profilo facoltativo con i tuoi record, replay e statistiche di gioco, in classifica, e il tuo salvataggio da aprire qui.",
+    install: "Installazione",
+    install1: "Installa Phigros dal Play Store.",
+    install2: "Scarica **phigrospp-installer.apk** dall’ultima release dell’installer e aprilo.",
+    install3:
+      "Tocca **Install**: trasforma il tuo Phigros in Phigros++, un’app a sé accanto al gioco, e in seguito lo aggiorna.",
+    install4:
+      "In Phigros++ apri **Settings → Profile**, attiva **Sync to phigros.tools** e conserva le 16 parole che compaiono.",
+    installNote:
+      "Le mod girano con la tua chiave phigros.tools, quindi aggiungi solo mod di cui ti fidi.",
+    bring: "Porta con te il salvataggio",
+    bringText:
+      "Phigros++ parte con un salvataggio vuoto e, dato che il cloud di TapTap non risponde più, non può recuperare il tuo da lì.",
+    browser: "Hai già aperto il tuo salvataggio su phigros.tools",
+    browserText:
+      "Questo browser ne ha tenuto una copia. Accedi da Phigros++, apri quel salvataggio dalla cronologia e scegli **Invia a Phigros++**: al prossimo avvio il gioco propone di caricarlo.",
+    device: "Usi già Phigros++ su un altro dispositivo",
+    deviceText:
+      "Scegli **Sign in another device** su quello, quindi **Sign in to my profile** su quello nuovo e inserisci il suo codice o le tue 16 parole. Phigros++ ti propone poi il salvataggio caricato dall’altro dispositivo.",
+    game: "Il tuo salvataggio esiste solo nel gioco",
+    gameText:
+      "Phigros++ si installa come un’app separata accanto a Phigros, quindi il tuo salvataggio resta nel gioco originale e puoi continuare a giocarci lì. Per ora Phigros++ parte con un salvataggio tutto suo, e stiamo lavorando a un modo per trasferire il tuo.",
+    source: "Codice sorgente",
   },
   history: {
     snapshots: "Snapshot",

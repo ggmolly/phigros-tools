@@ -8,6 +8,9 @@ export const id = {
     history: "Riwayat",
     charts: "Chart",
     leaderboard: "Papan peringkat",
+    devices: "Perangkat",
+    phigrospp: "Phigros++",
+    profile: "Profil",
     label: "Bagian",
   },
   header: {
@@ -68,22 +71,6 @@ export const id = {
     code: "Kode",
     newCode: "Kode baru",
     openTapTap: "Buka TapTap",
-    guideButton: "Cara impor",
-    guideTitle: "Cara Impor",
-    guideClose: "Tutup panduan impor",
-    guideIntro:
-      "phigros.tools membaca **save cloud TapTap** kamu, jadi sinkronkan dulu: di Phigros, buka **Pengaturan → Profil**, login dengan TapTap, lalu ketuk **Sinkronkan Sekarang**. Versi global dan Tiongkok sama-sama bisa.",
-    step1: "Pilih **Login TapTap** lalu pilih versi game-mu.",
-    step2:
-      "Pindai kode QR dengan ponselmu, atau ketuk **Buka TapTap** jika kamu sudah di ponsel, lalu setujui dengan akun TapTap yang kamu pakai bermain.",
-    step3:
-      "Save-mu termuat, dan browser ini mengingat login-nya sehingga **Sinkron** bisa mengambil save yang lebih baru nanti.",
-    usbSummary: "Atau lewat Android USB",
-    usb1: "Di ponsel, buka **Setelan → Tentang ponsel** dan ketuk **Nomor build** tujuh kali untuk membuka Opsi developer.",
-    usb2: "Di **Opsi developer**, aktifkan **Debugging USB**.",
-    usb3: "Sambungkan ponsel ke komputer dan buka situs ini di **Chrome** atau **Edge** (Firefox dan Safari tidak bisa berkomunikasi dengan perangkat USB).",
-    usb4: "Pilih **Android (USB)**, pilih ponselmu, lalu ketuk **Izinkan** di ponsel.",
-    loginWithTapTap: "Login dengan TapTap",
   },
   seo: {
     siteDescription:
@@ -149,7 +136,6 @@ export const id = {
   tool: {
     skip: "Langsung ke konten",
     syncTitle: (date: string) => `Ambil save cloud terbaru · terakhir diambil ${date}`,
-    reenterToken: "Masukkan ulang token",
     player: (id: string) => `Pemain ${id}`,
     localSave: "Save lokal",
     importTagline: "Muat progres Phigros kamu",
@@ -196,7 +182,8 @@ export const id = {
     searchPlayers: "Cari nama atau nama#0042",
     noPlayers: "Tidak ada pemain dengan nama ini",
     noRanked: "Belum ada pemain yang diperingkat",
-    noCharts: "Belum ada chart yang dimainkan",
+    noCharts:
+      "Belum ada chart yang dimainkan. Mainkan satu dengan Phigros++ untuk jadi yang pertama.",
     description:
       "Pemain Phigros diurutkan menurut RKS dan permainan terbaik di setiap chart, dari pemain yang menyinkronkan dengan Phigros++.",
   },
@@ -482,6 +469,123 @@ export const id = {
     downloadFailed: (status: string) => `Unduhan save: HTTP ${status}`,
     jsonTooLarge: (mb: string) => `JSON melebihi batas impor ${mb} MB`,
     invalidJson: "JSON tidak valid",
+    pppRemoved: "Browser ini sudah dihapus dari profil. Login lagi untuk membukanya.",
+    pppNoCode:
+      "Kode ini tidak berlaku karena sudah dipakai atau lebih dari 10 menit. Minta kode baru.",
+    pppNoProfile:
+      "Tidak ada profil phigros.tools yang dibuat dengan kata-kata ini. Periksa setiap kata dan urutannya.",
+    pppServer: (status: string) => `phigros.tools tidak bisa menjawab (HTTP ${status}). Coba lagi.`,
+    pppWord: (word: string) => `“${word}” bukan salah satu kata pemulihan.`,
+    pppWords: (count: string) => `Itu ${count} kata, sedangkan frasa pemulihan berisi 16 kata.`,
+    pppNoSave:
+      "Phigros++ belum mengunggah save kamu. Aktifkan Upload my save di Pengaturan → Profil dalam game.",
+    pppUnsupported:
+      "Browser ini tidak bisa login. Perbarui browser-nya, atau pakai Chrome, Firefox, atau Safari versi terbaru.",
+  },
+  ppp: {
+    profile: "Profil Phigros++",
+    profileDesc: "Login dari game untuk membuka save kamu",
+    otherWays: "Cara lain",
+    otherWaysDesc: "Login TapTap, Android (USB), session token",
+    taptapGone:
+      "Save cloud TapTap berhenti merespons sejak November 2026, jadi cara-cara ini mungkin gagal. Phigros++ menyimpan save kamu di phigros.tools sebagai gantinya.",
+    pitch:
+      "Phigros++ menambahkan replay, HUD, dan mod ke game, serta menyimpan save dan permainanmu di sini.",
+    get: "Dapatkan Phigros++",
+    signInTitle: "Login dari Phigros++",
+    signInStep1:
+      "Di Phigros++, buka **Pengaturan → Profil** lalu pilih **Sign in another device**, atau **Open in browser** supaya tidak perlu mengetik.",
+    signInStep2: "Ketik kode yang muncul di sini.",
+    code: "Kode",
+    signIn: "Login",
+    signingIn: "Sedang login…",
+    usePhrase: "Pakai frasa pemulihan saja",
+    useCode: "Pakai kode dari game saja",
+    phraseTitle: "Login dengan frasa pemulihan",
+    phraseText:
+      "Ketik 16 kata yang ditampilkan Phigros++ di **Pengaturan → Profil → Show recovery phrase**, sesuai urutan.",
+    phrase: "Frasa pemulihan",
+    phraseNote:
+      "Kata-kata ini diubah menjadi kuncimu di browser ini dan tidak pernah dikirim. Setelah itu browser ini mendapat kuncinya sendiri, yang bisa kamu hapus di Perangkat.",
+    close: "Tutup",
+    signOut: "Logout",
+    signOutConfirm:
+      "Logout browser ini dari profil Phigros++ kamu? Snapshot-nya tetap ada di Riwayat.",
+    move: "Save ini hanya ada di browser ini. Kirim ke Phigros++ supaya kamu bisa terus memainkannya, dengan replay dan permainanmu di papan peringkat.",
+    send: "Kirim ke Phigros++",
+    sendConfirm: (name: string) =>
+      `Kirim save ini ke Phigros++ milik ${name}? Saat game dibuka berikutnya, game akan menawarkan untuk memuatnya dan memberi tahu apa yang akan diganti.`,
+    sent: "Terkirim. Buka Phigros++ untuk memuatnya.",
+    moveStep1:
+      "Pasang Phigros++ lalu aktifkan **Sync to phigros.tools** di **Pengaturan → Profil**.",
+    moveStep2:
+      "Di sana, pilih **Sign in another device** lalu **Open in browser**, atau login di sini dengan kode yang muncul.",
+    moveStep3: "Kembali ke save ini lalu pilih **Kirim ke Phigros++**.",
+    taptapCard: (date: string) =>
+      `Cloud TapTap sudah tidak merespons, tapi browser ini masih menyimpan save kamu dari ${date}. Buka save itu untuk mengirimnya ke Phigros++.`,
+    taptapCardNone:
+      "Cloud TapTap sudah tidak merespons, dan browser ini tidak punya salinan save ini.",
+    openSave: "Buka save saya",
+    olderSave: (date: string, rks: string) =>
+      `Browser ini juga menyimpan save dari ${date} dengan RKS ${rks}, yang bisa kamu kirim ke Phigros++.`,
+    openIt: "Buka",
+    devicesTitle: "Perangkat",
+    devicesText: (tag: string) =>
+      `Semua yang login sebagai ${tag}. Perangkat yang dihapus tidak bisa lagi menyinkronkan, mengunggah, atau mengunduh save kamu, tetapi tetap menyimpan apa yang sudah diunduhnya.`,
+    addDevice: "Tambah perangkat",
+    addDeviceText:
+      "Di Phigros++ pada perangkat lain, buka **Pengaturan → Profil**, pilih **Sign in to my profile**, lalu ketik kode ini. Kode ini hanya bisa dipakai sekali, selama 10 menit.",
+    phraseRow: "Frasa pemulihan",
+    phraseRowDesc:
+      "16 kata milikmu. Kata-kata ini selalu bisa memulihkan profil, jadi tidak bisa dihapus.",
+    thisBrowser: "Browser ini",
+    seen: (date: string) => `terakhir dilihat ${date}`,
+    added: (date: string) => `ditambahkan ${date}`,
+    remove: "Hapus",
+    rename: "Ganti nama",
+    removeConfirm: (name: string) =>
+      `Hapus ${name}? Perangkat itu tidak bisa lagi menyinkronkan atau mengunduh save kamu.`,
+    signingInFromLink: "Login dengan kode dari Phigros++…",
+    leaderboardCta:
+      "Semua pemain di sini bermain dengan Phigros++, yang mengirim permainan dan replay mereka.",
+    leaderboardJoin: "Masuk papan peringkat",
+  },
+  pppPage: {
+    description:
+      "Phigros dengan replay, HUD, dan mod Lua, terpasang sebagai aplikasi tersendiri di samping game. Save, rekor, dan replay kamu disimpan di phigros.tools, tempat permainanmu dihitung di papan peringkat.",
+    download: "Unduh installer",
+    downloadNote: "Untuk Android 7 ke atas, dengan Phigros dari Play Store",
+    replays: "Replay",
+    replaysText:
+      "Setiap permainan direkam dan bisa diputar ulang dari daftar lagu, dengan fitur lompat, jeda, dan pengaturan kecepatan.",
+    hud: "HUD",
+    hudText:
+      "Grade dan akurasi yang sedang dituju permainanmu, bar hit error, dan opsi untuk melewati jeda loading game.",
+    sync: "Sinkron phigros.tools",
+    syncText:
+      "Profil opsional berisi rekor, replay, dan statistik permainanmu, diperingkat di papan peringkat, beserta save kamu untuk dibuka di sini.",
+    install: "Cara Memasang",
+    install1: "Pasang Phigros dari Play Store.",
+    install2: "Unduh **phigrospp-installer.apk** dari rilis terbaru installer, lalu buka.",
+    install3:
+      "Ketuk **Install**: installer akan mengubah Phigros kamu menjadi Phigros++, aplikasi tersendiri di samping game, dan memperbaruinya nanti.",
+    install4:
+      "Di Phigros++, buka **Pengaturan → Profil**, aktifkan **Sync to phigros.tools**, lalu simpan 16 kata yang ditampilkan.",
+    installNote:
+      "Mod berjalan dengan kunci phigros.tools kamu, jadi pasang hanya mod yang kamu percaya.",
+    bring: "Pindahkan Save Kamu",
+    bringText:
+      "Phigros++ dimulai dengan save kosong, dan cloud TapTap sudah tidak merespons, jadi save kamu tidak bisa diambil dari sana.",
+    browser: "Kamu pernah membuka save di phigros.tools",
+    browserText:
+      "Browser ini menyimpan salinannya. Login dari Phigros++, buka save itu dari Riwayat, lalu pilih **Kirim ke Phigros++**: game akan menawarkan untuk memuatnya saat dibuka berikutnya.",
+    device: "Kamu sudah memakai Phigros++ di perangkat lain",
+    deviceText:
+      "Pilih **Sign in another device** di sana, lalu **Sign in to my profile** di perangkat baru dan ketik kodenya atau 16 kata milikmu. Setelah itu Phigros++ menawarkan save yang diunggah perangkat lainmu.",
+    game: "Save kamu hanya ada di dalam game",
+    gameText:
+      "Phigros++ dipasang sebagai aplikasi terpisah di samping Phigros, jadi save-mu tetap ada di game aslinya dan kamu bisa terus memainkannya di sana. Untuk sekarang Phigros++ dimulai dengan save-nya sendiri, dan kami sedang menyiapkan cara untuk memindahkan save-mu.",
+    source: "Kode sumber",
   },
   history: {
     snapshots: "Snapshot",

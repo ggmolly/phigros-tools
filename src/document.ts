@@ -14,7 +14,7 @@ export interface SaveDocumentV1 {
   schema: "phigros-web-save";
   schemaVersion: 1;
   source: {
-    kind: "cloud" | "zip" | "json";
+    kind: "cloud" | "zip" | "json" | "phigrospp";
     importedAt: string;
     name?: string;
     cloudUpdatedAt?: string;
@@ -138,7 +138,7 @@ const saveDocument = v.object({
   schema: v.literal("phigros-web-save"),
   schemaVersion: v.literal(1),
   source: v.object({
-    kind: v.picklist(["cloud", "zip", "json"]),
+    kind: v.picklist(["cloud", "zip", "json", "phigrospp"]),
     importedAt: isoString,
     name: v.optional(shortString),
     cloudUpdatedAt: v.optional(isoString),

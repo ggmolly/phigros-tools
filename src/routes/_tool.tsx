@@ -1,9 +1,10 @@
-import { createFileRoute, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import { Arrow, SyncIcon } from "../components/arrow";
 import { SiteHeader, type TabId, toolTabs } from "../components/chrome";
 import { DATE_TIME } from "../components/history-panels";
-import { ImportOptions, TapTapDialog } from "../components/import";
+import { ImportOptions, OtherWaysDialog, TapTapDialog } from "../components/import";
+import { SignInDialog } from "../components/phigrospp";
 import { Avatar } from "../components/primitives";
 import { Rich, useFormat, useT } from "../i18n";
 import { calculateRanking } from "../metrics";
@@ -29,6 +30,7 @@ function download(name: string, value: string | Uint8Array, type = "application/
 function ToolLayout() {
   const {
     loaded,
+    account,
     snapshots,
     credentials,
     sync,
@@ -62,19 +64,37 @@ function ToolLayout() {
   const openImport = () => importDialog.current?.showModal();
   const pathname = useRouterState({ select: (state) => state.location.pathname as TabId });
   const loadedCredential = loaded && credentials.find((c) => c.playerId === loaded.playerId);
+  // the open save is the signed-in Phigros++ profile's, known from the page's cookie before storage is read
+  const profileSave = !!loaded && account === loaded.playerId;
   const playerName = loaded && (loadedCredential?.nickname ?? loaded.playerId);
-  const tabIds = toolTabs(!!loaded, snapshots.length > 0);
+  const tabIds = toolTabs(!!loaded, snapshots.length > 0, profileSave);
   const activeTab = tabIds.includes(pathname) ? pathname : "/";
-  const rememberedId = credentials.some((c) => c.playerId === selectedPlayer)
+  // the token dialog only knows TapTap logins
+  const tokens = credentials.filter((c) => c.token);
+  const rememberedId = tokens.some((c) => c.playerId === selectedPlayer)
     ? selectedPlayer
-    : credentials[0]?.playerId;
+    : tokens[0]?.playerId;
   // A tab that can't show anything yet (e.g. /records after a reload, before a save is opened) goes back to "/".
   // biome-ignore lint/correctness/useExhaustiveDependencies: navigate isn't wrapped in useCallback (the project relies on the React Compiler instead), so listing it would re-run this every render.
   useEffect(() => {
     // Only for the tool's own tabs: while following a link out (e.g. to /charts/$id) this layout briefly sees the new path.
-    if (storageReady && toolTabs(true, true).includes(pathname) && pathname !== activeTab)
+    const anyTab = [...toolTabs(true, true, true), ...toolTabs(true, true, false)];
+    if (storageReady && anyTab.includes(pathname) && pathname !== activeTab)
       void navigate({ to: activeTab, replace: true });
   }, [storageReady, pathname, activeTab]);
+  const tag = loaded && (
+    <>
+      <Avatar
+        className="player-avatar"
+        name={loaded.document.profile?.avatar || loaded.document.summary?.avatar || ""}
+      />
+      <span className="player-name">{playerName || t.tool.localSave}</span>
+      <span className="player-rks">
+        <span className="sr-only">RKS </span>
+        {calculateRanking(loaded.document).rankingScore.toFixed(2)}
+      </span>
+    </>
+  );
   return (
     <>
       <a className="skip-link" href="#results">
@@ -83,7 +103,8 @@ function ToolLayout() {
       <SiteHeader>
         {loaded && (
           <div className="player-area">
-            {loadedCredential && (
+            {/* TapTap's cloud is gone: only a Phigros++ profile syncs */}
+            {profileSave && loadedCredential && (
               <button
                 type="button"
                 className={`arrow-row sync-row${sync?.playerId === loadedCredential.playerId ? ` sync-${sync.state}` : ""}`}
@@ -100,35 +121,26 @@ function ToolLayout() {
                 </span>
               </button>
             )}
-            {sync?.state === "error" && sync.playerId === loadedCredential?.playerId && (
-              <button
-                type="button"
-                className="sync-fix"
-                onClick={() => dialog.current?.showModal()}
-              >
-                {t.tool.reenterToken}
+            {/* Overview's hero is this same profile strip, larger; one is enough per screen. A Phigros++ profile's
+             * leads back to it, and has no Import: its save comes from the game. */}
+            {activeTab !== "/" &&
+              (profileSave ? (
+                <Link to="/" className="player-tag">
+                  {tag}
+                </Link>
+              ) : (
+                <div
+                  className="player-tag"
+                  title={loaded.playerId ? t.tool.player(loaded.playerId) : undefined}
+                >
+                  {tag}
+                </div>
+              ))}
+            {!profileSave && (
+              <button type="button" className="btn btn-ghost import-open" onClick={openImport}>
+                {t.menu.import}
               </button>
             )}
-            {/* Overview's hero is this same profile strip, larger; one is enough per screen. */}
-            {activeTab !== "/" && (
-              <div
-                className="player-tag"
-                title={loaded.playerId ? t.tool.player(loaded.playerId) : undefined}
-              >
-                <Avatar
-                  className="player-avatar"
-                  name={loaded.document.profile?.avatar || loaded.document.summary?.avatar || ""}
-                />
-                <span className="player-name">{playerName || t.tool.localSave}</span>
-                <span className="player-rks">
-                  <span className="sr-only">RKS </span>
-                  {calculateRanking(loaded.document).rankingScore.toFixed(2)}
-                </span>
-              </div>
-            )}
-            <button type="button" className="btn btn-ghost import-open" onClick={openImport}>
-              {t.menu.import}
-            </button>
           </div>
         )}
       </SiteHeader>
@@ -203,6 +215,8 @@ function ToolLayout() {
           </div>
         </dialog>
         <TapTapDialog />
+        <SignInDialog />
+        <OtherWaysDialog />
         <dialog ref={dialog} id="tokenDialog">
           <form method="dialog" className="dialog-head">
             <h2>{t.tool.tokenTitle}</h2>
@@ -212,7 +226,7 @@ function ToolLayout() {
             </button>
           </form>
           <p className="meta">{t.tool.tokenNote}</p>
-          {credentials.length > 0 && (
+          {tokens.length > 0 && (
             <div className="dialog-field">
               <label htmlFor="remembered" className="field-label">
                 {t.tool.remembered}
@@ -224,7 +238,7 @@ function ToolLayout() {
                   value={rememberedId}
                   onChange={(e) => setSelectedPlayer(e.target.value)}
                 >
-                  {credentials.map((c) => (
+                  {tokens.map((c) => (
                     <option key={c.playerId} value={c.playerId}>
                       {c.nickname ? `${c.nickname} · ` : ""}
                       {c.playerId}
@@ -236,10 +250,10 @@ function ToolLayout() {
                   className="btn"
                   disabled={busy}
                   onClick={() => {
-                    const c = credentials.find((item) => item.playerId === rememberedId);
+                    const c = tokens.find((item) => item.playerId === rememberedId);
                     if (c) {
                       dialog.current?.close();
-                      void cloudImport(async () => c);
+                      void cloudImport(async () => ({ ...c, token: c.token! }));
                     }
                   }}
                 >

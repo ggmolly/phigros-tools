@@ -8,6 +8,9 @@ export const ja = {
     history: "履歴",
     charts: "譜面",
     leaderboard: "ランキング",
+    devices: "デバイス",
+    phigrospp: "Phigros++",
+    profile: "プロフィール",
     label: "セクション",
   },
   header: {
@@ -68,22 +71,6 @@ export const ja = {
     code: "コード",
     newCode: "新しいコード",
     openTapTap: "TapTap を開く",
-    guideButton: "インポート方法",
-    guideTitle: "インポート方法",
-    guideClose: "インポートガイドを閉じる",
-    guideIntro:
-      "phigros.tools は **TapTap のクラウドセーブ** を読み込むので、先に同期してください：Phigros で **設定 → プロフィール** を開き、TapTap でログインして **今すぐ同期** をタップします。グローバル版と中国版のどちらにも対応しています。",
-    step1: "**TapTap ログイン** を選び、ゲームのバージョンを選択します。",
-    step2:
-      "スマホで QR コードをスキャンするか、すでにスマホ上なら **TapTap を開く** をタップし、プレイしている TapTap アカウントで承認します。",
-    step3:
-      "セーブが読み込まれます。このブラウザはログインを記憶するので、以降は **同期** で新しいセーブを取得できます。",
-    usbSummary: "代わりに Android を USB で接続",
-    usb1: "スマホで **設定 → デバイス情報** を開き、**ビルド番号** を 7 回タップして開発者向けオプションを有効にします。",
-    usb2: "**開発者向けオプション** で **USB デバッグ** をオンにします。",
-    usb3: "スマホをパソコンに接続し、このサイトを **Chrome** または **Edge** で開きます（Firefox と Safari は USB デバイスと通信できません）。",
-    usb4: "**Android（USB）** を選び、スマホを選択してから、スマホで **許可** をタップします。",
-    loginWithTapTap: "TapTap でログイン",
   },
   seo: {
     siteDescription:
@@ -148,7 +135,6 @@ export const ja = {
   tool: {
     skip: "本文へスキップ",
     syncTitle: (date: string) => `最新のクラウドセーブを取得 · 前回の取得 ${date}`,
-    reenterToken: "トークンを再入力",
     player: (id: string) => `プレイヤー ${id}`,
     localSave: "ローカルセーブ",
     importTagline: "Phigros の進捗を読み込みます",
@@ -195,7 +181,7 @@ export const ja = {
     searchPlayers: "名前 または 名前#0042 で検索",
     noPlayers: "この名前のプレイヤーはいません",
     noRanked: "まだランキングにプレイヤーがいません",
-    noCharts: "まだプレイのある譜面がありません",
+    noCharts: "まだプレイのある譜面がありません。Phigros++ でプレイして最初の一人になりましょう。",
     description:
       "RKS 順の Phigros プレイヤーと、各譜面のベストプレイ。Phigros++ で同期しているプレイヤーのデータです。",
   },
@@ -483,6 +469,125 @@ export const ja = {
     downloadFailed: (status: string) => `セーブのダウンロード：HTTP ${status}`,
     jsonTooLarge: (mb: string) => `JSON がインポート上限の ${mb} MB を超えています`,
     invalidJson: "無効な JSON",
+    pppRemoved:
+      "このブラウザはプロフィールから削除されました。開くにはもう一度サインインしてください。",
+    pppNoCode:
+      "このコードは使えません。すでに使用済みか、発行から 10 分以上経っています。新しいコードを発行してください。",
+    pppNoProfile:
+      "この単語で作られた phigros.tools のプロフィールはありません。各単語とその順番を確認してください。",
+    pppServer: (status: string) =>
+      `phigros.tools から応答がありませんでした（HTTP ${status}）。もう一度お試しください。`,
+    pppWord: (word: string) => `「${word}」はリカバリーワードではありません。`,
+    pppWords: (count: string) => `入力されたのは ${count} 語です。リカバリーフレーズは 16 語です。`,
+    pppNoSave:
+      "Phigros++ はまだセーブをアップロードしていません。ゲームの Settings → Profile で Upload my save をオンにしてください。",
+    pppUnsupported:
+      "このブラウザではサインインできません。ブラウザを更新するか、最新の Chrome、Firefox、Safari を使ってください。",
+  },
+  ppp: {
+    profile: "Phigros++ プロフィール",
+    profileDesc: "ゲームからサインインしてセーブを開く",
+    otherWays: "その他の方法",
+    otherWaysDesc: "TapTap ログイン、Android（USB）、セッショントークン",
+    taptapGone:
+      "TapTap のクラウドセーブは 2026 年 11 月に応答しなくなったため、これらの方法は失敗する可能性があります。代わりに Phigros++ がセーブを phigros.tools に保存します。",
+    pitch:
+      "Phigros++ はゲームにリプレイ、HUD、Mod を追加し、セーブとプレイをこのサイトに保存します。",
+    get: "Phigros++ を入手",
+    signInTitle: "Phigros++ からサインイン",
+    signInStep1:
+      "Phigros++ で **Settings → Profile** を開き、**Sign in another device** を選びます。入力を省くなら **Open in browser** を選んでください。",
+    signInStep2: "表示されたコードをここに入力します。",
+    code: "コード",
+    signIn: "サインイン",
+    signingIn: "サインイン中…",
+    usePhrase: "リカバリーフレーズを使う",
+    useCode: "ゲームのコードを使う",
+    phraseTitle: "リカバリーフレーズでサインイン",
+    phraseText:
+      "Phigros++ の **Settings → Profile → Show recovery phrase** に表示された 16 語を順番どおりに入力してください。",
+    phrase: "リカバリーフレーズ",
+    phraseNote:
+      "単語はこのブラウザ内で鍵に変換され、送信されることはありません。その後このブラウザには専用の鍵が発行され、デバイスから削除できます。",
+    close: "閉じる",
+    signOut: "サインアウト",
+    signOutConfirm:
+      "このブラウザを Phigros++ プロフィールからサインアウトしますか？スナップショットは履歴に残ります。",
+    move: "このセーブはこのブラウザにしかありません。Phigros++ に送ると、リプレイ付きで続きをプレイでき、プレイがランキングに載ります。",
+    send: "Phigros++ に送る",
+    sendConfirm: (name: string) =>
+      `このセーブを ${name} の Phigros++ に送りますか？次回ゲームを起動したときに読み込むか確認され、何が置き換わるかも表示されます。`,
+    sent: "送信しました。Phigros++ を開いて読み込んでください。",
+    moveStep1:
+      "Phigros++ をインストールし、**Settings → Profile** で **Sync to phigros.tools** をオンにします。",
+    moveStep2:
+      "そこで **Sign in another device** を選び、**Open in browser** を選ぶか、表示されたコードでここからサインインします。",
+    moveStep3: "このセーブに戻り、**Phigros++ に送る** を選びます。",
+    taptapCard: (date: string) =>
+      `TapTap のクラウドはもう応答しませんが、このブラウザには ${date} のセーブが残っています。開いて Phigros++ に送ってください。`,
+    taptapCardNone:
+      "TapTap のクラウドはもう応答せず、このブラウザにもこのセーブのコピーはありません。",
+    openSave: "セーブを開く",
+    olderSave: (date: string, rks: string) =>
+      `このブラウザには ${date} の RKS ${rks} のセーブも残っていて、Phigros++ に送ることができます。`,
+    openIt: "開く",
+    devicesTitle: "デバイス",
+    devicesText: (tag: string) =>
+      `${tag} としてサインインしているすべてのデバイスです。削除したデバイスはセーブの同期、アップロード、ダウンロードができなくなりますが、ダウンロード済みのものは残ります。`,
+    addDevice: "デバイスを追加",
+    addDeviceText:
+      "もう一方のデバイスの Phigros++ で **Settings → Profile** を開き、**Sign in to my profile** を選んでこのコードを入力してください。コードは 1 回だけ、10 分間有効です。",
+    phraseRow: "リカバリーフレーズ",
+    phraseRowDesc: "あなたの 16 語です。いつでもプロフィールを復元できるので、削除はできません。",
+    thisBrowser: "このブラウザ",
+    seen: (date: string) => `最終アクセス ${date}`,
+    added: (date: string) => `追加 ${date}`,
+    remove: "削除",
+    rename: "名前を変更",
+    removeConfirm: (name: string) =>
+      `${name} を削除しますか？セーブの同期やダウンロードができなくなります。`,
+    signingInFromLink: "Phigros++ のコードでサインイン中…",
+    leaderboardCta:
+      "ここにいるプレイヤーは全員 Phigros++ でプレイし、プレイとリプレイを送信しています。",
+    leaderboardJoin: "ランキングに参加する",
+  },
+  pppPage: {
+    description:
+      "リプレイ、HUD、Lua Mod を備えた Phigros で、ゲームとは別のアプリとしてインストールされます。セーブ、記録、リプレイを phigros.tools に保存し、プレイはランキングに反映されます。",
+    download: "インストーラーを入手",
+    downloadNote: "Android 7 以降、Play ストア版の Phigros が必要です",
+    replays: "リプレイ",
+    replaysText:
+      "すべてのプレイが記録され、楽曲リストから再生できます。シーク、一時停止、再生速度の変更にも対応しています。",
+    hud: "HUD",
+    hudText:
+      "プレイの到達見込みのランクと精度、判定ずれバー、そしてゲームの読み込み待ちを飛ばすオプションがあります。",
+    sync: "phigros.tools 同期",
+    syncText:
+      "任意で作れるプロフィールに記録、リプレイ、プレイ統計が保存され、ランキングに載り、セーブもこのサイトで開けます。",
+    install: "インストール",
+    install1: "Play ストアから Phigros をインストールします。",
+    install2:
+      "インストーラーの最新リリースから **phigrospp-installer.apk** をダウンロードして開きます。",
+    install3:
+      "**Install** をタップすると、Phigros にパッチを当てて、ゲームとは別のアプリである Phigros++ を作成し、以後の更新も行います。",
+    install4:
+      "Phigros++ で **Settings → Profile** を開き、**Sync to phigros.tools** をオンにして、表示される 16 語を控えておきます。",
+    installNote:
+      "Mod はあなたの phigros.tools の鍵で動くので、信頼できる Mod だけを追加してください。",
+    bring: "セーブを引き継ぐ",
+    bringText:
+      "Phigros++ は空のセーブで始まり、TapTap のクラウドはもう応答しないため、そこからセーブを取得することはできません。",
+    browser: "以前 phigros.tools でセーブを開いたことがある場合",
+    browserText:
+      "このブラウザにコピーが残っています。Phigros++ からサインインし、履歴からそのセーブを開いて **Phigros++ に送る** を選んでください。次回の起動時にゲームが読み込みを提案します。",
+    device: "すでに別のデバイスで Phigros++ を使っている場合",
+    deviceText:
+      "そのデバイスで **Sign in another device** を選び、新しいデバイスで **Sign in to my profile** を選んで、そのコードか 16 語を入力してください。すると Phigros++ が、もう一方のデバイスがアップロードしたセーブを提案します。",
+    game: "セーブがゲームの中にしかない場合",
+    gameText:
+      "Phigros++ は Phigros とは別のアプリとしてインストールされるので、セーブは元のゲームに残り、そちらで引き続き遊べます。今のところ Phigros++ は独自のセーブで始まりますが、あなたのセーブを移す方法を準備中です。",
+    source: "ソースコード",
   },
   history: {
     snapshots: "スナップショット",
