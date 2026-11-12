@@ -76,21 +76,3 @@ export const catalogSongs = data.songs as CatalogSong[];
 export const catalogChartTotals = LEVELS.map(
   (_, level) => catalogSongs.filter((song) => song.constants[level] !== null).length,
 );
-
-/** Catalog charts without a played record, per difficulty. */
-export function missingCharts(
-  songs: { songId: string; levels: (null | object)[] }[],
-): { id: string; title: string }[][] {
-  const played = new Set(
-    songs.flatMap((song) =>
-      song.levels.flatMap((record, level) =>
-        record ? [`${canonicalSongId(song.songId)}:${level}`] : [],
-      ),
-    ),
-  );
-  return LEVELS.map((_, level) =>
-    catalogSongs
-      .filter((song) => song.constants[level] !== null && !played.has(`${song.id}:${level}`))
-      .map((song) => ({ id: song.id, title: song.title })),
-  );
-}

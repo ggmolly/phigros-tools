@@ -59,7 +59,6 @@ function GithubLink() {
 export type TabId =
   | "/"
   | "/records"
-  | "/collection"
   | "/history"
   | "/devices"
   | "/charts"
@@ -69,7 +68,6 @@ export type TabId =
 export const TAB_KEY = {
   "/": "overview",
   "/records": "records",
-  "/collection": "collection",
   "/history": "history",
   "/devices": "devices",
   "/charts": "charts",
@@ -101,7 +99,7 @@ function LanguageSwitch() {
 /** The save-analyzer tabs that have something to show right now: a Phigros++ profile's save has Devices, and the
  * server keeps its history, while History holds the snapshots of saves kept in this browser. */
 export function toolTabs(hasSave: boolean, hasSnapshots: boolean, signedIn: boolean): TabId[] {
-  if (hasSave) return ["/", "/records", "/collection", signedIn ? "/devices" : "/history"];
+  if (hasSave) return ["/", "/records", signedIn ? "/devices" : "/history"];
   return hasSnapshots ? ["/", "/history"] : ["/"];
 }
 

@@ -4,7 +4,6 @@ export const ja = {
   tabs: {
     overview: "概要",
     records: "記録",
-    collection: "コレクション",
     history: "履歴",
     charts: "譜面",
     leaderboard: "ランキング",
@@ -84,9 +83,6 @@ export const ja = {
     recordsTitle: "譜面の記録",
     recordsDescription:
       "Phigros でプレイした全譜面を検索・並べ替え。All Perfect でランキングスコアがどれだけ上がるかでも並べ替えられます。",
-    collectionTitle: "コレクション",
-    collectionDescription:
-      "Phigros の難易度別 Clear・Full Combo・Phi の進捗と、まだプレイしていない譜面。",
     historyTitle: "履歴",
     historyDescription:
       "ブラウザに保存したスナップショットから、Phigros のランキングスコアの推移とセーブ間の変化を確認。",
@@ -314,16 +310,6 @@ export const ja = {
       gold: "金",
       rainbow: "虹",
     },
-  },
-  collection: {
-    chartsPlayed: (played: string, total: string) => `${played} / ${total} 譜面プレイ済み`,
-    totalCompletion: "総合達成率",
-    completionLabel: (percent: string) => `全譜面の ${percent}% をプレイ済み`,
-    levelPlayed: (level: string, played: string, total: string) =>
-      `${level}：${total} 譜面中 ${played} 譜面プレイ済み`,
-    notPlayedOne: (n: number) => `未プレイの譜面 ${n} 件`,
-    notPlayedMany: (n: number) => `未プレイの譜面 ${n} 件`,
-    missing: (n: number) => `未プレイ ${n} 件`,
   },
   records: {
     title: "譜面の記録",

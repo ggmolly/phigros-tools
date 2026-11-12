@@ -13,7 +13,6 @@ import { Route as ToolRouteImport } from './routes/_tool'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as PhigrosppRouteImport } from './routes/phigrospp'
 import { Route as ToolIndexRouteImport } from './routes/_tool.index'
-import { Route as ToolCollectionRouteImport } from './routes/_tool.collection'
 import { Route as ToolDevicesRouteImport } from './routes/_tool.devices'
 import { Route as ToolHistoryRouteImport } from './routes/_tool.history'
 import { Route as ToolInRouteImport } from './routes/_tool.in'
@@ -43,11 +42,6 @@ const PhigrosppRoute = PhigrosppRouteImport.update({
 const ToolIndexRoute = ToolIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => ToolRoute,
-} as any)
-const ToolCollectionRoute = ToolCollectionRouteImport.update({
-  id: '/collection',
-  path: '/collection',
   getParentRoute: () => ToolRoute,
 } as any)
 const ToolDevicesRoute = ToolDevicesRouteImport.update({
@@ -110,7 +104,6 @@ export interface FileRoutesByFullPath {
   '/': typeof ToolIndexRoute
   '/leaderboard': typeof LeaderboardRouteWithChildren
   '/phigrospp': typeof PhigrosppRoute
-  '/collection': typeof ToolCollectionRoute
   '/devices': typeof ToolDevicesRoute
   '/history': typeof ToolHistoryRoute
   '/in': typeof ToolInRoute
@@ -125,7 +118,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/phigrospp': typeof PhigrosppRoute
-  '/collection': typeof ToolCollectionRoute
   '/devices': typeof ToolDevicesRoute
   '/history': typeof ToolHistoryRoute
   '/in': typeof ToolInRoute
@@ -144,7 +136,6 @@ export interface FileRoutesById {
   '/_tool': typeof ToolRouteWithChildren
   '/leaderboard': typeof LeaderboardRouteWithChildren
   '/phigrospp': typeof PhigrosppRoute
-  '/_tool/collection': typeof ToolCollectionRoute
   '/_tool/devices': typeof ToolDevicesRoute
   '/_tool/history': typeof ToolHistoryRoute
   '/_tool/in': typeof ToolInRoute
@@ -164,7 +155,6 @@ export interface FileRouteTypes {
     | '/'
     | '/leaderboard'
     | '/phigrospp'
-    | '/collection'
     | '/devices'
     | '/history'
     | '/in'
@@ -179,7 +169,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/phigrospp'
-    | '/collection'
     | '/devices'
     | '/history'
     | '/in'
@@ -197,7 +186,6 @@ export interface FileRouteTypes {
     | '/_tool'
     | '/leaderboard'
     | '/phigrospp'
-    | '/_tool/collection'
     | '/_tool/devices'
     | '/_tool/history'
     | '/_tool/in'
@@ -252,13 +240,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof ToolIndexRouteImport
-      parentRoute: typeof ToolRoute
-    }
-    '/_tool/collection': {
-      id: '/_tool/collection'
-      path: '/collection'
-      fullPath: '/collection'
-      preLoaderRoute: typeof ToolCollectionRouteImport
       parentRoute: typeof ToolRoute
     }
     '/_tool/devices': {
@@ -342,7 +323,6 @@ declare module '@tanstack/react-router' {
 }
 
 interface ToolRouteChildren {
-  ToolCollectionRoute: typeof ToolCollectionRoute
   ToolDevicesRoute: typeof ToolDevicesRoute
   ToolHistoryRoute: typeof ToolHistoryRoute
   ToolInRoute: typeof ToolInRoute
@@ -351,7 +331,6 @@ interface ToolRouteChildren {
 }
 
 const ToolRouteChildren: ToolRouteChildren = {
-  ToolCollectionRoute: ToolCollectionRoute,
   ToolDevicesRoute: ToolDevicesRoute,
   ToolHistoryRoute: ToolHistoryRoute,
   ToolInRoute: ToolInRoute,

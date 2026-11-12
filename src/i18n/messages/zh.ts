@@ -4,7 +4,6 @@ export const zh = {
   tabs: {
     overview: "总览",
     records: "成绩",
-    collection: "收集",
     history: "历史",
     charts: "谱面",
     leaderboard: "排行榜",
@@ -84,9 +83,6 @@ export const zh = {
     recordsTitle: "谱面成绩",
     recordsDescription:
       "你在 Phigros 中玩过的所有谱面，可搜索和排序，包括按 All Perfect 能提升多少 RKS 排序。",
-    collectionTitle: "收集",
-    collectionDescription:
-      "你在 Phigros 各难度的 Clear、Full Combo 与 Phi 进度，以及尚未游玩的谱面。",
     historyTitle: "历史",
     historyDescription: "根据保存在浏览器中的快照，查看你的 Phigros RKS 变化以及存档之间的差异。",
     songIntro: (title: string, artist: string, chapter: string) =>
@@ -307,16 +303,6 @@ export const zh = {
       gold: "金",
       rainbow: "彩",
     },
-  },
-  collection: {
-    chartsPlayed: (played: string, total: string) => `已游玩 ${played} / ${total} 个谱面`,
-    totalCompletion: "总完成度",
-    completionLabel: (percent: string) => `已游玩全部谱面的 ${percent}%`,
-    levelPlayed: (level: string, played: string, total: string) =>
-      `${level}：已游玩 ${played} / ${total} 个谱面`,
-    notPlayedOne: (n: number) => `${n} 个谱面尚未游玩`,
-    notPlayedMany: (n: number) => `${n} 个谱面尚未游玩`,
-    missing: (n: number) => `缺 ${n} 个`,
   },
   records: {
     title: "谱面成绩",

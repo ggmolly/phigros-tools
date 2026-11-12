@@ -2,7 +2,6 @@ export const en = {
   tabs: {
     overview: "Overview",
     records: "Records",
-    collection: "Collection",
     history: "History",
     charts: "Charts",
     leaderboard: "Leaderboard",
@@ -82,9 +81,6 @@ export const en = {
     recordsTitle: "Chart Records",
     recordsDescription:
       "Every chart you've played in Phigros, searchable and sortable, including by how much an All Perfect would raise your ranking score.",
-    collectionTitle: "Collection",
-    collectionDescription:
-      "Your Phigros Cleared, Full Combo and Phi progress per difficulty, and the charts you haven't played yet.",
     historyTitle: "History",
     historyDescription:
       "Your Phigros ranking score over time and what changed between saves, from snapshots kept in your browser.",
@@ -313,16 +309,6 @@ export const en = {
       gold: "Gold",
       rainbow: "Rainbow",
     },
-  },
-  collection: {
-    chartsPlayed: (played: string, total: string) => `${played} / ${total} charts played`,
-    totalCompletion: "Total Completion",
-    completionLabel: (percent: string) => `${percent}% of all charts played`,
-    levelPlayed: (level: string, played: string, total: string) =>
-      `${level}: ${played} of ${total} charts played`,
-    notPlayedOne: (n: number) => `${n} chart not played yet`,
-    notPlayedMany: (n: number) => `${n} charts not played yet`,
-    missing: (n: number) => `${n} missing`,
   },
   records: {
     title: "Chart Records",

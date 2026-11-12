@@ -4,7 +4,6 @@ export const vi = {
   tabs: {
     overview: "Tổng quan",
     records: "Kỷ lục",
-    collection: "Bộ sưu tập",
     history: "Lịch sử",
     charts: "Chart",
     leaderboard: "Bảng xếp hạng",
@@ -84,9 +83,6 @@ export const vi = {
     recordsTitle: "Kỷ lục chart",
     recordsDescription:
       "Mọi chart bạn đã chơi trong Phigros, có thể tìm kiếm và sắp xếp, kể cả theo mức một All Perfect sẽ tăng ranking score của bạn.",
-    collectionTitle: "Bộ sưu tập",
-    collectionDescription:
-      "Tiến độ Clear, Full Combo và Phi theo từng độ khó trong Phigros, và các chart bạn chưa chơi.",
     historyTitle: "Lịch sử",
     historyDescription:
       "Ranking score Phigros của bạn theo thời gian và những gì thay đổi giữa các save, từ các bản lưu trong trình duyệt.",
@@ -316,16 +312,6 @@ export const vi = {
       gold: "Vàng",
       rainbow: "Cầu vồng",
     },
-  },
-  collection: {
-    chartsPlayed: (played: string, total: string) => `Đã chơi ${played} / ${total} chart`,
-    totalCompletion: "Tổng tiến độ",
-    completionLabel: (percent: string) => `Đã chơi ${percent}% tổng số chart`,
-    levelPlayed: (level: string, played: string, total: string) =>
-      `${level}: đã chơi ${played} trên ${total} chart`,
-    notPlayedOne: (n: number) => `${n} chart chưa chơi`,
-    notPlayedMany: (n: number) => `${n} chart chưa chơi`,
-    missing: (n: number) => `Thiếu ${n}`,
   },
   records: {
     title: "Kỷ lục chart",

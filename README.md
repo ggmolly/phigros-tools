@@ -33,12 +33,6 @@ Every chart you've played, searchable, filterable by difficulty and clear status
 
 ![Chart records table filtered to IN](docs/screenshots/04-records.png)
 
-### Collection
-
-Cleared, Full Combo and Phi progress per difficulty, plus the charts you haven't played yet.
-
-![Collection completion per difficulty](docs/screenshots/05-collection.png)
-
 ### History
 
 Save snapshots (stored in your browser) to chart your RKS over time and see what changed since the last one.

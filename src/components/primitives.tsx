@@ -1,13 +1,7 @@
 import type { CSSProperties, ReactNode, Ref } from "react";
 import { useFormat, useT } from "../i18n";
-import { LEVELS, type LevelName } from "../modules";
+import { LEVELS } from "../modules";
 
-export const LEVEL_NAMES: Record<LevelName, string> = {
-  EZ: "Easy",
-  HD: "Hard",
-  IN: "Insane",
-  AT: "Another",
-};
 const RANKS: [number, string][] = [
   [960_000, "V"],
   [920_000, "S"],

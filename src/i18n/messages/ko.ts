@@ -4,7 +4,6 @@ export const ko = {
   tabs: {
     overview: "개요",
     records: "기록",
-    collection: "컬렉션",
     history: "기록 내역",
     charts: "채보",
     leaderboard: "리더보드",
@@ -84,9 +83,6 @@ export const ko = {
     recordsTitle: "채보 기록",
     recordsDescription:
       "Phigros에서 플레이한 모든 채보를 검색하고 정렬하세요. All Perfect가 랭킹 스코어를 얼마나 올리는지로도 정렬할 수 있습니다.",
-    collectionTitle: "컬렉션",
-    collectionDescription:
-      "난이도별 Phigros Clear, Full Combo, Phi 진행도와 아직 플레이하지 않은 채보.",
     historyTitle: "기록 내역",
     historyDescription:
       "브라우저에 저장된 스냅샷으로 보는 Phigros 랭킹 스코어 변화와 세이브 간 차이.",
@@ -314,16 +310,6 @@ export const ko = {
       gold: "골드",
       rainbow: "레인보우",
     },
-  },
-  collection: {
-    chartsPlayed: (played: string, total: string) => `${played} / ${total} 채보 플레이함`,
-    totalCompletion: "전체 달성률",
-    completionLabel: (percent: string) => `전체 채보의 ${percent}% 플레이함`,
-    levelPlayed: (level: string, played: string, total: string) =>
-      `${level}: ${total}개 중 ${played}개 채보 플레이함`,
-    notPlayedOne: (n: number) => `아직 플레이하지 않은 채보 ${n}개`,
-    notPlayedMany: (n: number) => `아직 플레이하지 않은 채보 ${n}개`,
-    missing: (n: number) => `${n}개 남음`,
   },
   records: {
     title: "채보 기록",

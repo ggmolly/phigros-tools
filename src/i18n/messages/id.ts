@@ -4,7 +4,6 @@ export const id = {
   tabs: {
     overview: "Ringkasan",
     records: "Rekor",
-    collection: "Koleksi",
     history: "Riwayat",
     charts: "Chart",
     leaderboard: "Papan peringkat",
@@ -84,9 +83,6 @@ export const id = {
     recordsTitle: "Rekor Chart",
     recordsDescription:
       "Semua chart yang sudah kamu mainkan di Phigros, bisa dicari dan diurutkan, termasuk berdasarkan seberapa besar All Perfect akan menaikkan ranking score-mu.",
-    collectionTitle: "Koleksi",
-    collectionDescription:
-      "Progres Clear, Full Combo, dan Phi Phigros-mu per tingkat kesulitan, serta chart yang belum kamu mainkan.",
     historyTitle: "Riwayat",
     historyDescription:
       "Ranking score Phigros-mu dari waktu ke waktu dan apa yang berubah antar save, dari snapshot yang disimpan di browsermu.",
@@ -316,16 +312,6 @@ export const id = {
       gold: "Emas",
       rainbow: "Pelangi",
     },
-  },
-  collection: {
-    chartsPlayed: (played: string, total: string) => `${played} / ${total} chart dimainkan`,
-    totalCompletion: "Total Penyelesaian",
-    completionLabel: (percent: string) => `${percent}% dari semua chart dimainkan`,
-    levelPlayed: (level: string, played: string, total: string) =>
-      `${level}: ${played} dari ${total} chart dimainkan`,
-    notPlayedOne: (n: number) => `${n} chart belum dimainkan`,
-    notPlayedMany: (n: number) => `${n} chart belum dimainkan`,
-    missing: (n: number) => `${n} belum`,
   },
   records: {
     title: "Rekor Chart",
