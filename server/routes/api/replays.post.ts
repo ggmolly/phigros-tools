@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { defineHandler, HTTPError } from "nitro/h3";
-import { canonicalSongId } from "../../../src/catalog";
+import { canonicalSongId, isLevel } from "../../../src/catalog";
 import { REPLAY_DOMAIN, REPLAY_SIGNED, replayHeader } from "../../../src/pigeon";
 import { signed, verifySignature } from "../../auth";
 import { player } from "../../players";
@@ -27,10 +27,15 @@ export default defineHandler(async (event) => {
   } catch (error) {
     throw HTTPError.status(400, (error as Error).message);
   }
+  // the game's song ids end in .0, the catalog's don't
+  const song = canonicalSongId(header.id.replace(/\.0$/, ""));
+  // the worker opens the chart by both: a ranked level, and a song that names a folder (maybe of a game update the
+  // site doesn't have yet)
+  if (!isLevel(header.difficulty) || /[/\\]|^\.{0,2}$/.test(song))
+    throw HTTPError.status(400, "Not a ranked chart");
   const sha256 = createHash("sha256").update(body).digest("hex");
   await Bun.write(`${REPLAY_DIR}/${sha256}.pigeon`, body);
-  // the game's song ids end in .0, the catalog's don't
-  addReplay(sha256, key, canonicalSongId(header.id.replace(/\.0$/, "")), header);
+  addReplay(sha256, key, song, header);
   await queueVerify(sha256);
   return { id: sha256 };
 });

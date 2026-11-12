@@ -1,11 +1,12 @@
 import { createPublicKey, verify } from "node:crypto";
-import { type H3Event, HTTPError } from "nitro/h3";
+import { assertBodySize, type H3Event, HTTPError } from "nitro/h3";
 import { sqlite } from "./db";
 import { markSeen } from "./players";
 
 // spki der header of a raw ed25519 public key
 const SPKI = Buffer.from("302a300506032b6570032100", "hex");
 const DAY = 86_400_000;
+const MAX_BODY = 8 * 1024 * 1024;
 // the key also signs replays, so a request's signature is of its own kind
 const DOMAIN = "phigros.tools request v1\0";
 
@@ -35,9 +36,10 @@ export function verifySignature(
  * A request signed by Phigros++ (the game's Unity can't set headers): the player's ed25519 public key (32 bytes), a
  * signature (64) of `DOMAIN<METHOD> <path>\n<time><body>`, the time in ms (i64 LE), then the body. The time only goes
  * forward per key, so a request can't be sent again. A time not after the last one gets 409 with the last one, for a
- * device whose clock ran ahead once to catch up.
+ * device whose clock ran ahead once to catch up. A request over 8 MB gets 413 without being read to its end.
  */
 export async function signed(event: H3Event): Promise<{ key: Uint8Array; body: Uint8Array }> {
+  assertBodySize(event, MAX_BODY);
   const bytes = new Uint8Array(await event.req.arrayBuffer());
   if (bytes.length < 104) throw HTTPError.status(400);
   const key = bytes.subarray(0, 32);

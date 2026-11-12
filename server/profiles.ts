@@ -76,11 +76,14 @@ const insertPlay = sqlite.prepare<
    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT DO NOTHING`,
 );
 
-/** Songs a player finished, one JSON object per line as the game sends them. Sending one again changes nothing. */
+/**
+ * Songs a player finished, one JSON object per line as the game sends them. Sending one again changes nothing. Levels
+ * the site doesn't rank (the game's Legacy charts) are skipped.
+ */
 export function addPlays(key: Uint8Array, text: string): number {
   const lines = text.split("\n").filter(Boolean);
   if (lines.length > MAX_PLAYS) throw HTTPError.status(413, "Too many plays");
-  const plays = lines.map((line) => {
+  const plays = lines.flatMap((line) => {
     const p = JSON.parse(line) as Record<string, unknown>;
     const n = (field: string) => {
       const value = Number(p[field]);
@@ -89,7 +92,7 @@ export function addPlays(key: Uint8Array, text: string): number {
       return value;
     };
     const level = String(p.level);
-    if (!LEVELS.includes(level as LevelName)) throw HTTPError.status(400, `Bad level: ${line}`);
+    if (!LEVELS.includes(level as LevelName)) return [];
     return {
       song: canonicalSongId(String(p.song).replace(/\.0$/, "")),
       level,
