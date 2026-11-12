@@ -38,13 +38,7 @@ export const de = {
     lastSync: (date: string) => `zuletzt synchronisiert am ${date}`,
     played: "Gespielt",
     fullCombo: "Full Combo",
-    syncPrompt: "Synchronisiere, um deinen neuesten Cloud-Spielstand zu laden.",
-    sync: "Synchronisieren",
-    syncNow: "Jetzt synchronisieren",
-    syncing: "Wird synchronisiert…",
-    fresh: "Neuer Spielstand geladen",
-    same: "Bereits aktuell",
-    failed: "Synchronisierung fehlgeschlagen",
+    syncPrompt: "Spiele einen Song mit Phigros++ und dein Spielstand erscheint hier.",
   },
   import: {
     taptap: "TapTap-Login",
@@ -131,7 +125,6 @@ export const de = {
   },
   tool: {
     skip: "Zum Inhalt springen",
-    syncTitle: (date: string) => `Neuesten Cloud-Spielstand abrufen · zuletzt abgerufen ${date}`,
     player: (id: string) => `Spieler ${id}`,
     localSave: "Lokaler Spielstand",
     importTagline: "Lade deinen Phigros-Fortschritt",

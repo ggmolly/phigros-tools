@@ -708,42 +708,6 @@
   align-items: flex-end;
   min-width: 0;
 }
-/* Profile screen "Sync Now →" row */
-.sync-row {
-  width: auto;
-  gap: 14px;
-  padding: 4px 0;
-  font-size: 17px;
-  white-space: nowrap;
-}
-.sync-row .arrow-chip {
-  width: 50px;
-  height: 32px;
-}
-.sync-row .sync-icon {
-  width: 20px;
-  height: 20px;
-}
-.sync-row:hover .sync-label {
-  color: var(--glow);
-}
-.sync-fresh .sync-label {
-  text-shadow: 0 0 10px rgb(255 255 255 / 0.6);
-}
-.sync-error .sync-label {
-  color: var(--negative);
-}
-.sync-error .arrow-chip::before {
-  background: var(--negative);
-}
-.sync-icon.spinning {
-  animation: spin 0.9s linear infinite;
-}
-@keyframes spin {
-  to {
-    transform: rotate(-360deg);
-  }
-}
 /* Avatar tile cut on the same slant as the name band it sits against, like the in-game profile */
 .player-avatar {
   position: relative;
@@ -1251,10 +1215,6 @@
   padding: 0 34px;
   font-size: 22px;
   letter-spacing: 0.08em;
-}
-.menu-play .sync-icon {
-  width: 24px;
-  height: 24px;
 }
 @container (max-width: 640px) {
   .menu-head {
@@ -2789,7 +2749,7 @@ dialog strong {
     margin-top: -8px;
   }
 }
-/* Header: a loaded save needs ~1250px for one row (brand, five tabs, sync, player tag, GitHub), so it tightens
+/* Header: a loaded save needs ~1250px for one row (brand, five tabs, player tag, GitHub), so it tightens
  * first, then puts the tabs on their own row. */
 @media (max-width: 1600px) {
   .topbar {
@@ -2800,9 +2760,6 @@ dialog strong {
   }
   .tab {
     padding: 0 20px;
-  }
-  .sync-row .sync-label {
-    display: none;
   }
 }
 /* eight tabs and a player don't share one row below this */
@@ -2956,13 +2913,6 @@ dialog strong {
   }
   .player-rks {
     margin-bottom: 0;
-  }
-  .sync-row .sync-label {
-    display: none;
-  }
-  .sync-row .arrow-chip {
-    width: 42px;
-    height: 30px;
   }
   .tabs {
     padding: 0 12px;

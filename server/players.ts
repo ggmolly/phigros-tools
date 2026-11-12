@@ -29,7 +29,9 @@ sqlite.run(
   "CREATE INDEX IF NOT EXISTS idx_players_rank_verified ON players(rks_verified DESC, rks_verified_at)",
 );
 
-const touch = sqlite.prepare<unknown, [number, Uint8Array]>("UPDATE players SET seen = ? WHERE key = ?");
+const touch = sqlite.prepare<unknown, [number, Uint8Array]>(
+  "UPDATE players SET seen = ? WHERE key = ?",
+);
 
 /** The player was just online: any request their game signed says so. */
 export const markSeen = (key: Uint8Array) => touch.run(Date.now(), key);
@@ -75,6 +77,9 @@ const rename = sqlite.prepare<unknown, [string, string, number, Uint8Array]>(
 const idTaken = sqlite.prepare<{ key: Uint8Array }, [string]>(
   "SELECT key FROM players WHERE id = ?",
 );
+
+/** The key of a player's id, undefined for no such player. */
+export const keyOf = (id: string) => idTaken.get(id)?.key;
 
 export function player(key: Uint8Array): PlayerName | undefined {
   const row = byKey.get(key);

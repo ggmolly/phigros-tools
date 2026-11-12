@@ -38,13 +38,7 @@ export const id = {
     lastSync: (date: string) => `sinkron terakhir ${date}`,
     played: "Dimainkan",
     fullCombo: "Full Combo",
-    syncPrompt: "Sinkronkan untuk mengambil save cloud terbarumu.",
-    sync: "Sinkron",
-    syncNow: "Sinkronkan Sekarang",
-    syncing: "Menyinkronkan…",
-    fresh: "Save baru diambil",
-    same: "Sudah terbaru",
-    failed: "Sinkron gagal",
+    syncPrompt: "Mainkan satu lagu dengan Phigros++ dan save-mu akan muncul di sini.",
   },
   import: {
     taptap: "Login TapTap",
@@ -131,7 +125,6 @@ export const id = {
   },
   tool: {
     skip: "Langsung ke konten",
-    syncTitle: (date: string) => `Ambil save cloud terbaru · terakhir diambil ${date}`,
     player: (id: string) => `Pemain ${id}`,
     localSave: "Save lokal",
     importTagline: "Muat progres Phigros kamu",

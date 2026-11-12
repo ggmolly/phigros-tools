@@ -6,7 +6,7 @@ import { calculateRanking, type RankingResult } from "../metrics";
 import { countLevels } from "../modules";
 import { useSave } from "../save-context";
 import type { Credential, SnapshotV1 } from "../store";
-import { Arrow, SyncIcon } from "./arrow";
+import { Arrow } from "./arrow";
 import { ImportOptions } from "./import";
 import { Stat } from "./primitives";
 
@@ -174,12 +174,11 @@ function PlayerCard({
 }: {
   player: { credential: Credential; latest?: SnapshotV1; ranking?: RankingResult };
 }) {
-  const { sync, busy, syncPlayer, syncLabel, openSnapshot, openSignIn, credentials } = useSave();
+  const { openSnapshot, openSignIn, credentials } = useSave();
   const t = useT();
   const format = useFormat();
   const songs = latest?.document.songs ?? [];
   const counts = countLevels(songs);
-  const syncing = sync && sync.playerId === credential.playerId ? sync.state : undefined;
   // TapTap's cloud is gone: its logins open the copy this browser kept, to send it to Phigros++
   if (credential.token)
     return (
@@ -235,15 +234,6 @@ function PlayerCard({
         ) : (
           <p className="menu-text">{t.menu.syncPrompt}</p>
         )}
-        <button
-          type="button"
-          className={`btn menu-play${syncing ? ` sync-${syncing}` : ""}`}
-          disabled={busy}
-          onClick={() => void syncPlayer(credential)}
-        >
-          <SyncIcon spinning={syncing === "syncing"} />
-          <span className="sync-label">{syncLabel(credential.playerId, t.menu.sync)}</span>
-        </button>
       </div>
     </>
   );

@@ -36,12 +36,11 @@ export function RksChart({
   // a change of a few thousandths stays small: the line spans at least a tenth of RKS, centered
   const span = Math.max(max - min, MIN_SPAN);
   const middle = (min + max) / 2;
-  const coords = points.map(
+  // a single day is a flat line across the chart
+  const drawn = points.length === 1 ? [points[0]!, points[0]!] : points;
+  const coords = drawn.map(
     (point, index) =>
-      [
-        points.length === 1 ? 50 : (index / (points.length - 1)) * 100,
-        50 - ((point.rks - middle) / span) * 84,
-      ] as const,
+      [(index / (drawn.length - 1)) * 100, 50 - ((point.rks - middle) / span) * 84] as const,
   );
   const line = coords.map(([x, y]) => `${x},${y}`).join(" ");
   const lines = marks.map(({ index, label }) => ({
@@ -60,7 +59,8 @@ export function RksChart({
   return (
     <>
       <p className="progress-period">
-        {format.date(points[0]!.at, dates)} → {format.date(points.at(-1)!.at, dates)}
+        {format.date(points[0]!.at, dates)}
+        {points.length > 1 && ` → ${format.date(points.at(-1)!.at, dates)}`}
       </p>
       <div className="rks-plot" onPointerMove={pick} onPointerLeave={() => setHover(undefined)}>
         <svg

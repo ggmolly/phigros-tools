@@ -61,7 +61,7 @@ function pack(files: Record<string, Uint8Array>): Uint8Array {
   return Buffer.concat(parts);
 }
 
-/** The game's module files and its summary as Phigros++ sends them (see pack). */
+/** The game's module files and its summary as Phigros++ sends them (see pack). Returns when it was stored (ms). */
 export async function storeSave(id: string, body: Uint8Array, slot: Slot = "saves") {
   if (body.length > MAX) throw HTTPError.status(413, "Save too large");
   const { summary, ...files } = unpack(body);
@@ -69,12 +69,14 @@ export async function storeSave(id: string, body: Uint8Array, slot: Slot = "save
     throw HTTPError.status(400, "Not a save");
   const zip = zipSync(files);
   await Bun.write(path(slot, id), zip);
+  const updated = Date.now();
   SLOTS[slot].store.run(
     id,
-    Date.now(),
+    updated,
     zip.length,
     summary ? new TextDecoder().decode(summary) : null,
   );
+  return updated;
 }
 
 /**

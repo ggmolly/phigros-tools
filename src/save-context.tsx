@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "@tanstack/react-router";
+import { useNavigate, useParams, useRouter } from "@tanstack/react-router";
 import { createContext, type RefObject, use, useEffect, useRef, useState } from "react";
 import type { Account } from "./adb";
 import { catalogRevision } from "./catalog";
@@ -6,6 +6,7 @@ import { MAX_JSON_SIZE, parseJsonDocument, type SaveDocumentV1 } from "./documen
 import type { Home } from "./home";
 import { useFormat, useT } from "./i18n";
 import { AppError, errorText } from "./i18n/errors";
+import { useLive } from "./live";
 import { calculateRanking } from "./metrics";
 import { applyPalette } from "./palettes";
 import type { Region, SaveArchive } from "./save";
@@ -46,7 +47,6 @@ interface SaveContextValue {
   account?: string;
   /** That profile's public page as the server rendered it with the page. */
   home: Home | null;
-  sync?: { playerId: string; state: "syncing" | "fresh" | "same" | "error" };
   dialog: RefObject<HTMLDialogElement | null>;
   usbDialog: RefObject<HTMLDialogElement | null>;
   /** Opens the TapTap QR login (set by <TapTapDialog>, which owns that flow's state). */
@@ -65,13 +65,11 @@ interface SaveContextValue {
     report?: (text: string) => void,
     signal?: AbortSignal,
   ) => Promise<boolean>;
-  syncPlayer: (credential: Credential) => Promise<void>;
   /** Signs this browser in to a Phigros++ profile with a code or the recovery phrase, then opens its save. */
   signIn: (how: { code: string } | { phrase: string }) => Promise<void>;
   signOut: (credential: Credential) => Promise<void>;
   /** Sends a snapshot's original save to a Phigros++ profile, for its game to offer. */
   sendToPhigrospp: (rawZip: Uint8Array, credential: Credential) => Promise<void>;
-  syncLabel: (playerId: string, idle: string) => string;
   closeUsb: () => void;
   resetUsbDialog: () => void;
   connectAndroid: () => Promise<void>;
@@ -81,7 +79,7 @@ interface SaveContextValue {
 
 const SaveContext = createContext<SaveContextValue | undefined>(undefined);
 
-/** Everything the save-analyzer tool's tabs share: the loaded save, local history, import/sync flows and dialogs. */
+/** Everything the save-analyzer tool's tabs share: the loaded save, local history, import flows and dialogs. */
 export function useSave(): SaveContextValue {
   const value = use(SaveContext);
   if (!value) throw new Error("useSave() must be used within <SaveProvider>");
@@ -92,6 +90,7 @@ export function SaveProvider({ children, home }: { children: React.ReactNode; ho
   const t = useT();
   const format = useFormat();
   const navigate = useNavigate();
+  const router = useRouter();
   // a signed-in Phigros++ player's page renders with their save on the server (see getHome)
   const [loaded, setLoaded] = useState<Loaded | undefined>(
     home?.document && { document: home.document, playerId: home.id },
@@ -111,12 +110,11 @@ export function SaveProvider({ children, home }: { children: React.ReactNode; ho
   const [usbEvents, setUsbEvents] = useState<string[]>([]);
   const [unsupportedZip, setUnsupportedZip] = useState<{ name: string; bytes: Uint8Array }>();
   const [storageReady, setStorageReady] = useState(false);
-  const [sync, setSync] = useState<{
-    playerId: string;
-    state: "syncing" | "fresh" | "same" | "error";
-  }>();
-  const syncing = useRef(false);
-  const lastStored = useRef(false);
+  const account = storageReady ? credentials.find((c) => c.signer)?.playerId : home?.id;
+  // when the newest save the page has of the profile was uploaded (ms): the profile's stream only fetches newer ones
+  const pulled = useRef(Date.parse(home?.document?.source.cloudUpdatedAt ?? "") || 0);
+  const pulling = useRef(false);
+  const inPlace = useRef(false);
   const dialog = useRef<HTMLDialogElement>(null);
   const usbDialog = useRef<HTMLDialogElement>(null);
   const openTapTap = useRef<() => void>(undefined);
@@ -136,14 +134,12 @@ export function SaveProvider({ children, home }: { children: React.ReactNode; ho
     void refresh()
       .catch((error) => say(`✗ ${t.save.storageUnavailable(message(error))}`))
       .finally(() => setStorageReady(true));
-    // a Phigros++ player signed in before the cookie existed gets it, and their save
+    // a Phigros++ player signed in before the cookie existed gets it, their save comes from the profile's stream
     void listCredentials().then(async (list) => {
       const signedIn = list.find((c) => c.signer);
       // a cookie whose key this browser no longer has is forgotten too
       if (!signedIn && home) await fetch("/api/session", { method: "DELETE" });
-      if (!signedIn || home?.id === signedIn.playerId) return;
-      await startSession(signedIn);
-      await syncPlayer(signedIn);
+      if (signedIn && home?.id !== signedIn.playerId) await startSession(signedIn);
     });
     return () => {
       clearTimeout(usbCloseTimer.current);
@@ -163,11 +159,6 @@ export function SaveProvider({ children, home }: { children: React.ReactNode; ho
       current = false;
     };
   }, [accentSong]);
-  useEffect(() => {
-    if (!sync || sync.state === "syncing") return;
-    const timer = setTimeout(() => setSync(undefined), sync.state === "error" ? 12_000 : 5_000);
-    return () => clearTimeout(timer);
-  }, [sync]);
   // biome-ignore lint/correctness/useExhaustiveDependencies: usbEvents isn't read here, but re-scrolling on each new log line is the point.
   useEffect(() => {
     if (usbLog.current) usbLog.current.scrollTop = usbLog.current.scrollHeight;
@@ -179,7 +170,6 @@ export function SaveProvider({ children, home }: { children: React.ReactNode; ho
       await makeSnapshot(next.document, next.archive, catalogRevision, next.playerId),
     );
     await refresh();
-    lastStored.current = saved;
     say(saved ? t.save.snapshotSaved : t.save.alreadySaved);
     return saved;
   }
@@ -187,7 +177,7 @@ export function SaveProvider({ children, home }: { children: React.ReactNode; ho
     setLoaded(next);
     setChartKey(calculateRanking(next.document).charts[0]?.key ?? "");
     setUnsupportedZip(undefined);
-    if (!syncing.current) void navigate({ to: "/" }); // a sync refreshes in place
+    if (!inPlace.current) void navigate({ to: "/" });
     if (next.playerId) setSelectedPlayer(next.playerId);
   }
   async function imported(next: Loaded): Promise<boolean> {
@@ -242,8 +232,9 @@ export function SaveProvider({ children, home }: { children: React.ReactNode; ho
     if (stored) say(t.save.loadedSongs(document.songs.length, archive.fingerprint.slice(0, 12)));
   }
   /** The save a Phigros++ profile's game uploaded, opened like a cloud save. */
-  async function phigrosppImport(credential: Credential): Promise<boolean> {
+  async function phigrosppImport(credential: Credential) {
     setBusy(true);
+    pulling.current = true;
     try {
       const ppp = await import("./phigrospp");
       const response = await ppp.call(credential.signer!, "POST", "/api/save");
@@ -254,27 +245,39 @@ export function SaveProvider({ children, home }: { children: React.ReactNode; ho
       );
       const { zipSync } = await import("fflate");
       const decode = (bytes?: Uint8Array) => bytes && new TextDecoder().decode(bytes);
+      pulled.current = Number(decode(updated));
       await ingestZip(
         zipSync(modules),
         {
           kind: "phigrospp",
-          cloudUpdatedAt: new Date(Number(decode(updated))).toISOString(),
+          cloudUpdatedAt: new Date(pulled.current).toISOString(),
           summary: decode(summary),
         },
         credential.playerId,
       );
-      return true;
     } catch (error) {
       if (error instanceof AppError && error.key === "pppRemoved") {
         await deleteCredential(credential.playerId);
         await refresh();
       }
       say(`✗ ${message(error)}`);
-      return false;
     } finally {
+      pulling.current = false;
       setBusy(false);
     }
   }
+  // the save the profile's game uploads opens on its own, in place of the open one. a save of another player stays
+  // open, the profile's comes with its next event
+  useLive(account, (event, data) => {
+    if (event === "change") return void router.invalidate();
+    const credential = credentials.find((c) => c.signer && c.playerId === account);
+    if (!credential || pulling.current || Number(data) <= pulled.current) return;
+    if (loaded && loaded.playerId !== credential.playerId) return;
+    inPlace.current = true;
+    void phigrosppImport(credential).finally(() => {
+      inPlace.current = false;
+    });
+  });
   /** The cookie the signed-in player's pages render with (server/session.ts). */
   async function startSession(credential: Credential) {
     const ppp = await import("./phigrospp");
@@ -288,7 +291,7 @@ export function SaveProvider({ children, home }: { children: React.ReactNode; ho
     await saveCredential(credential);
     await refresh();
     await startSession(credential);
-    await syncPlayer(credential);
+    await phigrosppImport(credential);
   }
   async function signOut(credential: Credential) {
     const ppp = await import("./phigrospp");
@@ -351,30 +354,6 @@ export function SaveProvider({ children, home }: { children: React.ReactNode; ho
     } finally {
       if (!signal?.aborted) setBusy(false);
     }
-  }
-  /** Re-fetch the newest cloud save with a remembered session token. */
-  async function syncPlayer(credential: Credential) {
-    if (busy) return;
-    syncing.current = true;
-    lastStored.current = false;
-    setSync({ playerId: credential.playerId, state: "syncing" });
-    const ok = credential.signer
-      ? await phigrosppImport(credential)
-      : await cloudImport(async () => ({ ...credential, token: credential.token! }));
-    syncing.current = false;
-    setSync({
-      playerId: credential.playerId,
-      state: ok ? (lastStored.current ? "fresh" : "same") : "error",
-    });
-  }
-  function syncLabel(playerId: string, idle: string) {
-    if (sync?.playerId !== playerId) return idle;
-    return {
-      syncing: t.menu.syncing,
-      fresh: t.menu.fresh,
-      same: t.menu.same,
-      error: t.menu.failed,
-    }[sync.state];
   }
   /** The fade-out is pure CSS (see #usbDialog in style.css). */
   function closeUsb() {
@@ -465,9 +444,8 @@ export function SaveProvider({ children, home }: { children: React.ReactNode; ho
     usbEvents,
     unsupportedZip,
     storageReady,
-    account: storageReady ? credentials.find((c) => c.signer)?.playerId : home?.id,
+    account,
     home,
-    sync,
     dialog,
     usbDialog,
     openTapTap,
@@ -479,11 +457,9 @@ export function SaveProvider({ children, home }: { children: React.ReactNode; ho
     refresh,
     storeSave,
     cloudImport,
-    syncPlayer,
     signIn,
     signOut,
     sendToPhigrospp,
-    syncLabel,
     closeUsb,
     resetUsbDialog,
     connectAndroid,

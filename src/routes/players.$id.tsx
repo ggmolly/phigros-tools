@@ -1,9 +1,10 @@
-import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, notFound, useNavigate, useRouter } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { SiteHeader } from "../components/chrome";
 import { useProfileCredential } from "../components/phigrospp";
 import { Card, RecentActivity, RecentPlays, TopPlays } from "../components/player";
 import { RksHistory } from "../components/rks-history";
+import { useLive } from "../live";
 import { CARDS, getProfile } from "../plays";
 import { useSave } from "../save-context";
 import { headT, pageMeta, SITE } from "../seo";
@@ -55,6 +56,8 @@ function PlayerPage() {
   const profile = Route.useLoaderData();
   const { loaded } = useSave();
   const navigate = useNavigate();
+  const router = useRouter();
+  useLive(profile.player.id, () => void router.invalidate());
   const mine = useProfileCredential()?.playerId === profile.player.id;
   // a player's own page is their Overview, with their save around it
   useEffect(() => {

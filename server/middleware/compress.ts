@@ -6,7 +6,8 @@ export default onResponse((response, event) => {
   if (
     !response.body ||
     response.headers.has("content-encoding") ||
-    !/^(text\/|application\/(json|javascript|xml|ld\+json))/.test(type)
+    !/^(text\/|application\/(json|javascript|xml|ld\+json))/.test(type) ||
+    type.startsWith("text/event-stream") // compressing buffers the stream
   )
     return;
   const accept = event.req.headers.get("accept-encoding") ?? "";

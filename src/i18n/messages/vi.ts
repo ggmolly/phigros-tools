@@ -38,13 +38,7 @@ export const vi = {
     lastSync: (date: string) => `đồng bộ lần cuối ${date}`,
     played: "Đã chơi",
     fullCombo: "Full Combo",
-    syncPrompt: "Đồng bộ để tải save đám mây mới nhất.",
-    sync: "Đồng bộ",
-    syncNow: "Đồng bộ ngay",
-    syncing: "Đang đồng bộ…",
-    fresh: "Đã tải save mới",
-    same: "Đã là bản mới nhất",
-    failed: "Đồng bộ thất bại",
+    syncPrompt: "Chơi một bài với Phigros++ và save của bạn sẽ hiện ở đây.",
   },
   import: {
     taptap: "Đăng nhập TapTap",
@@ -131,7 +125,6 @@ export const vi = {
   },
   tool: {
     skip: "Bỏ qua đến nội dung",
-    syncTitle: (date: string) => `Lấy save đám mây mới nhất · lần lấy gần nhất ${date}`,
     player: (id: string) => `Người chơi ${id}`,
     localSave: "Save cục bộ",
     importTagline: "Tải tiến trình Phigros của bạn",

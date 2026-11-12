@@ -1,12 +1,11 @@
 import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
-import { Arrow, SyncIcon } from "../components/arrow";
+import { Arrow } from "../components/arrow";
 import { SiteHeader, type TabId, toolTabs } from "../components/chrome";
-import { DATE_TIME } from "../components/history-panels";
 import { ImportOptions, OtherWaysDialog, TapTapDialog } from "../components/import";
 import { SignInDialog } from "../components/phigrospp";
 import { Avatar } from "../components/primitives";
-import { Rich, useFormat, useT } from "../i18n";
+import { Rich, useT } from "../i18n";
 import { calculateRanking } from "../metrics";
 import { message, useSave } from "../save-context";
 import { headT, pageLinks } from "../seo";
@@ -33,7 +32,6 @@ function ToolLayout() {
     account,
     snapshots,
     credentials,
-    sync,
     busy,
     log,
     token,
@@ -49,8 +47,6 @@ function ToolLayout() {
     say,
     refresh,
     cloudImport,
-    syncPlayer,
-    syncLabel,
     closeUsb,
     resetUsbDialog,
     openFile,
@@ -58,7 +54,6 @@ function ToolLayout() {
     setSelectedPlayer,
   } = useSave();
   const t = useT();
-  const format = useFormat();
   const navigate = useNavigate();
   const importDialog = useRef<HTMLDialogElement>(null);
   const openImport = () => importDialog.current?.showModal();
@@ -103,24 +98,6 @@ function ToolLayout() {
       <SiteHeader>
         {loaded && (
           <div className="player-area">
-            {/* TapTap's cloud is gone: only a Phigros++ profile syncs */}
-            {profileSave && loadedCredential && (
-              <button
-                type="button"
-                className={`arrow-row sync-row${sync?.playerId === loadedCredential.playerId ? ` sync-${sync.state}` : ""}`}
-                disabled={busy}
-                aria-live="polite"
-                title={t.tool.syncTitle(format.date(loaded.document.source.importedAt, DATE_TIME))}
-                onClick={() => void syncPlayer(loadedCredential)}
-              >
-                <span className="sync-label">
-                  {syncLabel(loadedCredential.playerId, t.menu.syncNow)}
-                </span>
-                <span className="arrow-chip">
-                  <SyncIcon spinning={sync?.state === "syncing"} />
-                </span>
-              </button>
-            )}
             {/* Overview's hero is this same profile strip, larger; one is enough per screen. A Phigros++ profile's
              * leads back to it, and has no Import: its save comes from the game. */}
             {activeTab !== "/" &&

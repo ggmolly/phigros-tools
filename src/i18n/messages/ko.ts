@@ -38,13 +38,7 @@ export const ko = {
     lastSync: (date: string) => `마지막 동기화 ${date}`,
     played: "플레이함",
     fullCombo: "Full Combo",
-    syncPrompt: "동기화하여 최신 클라우드 세이브를 가져옵니다.",
-    sync: "동기화",
-    syncNow: "지금 동기화",
-    syncing: "동기화 중…",
-    fresh: "새 세이브를 가져왔습니다",
-    same: "이미 최신입니다",
-    failed: "동기화 실패",
+    syncPrompt: "Phigros++로 한 곡을 플레이하면 세이브가 여기에 표시됩니다.",
   },
   import: {
     taptap: "TapTap 로그인",
@@ -131,7 +125,6 @@ export const ko = {
   },
   tool: {
     skip: "본문으로 건너뛰기",
-    syncTitle: (date: string) => `최신 클라우드 세이브 가져오기 · 마지막으로 가져온 시각 ${date}`,
     player: (id: string) => `플레이어 ${id}`,
     localSave: "로컬 세이브",
     importTagline: "Phigros 진행 상황을 불러옵니다",

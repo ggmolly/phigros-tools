@@ -4,8 +4,9 @@ import { judge } from "../src/judge";
 import { decodeReplay } from "../src/pigeon";
 import { decodePhc } from "../src/player/phc";
 import { sqlite } from "./db";
+import { playerId } from "./players";
 import { addAchievement, snapshotHistory } from "./profiles";
-import { openQueue, VERIFY_QUEUE } from "./queue";
+import { announce, openQueue, VERIFY_QUEUE } from "./queue";
 import { countReplay, REPLAY_DIR } from "./replays";
 
 // judges uploaded replays like the game did and marks them verified when the game's recorded result is what their
@@ -15,9 +16,10 @@ import { countReplay, REPLAY_DIR } from "./replays";
 const CHARTS = process.env.CHART_DIR ?? "./public/chart-data";
 const RESULT = ["score", "maxcombo", "perfect", "good", "bad", "miss", "early", "late"] as const;
 
-const replay = sqlite.prepare<{ song: string; level: string; status: string }, [string]>(
-  "SELECT song, level, status FROM replays WHERE sha256 = ?",
-);
+const replay = sqlite.prepare<
+  { key: Uint8Array; song: string; level: string; status: string },
+  [string]
+>("SELECT key, song, level, status FROM replays WHERE sha256 = ?");
 const pending = sqlite.prepare<{ sha256: string }, []>(
   "SELECT sha256 FROM replays WHERE status = 'pending'",
 );
@@ -39,9 +41,11 @@ function verify(sha256: string) {
   const replayed = Object.fromEntries(RESULT.map((field) => [field, judged[field]]));
   const same = RESULT.every((field) => recorded[field] === replayed[field]);
   settle.run(same ? "verified" : "unverified", JSON.stringify({ recorded, replayed }), sha256);
-  if (!same) return;
-  const { key, song, level, raised } = countReplay(sha256, header);
-  if (raised) addAchievement(key, song, level, header.score);
+  if (same) {
+    const { key, song, level, raised } = countReplay(sha256, header);
+    if (raised) addAchievement(key, song, level, header.score);
+  }
+  void announce(playerId(row.key), "change");
   console.log(`${sha256} ${row.song} ${row.level}: ${same ? "verified" : "unverified"}`);
 }
 

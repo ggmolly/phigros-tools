@@ -38,13 +38,7 @@ export const zhHant = {
     lastSync: (date: string) => `上次同步於 ${date}`,
     played: "已遊玩",
     fullCombo: "Full Combo",
-    syncPrompt: "同步以取得最新的雲端存檔。",
-    sync: "同步",
-    syncNow: "立即同步",
-    syncing: "同步中…",
-    fresh: "已取得新存檔",
-    same: "已是最新",
-    failed: "同步失敗",
+    syncPrompt: "用 Phigros++ 玩一首歌，你的存檔就會出現在這裡。",
   },
   import: {
     taptap: "TapTap 登入",
@@ -130,7 +124,6 @@ export const zhHant = {
   },
   tool: {
     skip: "跳到內容",
-    syncTitle: (date: string) => `取得最新雲端存檔 · 上次取得於 ${date}`,
     player: (id: string) => `玩家 ${id}`,
     localSave: "本機存檔",
     importTagline: "載入你的 Phigros 進度",

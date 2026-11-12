@@ -283,12 +283,20 @@ export function profilePage(id: string): PlayerProfile | undefined {
   // counted like the game's RKS: the 27 best charts, and the 3 best of those with 100% accuracy
   for (const best of top.slice(0, BEST)) best.counted = true;
   for (const best of top.filter((b) => b.accuracy >= 100).slice(0, PHI)) best.counted = true;
+  const rank = row.unlisted ? null : (rankOf.get(row.key)?.rank ?? null);
+  // the worker keeps a day hourly (snapshotHistory), today's point follows the RKS shown above it
+  const history = historyOf.all(row.key).reverse();
+  const today = new Date().toISOString().slice(0, 10);
+  if (rank !== null && row.rks > 0) {
+    if (history.at(-1)?.day === today) history.pop();
+    history.push({ day: today, rks: row.rks, rank });
+  }
   return {
     player: { id: row.id, name: row.name, number: row.number, avatar: row.avatar },
     intro: row.intro,
     background: row.background,
     rks: row.rks,
-    rank: row.unlisted ? null : (rankOf.get(row.key)?.rank ?? null),
+    rank,
     joined: row.created,
     seen: Math.max(row.seen, row.created),
     stats: {
@@ -300,6 +308,6 @@ export function profilePage(id: string): PlayerProfile | undefined {
     top,
     recent: recentPlays(row.key, 0, LIST_FIRST),
     activity: activities(row.key, 0, LIST_FIRST),
-    history: historyOf.all(row.key).reverse(),
+    history,
   };
 }

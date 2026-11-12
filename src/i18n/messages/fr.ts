@@ -38,13 +38,7 @@ export const fr = {
     lastSync: (date: string) => `dernière synchro le ${date}`,
     played: "Joués",
     fullCombo: "Full Combo",
-    syncPrompt: "Synchronisez pour récupérer votre dernière save cloud.",
-    sync: "Synchro",
-    syncNow: "Synchroniser",
-    syncing: "Synchronisation…",
-    fresh: "Nouvelle save récupérée",
-    same: "Déjà à jour",
-    failed: "Échec de la synchro",
+    syncPrompt: "Jouez une musique avec Phigros++ et votre save apparaîtra ici.",
   },
   import: {
     taptap: "Connexion TapTap",
@@ -131,8 +125,6 @@ export const fr = {
   },
   tool: {
     skip: "Aller au contenu",
-    syncTitle: (date: string) =>
-      `Récupérer la dernière save cloud · dernière récupération le ${date}`,
     player: (id: string) => `Joueur ${id}`,
     localSave: "Save locale",
     importTagline: "Chargez votre progression Phigros",

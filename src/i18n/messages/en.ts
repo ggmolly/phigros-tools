@@ -36,13 +36,7 @@ export const en = {
     lastSync: (date: string) => `last sync ${date}`,
     played: "Played",
     fullCombo: "Full Combo",
-    syncPrompt: "Sync to fetch your newest cloud save.",
-    sync: "Sync",
-    syncNow: "Sync Now",
-    syncing: "Syncing…",
-    fresh: "New save fetched",
-    same: "Already up to date",
-    failed: "Sync failed",
+    syncPrompt: "Play a song with Phigros++ and your save shows up here.",
   },
   import: {
     taptap: "TapTap login",
@@ -129,7 +123,6 @@ export const en = {
   },
   tool: {
     skip: "Skip to content",
-    syncTitle: (date: string) => `Fetch the newest cloud save · last fetched ${date}`,
     player: (id: string) => `Player ${id}`,
     localSave: "Local save",
     importTagline: "Load your Phigros progress",

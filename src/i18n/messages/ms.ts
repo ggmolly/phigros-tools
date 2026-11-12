@@ -38,13 +38,7 @@ export const ms = {
     lastSync: (date: string) => `segerak terakhir ${date}`,
     played: "Dimainkan",
     fullCombo: "Full Combo",
-    syncPrompt: "Segerakkan untuk mendapatkan save awan terbaharu anda.",
-    sync: "Segerak",
-    syncNow: "Segerakkan Sekarang",
-    syncing: "Sedang menyegerak…",
-    fresh: "Save baharu diperoleh",
-    same: "Sudah terkini",
-    failed: "Segerak gagal",
+    syncPrompt: "Mainkan satu lagu dengan Phigros++ dan save anda akan muncul di sini.",
   },
   import: {
     taptap: "Log masuk TapTap",
@@ -132,7 +126,6 @@ export const ms = {
   },
   tool: {
     skip: "Langkau ke kandungan",
-    syncTitle: (date: string) => `Ambil save awan terkini · kali terakhir diambil ${date}`,
     player: (id: string) => `Pemain ${id}`,
     localSave: "Save setempat",
     importTagline: "Muatkan kemajuan Phigros anda",

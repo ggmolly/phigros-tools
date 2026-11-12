@@ -2,6 +2,8 @@ import amqp, { type ConfirmChannel } from "amqplib";
 
 /** The queue of uploaded replays waiting to be judged (server/worker.ts), by their sha256. */
 export const VERIFY_QUEUE = "replays.verify";
+/** What changed for a player, from the server or the worker, for the pages open on them (server/events.ts). */
+export const EVENTS = "events";
 const URL = process.env.AMQP_URL ?? "amqp://localhost";
 
 let channel: Promise<ConfirmChannel> | undefined;
@@ -16,6 +18,7 @@ export function openQueue(): Promise<ConfirmChannel> {
     })
     .then(async (opened) => {
       await opened.assertQueue(VERIFY_QUEUE, { durable: true });
+      await opened.assertExchange(EVENTS, "fanout", { durable: false });
       opened.on("close", () => {
         channel = undefined;
       });
@@ -37,5 +40,17 @@ export async function queueVerify(sha256: string) {
     await opened.waitForConfirms();
   } catch (error) {
     console.error(`replay ${sha256} not queued:`, error);
+  }
+}
+
+/** A player's event: "save" with the upload time when their game sent a save, "change" for anything else they show. */
+export type LiveEvent = "save" | "change";
+
+/** Tells the pages open on a player that something changed. A lost one only waits for their next reconnect. */
+export async function announce(id: string, event: LiveEvent, data = "") {
+  try {
+    (await openQueue()).publish(EVENTS, "", Buffer.from(JSON.stringify({ id, event, data })));
+  } catch (error) {
+    console.error(`event ${event} of ${id} not sent:`, error);
   }
 }

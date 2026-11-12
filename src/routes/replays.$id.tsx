@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { catalogSong } from "../catalog";
 import { Arrow } from "../components/arrow";
@@ -8,6 +8,7 @@ import { PlayerTag, PlayStatusLabel } from "../components/plays";
 import { Rank, score7 } from "../components/primitives";
 import { useFormat, useT } from "../i18n";
 import { CHALLENGE, judge, type Result, WINDOWS } from "../judge";
+import { useLive } from "../live";
 import { LEVELS, type LevelName } from "../modules";
 import { decodeReplay, type ReplayFrame, type ReplayHeader } from "../pigeon";
 import { type Chart, countUpTo, parseChart, type RawChart } from "../player/chart";
@@ -165,6 +166,9 @@ function ReplayPage() {
   const [replay, setReplay] = useState<{ header: ReplayHeader; frames: ReplayFrame[] }>();
   const [chart, setChart] = useState<{ raw: RawChart; parsed: Chart }>();
   const [error, setError] = useState<string>();
+  const router = useRouter();
+  // its status shows up once the worker judged it
+  useLive(info.status === "pending" ? info.player.id : undefined, () => void router.invalidate());
 
   useEffect(() => {
     setReplay(undefined);

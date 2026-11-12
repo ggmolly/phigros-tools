@@ -39,13 +39,7 @@ export const es = {
     lastSync: (date: string) => `última sincronización ${date}`,
     played: "Jugados",
     fullCombo: "Full Combo",
-    syncPrompt: "Sincroniza para obtener tu partida en la nube más reciente.",
-    sync: "Sincronizar",
-    syncNow: "Sincronizar ahora",
-    syncing: "Sincronizando…",
-    fresh: "Nueva partida obtenida",
-    same: "Ya está actualizado",
-    failed: "Error al sincronizar",
+    syncPrompt: "Juega una canción con Phigros++ y tu partida aparecerá aquí.",
   },
   import: {
     taptap: "Inicio de sesión TapTap",
@@ -132,8 +126,6 @@ export const es = {
   },
   tool: {
     skip: "Saltar al contenido",
-    syncTitle: (date: string) =>
-      `Descargar la partida guardada más reciente de la nube · última descarga: ${date}`,
     player: (id: string) => `Jugador ${id}`,
     localSave: "Partida local",
     importTagline: "Carga tu progreso de Phigros",

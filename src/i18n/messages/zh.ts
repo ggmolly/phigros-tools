@@ -38,13 +38,7 @@ export const zh = {
     lastSync: (date: string) => `上次同步于 ${date}`,
     played: "已游玩",
     fullCombo: "Full Combo",
-    syncPrompt: "同步以获取最新的云存档。",
-    sync: "同步",
-    syncNow: "立即同步",
-    syncing: "同步中…",
-    fresh: "已获取新存档",
-    same: "已是最新",
-    failed: "同步失败",
+    syncPrompt: "用 Phigros++ 玩一首歌，你的存档就会出现在这里。",
   },
   import: {
     taptap: "TapTap 登录",
@@ -130,7 +124,6 @@ export const zh = {
   },
   tool: {
     skip: "跳到内容",
-    syncTitle: (date: string) => `获取最新云存档 · 上次获取于 ${date}`,
     player: (id: string) => `玩家 ${id}`,
     localSave: "本地存档",
     importTagline: "载入你的 Phigros 进度",

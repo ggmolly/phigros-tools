@@ -38,13 +38,7 @@ export const ja = {
     lastSync: (date: string) => `最終同期 ${date}`,
     played: "プレイ済み",
     fullCombo: "Full Combo",
-    syncPrompt: "同期して最新のクラウドセーブを取得します。",
-    sync: "同期",
-    syncNow: "今すぐ同期",
-    syncing: "同期中…",
-    fresh: "新しいセーブを取得しました",
-    same: "すでに最新です",
-    failed: "同期に失敗しました",
+    syncPrompt: "Phigros++ で1曲プレイすると、セーブがここに表示されます。",
   },
   import: {
     taptap: "TapTap ログイン",
@@ -130,7 +124,6 @@ export const ja = {
   },
   tool: {
     skip: "本文へスキップ",
-    syncTitle: (date: string) => `最新のクラウドセーブを取得 · 前回の取得 ${date}`,
     player: (id: string) => `プレイヤー ${id}`,
     localSave: "ローカルセーブ",
     importTagline: "Phigros の進捗を読み込みます",

@@ -4,14 +4,15 @@ import { canonicalSongId, isLevel } from "../../../src/catalog";
 import { REPLAY_DOMAIN, REPLAY_SIGNED, replayHeader } from "../../../src/pigeon";
 import { signed, verifySignature } from "../../auth";
 import { player } from "../../players";
-import { queueVerify } from "../../queue";
+import { announce, queueVerify } from "../../queue";
 import { addReplay, REPLAY_DIR } from "../../replays";
 
 // a registered player's replay that beat or tied their record, signed by the device that sent it. a verified one
 // replaces an imported record of the same score. sending it again changes nothing
 export default defineHandler(async (event) => {
   const { key, device, body } = await signed(event);
-  if (!player(key)) throw HTTPError.status(403, "Not registered");
+  const found = player(key);
+  if (!found) throw HTTPError.status(403, "Not registered");
   const data = body.subarray(0, -REPLAY_SIGNED);
   const signer = body.subarray(-REPLAY_SIGNED, -64);
   const message = Buffer.concat([Buffer.from(REPLAY_DOMAIN), data]);
@@ -37,5 +38,6 @@ export default defineHandler(async (event) => {
   await Bun.write(`${REPLAY_DIR}/${sha256}.pigeon`, body);
   addReplay(sha256, key, song, header);
   await queueVerify(sha256);
+  await announce(found.id, "change");
   return { id: sha256 };
 });
