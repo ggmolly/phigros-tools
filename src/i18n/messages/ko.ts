@@ -526,13 +526,9 @@ export const ko = {
       `이 브라우저에는 ${date}의 RKS ${rks} 세이브도 남아 있으며, Phigros++로 보낼 수 있습니다.`,
     openIt: "열기",
     devicesTitle: "기기",
-    devicesText: (tag: string) =>
-      `${tag}(으)로 로그인된 모든 기기입니다. 삭제한 기기는 더 이상 세이브를 동기화, 업로드, 다운로드할 수 없지만 이미 다운로드한 것은 남습니다.`,
     addDevice: "기기 추가",
     addDeviceText:
       "다른 기기의 Phigros++에서 **Settings → Profile**을 열고 **Sign in to my profile**을 선택한 다음 이 코드를 입력하세요. 코드는 10분 동안 한 번만 쓸 수 있습니다.",
-    phraseRow: "복구 문구",
-    phraseRowDesc: "내 16개 단어입니다. 언제든 프로필을 되살릴 수 있어서 삭제할 수 없습니다.",
     thisBrowser: "이 브라우저",
     seen: (date: string) => `마지막 접속 ${date}`,
     added: (date: string) => `추가됨 ${date}`,

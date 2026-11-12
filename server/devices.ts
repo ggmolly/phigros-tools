@@ -11,7 +11,7 @@ sqlite.run(
   "CREATE TABLE IF NOT EXISTS invites (code TEXT PRIMARY KEY, owner BLOB NOT NULL, expires INTEGER NOT NULL)",
 );
 
-// the names players give their keys, the recovery phrase's included, over the model a device was added with
+// the names players give their devices, over the model a device was added with
 sqlite.run("CREATE TABLE IF NOT EXISTS labels (key BLOB PRIMARY KEY, name TEXT NOT NULL)");
 
 const LIFETIME = 10 * 60_000;
@@ -35,9 +35,6 @@ const addDevice = sqlite.prepare<unknown, [Uint8Array, Uint8Array, string, numbe
 );
 const devicesOf = sqlite.prepare<{ key: Uint8Array; name: string; added: number }, [Uint8Array]>(
   "SELECT key, name, added FROM devices WHERE owner = ? AND removed IS NULL ORDER BY added",
-);
-const created = sqlite.prepare<{ created: number }, [Uint8Array]>(
-  "SELECT created FROM players WHERE key = ?",
 );
 const labelOf = sqlite.prepare<{ name: string }, [Uint8Array]>(
   "SELECT name FROM labels WHERE key = ?",
@@ -80,30 +77,21 @@ export function redeemInvite(key: Uint8Array, typed: string, name: string) {
   return player(owner)!;
 }
 
-/**
- * The keys of a profile: its own first (`phrase`, it can't be removed), then each device added with a code, with when
- * it last signed a request and whether it's the one asking.
- */
+/** The devices added to a profile with a code, with when each last signed a request and whether it's the one asking. */
 export function listDevices(owner: Uint8Array, asking: Uint8Array): Device[] {
-  const hex = (key: Uint8Array) => Buffer.from(key).toString("hex");
-  const row = (key: Uint8Array, name: string, added: number, phrase: boolean): Device => ({
-    key: hex(key),
-    name: labelOf.get(key)?.name ?? name,
-    added,
-    seen: lastTime.get(key)?.last_time ?? 0,
-    phrase,
-    you: Buffer.from(key).equals(asking),
-  });
-  return [
-    row(owner, "", created.get(owner)?.created ?? 0, true),
-    ...devicesOf.all(owner).map((device) => row(device.key, device.name, device.added, false)),
-  ];
+  return devicesOf.all(owner).map((device) => ({
+    key: Buffer.from(device.key).toString("hex"),
+    name: labelOf.get(device.key)?.name ?? device.name,
+    added: device.added,
+    seen: lastTime.get(device.key)?.last_time ?? 0,
+    you: Buffer.from(device.key).equals(asking),
+  }));
 }
 
-/** Names one of the profile's keys, its own or a device's, as the player wants to see it, "" for its default. */
+/** Names a device of the profile as the player wants to see it, "" for its default. */
 export function renameDevice(owner: Uint8Array, key: string, name: string) {
   const device = Buffer.from(key, "hex");
-  if (!device.equals(owner) && !ownedDevice.get(device, owner)) throw HTTPError.status(404);
+  if (!ownedDevice.get(device, owner)) throw HTTPError.status(404);
   const cleaned = name.replace(/\p{C}/gu, "").trim().slice(0, NAME_LENGTH);
   // an empty name goes back to the device's own
   if (cleaned) setLabel.run(device, cleaned);

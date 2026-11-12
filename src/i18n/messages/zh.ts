@@ -505,13 +505,9 @@ export const zh = {
       `此浏览器还保留了一份 ${date} 的存档，RKS 为 ${rks}，你可以把它发送到 Phigros++。`,
     openIt: "打开",
     devicesTitle: "设备",
-    devicesText: (tag: string) =>
-      `所有以 ${tag} 身份登录的设备。被移除的设备将无法再同步、上传或下载你的存档，但会保留已下载的内容。`,
     addDevice: "添加设备",
     addDeviceText:
       "在另一台设备的 Phigros++ 中打开**设置 → 个人资料**，选择 **Sign in to my profile** 并输入此代码。它只能使用一次，有效期 10 分钟。",
-    phraseRow: "恢复短语",
-    phraseRowDesc: "你的 16 个单词。它们始终可以找回资料，因此无法移除。",
     thisBrowser: "此浏览器",
     seen: (date: string) => `上次使用于 ${date}`,
     added: (date: string) => `添加于 ${date}`,

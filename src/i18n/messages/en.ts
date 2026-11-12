@@ -522,13 +522,9 @@ export const en = {
       `This browser also kept a save from ${date} with RKS ${rks}, which you can send to Phigros++.`,
     openIt: "Open it",
     devicesTitle: "Devices",
-    devicesText: (tag: string) =>
-      `Everything signed in as ${tag}. A removed device can’t sync, upload or download your save anymore, but keeps what it already downloaded.`,
     addDevice: "Add a device",
     addDeviceText:
       "In Phigros++ on the other device, open **Settings → Profile**, choose **Sign in to my profile** and type this code. It works once, for 10 minutes.",
-    phraseRow: "Recovery phrase",
-    phraseRowDesc: "Your 16 words. They always bring the profile back, so they can’t be removed.",
     thisBrowser: "This browser",
     seen: (date: string) => `last seen ${date}`,
     added: (date: string) => `added ${date}`,

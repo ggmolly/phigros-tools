@@ -532,13 +532,9 @@ export const ja = {
       `このブラウザには ${date} の RKS ${rks} のセーブも残っていて、Phigros++ に送ることができます。`,
     openIt: "開く",
     devicesTitle: "デバイス",
-    devicesText: (tag: string) =>
-      `${tag} としてサインインしているすべてのデバイスです。削除したデバイスはセーブの同期、アップロード、ダウンロードができなくなりますが、ダウンロード済みのものは残ります。`,
     addDevice: "デバイスを追加",
     addDeviceText:
       "もう一方のデバイスの Phigros++ で **Settings → Profile** を開き、**Sign in to my profile** を選んでこのコードを入力してください。コードは 1 回だけ、10 分間有効です。",
-    phraseRow: "リカバリーフレーズ",
-    phraseRowDesc: "あなたの 16 語です。いつでもプロフィールを復元できるので、削除はできません。",
     thisBrowser: "このブラウザ",
     seen: (date: string) => `最終アクセス ${date}`,
     added: (date: string) => `追加 ${date}`,

@@ -533,13 +533,9 @@ export const es = {
       `Este navegador también guardó una partida del ${date} con RKS ${rks}, que puedes enviar a Phigros++.`,
     openIt: "Abrirla",
     devicesTitle: "Dispositivos",
-    devicesText: (tag: string) =>
-      `Todo lo que tiene la sesión iniciada como ${tag}. Un dispositivo quitado ya no puede sincronizar, subir ni descargar tu partida, pero conserva lo que ya descargó.`,
     addDevice: "Añadir un dispositivo",
     addDeviceText:
       "En Phigros++, en el otro dispositivo, abre **Ajustes → Perfil**, elige **Sign in to my profile** y escribe este código. Funciona una sola vez, durante 10 minutos.",
-    phraseRow: "Frase de recuperación",
-    phraseRowDesc: "Tus 16 palabras. Siempre recuperan el perfil, así que no se pueden quitar.",
     thisBrowser: "Este navegador",
     seen: (date: string) => `visto por última vez el ${date}`,
     added: (date: string) => `añadido el ${date}`,

@@ -530,14 +530,9 @@ export const id = {
       `Browser ini juga menyimpan save dari ${date} dengan RKS ${rks}, yang bisa kamu kirim ke Phigros++.`,
     openIt: "Buka",
     devicesTitle: "Perangkat",
-    devicesText: (tag: string) =>
-      `Semua yang login sebagai ${tag}. Perangkat yang dihapus tidak bisa lagi menyinkronkan, mengunggah, atau mengunduh save kamu, tetapi tetap menyimpan apa yang sudah diunduhnya.`,
     addDevice: "Tambah perangkat",
     addDeviceText:
       "Di Phigros++ pada perangkat lain, buka **Pengaturan → Profil**, pilih **Sign in to my profile**, lalu ketik kode ini. Kode ini hanya bisa dipakai sekali, selama 10 menit.",
-    phraseRow: "Frasa pemulihan",
-    phraseRowDesc:
-      "16 kata milikmu. Kata-kata ini selalu bisa memulihkan profil, jadi tidak bisa dihapus.",
     thisBrowser: "Browser ini",
     seen: (date: string) => `terakhir dilihat ${date}`,
     added: (date: string) => `ditambahkan ${date}`,

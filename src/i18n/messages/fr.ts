@@ -537,14 +537,9 @@ export const fr = {
       `Ce navigateur a aussi gardé une save du ${date} avec un RKS de ${rks}, que vous pouvez envoyer à Phigros++.`,
     openIt: "L’ouvrir",
     devicesTitle: "Appareils",
-    devicesText: (tag: string) =>
-      `Tout ce qui est connecté en tant que ${tag}. Un appareil retiré ne peut plus synchroniser, envoyer ni télécharger votre save, mais garde ce qu’il a déjà téléchargé.`,
     addDevice: "Ajouter un appareil",
     addDeviceText:
       "Dans Phigros++ sur l’autre appareil, ouvrez **Settings → Profile**, choisissez **Sign in to my profile** et saisissez ce code. Il ne sert qu’une fois, pendant 10 minutes.",
-    phraseRow: "Phrase de récupération",
-    phraseRowDesc:
-      "Vos 16 mots permettent toujours de récupérer le profil, ils ne peuvent donc pas être retirés.",
     thisBrowser: "Ce navigateur",
     seen: (date: string) => `vu le ${date}`,
     added: (date: string) => `ajouté le ${date}`,

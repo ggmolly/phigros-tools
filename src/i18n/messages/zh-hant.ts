@@ -506,13 +506,9 @@ export const zhHant = {
       `此瀏覽器還保留了一份 ${date} 的存檔，RKS 為 ${rks}，你可以把它傳送到 Phigros++。`,
     openIt: "開啟",
     devicesTitle: "裝置",
-    devicesText: (tag: string) =>
-      `所有以 ${tag} 身分登入的裝置。被移除的裝置將無法再同步、上傳或下載你的存檔，但會保留已下載的內容。`,
     addDevice: "新增裝置",
     addDeviceText:
       "在另一台裝置的 Phigros++ 中開啟**設定 → 個人資料**，選擇 **Sign in to my profile** 並輸入此代碼。它只能使用一次，有效期限為 10 分鐘。",
-    phraseRow: "復原短語",
-    phraseRowDesc: "你的 16 個單字。它們隨時可以找回個人資料，因此無法移除。",
     thisBrowser: "此瀏覽器",
     seen: (date: string) => `上次使用於 ${date}`,
     added: (date: string) => `新增於 ${date}`,

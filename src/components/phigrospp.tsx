@@ -242,7 +242,6 @@ export function DevicesPanel({ credential }: { credential: Credential }) {
           {t.ppp.addDevice} <Arrow />
         </button>
       </div>
-      <p className="meta">{t.ppp.devicesText(credential.nickname ?? credential.playerId)}</p>
       {invite && (
         <div className="device-invite">
           <p className="invite-code">{invite.code.replace(/(.{4})/, "$1 ")}</p>
@@ -261,7 +260,7 @@ export function DevicesPanel({ credential }: { credential: Credential }) {
                   // biome-ignore lint/a11y/noAutofocus: the pen button asked to type the name now.
                   autoFocus
                   defaultValue={device.name}
-                  placeholder={device.phrase ? t.ppp.phraseRow : device.name}
+                  placeholder={device.name}
                   aria-label={t.ppp.rename}
                   maxLength={64}
                   onKeyDown={(e) => {
@@ -271,14 +270,13 @@ export function DevicesPanel({ credential }: { credential: Credential }) {
                   onBlur={(e) => void rename(device, e.currentTarget.value).catch(fail)}
                 />
               ) : (
-                <span className="device-name">{device.name || t.ppp.phraseRow}</span>
+                <span className="device-name">{device.name}</span>
               )}
               <span className="meta">
                 {[
-                  device.phrase && t.ppp.phraseRowDesc,
                   device.you && t.ppp.thisBrowser,
                   device.seen > 0 && t.ppp.seen(format.date(device.seen, DATE_TIME)),
-                  !device.phrase && t.ppp.added(format.date(device.added)),
+                  t.ppp.added(format.date(device.added)),
                 ]
                   .filter(Boolean)
                   .join(" · ")}
@@ -293,7 +291,7 @@ export function DevicesPanel({ credential }: { credential: Credential }) {
                 {t.ppp.signOut}
               </button>
             )}
-            {!device.phrase && !device.you && (
+            {!device.you && (
               <button
                 type="button"
                 className="btn btn-ghost btn-danger"

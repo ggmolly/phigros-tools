@@ -533,14 +533,9 @@ export const it = {
       `Questo browser ha conservato anche un salvataggio del ${date} con RKS ${rks}, che puoi inviare a Phigros++.`,
     openIt: "Aprilo",
     devicesTitle: "Dispositivi",
-    devicesText: (tag: string) =>
-      `Tutto ciò che ha effettuato l’accesso come ${tag}. Un dispositivo rimosso non può più sincronizzare, caricare o scaricare il tuo salvataggio, ma tiene ciò che ha già scaricato.`,
     addDevice: "Aggiungi un dispositivo",
     addDeviceText:
       "In Phigros++ sull’altro dispositivo apri **Settings → Profile**, scegli **Sign in to my profile** e inserisci questo codice. Funziona una sola volta, per 10 minuti.",
-    phraseRow: "Frase di recupero",
-    phraseRowDesc:
-      "Le tue 16 parole riportano sempre indietro il profilo, quindi non si possono rimuovere.",
     thisBrowser: "Questo browser",
     seen: (date: string) => `visto l’ultima volta il ${date}`,
     added: (date: string) => `aggiunto il ${date}`,

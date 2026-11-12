@@ -528,13 +528,9 @@ export const vi = {
       `Trình duyệt này còn giữ một save lưu ngày ${date} với RKS ${rks}, bạn có thể gửi nó sang Phigros++.`,
     openIt: "Mở nó",
     devicesTitle: "Thiết bị",
-    devicesText: (tag: string) =>
-      `Mọi thứ đang đăng nhập dưới tên ${tag}. Thiết bị đã gỡ sẽ không thể đồng bộ, tải lên hay tải xuống save của bạn nữa, nhưng vẫn giữ những gì đã tải xuống.`,
     addDevice: "Thêm thiết bị",
     addDeviceText:
       "Trong Phigros++ trên thiết bị kia, mở **Settings → Profile**, chọn **Sign in to my profile** và nhập mã này. Mã chỉ dùng được một lần, trong 10 phút.",
-    phraseRow: "Cụm từ khôi phục",
-    phraseRowDesc: "16 từ của bạn. Chúng luôn khôi phục được hồ sơ, nên không thể gỡ bỏ.",
     thisBrowser: "Trình duyệt này",
     seen: (date: string) => `hoạt động lần cuối ${date}`,
     added: (date: string) => `thêm vào ${date}`,

@@ -531,13 +531,9 @@ export const ms = {
       `Pelayar ini juga menyimpan save dari ${date} dengan RKS ${rks}, yang boleh anda hantar ke Phigros++.`,
     openIt: "Bukanya",
     devicesTitle: "Peranti",
-    devicesText: (tag: string) =>
-      `Semua yang log masuk sebagai ${tag}. Peranti yang dibuang tidak lagi boleh menyegerak, memuat naik atau memuat turun save anda, tetapi menyimpan apa yang sudah dimuat turunnya.`,
     addDevice: "Tambah peranti",
     addDeviceText:
       "Dalam Phigros++ pada peranti lain, buka **Tetapan → Profil**, pilih **Sign in to my profile** dan taip kod ini. Kod ini berfungsi sekali sahaja, selama 10 minit.",
-    phraseRow: "Frasa pemulihan",
-    phraseRowDesc: "16 perkataan anda. Ia sentiasa memulihkan profil, jadi ia tidak boleh dibuang.",
     thisBrowser: "Pelayar ini",
     seen: (date: string) => `kali terakhir dilihat ${date}`,
     added: (date: string) => `ditambah ${date}`,

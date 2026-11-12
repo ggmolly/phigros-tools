@@ -12,13 +12,11 @@ import WORDS from "./words.txt?raw";
 export interface Device {
   /** The public key, in hex. */
   key: string;
-  /** The device's model or browser, "" for the profile's own key. */
+  /** The name the player gave it, else the device's model or browser. */
   name: string;
   added: number;
   /** When it last signed a request (ms), 0 for never. */
   seen: number;
-  /** The key of the recovery phrase, which can't be removed. */
-  phrase: boolean;
   /** The key that asked: this browser. */
   you: boolean;
 }

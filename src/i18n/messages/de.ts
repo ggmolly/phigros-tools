@@ -536,14 +536,9 @@ export const de = {
       `Dieser Browser hat außerdem einen Spielstand vom ${date} mit RKS ${rks} aufbewahrt, den du an Phigros++ senden kannst.`,
     openIt: "Öffnen",
     devicesTitle: "Geräte",
-    devicesText: (tag: string) =>
-      `Alles, was als ${tag} angemeldet ist. Ein entferntes Gerät kann deinen Spielstand nicht mehr synchronisieren, hoch- oder herunterladen, behält aber, was es schon heruntergeladen hat.`,
     addDevice: "Gerät hinzufügen",
     addDeviceText:
       "Öffne in Phigros++ auf dem anderen Gerät **Settings → Profile**, wähle **Sign in to my profile** und gib diesen Code ein. Er funktioniert einmal, 10 Minuten lang.",
-    phraseRow: "Wiederherstellungsphrase",
-    phraseRowDesc:
-      "Deine 16 Wörter holen das Profil immer zurück, deshalb lassen sie sich nicht entfernen.",
     thisBrowser: "Dieser Browser",
     seen: (date: string) => `zuletzt gesehen am ${date}`,
     added: (date: string) => `hinzugefügt am ${date}`,
