@@ -1,6 +1,7 @@
 // satori calls these components as plain functions, outside React, so the React Compiler must not add hooks to them.
 "use no memo";
 
+// satori stays at 0.32.0: 0.63 drops most of these cards' text and shifts their layout
 import satori from "satori";
 import sharp, { type Sharp } from "sharp";
 import { catalogChartTotals, catalogSong } from "../src/catalog";
