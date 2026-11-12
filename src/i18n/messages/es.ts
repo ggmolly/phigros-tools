@@ -197,6 +197,8 @@ export const es = {
     players: "Jugadores",
     searchPlayers: "Buscar nombre o nombre#0042",
     noPlayers: "Ningún jugador tiene este nombre",
+    noRanked: "Aún no hay jugadores clasificados",
+    noCharts: "Aún no hay charts con partidas",
     description:
       "Jugadores de Phigros ordenados por RKS y las mejores partidas de cada chart, enviadas por quienes sincronizan con Phigros++.",
   },
@@ -220,12 +222,23 @@ export const es = {
     player: "Jugador",
     played: "Jugada",
     status: "Estado",
-    replayStatus: { verified: "Verificada", imported: "Importado" },
+    replayStatus: {
+      verified: "Verificada",
+      imported: "Importado",
+      pending: "Pendiente",
+      unverified: "No verificada",
+    },
     replayStatusHelp: {
       verified: "Comprobamos esta partida y es coherente.",
       imported: "Declarado por el juego del jugador, sin repetición que lo demuestre.",
+      pending:
+        "Aún no se ha comprobado. Tras una actualización del juego, espera a que phigros.tools conozca la nueva versión.",
+      unverified: "Volver a reproducir los toques no da el resultado registrado.",
     },
     pageOf: (page: string, pages: string) => `Página ${page} de ${pages}`,
+    noPlays: "Nadie ha jugado este chart todavía",
+    playedWith: (version: string) => `Jugada con Phigros++ ${version}`,
+    addedFiles: (files: string) => `archivos añadidos: ${files}`,
     illustratedBy: (name: string) => `Ilustración de ${name}`,
     moreFrom: (chapter: string) => `Más de ${chapter}`,
     moreBy: (artist: string) => `Más de ${artist}`,

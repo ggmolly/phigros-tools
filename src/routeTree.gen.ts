@@ -17,6 +17,7 @@ import { Route as ToolHistoryRouteImport } from './routes/_tool.history'
 import { Route as ToolRecordsRouteImport } from './routes/_tool.records'
 import { Route as ChartsIndexRouteImport } from './routes/charts.index'
 import { Route as ChartsIdRouteImport } from './routes/charts.$id'
+import { Route as LeaderboardIndexRouteImport } from './routes/leaderboard.index'
 import { Route as PlayersIdRouteImport } from './routes/players.$id'
 import { Route as ReplaysIdRouteImport } from './routes/replays.$id'
 import { Route as ChartsIdPlayLevelRouteImport } from './routes/charts.$id_.play.$level'
@@ -61,6 +62,11 @@ const ChartsIdRoute = ChartsIdRouteImport.update({
   path: '/charts/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LeaderboardIndexRoute = LeaderboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LeaderboardRoute,
+} as any)
 const PlayersIdRoute = PlayersIdRouteImport.update({
   id: '/players/$id',
   path: '/players/$id',
@@ -84,7 +90,7 @@ const ChartsIdPlaysLevelRoute = ChartsIdPlaysLevelRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof ToolIndexRoute
-  '/leaderboard': typeof LeaderboardRoute
+  '/leaderboard': typeof LeaderboardRouteWithChildren
   '/collection': typeof ToolCollectionRoute
   '/history': typeof ToolHistoryRoute
   '/records': typeof ToolRecordsRoute
@@ -92,11 +98,11 @@ export interface FileRoutesByFullPath {
   '/players/$id': typeof PlayersIdRoute
   '/replays/$id': typeof ReplaysIdRoute
   '/charts/': typeof ChartsIndexRoute
+  '/leaderboard/': typeof LeaderboardIndexRoute
   '/charts/$id/play/$level': typeof ChartsIdPlayLevelRoute
   '/charts/$id/plays/$level': typeof ChartsIdPlaysLevelRoute
 }
 export interface FileRoutesByTo {
-  '/leaderboard': typeof LeaderboardRoute
   '/collection': typeof ToolCollectionRoute
   '/history': typeof ToolHistoryRoute
   '/records': typeof ToolRecordsRoute
@@ -105,13 +111,14 @@ export interface FileRoutesByTo {
   '/replays/$id': typeof ReplaysIdRoute
   '/': typeof ToolIndexRoute
   '/charts': typeof ChartsIndexRoute
+  '/leaderboard': typeof LeaderboardIndexRoute
   '/charts/$id/play/$level': typeof ChartsIdPlayLevelRoute
   '/charts/$id/plays/$level': typeof ChartsIdPlaysLevelRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_tool': typeof ToolRouteWithChildren
-  '/leaderboard': typeof LeaderboardRoute
+  '/leaderboard': typeof LeaderboardRouteWithChildren
   '/_tool/collection': typeof ToolCollectionRoute
   '/_tool/history': typeof ToolHistoryRoute
   '/_tool/records': typeof ToolRecordsRoute
@@ -120,6 +127,7 @@ export interface FileRoutesById {
   '/replays/$id': typeof ReplaysIdRoute
   '/_tool/': typeof ToolIndexRoute
   '/charts/': typeof ChartsIndexRoute
+  '/leaderboard/': typeof LeaderboardIndexRoute
   '/charts/$id_/play/$level': typeof ChartsIdPlayLevelRoute
   '/charts/$id_/plays/$level': typeof ChartsIdPlaysLevelRoute
 }
@@ -135,11 +143,11 @@ export interface FileRouteTypes {
     | '/players/$id'
     | '/replays/$id'
     | '/charts/'
+    | '/leaderboard/'
     | '/charts/$id/play/$level'
     | '/charts/$id/plays/$level'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/leaderboard'
     | '/collection'
     | '/history'
     | '/records'
@@ -148,6 +156,7 @@ export interface FileRouteTypes {
     | '/replays/$id'
     | '/'
     | '/charts'
+    | '/leaderboard'
     | '/charts/$id/play/$level'
     | '/charts/$id/plays/$level'
   id:
@@ -162,13 +171,14 @@ export interface FileRouteTypes {
     | '/replays/$id'
     | '/_tool/'
     | '/charts/'
+    | '/leaderboard/'
     | '/charts/$id_/play/$level'
     | '/charts/$id_/plays/$level'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   ToolRoute: typeof ToolRouteWithChildren
-  LeaderboardRoute: typeof LeaderboardRoute
+  LeaderboardRoute: typeof LeaderboardRouteWithChildren
   ChartsIdRoute: typeof ChartsIdRoute
   PlayersIdRoute: typeof PlayersIdRoute
   ReplaysIdRoute: typeof ReplaysIdRoute
@@ -235,6 +245,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChartsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/leaderboard/': {
+      id: '/leaderboard/'
+      path: '/'
+      fullPath: '/leaderboard/'
+      preLoaderRoute: typeof LeaderboardIndexRouteImport
+      parentRoute: typeof LeaderboardRoute
+    }
     '/players/$id': {
       id: '/players/$id'
       path: '/players/$id'
@@ -282,9 +299,21 @@ const ToolRouteChildren: ToolRouteChildren = {
 
 const ToolRouteWithChildren = ToolRoute._addFileChildren(ToolRouteChildren)
 
+interface LeaderboardRouteChildren {
+  LeaderboardIndexRoute: typeof LeaderboardIndexRoute
+}
+
+const LeaderboardRouteChildren: LeaderboardRouteChildren = {
+  LeaderboardIndexRoute: LeaderboardIndexRoute,
+}
+
+const LeaderboardRouteWithChildren = LeaderboardRoute._addFileChildren(
+  LeaderboardRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   ToolRoute: ToolRouteWithChildren,
-  LeaderboardRoute: LeaderboardRoute,
+  LeaderboardRoute: LeaderboardRouteWithChildren,
   ChartsIdRoute: ChartsIdRoute,
   PlayersIdRoute: PlayersIdRoute,
   ReplaysIdRoute: ReplaysIdRoute,

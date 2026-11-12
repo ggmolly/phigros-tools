@@ -46,6 +46,9 @@ export interface ReplayInfo {
   good: number;
   bad: number;
   miss: number;
+  /** The Phigros++ version it was played with, and the files the player added to its mods/ and core/ folders. */
+  phigrospp: string;
+  files: string[];
 }
 
 /** How many players a chart has and the best ones. */
@@ -171,3 +174,33 @@ export const getReplayInfo = createServerFn({ method: "GET" })
     const info = await api<ReplayInfo>(`/api/replays/${encodeURIComponent(id)}/info`);
     return info && { ...info, themeColor: accentOf(info.song) };
   });
+
+// a ranking always answers, nothing back is the server failing. q searches the players
+async function ranking<T>(path: string, page: number, verified: boolean, q = ""): Promise<T> {
+  const query = new URLSearchParams({ page: String(page), q });
+  if (verified) query.set("verified", "1");
+  const data = await api<T>(`${path}?${query}`);
+  if (!data) throw new Error(`${path} failed`);
+  return data;
+}
+
+/** One page of the players by RKS, searched by name or name#0042. */
+export const getPlayerRanking = createServerFn({ method: "GET" })
+  .validator((search: { page: number; q: string; verified: boolean }) => search)
+  .handler(({ data }) => ranking<PlayerRanking>("/api/players", data.page, data.verified, data.q));
+
+/** Every chart with plays, most players first. */
+export const getChartCounts = createServerFn({ method: "GET" })
+  .validator((verified: boolean) => verified)
+  .handler(({ data }) => ranking<ChartCount[]>("/api/charts", 1, data));
+
+/** One page of a chart's players. */
+export const getChartPlays = createServerFn({ method: "GET" })
+  .validator((search: { song: string; level: string; page: number; verified: boolean }) => search)
+  .handler(({ data }) =>
+    ranking<ChartPlays>(
+      `/api/charts/${encodeURIComponent(data.song)}/${encodeURIComponent(data.level)}`,
+      data.page,
+      data.verified,
+    ),
+  );

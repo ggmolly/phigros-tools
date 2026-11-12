@@ -195,6 +195,8 @@ export const id = {
     players: "Pemain",
     searchPlayers: "Cari nama atau nama#0042",
     noPlayers: "Tidak ada pemain dengan nama ini",
+    noRanked: "Belum ada pemain yang diperingkat",
+    noCharts: "Belum ada chart yang dimainkan",
     description:
       "Pemain Phigros diurutkan menurut RKS dan permainan terbaik di setiap chart, dari pemain yang menyinkronkan dengan Phigros++.",
   },
@@ -218,12 +220,23 @@ export const id = {
     player: "Pemain",
     played: "Dimainkan",
     status: "Status",
-    replayStatus: { verified: "Terverifikasi", imported: "Diimpor" },
+    replayStatus: {
+      verified: "Terverifikasi",
+      imported: "Diimpor",
+      pending: "Menunggu",
+      unverified: "Tidak terverifikasi",
+    },
     replayStatusHelp: {
       verified: "Kami sudah memeriksa permainan ini dan hasilnya konsisten.",
       imported: "Dilaporkan oleh game pemain, tanpa replay sebagai bukti.",
+      pending:
+        "Belum diperiksa. Setelah pembaruan game, ini menunggu sampai phigros.tools mengenal versi baru.",
+      unverified: "Memutar ulang sentuhannya tidak memberi hasil yang tercatat.",
     },
     pageOf: (page: string, pages: string) => `Halaman ${page} dari ${pages}`,
+    noPlays: "Belum ada yang memainkan chart ini",
+    playedWith: (version: string) => `Dimainkan dengan Phigros++ ${version}`,
+    addedFiles: (files: string) => `file tambahan: ${files}`,
     illustratedBy: (name: string) => `Ilustrasi oleh ${name}`,
     moreFrom: (chapter: string) => `Lainnya dari ${chapter}`,
     moreBy: (artist: string) => `Lainnya dari ${artist}`,

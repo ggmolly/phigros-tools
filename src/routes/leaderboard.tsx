@@ -1,19 +1,24 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { useState } from "react";
 import * as v from "valibot";
 import { catalogSong, searchFold } from "../catalog";
 import { SiteHeader } from "../components/chrome";
-import { Pager, PlayerTag, RankingSearch, ScopeSwitch, useJson } from "../components/plays";
+import { RankingSearch, ScopeSwitch } from "../components/plays";
 import { Difficulty } from "../components/primitives";
 import { useFormat, useT } from "../i18n";
-import { type ChartCount, PLAYS_PAGE, type PlayerRanking } from "../plays";
+import { getChartCounts } from "../plays";
 import { headT, pageLinks, pageMeta } from "../seo";
 
+// the charts, beside the players (leaderboard.index.tsx) whose search and pages don't reload them. the server counts
+// them once a minute (server/replays.ts), so they're kept as long
 export const Route = createFileRoute("/leaderboard")({
   validateSearch: v.object({
     ...RankingSearch.entries,
     q: v.fallback(v.optional(v.string()), undefined),
   }),
+  loaderDeps: ({ search }) => ({ verified: search.verified ?? false }),
+  loader: ({ deps }) => getChartCounts({ data: deps.verified }),
+  staleTime: 60_000,
   head: ({ match }) => {
     const { locale, t } = headT(match);
     return {
@@ -29,72 +34,12 @@ export const Route = createFileRoute("/leaderboard")({
   component: LeaderboardPage,
 });
 
-/** Players by RKS, a page at a time, searchable by name or name#0042. */
-function Players() {
-  const { page = 1, q = "", verified = false } = Route.useSearch();
-  const navigate = useNavigate({ from: Route.fullPath });
-  const t = useT();
-  const ranking = useJson<PlayerRanking>(
-    `/api/players?page=${page}&q=${encodeURIComponent(q)}${verified ? "&verified=1" : ""}`,
-  );
-  return (
-    <section className="panel">
-      <div className="panel-head">
-        <h2 className="panel-title">{t.leaderboard.players}</h2>
-      </div>
-      <input
-        className="field search-field"
-        type="search"
-        placeholder={t.leaderboard.searchPlayers}
-        aria-label={t.leaderboard.searchPlayers}
-        value={q}
-        onChange={(event) =>
-          void navigate({
-            search: (search) => ({
-              ...search,
-              q: event.target.value || undefined,
-              page: undefined,
-            }),
-            replace: true,
-          })
-        }
-      />
-      <div className="chart-stats-scroll">
-        <table className="song-diff-table">
-          <thead>
-            <tr>
-              {["#", t.song.player, "RKS"].map((name) => (
-                <th key={name} scope="col">
-                  {name}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {ranking?.players.map((player) => (
-              <tr key={player.rank}>
-                <td className="num meta">{player.rank}</td>
-                <td>
-                  <PlayerTag player={player.player} />
-                </td>
-                <td className="num">{player.rks.toFixed(2)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      {ranking && !ranking.count && q && <p className="meta">{t.leaderboard.noPlayers}</p>}
-      <Pager page={page} pages={Math.ceil((ranking?.count ?? 0) / PLAYS_PAGE)} />
-    </section>
-  );
-}
-
 /** Every chart with uploaded plays, most players first, each opening its own ranking. */
 function Charts() {
   const { verified = false } = Route.useSearch();
+  const charts = Route.useLoaderData();
   const t = useT();
   const format = useFormat();
-  const charts = useJson<ChartCount[]>(`/api/charts${verified ? "?verified=1" : ""}`) ?? [];
   const [query, setQuery] = useState("");
   const folded = searchFold(query);
   const shown = charts.flatMap((chart) => {
@@ -149,6 +94,7 @@ function Charts() {
           </tbody>
         </table>
       </div>
+      {!charts.length && <p className="meta">{t.leaderboard.noCharts}</p>}
       {charts.length > 0 && !shown.length && <p className="meta">{t.charts.empty}</p>}
     </section>
   );
@@ -164,7 +110,7 @@ function LeaderboardPage() {
         <h1 className="sr-only">{t.tabs.leaderboard}</h1>
         <ScopeSwitch verified={verified} />
         <div className="leaderboard-layout">
-          <Players />
+          <Outlet />
           <Charts />
         </div>
       </main>

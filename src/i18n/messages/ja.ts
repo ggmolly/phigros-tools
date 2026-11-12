@@ -194,6 +194,8 @@ export const ja = {
     players: "プレイヤー",
     searchPlayers: "名前 または 名前#0042 で検索",
     noPlayers: "この名前のプレイヤーはいません",
+    noRanked: "まだランキングにプレイヤーがいません",
+    noCharts: "まだプレイのある譜面がありません",
     description:
       "RKS 順の Phigros プレイヤーと、各譜面のベストプレイ。Phigros++ で同期しているプレイヤーのデータです。",
   },
@@ -217,12 +219,23 @@ export const ja = {
     player: "プレイヤー",
     played: "日時",
     status: "状態",
-    replayStatus: { verified: "検証済み", imported: "インポート" },
+    replayStatus: {
+      verified: "検証済み",
+      imported: "インポート",
+      pending: "確認待ち",
+      unverified: "未検証",
+    },
     replayStatusHelp: {
       verified: "このプレイを確認し、整合性が取れていました。",
       imported: "プレイヤーのゲームが申告した記録で、裏付けるリプレイはありません。",
+      pending:
+        "まだ確認されていません。ゲームのアップデート後は、phigros.tools が新しいバージョンに対応するまで待ちます。",
+      unverified: "タッチを再生しても記録された結果になりません。",
     },
     pageOf: (page: string, pages: string) => `${page} / ${pages} ページ`,
+    noPlays: "この譜面はまだ誰もプレイしていません",
+    playedWith: (version: string) => `Phigros++ ${version} でプレイ`,
+    addedFiles: (files: string) => `追加されたファイル: ${files}`,
     illustratedBy: (name: string) => `イラスト：${name}`,
     moreFrom: (chapter: string) => `${chapter} の他の楽曲`,
     moreBy: (artist: string) => `${artist} の他の楽曲`,

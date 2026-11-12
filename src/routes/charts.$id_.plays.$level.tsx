@@ -2,24 +2,21 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { catalogSong, isLevel, songLevels } from "../catalog";
 import { Arrow } from "../components/arrow";
 import { SiteHeader } from "../components/chrome";
-import {
-  Pager,
-  PlayCells,
-  PlayHeadings,
-  RankingSearch,
-  ScopeSwitch,
-  useJson,
-} from "../components/plays";
+import { Pager, PlayCells, PlayHeadings, RankingSearch, ScopeSwitch } from "../components/plays";
 import { Difficulty } from "../components/primitives";
 import { useFormat, useT } from "../i18n";
 import { LEVELS, type LevelName } from "../modules";
-import { type ChartPlays, PLAYS_PAGE } from "../plays";
+import { getChartPlays, PLAYS_PAGE } from "../plays";
 import { headT, pageLinks, pageMeta } from "../seo";
 
 export const Route = createFileRoute("/charts/$id_/plays/$level")({
   validateSearch: RankingSearch,
-  loader: ({ params }) => {
+  loaderDeps: ({ search }) => ({ page: search.page ?? 1, verified: search.verified ?? false }),
+  loader: ({ params, deps }) => {
     if (!isLevel(params.level) || !songLevels(params.id).includes(params.level)) throw notFound();
+    return getChartPlays({
+      data: { song: catalogSong(params.id)!.id, level: params.level, ...deps },
+    });
   },
   // the ranking changes all the time, so it stays out of search results
   head: ({ params, match }) => {
@@ -40,16 +37,13 @@ export const Route = createFileRoute("/charts/$id_/plays/$level")({
 
 function PlaysPage() {
   const params = Route.useParams();
-  const { page = 1, verified = false } = Route.useSearch();
+  const { page, verified } = Route.useLoaderDeps();
+  const chart = Route.useLoaderData();
   const t = useT();
   const format = useFormat();
   const song = catalogSong(params.id)!; // the loader 404s unknown songs and levels
   const level = params.level as LevelName;
-  const chart = useJson<ChartPlays>(
-    `/api/charts/${encodeURIComponent(song.id)}/${level}?page=${page}${verified ? "&verified=1" : ""}`,
-  );
-
-  const pages = Math.max(1, Math.ceil((chart?.count ?? 0) / PLAYS_PAGE));
+  const pages = Math.ceil(chart.count / PLAYS_PAGE);
   const constant = song.constants[LEVELS.indexOf(level)] ?? 0;
   return (
     <>
@@ -99,7 +93,7 @@ function PlaysPage() {
             <table className="song-diff-table">
               <PlayHeadings after={[t.song.played, ""]} />
               <tbody>
-                {chart?.plays.map((play) => (
+                {chart.plays.map((play) => (
                   <tr key={play.id}>
                     <PlayCells play={play} />
                     <td className="meta">{play.date ? format.date(play.date) : "-"}</td>
@@ -119,6 +113,7 @@ function PlaysPage() {
               </tbody>
             </table>
           </div>
+          {!chart.count && <p className="meta">{t.song.noPlays}</p>}
           <Pager page={page} pages={pages} />
         </section>
       </main>

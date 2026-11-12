@@ -195,6 +195,8 @@ export const vi = {
     players: "Người chơi",
     searchPlayers: "Tìm tên hoặc tên#0042",
     noPlayers: "Không có người chơi nào tên này",
+    noRanked: "Chưa có người chơi nào được xếp hạng",
+    noCharts: "Chưa có chart nào có lượt chơi",
     description:
       "Người chơi Phigros xếp theo RKS và lượt chơi tốt nhất của từng chart, từ những người đồng bộ bằng Phigros++.",
   },
@@ -218,12 +220,23 @@ export const vi = {
     player: "Người chơi",
     played: "Ngày chơi",
     status: "Trạng thái",
-    replayStatus: { verified: "Đã xác minh", imported: "Đã nhập" },
+    replayStatus: {
+      verified: "Đã xác minh",
+      imported: "Đã nhập",
+      pending: "Đang chờ",
+      unverified: "Chưa xác minh được",
+    },
     replayStatusHelp: {
       verified: "Chúng tôi đã kiểm tra lượt chơi này và nó hợp lệ.",
       imported: "Do trò chơi của người chơi khai báo, không có bản phát lại để chứng minh.",
+      pending:
+        "Chưa được kiểm tra. Sau khi trò chơi cập nhật, nó chờ đến khi phigros.tools hỗ trợ phiên bản mới.",
+      unverified: "Phát lại các lần chạm không cho ra kết quả đã ghi.",
     },
     pageOf: (page: string, pages: string) => `Trang ${page}/${pages}`,
+    noPlays: "Chưa ai chơi chart này",
+    playedWith: (version: string) => `Chơi với Phigros++ ${version}`,
+    addedFiles: (files: string) => `tệp đã thêm: ${files}`,
     illustratedBy: (name: string) => `Minh họa bởi ${name}`,
     moreFrom: (chapter: string) => `Thêm từ ${chapter}`,
     moreBy: (artist: string) => `Thêm của ${artist}`,

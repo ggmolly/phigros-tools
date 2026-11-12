@@ -1,10 +1,10 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { canonicalSongId, catalogSong } from "../catalog";
+import { catalogSong } from "../catalog";
 import { Arrow } from "../components/arrow";
 import { ChartPlayer } from "../components/chart-player";
 import { SiteHeader } from "../components/chrome";
-import { PlayerTag } from "../components/plays";
+import { PlayerTag, PlayStatusLabel } from "../components/plays";
 import { Rank, score7 } from "../components/primitives";
 import { useFormat, useT } from "../i18n";
 import { CHALLENGE, judge, type Result, WINDOWS } from "../judge";
@@ -170,27 +170,25 @@ function ReplayPage() {
     setReplay(undefined);
     setChart(undefined);
     setError(undefined);
-    fetch(`/api/replays/${encodeURIComponent(id)}`)
-      .then((res) => (res.ok ? res.arrayBuffer() : Promise.reject(new Error(`HTTP ${res.status}`))))
-      .then((bytes) => {
-        const decoded = decodeReplay(new Uint8Array(bytes), true);
-        setReplay(decoded);
-        const song = canonicalSongId(decoded.header.id.replace(/\.0$/, ""));
-        return fetch(`/chart-data/${encodeURIComponent(song)}/${decoded.header.difficulty}.phc`);
-      })
-      .then((res) => (res.ok ? res.arrayBuffer() : Promise.reject(new Error(`HTTP ${res.status}`))))
-      .then((data) => {
+    const bytes = (url: string) =>
+      fetch(url).then((res) =>
+        res.ok ? res.arrayBuffer() : Promise.reject(new Error(`HTTP ${res.status}`)),
+      );
+    Promise.all([
+      bytes(`/api/replays/${encodeURIComponent(id)}`),
+      bytes(`/chart-data/${encodeURIComponent(info.song)}/${info.level}.phc`),
+    ])
+      .then(([replay, data]) => {
+        setReplay(decodeReplay(new Uint8Array(replay), true));
         const raw = decodePhc(new Uint8Array(data));
         setChart({ raw, parsed: parseChart(raw) });
       })
       .catch((reason: Error) => setError(t.player.loadError(reason.message)));
-  }, [id, t]);
+  }, [id, info.song, info.level, t]);
 
-  const header = replay?.header;
-  const songId = header && canonicalSongId(header.id.replace(/\.0$/, ""));
-  const song = songId ? catalogSong(songId) : undefined;
-  const level = header?.difficulty as LevelName | undefined;
-  const constant = song && level ? (song.constants[LEVELS.indexOf(level)] ?? 0) : 0;
+  const song = catalogSong(info.song);
+  const level = info.level as LevelName;
+  const constant = song?.constants[LEVELS.indexOf(level)] ?? 0;
   const overlay = useMemo(() => replay && drawFingers(replay.header, replay.frames), [replay]);
   // the replay judged like the game did, so the chart is drawn as it was played
   const play = useMemo(
@@ -210,7 +208,7 @@ function ReplayPage() {
     <>
       <SiteHeader />
       <main className="app-shell">
-        {header && song && level && (
+        {song && (
           <div className="chart-player-bar">
             <Link
               to="/charts/$id/plays/$level"
@@ -226,15 +224,18 @@ function ReplayPage() {
               <h1 className="panel-title">{song.title}</h1>
               <p className="meta">
                 <PlayerTag player={info.player} /> · {level} {constant.toFixed(1)} ·{" "}
-                {score7(header.score)} · {header.accuracy.toFixed(2)}% ·{" "}
-                {format.date(header.date * 1000)}
+                {score7(info.score)} · {info.accuracy.toFixed(2)}% · {format.date(info.date)}
+              </p>
+              <p className="meta">
+                <PlayStatusLabel status={info.status} /> · {t.song.playedWith(info.phigrospp)}
+                {info.files.length > 0 && ` · ${t.song.addedFiles(info.files.join(", "))}`}
               </p>
             </div>
-            <Rank score={header.score} fc={header.bad + header.miss === 0} />
+            <Rank score={info.score} fc={info.fc} />
           </div>
         )}
         {error && <p className="meta">{error}</p>}
-        {chart && song && level ? (
+        {chart && song ? (
           <ChartPlayer
             key={id}
             chart={chart.parsed}

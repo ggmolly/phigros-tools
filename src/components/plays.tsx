@@ -1,8 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
 import * as v from "valibot";
 import { useFormat, useT } from "../i18n";
-import type { Play, PlayerName, PlayStatus } from "../plays";
+import type { Play, PlayerName, PlayStatus, ReplayInfo } from "../plays";
 import { Avatar, Rank, score7 } from "./primitives";
 
 /** The player's avatar and name#0042, linking to their page, the number dimmed so the name reads first. */
@@ -18,8 +17,8 @@ export function PlayerTag({ player }: { player: PlayerName }) {
   );
 }
 
-/** Verified or Imported, with what it means on hover. */
-export function PlayStatusLabel({ status }: { status: PlayStatus }) {
+/** Verified, Imported, Pending or Unverified, with what it means on hover. */
+export function PlayStatusLabel({ status }: { status: PlayStatus | ReplayInfo["status"] }) {
   const t = useT();
   return (
     <>
@@ -75,21 +74,6 @@ export function PlayHeadings({ before = [], after = [] }: { before?: string[]; a
       </tr>
     </thead>
   );
-}
-
-/** The JSON at a URL, refetched when it changes. The previous answer stays until the new one comes, and a late one is dropped. */
-export function useJson<T>(url: string) {
-  const [data, setData] = useState<T>();
-  useEffect(() => {
-    let current = true;
-    fetch(url)
-      .then((response) => response.json())
-      .then((json: T) => current && setData(json));
-    return () => {
-      current = false;
-    };
-  }, [url]);
-  return data;
 }
 
 /** Previous and next links around "Page X of Y", kept in the URL as ?page=. */

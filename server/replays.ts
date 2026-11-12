@@ -176,6 +176,9 @@ export function replayInfo(sha256: string): ReplayInfo | undefined {
     good: header.good,
     bad: header.bad,
     miss: header.miss,
+    phigrospp: header.phigrospp,
+    // "mods/hud.lua:1a2b3c4d,core/sync.lua:..." without the hashes
+    files: header.files ? header.files.split(",").map((file) => file.replace(/:[^:]*$/, "")) : [],
   };
 }
 
