@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from "react";
 const DURATION = 900;
 // false while the page the server sent hydrates: its numbers are already there, and stay put
 let live = false;
+// the numbers shown since the page loaded, as written: one counts the first time it shows, then never again
+const counted = new Set<string>();
 
 /** Lets numbers count from then on: mounted once, at the root, whose effect runs after every Count's. */
 export function CountsLive() {
@@ -15,13 +17,15 @@ export function CountsLive() {
 export const fixed3 = (value: number) => value.toFixed(3);
 
 /**
- * A number that counts up when it appears and on to its new value when it changes, like the trailer's. It only
- * moves once the first page has hydrated, and not at all for people who asked for less motion. For values that
+ * A number that counts up the first time it's shown, and on to its new value when it changes in place (a live
+ * update, another song picked), like the trailer's. Coming back to a number already seen doesn't count it again,
+ * the first page's numbers never move, and nothing does for people who asked for less motion. For values that
  * change now and then, not ones that follow a slider.
  */
 export function Count({ value, format }: { value: number; format: (value: number) => string }) {
   const element = useRef<HTMLSpanElement>(null);
   const shown = useRef(0);
+  const mounted = useRef(false);
   // react only writes the first text: every later one is set here, so a render mid-count can't show the end
   const [first] = useState(() => format(value));
   useEffect(() => {
@@ -30,7 +34,10 @@ export function Count({ value, format }: { value: number; format: (value: number
       shown.current = now;
       if (element.current) element.current.textContent = format(now);
     };
-    if (!live || from === value || matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const seen = !mounted.current && counted.has(format(value));
+    mounted.current = true;
+    counted.add(format(value));
+    if (!live || seen || from === value || matchMedia("(prefers-reduced-motion: reduce)").matches) {
       write(value);
       return;
     }
