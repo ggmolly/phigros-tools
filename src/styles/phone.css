@@ -118,14 +118,6 @@
     gap: 20px;
     padding: 18px 16px 20px;
   }
-  .hero-share {
-    position: relative;
-    top: auto;
-    right: auto;
-    justify-self: end;
-    order: -1;
-    margin-bottom: -8px;
-  }
   /* The name band takes the first line; the RKS tag and Challenge badge hang under its right end. */
   .hero-id {
     flex-wrap: wrap;

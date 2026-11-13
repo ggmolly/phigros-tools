@@ -117,67 +117,6 @@
 .challenge-rainbow::before {
   background: linear-gradient(100deg, #ff9a9a, #ffd36e, #8cf29a, #8fdcff, #c79bff);
 }
-.hero-share {
-  position: absolute;
-  top: 30px;
-  right: 34px;
-  z-index: 1;
-}
-a.btn[aria-disabled="true"] {
-  opacity: 0.38;
-  pointer-events: none;
-}
-#shareDialog {
-  width: min(1040px, calc(100% - 24px));
-}
-.share-preview {
-  display: grid;
-  place-items: center;
-  aspect-ratio: 16 / 9;
-  margin: 16px 0;
-  background: rgb(0 0 0 / 0.4);
-}
-.share-preview img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-/* The grid formats are portrait: fit the dialog's height instead of its width. */
-.share-preview-b30,
-.share-preview-fc30 {
-  aspect-ratio: auto;
-  height: min(62vh, 680px);
-}
-.share-preview-b30 img,
-.share-preview-fc30 img {
-  width: auto;
-  height: 100%;
-}
-.share-format {
-  margin-top: 12px;
-}
-.share-controls {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 16px 28px;
-}
-.share-name {
-  display: flex;
-  flex: 1 1 260px;
-  flex-direction: column;
-  gap: 6px;
-}
-.share-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-  padding: 0 6px;
-}
-.share-status {
-  margin-top: 14px;
-  font-size: 14px;
-}
 .hero-stats {
   display: flex;
   flex-wrap: wrap;
