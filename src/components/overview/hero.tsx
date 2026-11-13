@@ -4,6 +4,7 @@ import type { SaveDocumentV1 } from "../../document";
 import { useT } from "../../i18n";
 import type { RankingResult } from "../../metrics";
 import { countLevels, LEVELS } from "../../modules";
+import { Count, fixed3 } from "../../motion";
 import { Avatar, challengeRank, dataAmount, LevelStats, Stat } from "../primitives";
 
 /** The in-game profile strip (avatar, name, RKS tag, Challenge Mode badge), overall totals, self-intro and
@@ -43,7 +44,9 @@ export function Hero({
         </h1>
         <p className="hero-rks">
           <span className="hero-rks-label">RKS</span>
-          <span className="ranking-number">{ranking.rankingScore.toFixed(3)}</span>
+          <span className="ranking-number">
+            <Count value={ranking.rankingScore} format={fixed3} />
+          </span>
         </p>
         {challenge && (
           <p

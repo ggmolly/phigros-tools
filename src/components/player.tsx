@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { catalogSong } from "../catalog";
 import { useFormat, useT } from "../i18n";
+import { Count, fixed3 } from "../motion";
 import {
   type Activity,
   LIST_FIRST,
@@ -45,7 +46,9 @@ export function Card({ profile }: { profile: PlayerProfile }) {
         </h1>
         <p className="hero-rks">
           <span className="hero-rks-label">RKS</span>
-          <span className="ranking-number">{profile.rks.toFixed(3)}</span>
+          <span className="ranking-number">
+            <Count value={profile.rks} format={fixed3} />
+          </span>
         </p>
       </div>
       <div className="hero-stats">

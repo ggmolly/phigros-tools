@@ -25,27 +25,79 @@
   }
 }
 
-/* Panels come up, rows come in from the right. Where the browser can count siblings they follow each other,
- * elsewhere they arrive together. */
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Panels, cards and the main menu's entries come up, rows come in from the right. Where the browser can count
+ * siblings they follow each other, elsewhere they arrive together. Long lists only move their first rows. */
 .panel,
-.hero {
+.hero,
+.menu-entry,
+.ppp-features > *,
+.ppp-case,
+.gallery-card:nth-child(-n + 24),
+.song-pager {
   animation: rise 0.7s var(--ease) backwards;
 }
 .profile-list > li,
+.song-list > li:nth-child(-n + 30),
+.target-list > li,
+.snapshot-list > li,
+.device-list > li,
+.guide-steps > li,
+.song-links li,
 .song-diff-table tbody tr:nth-child(-n + 24),
 .table-scroll tbody tr:nth-child(-n + 24) {
   animation: slide-in 0.55s var(--ease) backwards;
 }
 @supports (order: sibling-index()) {
   .panel,
-  .hero {
+  .hero,
+  .menu-entry,
+  .ppp-features > *,
+  .ppp-case {
     animation-delay: calc(min(sibling-index() - 1, 6) * 70ms);
   }
+  .gallery-card:nth-child(-n + 24) {
+    animation-delay: calc(sibling-index() * 25ms);
+  }
   .profile-list > li,
+  .song-list > li:nth-child(-n + 30),
+  .target-list > li,
+  .snapshot-list > li,
+  .device-list > li,
+  .guide-steps > li,
+  .song-links li,
   .song-diff-table tbody tr:nth-child(-n + 24),
   .table-scroll tbody tr:nth-child(-n + 24) {
     animation-delay: calc(120ms + min(sibling-index(), 16) * 30ms);
   }
+}
+
+/* The RKS tag and the Challenge badge land after their hero, a song's cover is uncovered like the chart. */
+.hero-rks,
+.challenge-badge {
+  animation: pop 0.6s var(--ease) 0.3s backwards;
+}
+.song-detail-media img {
+  animation: uncover 0.9s var(--circ) 0.1s backwards;
+}
+
+/* Dialogs come up over a backdrop that fades in (the USB one has its own way in and out, see dialogs.css). */
+dialog[open]:not(#usbDialog) {
+  animation: rise 0.35s var(--ease);
+}
+dialog[open]:not(#usbDialog)::backdrop {
+  animation: fade 0.3s ease;
 }
 
 /* The RKS chart is uncovered from the left, so its curve looks drawn. */

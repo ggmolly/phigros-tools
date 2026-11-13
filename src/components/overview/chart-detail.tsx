@@ -3,6 +3,7 @@ import { catalogSong } from "../../catalog";
 import { useT } from "../../i18n";
 import { type ChartMetric, projectAccuracy, type RankingResult } from "../../metrics";
 import { LEVELS } from "../../modules";
+import { Count } from "../../motion";
 import { PhiSlot, Rank, Slider, score7, signed } from "../primitives";
 
 const MIN_ACCURACY = 70; // chart RKS is zero below this
@@ -134,7 +135,9 @@ export function ChartDetail({
             </button>
           ))}
         </div>
-        <p className={`score-value${unplayed ? " muted" : ""}`}>{score7(chart.score)}</p>
+        <p className={`score-value${unplayed ? " muted" : ""}`}>
+          <Count value={chart.score} format={score7} />
+        </p>
         <p className="score-accuracy">
           {unplayed ? t.overview.notPlayed : `${chart.accuracy.toFixed(2)}%`}
         </p>
