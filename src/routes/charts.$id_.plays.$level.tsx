@@ -60,16 +60,22 @@ function PlaysPage() {
             </span>
             {t.tabs.leaderboard}
           </Link>
-          <div className="chart-player-heading">
-            <h1 className="panel-title">
-              <Link to="/charts/$id" params={{ id: song.id }}>
+          <Link
+            to="/charts/$id"
+            params={{ id: song.id }}
+            className="chart-player-heading song-link"
+          >
+            <img src={`/covers/${song.id}.thumb.avif`} alt="" />
+            <div>
+              <h1 className="panel-title">
                 {song.title}
-              </Link>
-            </h1>
-            <p className="meta">
-              {song.artist} · {level} {constant.toFixed(1)}
-            </p>
-          </div>
+                <Arrow />
+              </h1>
+              <p className="meta">
+                {song.artist} · {level} {constant.toFixed(1)}
+              </p>
+            </div>
+          </Link>
           <span className="chart-player-levels">
             {songLevels(song.id).map((name) => (
               <Link
