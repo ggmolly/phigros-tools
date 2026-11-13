@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { MainMenu } from "../components/main-menu";
 import { Overview } from "../components/overview";
@@ -39,6 +39,19 @@ function OverviewRoute() {
       void getProfile({ data: profileId }).then((found) => setFetched(found ?? undefined));
   }, [profileId, rendered]);
   const profile = rendered ?? (fetched?.player.id === profileId ? fetched : undefined);
+  const navigate = useNavigate();
+  const masked = useRouterState({ select: (state) => !!state.location.maskedLocation });
+  // the address bar shows the profile's public url so it can be copied, and goes back to / once signed out. the router
+  // skips a navigation to the same path and state, so the state names the profile
+  useEffect(() => {
+    if (!!profileId !== masked)
+      void navigate({
+        to: "/",
+        replace: true,
+        state: { profile: profileId },
+        mask: profileId ? { to: "/players/$id", params: { id: profileId } } : undefined,
+      });
+  }, [profileId, masked, navigate]);
   return (
     <div id="panel-overview" role="tabpanel" aria-labelledby="tab-overview" className="tab-panel">
       {loaded && <PhigrosppBar />}
