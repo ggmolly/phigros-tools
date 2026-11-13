@@ -1,7 +1,15 @@
+/* Saira is declared over the same two weight ranges as the φ faces below, so each pair makes one face: with a
+ * single 100 to 900 face, text at 600 and up went to the φ-only face, and from there to the system's sans. */
 @font-face {
   font-family: Saira;
   src: url("/fonts/Saira.woff2") format("woff2");
-  font-weight: 100 900;
+  font-weight: 100 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: Saira;
+  src: url("/fonts/Saira.woff2") format("woff2");
+  font-weight: 600 900;
   font-display: swap;
 }
 /* The chart player's HUD lettering: Saira at a condensed width, like the game's (scripts/build-player-font.ts). */
