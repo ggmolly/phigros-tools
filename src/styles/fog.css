@@ -1,0 +1,95 @@
+/* ---------- Fog backdrop: the selected song's cover colours, blurred like the game's menus ---------- */
+/* Nine registered colours (a 3×3 grid, see src/palettes.ts) so switching songs crossfades smoothly. The
+ * real default is Spasmodic's palette, set inline on <html> (DEFAULT_PALETTE); these initial
+ * values are only the fallback the syntax requires. */
+@property --fog-0 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #000;
+}
+@property --fog-1 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #000;
+}
+@property --fog-2 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #000;
+}
+@property --fog-3 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #000;
+}
+@property --fog-4 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #000;
+}
+@property --fog-5 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #000;
+}
+@property --fog-6 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #000;
+}
+@property --fog-7 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #000;
+}
+@property --fog-8 {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #000;
+}
+:root {
+  transition:
+    --fog-0 1.4s ease,
+    --fog-1 1.4s ease,
+    --fog-2 1.4s ease,
+    --fog-3 1.4s ease,
+    --fog-4 1.4s ease,
+    --fog-5 1.4s ease,
+    --fog-6 1.4s ease,
+    --fog-7 1.4s ease,
+    --fog-8 1.4s ease;
+}
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(55% 50% at 50% 45%, var(--fog-4) 0%, transparent 72%),
+    radial-gradient(50% 50% at 50% -6%, var(--fog-1) 0%, transparent 72%),
+    radial-gradient(50% 50% at 50% 106%, var(--fog-7) 0%, transparent 72%),
+    radial-gradient(45% 55% at -4% 50%, var(--fog-3) 0%, transparent 72%),
+    radial-gradient(45% 55% at 104% 50%, var(--fog-5) 0%, transparent 72%),
+    radial-gradient(55% 60% at 0% 0%, var(--fog-0) 0%, transparent 72%),
+    radial-gradient(55% 60% at 100% 0%, var(--fog-2) 0%, transparent 72%),
+    radial-gradient(55% 60% at 0% 100%, var(--fog-6) 0%, transparent 72%),
+    radial-gradient(55% 60% at 100% 100%, var(--fog-8) 0%, transparent 72%),
+    color-mix(in srgb, var(--fog-4) 72%, #000);
+}
+.bokeh {
+  position: absolute;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.3);
+  box-shadow: 0 0 22px 8px rgb(255 255 255 / 0.12);
+  filter: blur(1.5px);
+  animation: drift 24s ease-in-out infinite alternate;
+}
+@keyframes drift {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(40px, -60px);
+  }
+}

@@ -1,0 +1,173 @@
+/* ---------- Records ---------- */
+.records {
+  padding-bottom: 14px;
+}
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 14px 22px;
+  margin-bottom: 16px;
+}
+.search-field {
+  flex: 0 1 280px;
+}
+.seg {
+  display: flex;
+  gap: 6px;
+  padding: 0 6px;
+}
+.seg-option {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 52px;
+  height: 36px;
+  padding: 0 14px;
+  font-size: 15px;
+}
+.seg-option::before {
+  background: var(--glass-strong);
+}
+.seg-option:hover::before {
+  background: rgb(0 0 0 / 0.95);
+}
+.seg-option[aria-pressed="true"] {
+  color: var(--ink);
+}
+.seg-option[aria-pressed="true"]::before {
+  background: var(--white);
+}
+.seg-ez[aria-pressed="true"]::before {
+  background: var(--ez);
+}
+.seg-hd[aria-pressed="true"]::before {
+  background: var(--hd);
+}
+.seg-in[aria-pressed="true"]::before {
+  background: var(--in);
+}
+.seg-at[aria-pressed="true"]::before {
+  background: var(--at);
+}
+.seg-ez[aria-pressed="true"],
+.seg-hd[aria-pressed="true"],
+.seg-in[aria-pressed="true"],
+.seg-at[aria-pressed="true"] {
+  color: #fff;
+}
+.seg-option:focus-visible {
+  outline: 0;
+}
+.filters .select {
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+.filters .select-field {
+  width: 170px;
+}
+/* Grow to fit the chosen label (long chapter names) instead of clipping it. */
+@supports (field-sizing: content) {
+  .filters .select-field {
+    width: auto;
+    min-width: 170px;
+    max-width: 100%;
+    field-sizing: content;
+  }
+}
+.table-scroll {
+  max-height: calc(100vh - 290px);
+  min-height: 320px;
+  overflow: auto;
+  margin: 0 -12px;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 0.35) transparent;
+}
+table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 8px 14px;
+  background: rgb(14 8 14 / 0.94);
+  color: var(--dim);
+  font-size: 13px;
+  font-weight: 400;
+  text-align: left;
+  white-space: nowrap;
+}
+td {
+  padding: 8px 14px;
+  border-bottom: 1px solid rgb(255 255 255 / 0.06);
+  white-space: nowrap;
+}
+tbody tr {
+  transition: background-color 0.12s ease;
+}
+tbody tr:hover {
+  background: rgb(255 255 255 / 0.06);
+}
+.num {
+  font-size: 17px;
+}
+.record-index {
+  width: 44px;
+  color: var(--faint);
+  font-size: 14px;
+}
+tr.in-best .record-index {
+  color: var(--text);
+}
+tr.b27-edge td {
+  border-top: 1px dashed rgb(255 255 255 / 0.55);
+}
+.record-song {
+  display: flex;
+  flex-direction: column;
+  max-width: 320px;
+  line-height: 1.25;
+}
+.record-title {
+  overflow: hidden;
+  font-size: 17px;
+  text-align: left;
+  text-overflow: ellipsis;
+}
+.record-pick:hover {
+  color: var(--glow);
+  text-shadow: 0 0 10px rgb(143 220 255 / 0.5);
+}
+.record-artist {
+  overflow: hidden;
+  color: var(--dim);
+  font-size: 13px;
+  text-overflow: ellipsis;
+}
+.record-score {
+  letter-spacing: 0.05em;
+}
+.record-rank {
+  display: inline-flex;
+  align-items: center;
+}
+.record-rank .rank {
+  font-size: 22px;
+}
+.record-rks {
+  font-size: 18px;
+}
+.record-gain {
+  display: block;
+  color: var(--glow);
+  font-size: 13px;
+}
+.empty-row {
+  padding: 22px 14px;
+}

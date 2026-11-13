@@ -1,0 +1,286 @@
+/* ---------- Hero: the in-game profile strip, totals and the per-difficulty stat bar ---------- */
+/* Identity on top (avatar | name band | RKS tag | Challenge badge, as in the game's Profile screen),
+ * then the overall totals beside the completion stat bar, then the self-intro. */
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 30px 64px;
+  margin: 0 0 28px;
+  padding: 30px 34px 28px;
+  background: var(--glass);
+}
+.hero-id {
+  display: flex;
+  align-items: flex-start;
+  grid-column: 1 / -1;
+  min-width: 0;
+  /* Room for the Share button in the top-right corner. */
+  margin-right: 190px;
+  padding-bottom: 16px;
+}
+/* Avatar tile cut on the shared slant (--tan × its height), overlapping the name band like the game's. */
+.hero-avatar {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  width: 136px;
+  height: 112px;
+  margin-right: -28px;
+  object-fit: cover;
+  clip-path: polygon(28px 0, 100% 0, calc(100% - 28px) 100%, 0 100%);
+}
+.hero-name {
+  display: flex;
+  align-items: center;
+  flex: 0 1 auto;
+  min-width: 0;
+  height: 112px;
+  padding: 0 84px 0 58px;
+  font-size: 44px;
+  font-weight: 400;
+  line-height: 1.1;
+}
+.hero-name::before {
+  background: var(--ink);
+}
+/* Ellipsis on an inner span: overflow on .hero-name itself would clip the skewed band's corners. */
+.hero-name-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* White tag hanging off the band's lower right, like the game's RKS tag (7.22 under "ggmolly"). */
+.hero-rks {
+  display: flex;
+  align-items: baseline;
+  flex: none;
+  gap: 12px;
+  align-self: flex-end;
+  height: 60px;
+  margin: 0 0 -16px -56px;
+  padding: 6px 30px 0;
+  color: var(--ink);
+}
+.hero-rks::before {
+  background: var(--white);
+}
+.hero-rks-label {
+  font-size: 18px;
+  font-weight: 500;
+}
+.ranking-number {
+  font-size: 50px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+/* Challenge Mode level in its tier colour, the game's badge beside the RKS. */
+.challenge-badge {
+  display: grid;
+  place-items: center;
+  flex: none;
+  align-self: flex-end;
+  /* As tall as the RKS tag beside it. */
+  height: 60px;
+  min-width: 76px;
+  margin: 0 0 -16px 10px;
+  padding: 0 18px;
+  font-size: 40px;
+  line-height: 1;
+}
+.challenge-white {
+  color: var(--ink);
+}
+.challenge-white::before {
+  background: var(--white);
+}
+.challenge-green::before {
+  background: var(--ez);
+}
+.challenge-blue::before {
+  background: var(--hd);
+}
+.challenge-red::before {
+  background: var(--in);
+}
+.challenge-gold {
+  color: var(--ink);
+}
+.challenge-gold::before {
+  background: #f2c65a;
+}
+.challenge-rainbow {
+  color: var(--ink);
+}
+.challenge-rainbow::before {
+  background: linear-gradient(100deg, #ff9a9a, #ffd36e, #8cf29a, #8fdcff, #c79bff);
+}
+.hero-share {
+  position: absolute;
+  top: 30px;
+  right: 34px;
+  z-index: 1;
+}
+a.btn[aria-disabled="true"] {
+  opacity: 0.38;
+  pointer-events: none;
+}
+#shareDialog {
+  width: min(1040px, calc(100% - 24px));
+}
+.share-preview {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 9;
+  margin: 16px 0;
+  background: rgb(0 0 0 / 0.4);
+}
+.share-preview img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+/* The grid formats are portrait: fit the dialog's height instead of its width. */
+.share-preview-b30,
+.share-preview-fc30 {
+  aspect-ratio: auto;
+  height: min(62vh, 680px);
+}
+.share-preview-b30 img,
+.share-preview-fc30 img {
+  width: auto;
+  height: 100%;
+}
+.share-format {
+  margin-top: 12px;
+}
+.share-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px 28px;
+}
+.share-name {
+  display: flex;
+  flex: 1 1 260px;
+  flex-direction: column;
+  gap: 6px;
+}
+.share-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 0 6px;
+}
+.share-status {
+  margin-top: 14px;
+  font-size: 14px;
+}
+.hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 40px;
+  padding-left: 8px;
+}
+.hero-stats .stat {
+  align-items: flex-start;
+  padding: 0;
+}
+.hero-stats .stat-value {
+  font-size: 34px;
+}
+.hero-stats .stat-total {
+  font-size: 17px;
+}
+.hero-stats .stat-label {
+  color: var(--dim);
+}
+.hero-stats {
+  grid-row: 2;
+}
+.hero .stat-bar {
+  grid-column: 2;
+  grid-row: 2;
+}
+.hero-intro {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  max-width: 70ch;
+  margin-top: -12px;
+  padding-left: 8px;
+  color: var(--dim);
+  font-size: 15px;
+  white-space: pre-line;
+}
+.stat-bar {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: stretch;
+}
+.stat-bar::before {
+  content: "";
+  position: absolute;
+  inset: 8px 0;
+  z-index: -1;
+  background: rgb(20 18 26 / 0.7);
+  transform: skewX(var(--skew));
+}
+.level-switch {
+  display: flex;
+  flex: none;
+}
+.level-switch-option {
+  display: grid;
+  place-items: center;
+  width: 62px;
+  color: var(--dim);
+  font-size: 22px;
+}
+.level-switch-option:hover {
+  color: var(--text);
+}
+.level-switch-option[aria-pressed="true"] {
+  width: 96px;
+  color: var(--ink);
+  font-size: 34px;
+}
+.level-switch-option[aria-pressed="true"]::before {
+  background: var(--white);
+}
+.level-switch-option:focus-visible {
+  outline: 0;
+}
+.stat-row {
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  flex: 1;
+  min-width: 0;
+}
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  padding: 12px 8px;
+  text-align: center;
+}
+.stat-value {
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 1.05;
+}
+.stat-total {
+  font-size: 18px;
+}
+.stat-label {
+  font-size: 14px;
+  white-space: nowrap;
+}
+.negative {
+  color: var(--negative);
+}

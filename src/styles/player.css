@@ -1,0 +1,225 @@
+/* ---------- Chart player (/charts/<id>/play/<level>) ---------- */
+/* Rows start at the shell's clipped edge: pad them so skewed backgrounds keep their slant. */
+.chart-player-bar,
+.chart-player-transport {
+  padding-inline: 10px;
+}
+.chart-player-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 22px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.chart-player-heading {
+  min-width: 0;
+}
+.chart-player-heading .panel-title {
+  margin: 0;
+}
+.chart-player-heading .meta {
+  margin: 2px 0 0;
+  font-size: 15px;
+}
+/* the player's tag sits on the line's text, its avatar no taller than the line */
+.chart-player-heading .leaderboard-player {
+  gap: 6px;
+  vertical-align: middle;
+}
+.chart-player-heading .leaderboard-avatar {
+  width: 20px;
+  height: 20px;
+}
+.chart-player-back {
+  display: inline-flex;
+  transform: scaleX(-1);
+}
+.chart-player-levels {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+.chart-player-levels a:not([aria-current]) {
+  opacity: 0.45;
+  transition: opacity 0.15s ease;
+}
+.chart-player-levels a:hover {
+  opacity: 1;
+}
+.chart-player-stage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  width: min(100%, (100vh - 250px) * 16 / 9);
+  margin-inline: auto;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 18px 50px rgb(0 0 0 / 0.45);
+}
+.chart-player-stage img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(10px) brightness(0.3);
+  transform: scale(1.05);
+}
+.chart-player-stage canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+.chart-player-transport {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: min(100%, (100vh - 250px) * 16 / 9);
+  margin: 16px auto 0;
+}
+.chart-player-play {
+  min-width: 104px;
+}
+.chart-player-time {
+  min-width: 3.2em;
+  color: var(--dim);
+  text-align: center;
+}
+/* The elapsed time copies a link to that moment (?t=). */
+.chart-player-share {
+  position: relative;
+  padding: 4px 2px;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline dotted rgb(255 255 255 / 0.35);
+  text-underline-offset: 4px;
+}
+.chart-player-share:hover,
+.chart-player-share:focus-visible {
+  color: var(--text);
+}
+.chart-player-copied {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  translate: -50% 0;
+  pointer-events: none;
+}
+/* A slanted white note that rises in, holds, then drifts up as it fades (one animation, as long as the timer). */
+.chart-player-copied > span {
+  display: block;
+  padding: 2px 14px;
+  background: var(--white);
+  color: var(--ink);
+  font-size: 13px;
+  white-space: nowrap;
+  clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+  animation: copied-note 1.8s ease both;
+}
+@keyframes copied-note {
+  0% {
+    opacity: 0;
+    translate: 0 6px;
+  }
+  12%,
+  80% {
+    opacity: 1;
+    translate: 0 0;
+  }
+  100% {
+    opacity: 0;
+    translate: 0 -4px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chart-player-copied > span {
+    animation-name: copied-note-fade;
+  }
+}
+@keyframes copied-note-fade {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  12%,
+  80% {
+    opacity: 1;
+  }
+}
+.chart-player-settings {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+  gap: 26px 56px;
+  width: min(100%, (100vh - 250px) * 16 / 9);
+  margin: 22px auto 0;
+  padding: 22px 30px 26px;
+}
+.player-setting {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+.player-setting-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 20px;
+}
+.player-setting .stepper .step:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+/* The game's volume slider: thin slanted caps at both ends of the track. */
+.slider-caps {
+  position: relative;
+  display: flex;
+  padding-inline: 12px;
+}
+.slider-caps::before,
+.slider-caps::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--white);
+  transform: skewX(var(--skew));
+}
+.slider-caps::before {
+  left: 2px;
+}
+.slider-caps::after {
+  right: 2px;
+}
+.player-song {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+}
+.player-song .meta {
+  min-width: 0;
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 640px) {
+  .chart-player-transport {
+    flex-wrap: wrap;
+    gap: 10px 12px;
+  }
+  .chart-player-transport .slider {
+    flex: 1 1 100%;
+    order: 1;
+  }
+  .chart-player-transport .chart-player-time:last-child {
+    margin-left: auto;
+  }
+  .chart-player-settings {
+    padding: 18px 16px 20px;
+  }
+}

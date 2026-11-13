@@ -1,0 +1,162 @@
+/* Minimal reset (the parts of Tailwind's preflight this sheet relies on); layered so every rule below wins. */
+@layer base {
+  *,
+  ::before,
+  ::after,
+  ::backdrop {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0 solid;
+  }
+  html {
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    font-family: Saira, "Segoe UI", sans-serif;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-size: inherit;
+    font-weight: inherit;
+  }
+  a {
+    color: inherit;
+    text-decoration: inherit;
+  }
+  small {
+    font-size: 80%;
+  }
+  table {
+    border-collapse: collapse;
+  }
+  ol,
+  ul {
+    list-style: none;
+  }
+  img,
+  svg,
+  canvas {
+    display: block;
+    vertical-align: middle;
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    border-radius: 0;
+    background-color: transparent;
+  }
+  ::placeholder {
+    opacity: 1;
+    color: color-mix(in oklab, currentcolor 50%, transparent);
+  }
+  [hidden]:where(:not([hidden="until-found"])) {
+    display: none !important;
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .min-w-0 {
+    min-width: 0;
+  }
+}
+
+/*
+ * Phigros design tokens (sampled from the game's screens, see ui/).
+ * Everything slanted uses ONE angle: parallelograms are drawn by a skewed ::before behind upright content,
+ * so the slope is identical whatever the element's height. Fixed-height controls use clip-path with --tan.
+ */
+@layer base {
+  :root {
+    color-scheme: dark;
+    --skew: -14deg;
+    --tan: 0.25;
+    --ink: #000;
+    --white: #fff;
+    --text: #fff;
+    --dim: rgb(255 255 255 / 0.66);
+    --faint: rgb(255 255 255 / 0.4);
+    --hairline: rgb(255 255 255 / 0.12);
+    --glass: rgb(10 5 12 / 0.5);
+    --glass-strong: rgb(6 3 8 / 0.78);
+    --glass-soft: rgb(12 6 14 / 0.28);
+    --ez: #4aa84a;
+    --hd: #3a78c0;
+    --in: #c43a33;
+    --at: #4a4a52;
+    --phi: #f5f25b;
+    --fc: #4f8df5;
+    --negative: #ff9d94;
+    --glow: #8fdcff;
+  }
+  html {
+    overflow-x: clip;
+    background: #3a2b35;
+  }
+  body {
+    min-height: 100vh;
+    margin: 0;
+    color: var(--text);
+    background: transparent;
+    font:
+      400 16px / 1.45 Saira,
+      "Segoe UI",
+      sans-serif;
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+  }
+  button,
+  input,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+  button {
+    background: none;
+    border: 0;
+    padding: 0;
+    border-radius: 0;
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  summary {
+    cursor: pointer;
+  }
+  :focus-visible {
+    outline: 2px solid var(--glow);
+    outline-offset: 3px;
+  }
+  ::selection {
+    background: #fff;
+    color: #000;
+  }
+  [hidden] {
+    display: none !important;
+  }
+}

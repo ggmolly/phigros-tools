@@ -1,0 +1,154 @@
+/* ---------- Song reference pages (/charts) ---------- */
+.breadcrumb {
+  margin: 0 0 10px;
+  font-size: 14px;
+}
+.breadcrumb a:hover,
+.chapter-link:hover,
+.artist-link:hover,
+.song-links a:hover,
+.link-button:hover {
+  color: var(--glow);
+}
+.link-button {
+  color: var(--dim);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.song-thumb {
+  display: block;
+  width: 48px;
+  height: 27px;
+  object-fit: cover;
+}
+/* Stacked panels: the song and its related songs (.song-main), its charts and stats (.song-scroll). */
+.song-layout,
+.song-main,
+.song-scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.song-detail {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 26px;
+  align-items: start;
+}
+.song-detail-media img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.song-detail-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+.song-diff-table {
+  min-width: 0;
+}
+.chart-stats-scroll {
+  overflow-x: auto;
+  margin: 0 -12px;
+}
+.chart-stats-scroll table {
+  min-width: max-content;
+}
+.song-links ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0 26px;
+  margin-top: 10px;
+}
+.song-links a {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+  border-top: 1px solid var(--hairline);
+  line-height: 1.25;
+}
+.song-links .record-title {
+  white-space: nowrap;
+}
+.song-pager {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 16px;
+}
+.song-pager .import-option {
+  width: auto;
+  max-width: 50%;
+}
+/* One line per title, so a long neighbour never changes the pager's height (and shifts it). */
+.song-pager .import-option > span:not(.arrow-chip) {
+  min-width: 0;
+}
+.song-pager strong {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.song-pager-prev .button-arrow {
+  transform: scaleX(-1);
+}
+.stat-help {
+  display: inline-grid;
+  place-items: center;
+  width: 15px;
+  height: 15px;
+  margin-left: 6px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.12);
+  color: var(--dim);
+  font-size: 11px;
+  font-style: normal;
+  text-decoration: none;
+  cursor: help;
+}
+/* Wide screens: two columns sized to the window, each scrolling on its own (the page itself doesn't). */
+@media (min-width: 1101px) and (min-height: 560px) {
+  .song-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: 18px;
+    height: calc(100svh - 196px);
+  }
+  .song-layout .song-detail {
+    grid-template-columns: 1fr;
+    align-content: start;
+  }
+  .song-side {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .song-scroll {
+    flex: 1;
+    min-height: 0;
+  }
+  .song-main {
+    min-height: 0;
+  }
+  .song-main,
+  .song-scroll {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: rgb(255 255 255 / 0.35) transparent;
+  }
+  .song-side .song-pager {
+    margin-bottom: 4px;
+  }
+}
+@media (max-width: 760px) {
+  .song-detail {
+    grid-template-columns: 1fr;
+  }
+  .song-pager {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,59 @@
+/* ---------- Panels ---------- */
+/* Shape rule (the game's): content planes (panels, the hero, the Best list) are upright translucent rectangles,
+ * since a tall plane skewed at --skew would drift ~a quarter of its height sideways; everything strip- or
+ * control-sized on them (tabs, buttons, chips, rows, stat bars, tags) is a parallelogram slanted on both sides.
+ * Headings sit on the plane as plain Title Case text, like "My Profile" in the game's settings, never on a strip. */
+.panel {
+  position: relative;
+  padding: 22px 30px 26px;
+  background: var(--glass);
+  overflow: clip;
+}
+.panel-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin: 0 0 18px;
+}
+.panel-title {
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+}
+.panel-count {
+  color: var(--dim);
+  font-size: 15px;
+}
+.panel-actions {
+  display: flex;
+  gap: 16px;
+  margin-left: auto;
+}
+.meta {
+  color: var(--dim);
+}
+.footnote {
+  margin-top: 8px;
+  color: var(--dim);
+  font-size: 14px;
+}
+.warning {
+  position: relative;
+  margin: 0 0 12px;
+  padding: 7px 16px 7px 30px;
+  background: rgb(0 0 0 / 0.45);
+  color: #ffe7a0;
+  font-size: 15px;
+}
+.warning::before {
+  content: "";
+  position: absolute;
+  left: 11px;
+  top: 6px;
+  bottom: 6px;
+  width: 4px;
+  background: #f3d36b;
+  transform: skewX(var(--skew));
+}

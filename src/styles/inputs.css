@@ -1,0 +1,143 @@
+/* ---------- Inputs ---------- */
+.field {
+  height: 40px;
+  min-width: 0;
+  padding: 0 14px;
+  background: rgb(0 0 0 / 0.62);
+  border: 1px solid rgb(255 255 255 / 0.8);
+  border-radius: 0;
+  color: var(--text);
+}
+.field::placeholder {
+  color: var(--faint);
+}
+.field:hover {
+  background: rgb(0 0 0 / 0.75);
+}
+.field:focus {
+  outline: 0;
+  border-color: #fff;
+  box-shadow:
+    0 0 0 1px #fff,
+    0 0 18px rgb(255 255 255 / 0.22);
+}
+.field-white {
+  --h: 40px;
+  height: var(--h);
+  width: 116px;
+  padding: 0 calc(var(--h) * var(--tan) + 6px);
+  border: 0;
+  border-radius: 0;
+  background: var(--white);
+  color: var(--ink);
+  font-size: 22px;
+  clip-path: polygon(
+    calc(var(--h) * var(--tan)) 0,
+    100% 0,
+    calc(100% - var(--h) * var(--tan)) 100%,
+    0 100%
+  );
+}
+.field-white:focus {
+  outline: 0;
+  background: #e8f6ff;
+}
+.select {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.select-label,
+.field-label {
+  color: var(--dim);
+  font-size: 13px;
+}
+.select-field {
+  --h: 40px;
+  height: var(--h);
+  min-width: 0;
+  padding: 0 44px 0 calc(var(--h) * var(--tan) + 10px);
+  border: 0;
+  border-radius: 0;
+  appearance: none;
+  color: var(--text);
+  font-size: 18px;
+  clip-path: polygon(
+    calc(var(--h) * var(--tan)) 0,
+    100% 0,
+    calc(100% - var(--h) * var(--tan)) 100%,
+    0 100%
+  );
+  background:
+    linear-gradient(45deg, transparent 50%, #fff 50%) calc(100% - 30px) 52% / 6px 6px no-repeat,
+    linear-gradient(135deg, #fff 50%, transparent 50%) calc(100% - 24px) 52% / 6px 6px no-repeat,
+    var(--glass-strong);
+}
+.select-field:hover {
+  background-color: rgb(0 0 0 / 0.9);
+}
+.select-field:focus-visible {
+  outline: 0;
+  box-shadow: inset 0 -2px var(--glow);
+}
+.select-field option {
+  background: #1a131a;
+  color: #fff;
+}
+/* Where supported, the option list is drawn in the page instead of an OS popup window (which can
+ * hang some Chromium setups), so it can wear the game's look: dark glass, white fill on the chosen one. */
+/* Phones: when the list doesn't fit beside its select, it spans the screen instead. */
+@position-try --picker-full-width {
+  position-area: block-end;
+  justify-self: stretch;
+  margin-inline: 12px;
+}
+@supports (appearance: base-select) {
+  .select-field,
+  .select-field::picker(select) {
+    appearance: base-select;
+  }
+  .select-field {
+    align-items: center;
+    overflow: hidden;
+    white-space: nowrap; /* one line; a label too long for the row is clipped like a native select */
+  }
+  .select-field::picker-icon {
+    display: none; /* the chevron is drawn by the background */
+  }
+  .select-field::picker(select) {
+    min-width: anchor-size(width);
+    max-height: min(420px, 60vh);
+    margin-top: 4px;
+    padding: 6px 0;
+    border: 0;
+    background: #100a10;
+    position-try-fallbacks: --picker-full-width;
+    color: var(--text);
+    box-shadow: 0 20px 60px rgb(0 0 0 / 0.6);
+    scrollbar-width: thin;
+    scrollbar-color: rgb(255 255 255 / 0.35) transparent;
+  }
+  .select-field option {
+    padding: 7px 22px;
+    background: transparent;
+    font-size: 16px;
+    white-space: normal;
+  }
+  .select-field option::checkmark {
+    display: none;
+  }
+  .select-field option:hover,
+  .select-field option:focus-visible {
+    outline: 0;
+    color: var(--glow);
+  }
+  .select-field option:checked {
+    background: var(--white);
+    color: var(--ink);
+  }
+  .select-field option:disabled {
+    color: var(--faint);
+  }
+}

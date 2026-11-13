@@ -1,0 +1,154 @@
+.profile-card {
+  isolation: isolate;
+  overflow: hidden;
+}
+/* the illustration the player shows in Phigros, dimmed behind their card and fading out at the bottom */
+.profile-banner {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.4);
+  mask-image: linear-gradient(to bottom, #000 30%, transparent);
+}
+.profile-card .hero-id {
+  margin-right: 0;
+}
+.profile-cleared .stat-value {
+  text-shadow: 0 0 10px rgb(255 255 255 / 0.45);
+}
+.profile-fc .stat-value {
+  color: var(--fc);
+  text-shadow: 0 0 10px rgb(79 141 245 / 0.65);
+}
+.profile-phi .stat-value {
+  color: var(--phi);
+  text-shadow:
+    0 0 5px rgb(245 242 91 / 0.85),
+    0 0 16px rgb(245 242 91 / 0.5);
+}
+.profile-details {
+  display: flex;
+  flex-wrap: wrap;
+  grid-column: 1 / -1;
+  gap: 10px 40px;
+  margin: 0;
+  padding: 18px 8px 0;
+  border-top: 1px solid var(--hairline);
+}
+.profile-details dt {
+  color: var(--dim);
+  font-size: 14px;
+}
+.profile-details dd {
+  margin: 0;
+  font-size: 20px;
+}
+.profile-number {
+  color: var(--faint);
+  font-size: 0.55em;
+  margin-left: 6px;
+}
+.profile-card ~ .panel,
+.profile-card ~ .select-screen {
+  margin-top: 18px;
+}
+.profile-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.profile-list li {
+  display: grid;
+  align-items: center;
+  gap: 4px 14px;
+  padding: 10px 4px;
+  border-bottom: 1px solid var(--hairline);
+}
+.profile-top li {
+  grid-template-columns: minmax(0, 1fr) 5.2em 4.8em 24px 6.8em 5.8em 48px;
+}
+.profile-recent li {
+  /* the date takes the RKS and status columns of the top plays, so both lists line up */
+  grid-template-columns: minmax(0, 1fr) 5.2em 4.8em 24px calc(12.6em + 14px) 48px;
+}
+.profile-activity li {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+.profile-uncounted {
+  opacity: 0.55;
+}
+.profile-chart {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.profile-chart a {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.profile-more {
+  margin-top: 12px;
+}
+@media (max-width: 700px) {
+  .profile-top li,
+  .profile-recent li {
+    grid-template-columns: minmax(0, 1fr) 5.6em 28px 52px;
+  }
+  .profile-activity li {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .profile-top li > :nth-child(3),
+  .profile-top li > :nth-child(5),
+  .profile-top li > :nth-child(6),
+  .profile-recent li > :nth-child(3),
+  .profile-recent li > :nth-child(5) {
+    display: none;
+  }
+}
+.rks-plot {
+  touch-action: pan-y;
+}
+.rks-tip {
+  position: absolute;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 8px 10px;
+  translate: 8px;
+  background: var(--glass-strong);
+  pointer-events: none;
+  white-space: nowrap;
+}
+.rks-tip.end {
+  translate: calc(-100% - 8px);
+}
+@media (max-width: 720px) {
+  .profile-card .stat-bar {
+    flex-direction: row;
+  }
+  .profile-card .stat-bar::before {
+    inset: 8px 0;
+    transform: skewX(var(--skew));
+  }
+  .profile-card .hero-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .profile-card .hero-stats .stat-label {
+    text-align: left;
+    white-space: normal;
+  }
+  .profile-details {
+    gap: 10px 28px;
+    padding: 14px 4px 0;
+  }
+  .profile-details dd {
+    font-size: 17px;
+  }
+}

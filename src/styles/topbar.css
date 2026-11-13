@@ -1,0 +1,189 @@
+/* ---------- Top bar: black corner block + tab strip + player tag ---------- */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  height: 68px;
+  padding-right: 28px;
+  overflow-x: clip;
+  background: linear-gradient(to bottom, rgb(24 14 22 / 0.55), rgb(24 14 22 / 0));
+  backdrop-filter: blur(12px);
+}
+.corner {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  flex: none;
+  padding: 0 46px 0 28px;
+}
+.corner::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 0 -40px;
+  z-index: -1;
+  background: var(--ink);
+  transform: skewX(var(--skew));
+  transform-origin: bottom;
+}
+.corner::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: -14px;
+  width: 7px;
+  background: var(--white);
+  transform: skewX(var(--skew));
+  transform-origin: bottom;
+}
+.brand-name {
+  font-size: 25px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+.brand-dot {
+  color: var(--glow);
+  text-shadow: 0 0 8px var(--glow);
+}
+.brand-sub {
+  color: var(--dim);
+  font-weight: 300;
+}
+.github-link {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex: none;
+  margin-left: auto;
+  color: var(--dim);
+  font-size: 14px;
+  transition: color 0.15s ease;
+}
+.player-area ~ .github-link {
+  margin-left: 0;
+}
+.github-link:hover {
+  color: var(--text);
+}
+.github-icon {
+  width: 20px;
+  height: 20px;
+}
+.github-stars {
+  font-variant-numeric: tabular-nums;
+}
+.lang-switch {
+  flex: none;
+  padding: 2px 4px;
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--dim);
+  font: inherit;
+}
+.lang-switch:hover {
+  color: var(--text);
+}
+.lang-switch option {
+  background: #10141c;
+  color: #fff;
+}
+.tabs {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex: none;
+  align-self: stretch;
+  padding: 0 22px;
+}
+.tabs::before {
+  content: "";
+  position: absolute;
+  inset: 9px 0;
+  z-index: -1;
+  background: var(--glass-strong);
+  transform: skewX(var(--skew));
+}
+.tab {
+  display: grid;
+  place-items: center;
+  padding: 0 30px;
+  font-size: 19px;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+.tab:hover:not([aria-selected="true"]) {
+  color: var(--glow);
+}
+.tab[aria-selected="true"] {
+  color: var(--ink);
+  font-size: 21px;
+}
+.tab[aria-selected="true"]::before {
+  background: var(--white);
+}
+.tab:focus-visible {
+  outline: 0;
+}
+.player-area {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  margin-left: auto;
+  min-width: 0;
+}
+.player-tag {
+  display: flex;
+  align-items: flex-end;
+  min-width: 0;
+}
+/* Avatar tile cut on the same slant as the name band it sits against, like the in-game profile */
+.player-avatar {
+  position: relative;
+  z-index: 1;
+  width: 58px;
+  height: 46px;
+  margin-right: -14px;
+  object-fit: cover;
+  clip-path: polygon(11px 0, 100% 0, calc(100% - 11px) 100%, 0 100%);
+}
+.player-name {
+  overflow: hidden;
+  max-width: 260px;
+  padding: 7px 30px 9px 24px;
+  font-size: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.player-name::before {
+  background: var(--ink);
+}
+.player-rks {
+  margin-left: -12px;
+  margin-bottom: -6px;
+  padding: 0 16px;
+  color: var(--ink);
+  font-size: 19px;
+}
+.player-rks::before {
+  background: var(--white);
+}
+
+.app-shell {
+  width: min(1640px, calc(100% - 48px));
+  margin: 0 auto;
+  padding-top: 18px;
+  overflow-x: clip;
+}
+.tab-panel {
+  animation: panel-in 0.22s ease-out;
+}
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+}

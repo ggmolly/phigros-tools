@@ -1,0 +1,333 @@
+@media (max-width: 720px) {
+  body {
+    font-size: 15px;
+  }
+  .site-footer {
+    width: calc(100% - 24px);
+  }
+  .app-shell {
+    width: calc(100% - 24px);
+    padding-top: 12px;
+  }
+  .corner {
+    padding: 0 32px 0 18px;
+  }
+  .brand-name {
+    font-size: 21px;
+  }
+  .player-avatar {
+    width: 48px;
+    height: 38px;
+    margin-right: -12px;
+    clip-path: polygon(9px 0, 100% 0, calc(100% - 9px) 100%, 0 100%);
+  }
+  .player-name {
+    max-width: 130px;
+    padding: 5px 22px 7px 18px;
+    font-size: 16px;
+  }
+  .player-rks {
+    font-size: 16px;
+  }
+  /* Its own line under the brand: the player tag left, the actions right, clear of the tab strip. */
+  .player-area {
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    padding: 2px 0 8px 12px;
+  }
+  .player-tag {
+    align-items: center;
+  }
+  .player-rks {
+    margin-bottom: 0;
+  }
+  .tabs {
+    padding: 0 12px;
+  }
+  .tab {
+    padding: 0 16px;
+    font-size: 16px;
+  }
+  .stepper {
+    gap: 10px;
+  }
+  .tab[aria-selected="true"] {
+    font-size: 17px;
+  }
+  .import-band {
+    grid-template-columns: 1fr;
+    gap: 2px;
+    padding: 14px 26px;
+  }
+  .import-band::before {
+    transform: none;
+  }
+  .import-heading {
+    display: block;
+    margin-bottom: 6px;
+  }
+  /* Phones: the carousel turns vertical, retracted entries become bands */
+  /* On the phone itself the link is what matters: it comes first, the QR code (for another screen) after. */
+  .taptap-side {
+    order: -1;
+  }
+  .qr-slot {
+    width: 150px;
+  }
+  .menu {
+    --slant: 0px;
+    flex-direction: column;
+    gap: 12px;
+    margin: 12px 0 0;
+    padding: 0;
+    overflow: visible;
+  }
+  .menu-entry {
+    flex: none;
+    min-height: 76px;
+    transition: none;
+  }
+  .menu-entry.is-open {
+    flex: none;
+    min-height: 440px;
+    padding: 20px;
+  }
+  .menu-art,
+  .menu-art img,
+  .menu-sliver-text,
+  .menu-strip::before {
+    transform: none;
+  }
+  .menu-sliver-text {
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 20px;
+  }
+  .menu-sliver-label {
+    writing-mode: horizontal-tb;
+    rotate: none;
+    font-size: 30px;
+  }
+  .menu-strip {
+    padding: 10px;
+  }
+  .hero {
+    gap: 20px;
+    padding: 18px 16px 20px;
+  }
+  .hero-share {
+    position: relative;
+    top: auto;
+    right: auto;
+    justify-self: end;
+    order: -1;
+    margin-bottom: -8px;
+  }
+  /* The name band takes the first line; the RKS tag and Challenge badge hang under its right end. */
+  .hero-id {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    margin-right: 0;
+    padding-bottom: 0;
+  }
+  .hero-avatar {
+    width: 84px;
+    height: 68px;
+    margin-right: -17px;
+    clip-path: polygon(17px 0, 100% 0, calc(100% - 17px) 100%, 0 100%);
+  }
+  /* Fill the line after the avatar so the tags wrap under it. */
+  .hero-name {
+    flex: 1 0 calc(100% - 67px);
+    height: 68px;
+    padding: 0 30px 0 34px;
+    font-size: 26px;
+  }
+  .hero-rks {
+    gap: 8px;
+    height: 44px;
+    margin: -8px 0 0;
+    padding: 4px 20px 0;
+  }
+  .hero-rks-label {
+    font-size: 15px;
+  }
+  .ranking-number {
+    font-size: 36px;
+  }
+  .challenge-badge {
+    height: 44px;
+    min-width: 58px;
+    margin: -8px 4px 0 8px;
+    padding: 0 12px;
+    font-size: 30px;
+  }
+  /* All four totals on one line. */
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 4px;
+  }
+  .hero-stats .stat-value {
+    font-size: 26px;
+  }
+  .hero-stats .stat-total {
+    font-size: 14px;
+  }
+  .hero-intro {
+    padding-left: 4px;
+  }
+  .stat-bar {
+    flex-direction: column;
+  }
+  .stat-bar::before {
+    inset: 44px 0 0;
+    transform: none;
+  }
+  .level-switch-option,
+  .level-switch-option[aria-pressed="true"] {
+    flex: 1;
+    width: auto;
+    height: 42px;
+    font-size: 20px;
+  }
+  .stat-value {
+    font-size: 30px;
+  }
+  .panel {
+    padding: 18px 16px 18px;
+  }
+  .panel-head {
+    margin-bottom: 14px;
+  }
+  .panel-title {
+    font-size: 22px;
+  }
+  .list-head {
+    padding: 18px 16px 0;
+  }
+  .best-list {
+    overflow: clip;
+  }
+  .song-list {
+    height: 460px;
+    min-height: 0;
+    padding: 26px 16px 50px 8px;
+  }
+  .song-row {
+    grid-template-columns: 28px minmax(0, 1fr) 28px 64px;
+    gap: 10px;
+    padding: 0 8px;
+  }
+  .song-row.selected {
+    grid-template-columns: 28px minmax(0, 1fr) 28px 100px;
+    padding-left: 14px;
+  }
+  .song-row.selected::before {
+    inset: 0 6px 0 -4px;
+  }
+  .song-title {
+    font-size: 18px;
+  }
+  .song-row.selected .song-title {
+    font-size: 24px;
+  }
+  .song-row.selected .song-level {
+    width: 100px;
+  }
+  .song-row.selected .song-level-number {
+    font-size: 28px;
+  }
+  .chart-detail {
+    padding: 18px 18px 22px;
+  }
+  .score-bar {
+    flex-wrap: wrap;
+    padding: 0 12px 10px 0;
+  }
+  .score-bar::before {
+    transform: none;
+    inset: 0;
+  }
+  .level-picker {
+    width: 100%;
+  }
+  .level-choice {
+    flex: 1;
+    width: auto;
+    height: 62px;
+  }
+  .score-value {
+    margin-left: 0;
+    padding: 12px 0 0 14px;
+    font-size: 34px;
+  }
+  .score-accuracy {
+    margin-bottom: 6px;
+  }
+  .score-bar .rank {
+    margin-left: auto;
+    font-size: 42px;
+  }
+  .step {
+    width: 44px;
+  }
+  .target-item {
+    grid-template-columns: minmax(0, 1fr) auto 5.2em auto;
+    gap: 8px;
+    font-size: 16px;
+  }
+  .target-accuracy {
+    font-size: 14px;
+  }
+  .target-from {
+    display: none;
+  }
+  .simulator-label,
+  .simulator-value,
+  .simulator-value input {
+    font-size: 21px;
+  }
+  .projection-result .stat-value {
+    font-size: 23px;
+  }
+  .projection-result::before {
+    transform: none;
+  }
+  .filters {
+    gap: 12px;
+  }
+  .search-field {
+    flex: 1 1 100%;
+  }
+  .seg {
+    flex-wrap: wrap;
+    padding: 0 4px;
+  }
+  .filters .select {
+    margin-left: 0;
+  }
+  .table-scroll {
+    margin: 0 -8px;
+    max-height: 480px;
+  }
+  .gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  /* Too small for the overlay, and touch has no hover: a tap opens the song page instead. */
+  .gallery-info {
+    display: none;
+  }
+  .panel-actions {
+    margin-left: 0;
+  }
+  .snapshot-actions .btn {
+    padding: 3px 16px;
+  }
+}

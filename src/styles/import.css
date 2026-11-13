@@ -1,0 +1,56 @@
+/* ---------- Import band (Misc. arrow rows) ---------- */
+.import-band {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: auto repeat(4, minmax(0, 1fr));
+  align-items: center;
+  gap: 10px 44px;
+  margin: 0 0 26px;
+  padding: 14px 64px;
+}
+.import-band::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--glass);
+  transform: skewX(var(--skew));
+}
+.import-heading h2 {
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.1;
+}
+.import-heading p {
+  color: var(--dim);
+  font-size: 14px;
+}
+.import-option strong {
+  display: block;
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+.import-description {
+  display: block;
+  margin-top: 1px;
+  color: var(--dim);
+  font-size: 14px;
+}
+.import-list {
+  display: grid;
+  gap: 4px;
+  margin-top: 16px;
+}
+.import-open {
+  flex: none;
+  margin-left: auto;
+}
+.file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}

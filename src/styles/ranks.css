@@ -1,0 +1,71 @@
+/* ---------- Rank icons + difficulty tags ---------- */
+.rank {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.15em;
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1;
+}
+.rank-phi {
+  color: var(--phi);
+  text-shadow:
+    0 0 5px rgb(245 242 91 / 0.85),
+    0 0 16px rgb(245 242 91 / 0.5);
+}
+.rank-fc {
+  color: var(--fc);
+  text-shadow: 0 0 10px rgb(79 141 245 / 0.65);
+}
+.rank-plain {
+  color: var(--text);
+}
+.difficulty {
+  display: inline-grid;
+  place-items: center;
+  min-width: 38px;
+  padding: 0 9px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 21px;
+}
+.difficulty::before {
+  background: var(--at);
+}
+.difficulty-ez::before {
+  background: var(--ez);
+}
+.difficulty-hd::before {
+  background: var(--hd);
+}
+.difficulty-in::before {
+  background: var(--in);
+}
+.difficulty-at::before {
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.3);
+}
+/* Which Phi slot a chart fills: a raised φ-yellow digit after its φ (φ¹), glowing like the rank icon. */
+.phi-slot {
+  margin-left: 1px;
+  color: var(--phi);
+  font-size: 0.6em;
+  line-height: 1;
+  vertical-align: super;
+  text-shadow: 0 0 8px rgb(245 242 91 / 0.45);
+}
+/* The rank icon sits in a flex row, where vertical-align does nothing. */
+.record-rank .phi-slot {
+  align-self: flex-start;
+  /* Pull it in past the rank icon's min-width, to sit against the φ. */
+  margin-left: -3px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.phi-note {
+  margin-left: 12px;
+  color: var(--phi);
+  font-size: 17px;
+  white-space: nowrap;
+  text-shadow: 0 0 8px rgb(245 242 91 / 0.45);
+}

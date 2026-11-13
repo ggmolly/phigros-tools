@@ -1,0 +1,55 @@
+/* ---------- Log + footer ---------- */
+#log {
+  position: relative;
+  margin-top: 22px;
+  padding: 8px 16px 8px 32px;
+  background: rgb(0 0 0 / 0.5);
+  color: #ffd6d1;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+#log::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  top: 7px;
+  bottom: 7px;
+  width: 4px;
+  background: var(--negative);
+  transform: skewX(var(--skew));
+}
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 6px 24px;
+  width: min(1640px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 26px 4px 22px;
+  color: var(--faint);
+  font-size: 13px;
+}
+.site-footer a {
+  color: var(--dim);
+}
+.footer-end {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 16px;
+}
+.site-footer a:hover {
+  color: var(--glow);
+}
+.skip-link {
+  position: absolute;
+  top: -60px;
+  left: 20px;
+  z-index: 30;
+  padding: 10px;
+  background: #fff;
+  color: #000;
+}
+.skip-link:focus {
+  top: 5px;
+}
