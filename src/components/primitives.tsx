@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode, Ref } from "react";
+import avatars from "../avatars.json";
 import { useFormat, useT } from "../i18n";
 import { LEVELS } from "../modules";
 
@@ -154,9 +155,10 @@ export function dataAmount(money: readonly number[]) {
   };
 }
 
-/** URL of an in-game avatar (see scripts/build-avatars.ts); an empty name is the game's default. */
+/** URL of an in-game avatar by the name saves store (see scripts/build-avatars.ts); "" is the game's default. */
 export function avatarUrl(name: string) {
-  return `/avatars/${encodeURIComponent(name || "Introduction")}.avif`;
+  const file = (avatars as Record<string, string>)[name || "Introduction"] ?? name;
+  return `/avatars/${encodeURIComponent(file)}.avif`;
 }
 
 /** The player's in-game avatar. */
