@@ -12,7 +12,6 @@ import { Backdrop, SiteFooter, SiteHeader } from "../components/chrome";
 import { getHome } from "../home";
 import { I18nProvider, useT } from "../i18n";
 import type { Locale } from "../i18n/locales";
-import { CountsLive } from "../motion";
 import { fogStyle } from "../palettes";
 import { SaveProvider } from "../save-context";
 import { headT, pageMeta, SITE_NAME } from "../seo";
@@ -47,7 +46,6 @@ function Root() {
       <SaveProvider home={home}>
         <Backdrop />
         <Analytics />
-        <CountsLive />
         <Outlet />
         <SiteFooter />
       </SaveProvider>

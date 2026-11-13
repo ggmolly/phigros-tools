@@ -2,7 +2,6 @@ import type { CSSProperties, ReactNode, Ref } from "react";
 import avatars from "../avatars.json";
 import { useFormat, useT } from "../i18n";
 import { LEVELS } from "../modules";
-import { Count } from "../motion";
 
 const RANKS: [number, string][] = [
   [960_000, "V"],
@@ -101,9 +100,7 @@ export function Stat({
   return (
     <div className={className ? `stat ${className}` : "stat"}>
       <p>
-        <span className="stat-value">
-          {typeof value === "number" ? <Count value={value} format={format.number} /> : value}
-        </span>
+        <span className="stat-value">{shown(value)}</span>
         {total !== undefined && (
           <span className="stat-total">
             {typeof total === "number" ? `/${shown(total)}` : total}
