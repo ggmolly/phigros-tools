@@ -12,6 +12,8 @@ export function getRouter() {
   return createRouter({
     routeTree,
     context: { i18n },
+    // a new page wipes in (styles/motion.css), a search or a filter changing the address doesn't
+    defaultViewTransition: { types: ({ pathChanged }) => pathChanged && ["page"] },
     rewrite: {
       input: ({ url }) => {
         const { locale, path } = splitLocale(url.pathname);

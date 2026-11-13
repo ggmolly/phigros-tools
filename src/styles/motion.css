@@ -1,0 +1,85 @@
+/* ---------- Motion: entrances and the page wipe, as in the Phigros++ trailer ---------- */
+:root {
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --circ: cubic-bezier(0.85, 0, 0.15, 1);
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+    filter: blur(8px);
+  }
+}
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(36px);
+  }
+}
+@keyframes uncover {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+
+/* Panels come up, rows come in from the right. Where the browser can count siblings they follow each other,
+ * elsewhere they arrive together. */
+.panel,
+.hero {
+  animation: rise 0.7s var(--ease) backwards;
+}
+.profile-list > li,
+.song-diff-table tbody tr:nth-child(-n + 24),
+.table-scroll tbody tr:nth-child(-n + 24) {
+  animation: slide-in 0.55s var(--ease) backwards;
+}
+@supports (order: sibling-index()) {
+  .panel,
+  .hero {
+    animation-delay: calc(min(sibling-index() - 1, 6) * 70ms);
+  }
+  .profile-list > li,
+  .song-diff-table tbody tr:nth-child(-n + 24),
+  .table-scroll tbody tr:nth-child(-n + 24) {
+    animation-delay: calc(120ms + min(sibling-index(), 16) * 30ms);
+  }
+}
+
+/* The RKS chart is uncovered from the left, so its curve looks drawn. */
+.rks-chart {
+  animation: uncover 1.4s var(--circ) 0.25s backwards;
+}
+
+/* A change of page wipes the new one in along the slant (the router asks for a view transition, see router.tsx).
+ * The top bar keeps its place. */
+.topbar {
+  view-transition-name: topbar;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+  animation: none;
+}
+::view-transition-new(root) {
+  animation: wipe 0.5s var(--circ);
+}
+@keyframes wipe {
+  from {
+    clip-path: polygon(0 0, 0 0, -25vh 100%, 0 100%);
+  }
+  to {
+    clip-path: polygon(0 0, calc(100% + 25vh) 0, 100% 100%, 0 100%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
