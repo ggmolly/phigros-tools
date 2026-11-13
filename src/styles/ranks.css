@@ -69,3 +69,34 @@
   white-space: nowrap;
   text-shadow: 0 0 8px rgb(245 242 91 / 0.45);
 }
+
+/* How a play got on a leaderboard: a chip, lit when the server judged its replay again. */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 1px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--dim);
+  cursor: help;
+}
+.status::before {
+  background: rgb(255 255 255 / 0.1);
+}
+.status svg {
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 3;
+}
+.status-verified {
+  color: #06202b;
+}
+.status-verified::before {
+  background: var(--glow);
+}
+.status-unverified {
+  color: var(--negative);
+}

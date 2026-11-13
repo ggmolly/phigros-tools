@@ -12,7 +12,8 @@
 .hero-name,
 .hero-rks,
 .challenge-badge,
-.difficulty {
+.difficulty,
+.status {
   position: relative;
   isolation: isolate;
 }
@@ -28,7 +29,8 @@
 .hero-name::before,
 .hero-rks::before,
 .challenge-badge::before,
-.difficulty::before {
+.difficulty::before,
+.status::before {
   content: "";
   position: absolute;
   inset: 0;

@@ -21,12 +21,14 @@ export function PlayerTag({ player }: { player: PlayerName }) {
 export function PlayStatusLabel({ status }: { status: PlayStatus | ReplayInfo["status"] }) {
   const t = useT();
   return (
-    <>
+    <span className={`status status-${status}`} title={t.song.replayStatusHelp[status]}>
+      {status === "verified" && (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 12.5l5.5 5.5L20 6.5" />
+        </svg>
+      )}
       {t.song.replayStatus[status]}
-      <abbr className="stat-help" title={t.song.replayStatusHelp[status]}>
-        ?
-      </abbr>
-    </>
+    </span>
   );
 }
 
