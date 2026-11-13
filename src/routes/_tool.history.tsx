@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Arrow } from "../components/arrow";
-import { DATE_TIME, RksHistory, SnapshotProgress } from "../components/history-panels";
+import { DATE_TIME, SnapshotHistory, SnapshotProgress } from "../components/history-panels";
 import { useSendToPhigrospp } from "../components/phigrospp";
 import { useFormat, useT } from "../i18n";
 import { calculateRanking } from "../metrics";
@@ -62,7 +62,7 @@ function HistoryRoute() {
     <div id="panel-history" role="tabpanel" aria-labelledby="tab-history" className="tab-panel">
       {loaded && (
         <div className="history-grid">
-          <RksHistory history={playerHistory} />
+          <SnapshotHistory history={playerHistory} />
           <SnapshotProgress history={playerHistory} />
         </div>
       )}

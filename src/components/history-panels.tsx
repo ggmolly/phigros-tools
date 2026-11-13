@@ -92,7 +92,7 @@ export function SnapshotProgress({ history }: { history: SnapshotV1[] }) {
   );
 }
 
-export function RksHistory({ history }: { history: SnapshotV1[] }) {
+export function SnapshotHistory({ history }: { history: SnapshotV1[] }) {
   const t = useT();
   const series = rksSeries(history);
   return (
