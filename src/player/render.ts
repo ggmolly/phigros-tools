@@ -23,10 +23,7 @@ const NOTES = [
   "hold-body-hl",
   "hold-end",
 ] as const;
-export type Art = Record<(typeof NOTES)[number], HTMLImageElement> & {
-  hit: HTMLCanvasElement;
-  good: HTMLCanvasElement;
-};
+export type Art = Record<(typeof NOTES)[number], HTMLImageElement>;
 
 /**
  * A played chart, from a replay's judgement: each note's judgement and when it happened (hit or missed), and the
@@ -56,12 +53,11 @@ const LINE_THICKNESS = 7.5;
 
 const HIT_LIFE = 0.5;
 const HIT_FRAMES = 30;
-const HIT_CELL = 256;
-const HIT_TINT = "rgb(255 236 160)";
+const HIT_TINT = "255 236 160";
 // the timing bar, like the Phigros++ HUD (mod/mods/hud.lua) scaled to this score font
 const JUDGE_COLORS = { perfect: "#ffeca0", good: "#a2eeff", bad: "#e2696d" };
 const BAR = { length: 510, thickness: 3.6, tick: 19.4, ticks: 50, y: 985 };
-const GOOD_TINT = "rgb(160 225 255)";
+const GOOD_TINT = "160 225 255";
 const MISSED_LIFE = 0.25; // a missed note fades out past its line
 const HIT_ALPHA = 0.88;
 const HIT_SCALE = 6;
@@ -74,28 +70,10 @@ function image(src: string) {
   return img.decode().then(() => img);
 }
 
-function tint(img: HTMLImageElement, color: string) {
-  const el = document.createElement("canvas");
-  el.width = img.width;
-  el.height = img.height;
-  const ctx = el.getContext("2d")!;
-  ctx.drawImage(img, 0, 0);
-  ctx.globalCompositeOperation = "multiply";
-  ctx.fillStyle = color;
-  ctx.fillRect(0, 0, el.width, el.height);
-  ctx.globalCompositeOperation = "destination-in";
-  ctx.drawImage(img, 0, 0);
-  return el;
-}
-
 let artLoading: Promise<Art> | undefined;
 export function loadArt() {
   artLoading ??= Promise.all([
-    Promise.all([
-      ...NOTES.map(async (name) => [name, await image(`/player/${name}.png`)] as const),
-      image("/player/hit.png").then((sheet) => ["hit", tint(sheet, HIT_TINT)] as const),
-      image("/player/hit.png").then((sheet) => ["good", tint(sheet, GOOD_TINT)] as const),
-    ]),
+    Promise.all(NOTES.map(async (name) => [name, await image(`/player/${name}.png`)] as const)),
     document.fonts.load(`40px ${HUD_FONT}`),
   ]).then(([entries]) => Object.fromEntries(entries) as Art);
   return artLoading;
@@ -113,42 +91,80 @@ function noise(seed: number) {
   return x - Math.floor(x);
 }
 
+const clamp = (x: number) => Math.min(1, Math.max(0, x));
+
+/**
+ * The hit effect, drawn after the game's sheet of 30 frames (in its pixels, `unit` canvas pixels each): a disc that
+ * shrinks, a diamond and a square that open around two turning arcs, and four squares thrown out. `tint` is the
+ * colour's three channels.
+ */
 function drawHit(
   ctx: CanvasRenderingContext2D,
-  sheet: HTMLCanvasElement,
   x: number,
   y: number,
   p: number,
   unit: number,
   seed: number,
-  color: string,
+  tint: string,
 ) {
-  const frame = Math.min(HIT_FRAMES - 1, Math.floor(p * HIT_FRAMES));
-  const size = HIT_CELL * unit;
-  ctx.setTransform(1, 0, 0, 1, x, y);
-  ctx.globalAlpha = HIT_ALPHA;
-  ctx.drawImage(
-    sheet,
-    (frame % 6) * HIT_CELL,
-    Math.floor(frame / 6) * HIT_CELL,
-    HIT_CELL,
-    HIT_CELL,
-    -size / 2,
-    -size / 2,
-    size,
-    size,
-  );
+  const frame = p * HIT_FRAMES;
+  const tone = (alpha: number) => `rgb(${tint} / ${alpha})`;
+  // lit from the top left, like the sheet
+  const light = (near: number, far: number) => {
+    const gradient = ctx.createLinearGradient(-90, -90, 90, 90);
+    gradient.addColorStop(0, tone(near));
+    gradient.addColorStop(1, tone(far));
+    return gradient;
+  };
+  const fade = HIT_ALPHA * clamp((HIT_FRAMES - frame) / 8);
+  const side = 86 * (1 - Math.exp(-frame / 2.4)) + 0.2 * frame; // half the square's
+  // the diamond's corners, from its centre, and how thick its band is
+  const corner = 68 + 44 * (1 - Math.exp((1 - frame) / 1.6)) + 0.2 * (frame - 1);
+  const band = frame < 8 ? 68.2 - 6.2 * frame : Math.max(1.5, 18.6 * Math.exp((8 - frame) / 5));
+  const hole = Math.max(0, corner - band);
+  const turn = ((25 * p - 120) * Math.PI) / 180;
+  ctx.setTransform(unit, 0, 0, unit, x, y);
+  ctx.globalAlpha = fade * clamp(frame);
+  ctx.fillStyle = light(0.36, 0.03);
+  ctx.beginPath();
+  for (const reach of [corner, hole]) {
+    ctx.moveTo(0, -reach);
+    ctx.lineTo(reach, 0);
+    ctx.lineTo(0, reach);
+    ctx.lineTo(-reach, 0);
+    ctx.closePath();
+  }
+  ctx.fill("evenodd");
+  ctx.strokeStyle = light(0.85, 0.12);
+  ctx.lineWidth = 2.5;
+  ctx.strokeRect(-side, -side, side * 2, side * 2);
+  ctx.globalAlpha = fade * clamp(frame - 1.5);
+  ctx.lineWidth = 4;
+  for (const half of [0, Math.PI]) {
+    ctx.beginPath();
+    ctx.arc(0, 0, side * 0.83, turn + half, turn + half + 1.6);
+    ctx.stroke();
+  }
+  ctx.globalAlpha = fade;
+  ctx.fillStyle = tone(0.12 * clamp((frame - 5) / 2));
+  ctx.beginPath();
+  ctx.arc(0, 0, 24, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = light(0.95, 0.6);
+  ctx.beginPath();
+  ctx.arc(0, 0, 5 + 36 * Math.exp(-frame / 5), 0, Math.PI * 2);
+  ctx.fill();
   ctx.globalAlpha = 1 - p;
-  ctx.fillStyle = color;
-  const side = 30 * (((0.2078 * p - 1.6524) * p + 1.6399) * p + 0.4988) * unit;
+  ctx.fillStyle = tone(1);
+  const size = 30 * (((0.2078 * p - 1.6524) * p + 1.6399) * p + 0.4988);
   for (let i = 0; i < 4; i++) {
-    const reach = (185 + 80 * noise(seed + i)) * ((9 * p) / (8 * p + 1)) * unit;
+    const reach = (185 + 80 * noise(seed + i)) * ((9 * p) / (8 * p + 1));
     const angle = 2 * Math.PI * noise(seed * 7 + i);
     ctx.fillRect(
-      Math.cos(angle) * reach - side / 2,
-      Math.sin(angle) * reach - side / 2,
-      side,
-      side,
+      Math.cos(angle) * reach - size / 2,
+      Math.sin(angle) * reach - size / 2,
+      size,
+      size,
     );
   }
 }
@@ -260,16 +276,7 @@ export function drawScene(
   }
   ctx.globalAlpha = 1;
   for (const hit of hits)
-    drawHit(
-      ctx,
-      hit.good ? art.good : art.hit,
-      hit.x,
-      hit.y,
-      hit.p,
-      HIT_SCALE * k,
-      hit.seed,
-      hit.good ? GOOD_TINT : HIT_TINT,
-    );
+    drawHit(ctx, hit.x, hit.y, hit.p, HIT_SCALE * k, hit.seed, hit.good ? GOOD_TINT : HIT_TINT);
   ctx.globalAlpha = 1;
 }
 
