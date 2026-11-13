@@ -55,7 +55,7 @@ function Players() {
           </thead>
           <tbody>
             {ranking.players.map((player) => (
-              <tr key={player.rank}>
+              <tr key={player.player.id}>
                 <td className="num meta">{player.rank}</td>
                 <td>
                   <PlayerTag player={player.player} />

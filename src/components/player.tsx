@@ -129,6 +129,12 @@ function List<T>({
   const t = useT();
   const [shown, setShown] = useState(first);
   const [loading, setLoading] = useState(false);
+  // a live update brings a new first page: start again from it
+  const [from, setFrom] = useState(first);
+  if (from !== first) {
+    setFrom(first);
+    setShown(first);
+  }
   if (!shown.items.length) return null;
   const more = () => {
     setLoading(true);
