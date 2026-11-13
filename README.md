@@ -1,5 +1,7 @@
 # phigros.tools
 
+![phigros.tools, a save analyzer, chart player and leaderboard for Phigros](docs/banner.webp)
+
 Analyze your Phigros save (ranking score, Best charts, records, progress) privately in your browser, and browse every chart's difficulty constant.
 
 ![Overview](docs/screenshots/02-overview.png)
