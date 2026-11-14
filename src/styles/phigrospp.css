@@ -57,20 +57,59 @@
 }
 .device-invite {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 6px;
   margin: 18px 0;
   padding: 16px 20px;
   background: rgb(0 0 0 / 0.4);
 }
+/* the code as the game's key caps: a slanted box per letter, in two groups of four, typed one after the other */
 .invite-code {
-  font-size: 40px;
-  letter-spacing: 0.15em;
+  display: flex;
+  gap: 8px;
+  font-size: clamp(20px, 6.4vw, 34px);
+}
+.invite-code b {
+  position: relative;
+  isolation: isolate;
+  flex: 0 1 52px;
+  font-weight: 500;
+  line-height: 1.6;
+  text-align: center;
+  animation: pop 0.4s var(--ease) backwards;
+}
+.invite-code b:nth-child(5) {
+  margin-left: 2.5%;
+}
+.invite-code b::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: rgb(255 255 255 / 0.12);
+  transform: skewX(var(--skew));
+}
+@supports (order: sibling-index()) {
+  .invite-code b {
+    animation-delay: calc(sibling-index() * 60ms);
+  }
+}
+/* the browser you're on: the row lit like a ranking's first places, with a white chip */
+.device-you {
+  background: linear-gradient(90deg, rgb(255 255 255 / 0.07), transparent 70%);
+}
+.device-here {
+  color: var(--ink);
+  cursor: default;
+}
+.device-here::before {
+  background: var(--white);
 }
 .device-list li {
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 14px 0;
+  padding: 14px 12px;
   border-top: 1px solid rgb(255 255 255 / 0.09);
 }
 .device-text {
@@ -79,6 +118,9 @@
   min-width: 0;
 }
 .device-name {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   font-size: 19px;
 }
 .device-rename {

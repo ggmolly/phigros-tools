@@ -244,7 +244,12 @@ export function DevicesPanel({ credential }: { credential: Credential }) {
       </div>
       {invite && (
         <div className="device-invite">
-          <p className="invite-code">{invite.code.replace(/(.{4})/, "$1 ")}</p>
+          <p className="invite-code" role="img" aria-label={invite.code.replace(/(.{4})/, "$1 ")}>
+            {[...invite.code].map((letter, at) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: a code's letters never move
+              <b key={at}>{letter}</b>
+            ))}
+          </p>
           <p className="meta">
             <Rich text={t.ppp.addDeviceText} />
           </p>
@@ -252,7 +257,7 @@ export function DevicesPanel({ credential }: { credential: Credential }) {
       )}
       <ul className="device-list">
         {devices?.map((device) => (
-          <li key={device.key}>
+          <li key={device.key} className={device.you ? "device-you" : undefined}>
             <span className="device-text">
               {editing === device.key ? (
                 <input
@@ -270,11 +275,13 @@ export function DevicesPanel({ credential }: { credential: Credential }) {
                   onBlur={(e) => void rename(device, e.currentTarget.value).catch(fail)}
                 />
               ) : (
-                <span className="device-name">{device.name}</span>
+                <span className="device-name">
+                  {device.name}
+                  {device.you && <b className="status device-here">{t.ppp.thisBrowser}</b>}
+                </span>
               )}
               <span className="meta">
                 {[
-                  device.you && t.ppp.thisBrowser,
                   device.seen > 0 && t.ppp.seen(format.date(device.seen, DATE_TIME)),
                   t.ppp.added(format.date(device.added)),
                 ]
