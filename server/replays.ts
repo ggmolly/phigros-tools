@@ -31,6 +31,14 @@ sqlite.run(`
     created INTEGER NOT NULL
   )
 `);
+// the timing accuracy of its touches (timingAccuracy), added after the table
+if (
+  !sqlite
+    .query<{ name: string }, []>("PRAGMA table_info(replays)")
+    .all()
+    .some((c) => c.name === "timing")
+)
+  sqlite.run("ALTER TABLE replays ADD COLUMN timing REAL");
 sqlite.run("CREATE INDEX IF NOT EXISTS idx_replays_key ON replays(key)");
 // each player's best on each chart, so a chart's ranking is read in order from the index: a verified replay (sha256),
 // or a record their game declared (imported, no sha256, no date). a tie goes to the earliest played replay, then to
@@ -152,10 +160,16 @@ export function countReplay(sha256: string, header: ReplayHeader) {
 }
 
 const about = sqlite.prepare<
-  PlayerName & { song: string; level: string; header: string; status: ReplayInfo["status"] },
+  PlayerName & {
+    song: string;
+    level: string;
+    header: string;
+    status: ReplayInfo["status"];
+    timing: number | null;
+  },
   [string]
 >(
-  `SELECT r.song, r.level, r.header, r.status, p.id, p.name, p.number, p.avatar FROM replays r JOIN players p ON p.key = r.key
+  `SELECT r.song, r.level, r.header, r.status, r.timing, p.id, p.name, p.number, p.avatar FROM replays r JOIN players p ON p.key = r.key
    WHERE r.sha256 = ?`,
 );
 
@@ -172,6 +186,7 @@ export function replayInfo(sha256: string): ReplayInfo | undefined {
     date: header.date * 1000,
     score: header.score,
     accuracy: header.accuracy,
+    timing: row.timing,
     fc: header.bad + header.miss === 0,
     maxcombo: header.maxcombo,
     perfect: header.perfect,
@@ -192,10 +207,11 @@ const chartPage = sqlite.prepare<
     fc: number;
     played: number | null;
     status: string | null;
+    timing: number | null;
   },
   [Scope, string, string, number, number]
 >(
-  `SELECT b.sha256, b.score, b.accuracy, b.fc, b.played, r.status, p.id, p.name, p.number, p.avatar FROM bests b
+  `SELECT b.sha256, b.score, b.accuracy, b.fc, b.played, r.status, r.timing, p.id, p.name, p.number, p.avatar FROM bests b
    LEFT JOIN replays r ON r.sha256 = b.sha256 JOIN players p ON p.key = b.key
    WHERE b.scope = ? AND b.song = ? AND b.level = ? AND p.unlisted = 0
    ORDER BY b.score DESC, b.played IS NULL, b.played, b.created LIMIT ? OFFSET ?`,
@@ -220,6 +236,7 @@ export function chartPlays(
     player: { id: row.id, name: row.name, number: row.number, avatar: row.avatar },
     score: row.score,
     accuracy: row.accuracy,
+    timing: row.timing,
     fc: row.fc === 1,
     status: (row.status ?? "imported") as PlayStatus,
     date: row.played,

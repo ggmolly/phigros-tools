@@ -201,6 +201,8 @@ export const en = {
         "Not checked yet. After a game update, it waits until phigros.tools knows the new version.",
       unverified: "Replaying the touches doesn't give the recorded result.",
     },
+    timingHelp:
+      "Timing accuracy: how close to the beat taps and holds were hit, from 100% when all are exactly on it to 0% when all are at the edge of a Bad. Drags, flicks and misses are left out.",
     pageOf: (page: string, pages: string) => `Page ${page} of ${pages}`,
     noPlays: "Nobody has played this chart yet",
     playedWith: (version: string) => `Played with Phigros++ ${version}`,

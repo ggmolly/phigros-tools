@@ -90,6 +90,21 @@ export function PlayStatusLabel({ status }: { status: PlayStatus | ReplayInfo["s
   );
 }
 
+/** A play's accuracy, then its replay's timing accuracy in small, explained on hover. */
+export function Accuracy({ accuracy, timing }: { accuracy: number; timing: number | null }) {
+  const t = useT();
+  return (
+    <>
+      {accuracy.toFixed(2)}%
+      {timing !== null && (
+        <sub className="timing" title={t.song.timingHelp}>
+          {timing.toFixed(1)}%
+        </sub>
+      )}
+    </>
+  );
+}
+
 /** A play's rank, player, score, accuracy and grade, as cells of a table row. */
 export function PlayCells({ play }: { play: Play }) {
   return (
@@ -99,7 +114,9 @@ export function PlayCells({ play }: { play: Play }) {
         <PlayerTag player={play.player} />
       </td>
       <td className="num record-score">{score7(play.score)}</td>
-      <td className="num">{play.accuracy.toFixed(2)}%</td>
+      <td className="num">
+        <Accuracy accuracy={play.accuracy} timing={play.timing} />
+      </td>
       <td>
         <Rank score={play.score} fc={play.fc} />
       </td>

@@ -205,6 +205,8 @@ export const id = {
         "Belum diperiksa. Setelah pembaruan game, ini menunggu sampai phigros.tools mengenal versi baru.",
       unverified: "Memutar ulang sentuhannya tidak memberi hasil yang tercatat.",
     },
+    timingHelp:
+      "Akurasi timing: seberapa tepat tap dan hold ditekan sesuai ketukan, dari 100% jika semuanya tepat waktu hingga 0% jika semuanya di batas Bad. Drag, flick, dan miss tidak dihitung.",
     pageOf: (page: string, pages: string) => `Halaman ${page} dari ${pages}`,
     noPlays: "Belum ada yang memainkan chart ini",
     playedWith: (version: string) => `Dimainkan dengan Phigros++ ${version}`,

@@ -203,6 +203,8 @@ export const ko = {
         "아직 확인되지 않았습니다. 게임 업데이트 후에는 phigros.tools가 새 버전을 지원할 때까지 기다립니다.",
       unverified: "터치를 다시 재생해도 기록된 결과가 나오지 않습니다.",
     },
+    timingHelp:
+      "타이밍 정확도: 탭과 홀드를 박자에 얼마나 정확히 쳤는지를 나타냅니다. 모두 정확하면 100%, 모두 Bad 경계에 있으면 0%입니다. 드래그, 플릭, 미스는 제외됩니다.",
     pageOf: (page: string, pages: string) => `${pages}페이지 중 ${page}페이지`,
     noPlays: "아직 아무도 이 채보를 플레이하지 않았습니다",
     playedWith: (version: string) => `Phigros++ ${version}(으)로 플레이`,

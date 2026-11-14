@@ -203,6 +203,8 @@ export const it = {
         "Non ancora controllata. Dopo un aggiornamento del gioco, attende che phigros.tools conosca la nuova versione.",
       unverified: "Rigiocando i tocchi non si ottiene il risultato registrato.",
     },
+    timingHelp:
+      "Precisione del timing: quanto tap e hold sono stati colpiti a tempo, dal 100% se sono tutti esattamente a tempo allo 0% se sono tutti al limite di un Bad. Drag, flick e miss non contano.",
     pageOf: (page: string, pages: string) => `Pagina ${page} di ${pages}`,
     noPlays: "Nessuno ha ancora giocato questo chart",
     playedWith: (version: string) => `Giocata con Phigros++ ${version}`,

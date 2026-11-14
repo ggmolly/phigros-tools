@@ -185,10 +185,11 @@ const bestsOf = sqlite.prepare<
     played: number | null;
     status: string | null;
     sha256: string | null;
+    timing: number | null;
   },
   [Uint8Array]
 >(
-  `SELECT b.song, b.level, b.score, b.accuracy, b.fc, b.played, r.status, b.sha256 FROM bests b
+  `SELECT b.song, b.level, b.score, b.accuracy, b.fc, b.played, r.status, b.sha256, r.timing FROM bests b
    LEFT JOIN replays r ON r.sha256 = b.sha256 WHERE b.key = ? AND b.scope = 0`,
 );
 const recentOf = sqlite.prepare<
@@ -201,13 +202,14 @@ const recentOf = sqlite.prepare<
     miss: number;
     played: number;
     replay: string | null;
+    timing: number | null;
   },
   [Uint8Array, number, number]
 >(
-  `SELECT p.song, p.level, p.score, p.accuracy, p.bad, p.miss, p.played,
-   (SELECT r.sha256 FROM replays r WHERE r.key = p.key AND r.song = p.song AND r.level = p.level
-    AND r.score = p.score AND r.status = 'verified' LIMIT 1) AS replay
-   FROM plays p WHERE p.key = ? ORDER BY p.played DESC LIMIT ? OFFSET ?`,
+  `SELECT p.song, p.level, p.score, p.accuracy, p.bad, p.miss, p.played, r.sha256 AS replay, r.timing
+   FROM plays p LEFT JOIN replays r ON r.sha256 = (SELECT sha256 FROM replays WHERE key = p.key AND song = p.song
+    AND level = p.level AND score = p.score AND status = 'verified' LIMIT 1)
+   WHERE p.key = ? ORDER BY p.played DESC LIMIT ? OFFSET ?`,
 );
 const activityOf = sqlite.prepare<
   { song: string; level: string; score: number; rank: number; at: number },
@@ -232,6 +234,7 @@ function recentPlays(key: Uint8Array, offset: number, limit: number): Page<Playe
     level: play.level,
     score: play.score,
     accuracy: play.accuracy,
+    timing: play.timing,
     fc: play.bad + play.miss === 0,
     date: play.played,
     replay: play.replay,
@@ -271,6 +274,7 @@ export function profilePage(id: string): PlayerProfile | undefined {
         level: best.level,
         score: best.score,
         accuracy: best.accuracy,
+        timing: best.timing,
         fc: best.fc === 1,
         date: best.played,
         replay: best.sha256,

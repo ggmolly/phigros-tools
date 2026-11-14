@@ -10,7 +10,7 @@ import {
   type PlayedChart,
   type PlayerProfile,
 } from "../plays";
-import { ChartLink, PlayStatusLabel } from "./plays";
+import { Accuracy, ChartLink, PlayStatusLabel } from "./plays";
 import { Avatar, Difficulty, Rank, Stat, score7 } from "./primitives";
 
 // a player's public page in parts: their own Overview shows them around what only their save has
@@ -111,7 +111,9 @@ function Result({ play }: { play: PlayedChart }) {
   return (
     <>
       <span className="num record-score">{score7(play.score)}</span>
-      <span className="num">{play.accuracy.toFixed(2)}%</span>
+      <span className="num">
+        <Accuracy accuracy={play.accuracy} timing={play.timing} />
+      </span>
       <Rank score={play.score} fc={play.fc} />
     </>
   );

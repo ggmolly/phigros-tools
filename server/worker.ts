@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { catalogManifest } from "../src/catalog";
-import { judge } from "../src/judge";
+import { judge, timingAccuracy } from "../src/judge";
 import { decodeReplay } from "../src/pigeon";
 import { decodePhc } from "../src/player/phc";
 import { topics } from "../src/topics";
@@ -24,8 +24,8 @@ const replay = sqlite.prepare<
 const pending = sqlite.prepare<{ sha256: string }, []>(
   "SELECT sha256 FROM replays WHERE status = 'pending'",
 );
-const settle = sqlite.prepare<unknown, [string, string, string]>(
-  "UPDATE replays SET status = ?, result = ? WHERE sha256 = ?",
+const settle = sqlite.prepare<unknown, [string, string, number | null, string]>(
+  "UPDATE replays SET status = ?, result = ?, timing = ? WHERE sha256 = ?",
 );
 
 function verify(sha256: string) {
@@ -41,7 +41,8 @@ function verify(sha256: string) {
   const recorded = Object.fromEntries(RESULT.map((field) => [field, header[field]]));
   const replayed = Object.fromEntries(RESULT.map((field) => [field, judged[field]]));
   const same = RESULT.every((field) => recorded[field] === replayed[field]);
-  settle.run(same ? "verified" : "unverified", JSON.stringify({ recorded, replayed }), sha256);
+  const result = JSON.stringify({ recorded, replayed });
+  settle.run(same ? "verified" : "unverified", result, timingAccuracy(judged.hits), sha256);
   if (same) {
     const { key, song, level, raised } = countReplay(sha256, header);
     if (raised) addAchievement(key, song, level, header.score);

@@ -22,6 +22,8 @@ export interface Play {
   player: PlayerName;
   score: number;
   accuracy: number;
+  /** The timing accuracy of its replay (`timingAccuracy` in src/judge.ts), null without one. */
+  timing: number | null;
   fc: boolean;
   status: PlayStatus;
   /** When it was played, in ms, null for an imported record. */
@@ -40,6 +42,8 @@ export interface ReplayInfo {
   date: number;
   score: number;
   accuracy: number;
+  /** Its timing accuracy (`timingAccuracy` in src/judge.ts), null until the worker judged it. */
+  timing: number | null;
   fc: boolean;
   maxcombo: number;
   perfect: number;
@@ -82,6 +86,8 @@ export interface PlayedChart {
   level: string;
   score: number;
   accuracy: number;
+  /** The timing accuracy of its replay (`timingAccuracy` in src/judge.ts), null without one. */
+  timing: number | null;
   fc: boolean;
   /** When it was played, in ms, null for an imported record. */
   date: number | null;
@@ -141,7 +147,7 @@ export interface PlayerProfile {
 
 export const PLAYS_PAGE = 50;
 
-/** The sizes of the link preview images of players and replays (server/card.tsx). */
+/** The sizes of the link preview images of players and replays (server/card.tsx), a chart ranking's is like a replay's. */
 export const CARDS = { player: { width: 1600, height: 900 }, replay: { width: 1200, height: 630 } };
 
 // the API read inside the server, during the server render too, so link previews show what the page does

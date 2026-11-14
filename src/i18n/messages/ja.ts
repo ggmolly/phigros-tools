@@ -203,6 +203,8 @@ export const ja = {
         "まだ確認されていません。ゲームのアップデート後は、phigros.tools が新しいバージョンに対応するまで待ちます。",
       unverified: "タッチを再生しても記録された結果になりません。",
     },
+    timingHelp:
+      "タイミング精度：タップとホールドをどれだけ正確なタイミングで押せたか。すべてぴったりなら100%、すべてBadの境目なら0%。ドラッグ、フリック、ミスは含みません。",
     pageOf: (page: string, pages: string) => `${page} / ${pages} ページ`,
     noPlays: "この譜面はまだ誰もプレイしていません",
     playedWith: (version: string) => `Phigros++ ${version} でプレイ`,

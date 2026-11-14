@@ -4,7 +4,7 @@ import { catalogSong } from "../catalog";
 import { Arrow } from "../components/arrow";
 import { ChartPlayer } from "../components/chart-player";
 import { SiteHeader } from "../components/chrome";
-import { PlayerTag, PlayStatusLabel, SongHeading } from "../components/plays";
+import { Accuracy, PlayerTag, PlayStatusLabel, SongHeading } from "../components/plays";
 import { Difficulty, Rank, score7 } from "../components/primitives";
 import { useFormat, useT } from "../i18n";
 import { CHALLENGE, judge, type Result, WINDOWS } from "../judge";
@@ -149,7 +149,7 @@ function toPlay(
   const timing: Play["timing"] = [];
   let average = 0;
   for (const hit of [...result.hits].sort((a, b) => (a.hit ?? a.t) - (b.hit ?? b.t))) {
-    if (!hit.offset || hit.judgement === "miss") continue;
+    if (hit.offset === undefined || hit.judgement === "miss") continue;
     average = average * 0.9 + hit.offset * 1000 * 0.1;
     timing.push({ at: hit.hit ?? hit.t, ms: hit.offset * 1000, judgement: hit.judgement, average });
   }
@@ -236,7 +236,9 @@ function ReplayPage() {
             </SongHeading>
             <p className="replay-result">
               <span>{score7(info.score)}</span>
-              <span className="meta">{info.accuracy.toFixed(2)}%</span>
+              <span className="meta">
+                <Accuracy accuracy={info.accuracy} timing={info.timing} />
+              </span>
               <Rank score={info.score} fc={info.fc} />
             </p>
           </div>

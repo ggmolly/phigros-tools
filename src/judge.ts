@@ -83,8 +83,19 @@ export interface Hit {
   t: number;
   /** when it was hit (a hold: its head), even for a hold dropped later and missed */
   hit?: number;
-  /** seconds late (negative early), for perfects, goods and bads */
+  /** seconds late (negative early), for hit taps and holds: drags and flicks are scored on time, they have none */
   offset?: number;
+}
+
+/**
+ * How close to the beat the notes were hit, from 100 for all exactly on time to 0 for all at the edge of a bad, in
+ * normal play's windows so challenge mode compares. Hits without an offset (drags, flicks, misses) are left out.
+ */
+export function timingAccuracy(hits: Hit[]): number | null {
+  const timed = hits.filter((hit) => hit.offset !== undefined);
+  if (!timed.length) return null;
+  const sum = timed.reduce((total, hit) => total + 1 - Math.abs(hit.offset!) / WINDOWS[2]!, 0);
+  return (sum / timed.length) * 100;
 }
 
 export interface Result {
@@ -551,7 +562,7 @@ export function judge(raw: RawChart, frames: ReplayFrame[], screen: ReplayHeader
           if (!(Math.abs(d) > DRAG_WINDOW) && !c.isJudged && fingersNear(note, REACH))
             c.isJudged = true;
           if (d < LAND && c.isJudged) {
-            score(note, "perfect", -d, now);
+            score(note, "perfect", undefined, now);
             note.isJudged = true;
             return true;
           }
@@ -565,7 +576,7 @@ export function judge(raw: RawChart, frames: ReplayFrame[], screen: ReplayHeader
         case 4: {
           c.isJudged ||= note.isJudgedForFlick;
           if (d < LAND && c.isJudged) {
-            score(note, "perfect", -d, now);
+            score(note, "perfect", undefined, now);
             note.isJudged = true;
             return true;
           }

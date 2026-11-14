@@ -205,6 +205,8 @@ export const ms = {
         "Belum disemak. Selepas kemas kini permainan, ia menunggu sehingga phigros.tools mengenali versi baharu.",
       unverified: "Memainkan semula sentuhan tidak memberi keputusan yang direkodkan.",
     },
+    timingHelp:
+      "Ketepatan masa: sejauh mana tap dan hold ditekan tepat pada rentak, daripada 100% jika semuanya tepat hingga 0% jika semuanya di hujung Bad. Drag, flick dan miss tidak dikira.",
     pageOf: (page: string, pages: string) => `Halaman ${page} daripada ${pages}`,
     noPlays: "Belum ada sesiapa yang memainkan carta ini",
     playedWith: (version: string) => `Dimainkan dengan Phigros++ ${version}`,
