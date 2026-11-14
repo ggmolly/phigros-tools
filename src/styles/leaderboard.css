@@ -7,7 +7,7 @@
 }
 
 main > .seg {
-  margin-bottom: 18px;
+  margin-bottom: 1.125rem;
 }
 /* the page's title over what the leaderboard is, the All / Verified switch at its end */
 .leaderboard-head {
@@ -15,22 +15,22 @@ main > .seg {
   flex-wrap: wrap;
   align-items: end;
   justify-content: space-between;
-  gap: 12px 24px;
-  margin-bottom: 18px;
-  padding-inline: 10px;
+  gap: 0.75rem 1.5rem;
+  margin-bottom: 1.125rem;
+  padding-inline: 0.625rem;
 }
 .leaderboard-head h1 {
-  font-size: 44px;
+  font-size: 2.75rem;
   font-weight: 300;
   line-height: 1.1;
 }
 .leaderboard-head .ppp-cta {
-  margin: 4px 0 0;
+  margin: 0.25rem 0 0;
 }
 .leaderboard-layout {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 1.125rem;
 }
 /* narrow enough to fit the width, so long titles wrap instead of pushing the counts off screen */
 .leaderboard-layout .chart-stats-scroll table {
@@ -42,18 +42,18 @@ main > .seg {
 }
 /* a narrow first column, and the numbers that rank (rks, players) at the row's end */
 .leaderboard-layout :is(th, td):first-child {
-  width: 72px;
+  width: 4.5rem;
 }
 .leaderboard-layout :is(th, td):last-child {
-  padding-right: 18px;
+  padding-right: 1.125rem;
   text-align: right;
 }
 .leaderboard-layout .search-field {
-  flex: 0 1 300px;
+  flex: 0 1 18.75rem;
   margin-left: auto;
 }
 /* wide screens: the players lead, the charts stay beside them and scroll on their own */
-@media (min-width: 1101px) {
+@media (min-width: 68.8125em) {
   .leaderboard-layout {
     display: grid;
     grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
@@ -61,10 +61,10 @@ main > .seg {
   }
   .leaderboard-layout > :last-child {
     position: sticky;
-    top: 18px;
+    top: 1.125rem;
   }
   .leaderboard-layout > :last-child .chart-stats-scroll {
-    max-height: calc(100vh - 150px);
+    max-height: calc(100vh - 9.375rem);
     overflow-y: auto;
   }
 }
@@ -74,8 +74,8 @@ main > .seg {
   display: grid;
   grid-template-columns: 1fr 1.12fr 1fr;
   align-items: end;
-  gap: 16px;
-  margin: 4px 30px 26px;
+  gap: 1rem;
+  margin: 0.25rem 1.875rem 1.625rem;
 }
 .podium li:nth-child(1) {
   order: 2;
@@ -94,8 +94,8 @@ main > .seg {
   isolation: isolate;
   display: grid;
   justify-items: center;
-  gap: 6px;
-  padding: 56px 18px 20px;
+  gap: 0.375rem;
+  padding: 3.5rem 1.125rem 1.25rem;
   text-align: center;
 }
 .podium-card::before {
@@ -122,66 +122,66 @@ main > .seg {
 }
 .podium-place b {
   position: absolute;
-  top: 12px;
-  left: 16px;
+  top: 0.75rem;
+  left: 1rem;
   color: var(--place);
-  font-size: 36px;
+  font-size: 2.25rem;
   font-weight: 600;
   line-height: 1;
   transform: skewX(calc(-1 * var(--skew)));
   transform-origin: top left;
 }
 .podium-avatar {
-  width: 84px;
-  height: 84px;
-  margin-bottom: 6px;
+  width: 5.25rem;
+  height: 5.25rem;
+  margin-bottom: 0.375rem;
 }
 .podium-name {
   max-width: 100%;
   overflow: hidden;
-  font-size: 20px;
+  font-size: 1.25rem;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .podium-rks {
-  font-size: 32px;
+  font-size: 2rem;
   font-weight: 300;
   line-height: 1.1;
 }
 .podium-card .button-arrow {
   position: absolute;
-  top: 16px;
-  right: 24px;
+  top: 1rem;
+  right: 1.5rem;
 }
 .podium li:nth-child(1) .podium-card {
-  padding-block: 62px 30px;
+  padding-block: 3.875rem 1.875rem;
 }
 .podium li:nth-child(1) .podium-card::before {
-  box-shadow: 0 0 34px rgb(245 242 91 / 0.12);
+  box-shadow: 0 0 2.125rem rgb(245 242 91 / 0.12);
 }
 .podium li:nth-child(1) .podium-avatar {
-  width: 112px;
-  height: 112px;
+  width: 7rem;
+  height: 7rem;
 }
 .podium li:nth-child(1) .podium-rks {
-  font-size: 42px;
+  font-size: 2.625rem;
 }
 /* phones: the podium becomes three rows, in order */
-@media (max-width: 700px) {
+@media (max-width: 43.75em) {
   .podium {
     grid-template-columns: 1fr;
-    gap: 8px;
-    margin-inline: 12px;
+    gap: 0.5rem;
+    margin-inline: 0.75rem;
   }
   .podium li:nth-child(n) {
     order: 0;
   }
   .podium li:nth-child(n) .podium-card {
-    grid-template-columns: 30px 52px minmax(0, 1fr) auto;
+    grid-template-columns: 1.875rem 3.25rem minmax(0, 1fr) auto;
     align-items: center;
     justify-items: start;
-    gap: 12px;
-    padding: 12px 22px;
+    gap: 0.75rem;
+    padding: 0.75rem 1.375rem;
     text-align: left;
   }
   .podium-place,
@@ -190,21 +190,21 @@ main > .seg {
     transform: none;
   }
   .podium-place b {
-    font-size: 28px;
+    font-size: 1.75rem;
   }
   .podium li:nth-child(n) .podium-avatar {
-    width: 52px;
-    height: 52px;
+    width: 3.25rem;
+    height: 3.25rem;
     margin: 0;
   }
   .podium li:nth-child(n) .podium-rks {
-    font-size: 26px;
+    font-size: 1.625rem;
   }
   .podium-card .button-arrow {
     display: none;
   }
   .podium-name {
-    font-size: 17px;
+    font-size: 1.0625rem;
   }
   .leaderboard-layout .search-field {
     flex-basis: 100%;
@@ -214,11 +214,11 @@ main > .seg {
 .leaderboard-player {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 0.625rem;
 }
 .leaderboard-avatar {
-  width: 28px;
-  height: 28px;
+  width: 1.75rem;
+  height: 1.75rem;
   flex: none;
 }
 
@@ -228,23 +228,23 @@ main > .seg {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 54px;
-  padding-left: 114px;
+  min-height: 3.375rem;
+  padding-left: 7.125rem;
 }
 .song-link {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 0.625rem;
   text-decoration: underline transparent;
-  text-underline-offset: 5px;
+  text-underline-offset: 0.3125rem;
   transition: text-decoration-color 0.15s ease;
 }
 .song-link img {
   position: absolute;
   top: 50%;
   left: 0;
-  width: 96px;
-  height: 54px;
+  width: 6rem;
+  height: 3.375rem;
   object-fit: cover;
   transform: translateY(-50%) skewX(var(--skew));
   transition: filter 0.15s ease;
@@ -266,24 +266,24 @@ main > .seg {
 .song-link:hover .button-arrow,
 .song-link:focus-visible .button-arrow {
   opacity: 1;
-  transform: translateX(5px);
+  transform: translateX(0.3125rem);
 }
 
 /* a replay's result, at the end of its heading: the score in the game's lettering, the accuracy and the grade */
 .replay-result {
   display: flex;
   align-items: baseline;
-  gap: 14px;
+  gap: 0.875rem;
   margin-left: auto;
   font-family: "Saira HUD", Saira, sans-serif;
-  font-size: 44px;
+  font-size: 2.75rem;
   line-height: 1;
 }
 .replay-result .meta {
-  font-size: 21px;
+  font-size: 1.3125rem;
 }
 .replay-result .rank {
-  font-size: 44px;
+  font-size: 2.75rem;
 }
 .song-heading .difficulty {
   vertical-align: 1px;
@@ -294,13 +294,13 @@ main > .seg {
 :where(.arrow-link) {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
 }
 .arrow-link .button-arrow {
-  width: 16px;
-  height: 16px;
+  width: 1rem;
+  height: 1rem;
   opacity: 0;
-  transform: translateX(-6px);
+  transform: translateX(-0.375rem);
   transition:
     opacity 0.15s ease,
     transform 0.3s var(--ease);
@@ -320,13 +320,13 @@ main > .seg {
 .chart-link {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 0.75rem;
   min-width: 0;
 }
 .chart-link img {
   flex: none;
-  width: 48px;
-  height: 27px;
+  width: 3rem;
+  height: 1.6875rem;
   object-fit: cover;
   transform: skewX(var(--skew));
 }
@@ -353,9 +353,9 @@ tr:has(.place) {
 }
 .chart-links {
   display: flex;
-  gap: 18px;
+  gap: 1.125rem;
 }
 .leaderboard-layout tr:has(.place) .leaderboard-avatar {
-  width: 40px;
-  height: 40px;
+  width: 2.5rem;
+  height: 2.5rem;
 }

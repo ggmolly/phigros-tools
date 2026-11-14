@@ -66,6 +66,8 @@ export const Route = createRootRouteWithContext<{ i18n: { locale: Locale } }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      // sizes are in rem, so the page can follow the system's text size (Chrome on Android)
+      { name: "text-scale", content: "scale" },
       ...pageMeta({
         title: SITE_NAME,
         description: headT(match).t.seo.siteDescription,

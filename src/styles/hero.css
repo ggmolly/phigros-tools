@@ -6,9 +6,9 @@
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
-  gap: 30px 64px;
-  margin: 0 0 28px;
-  padding: 30px 34px 28px;
+  gap: 1.875rem 4rem;
+  margin: 0 0 1.75rem;
+  padding: 1.875rem 2.125rem 1.75rem;
   background: var(--glass);
 }
 .hero-id {
@@ -17,28 +17,28 @@
   grid-column: 1 / -1;
   min-width: 0;
   /* Room for the Share button in the top-right corner. */
-  margin-right: 190px;
-  padding-bottom: 16px;
+  margin-right: 11.875rem;
+  padding-bottom: 1rem;
 }
 /* Avatar tile cut on the shared slant (--tan × its height), overlapping the name band like the game's. */
 .hero-avatar {
   position: relative;
   z-index: 1;
   flex: none;
-  width: 136px;
-  height: 112px;
-  margin-right: -28px;
+  width: 8.5rem;
+  height: 7rem;
+  margin-right: -1.75rem;
   object-fit: cover;
-  clip-path: polygon(28px 0, 100% 0, calc(100% - 28px) 100%, 0 100%);
+  clip-path: polygon(1.75rem 0, 100% 0, calc(100% - 1.75rem) 100%, 0 100%);
 }
 .hero-name {
   display: flex;
   align-items: center;
   flex: 0 1 auto;
   min-width: 0;
-  height: 112px;
-  padding: 0 84px 0 58px;
-  font-size: 44px;
+  height: 7rem;
+  padding: 0 5.25rem 0 3.625rem;
+  font-size: 2.75rem;
   font-weight: 400;
   line-height: 1.1;
 }
@@ -56,22 +56,22 @@
   display: flex;
   align-items: baseline;
   flex: none;
-  gap: 12px;
+  gap: 0.75rem;
   align-self: flex-end;
-  height: 60px;
-  margin: 0 0 -16px -56px;
-  padding: 6px 30px 0;
+  height: 3.75rem;
+  margin: 0 0 -1rem -3.5rem;
+  padding: 0.375rem 1.875rem 0;
   color: var(--ink);
 }
 .hero-rks::before {
   background: var(--white);
 }
 .hero-rks-label {
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 500;
 }
 .ranking-number {
-  font-size: 50px;
+  font-size: 3.125rem;
   font-weight: 400;
   line-height: 1;
   letter-spacing: 0.02em;
@@ -83,11 +83,11 @@
   flex: none;
   align-self: flex-end;
   /* As tall as the RKS tag beside it. */
-  height: 60px;
-  min-width: 76px;
-  margin: 0 0 -16px 10px;
-  padding: 0 18px;
-  font-size: 40px;
+  height: 3.75rem;
+  min-width: 4.75rem;
+  margin: 0 0 -1rem 0.625rem;
+  padding: 0 1.125rem;
+  font-size: 2.5rem;
   line-height: 1;
 }
 .challenge-white {
@@ -120,18 +120,18 @@
 .hero-stats {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px 40px;
-  padding-left: 8px;
+  gap: 0.75rem 2.5rem;
+  padding-left: 0.5rem;
 }
 .hero-stats .stat {
   align-items: flex-start;
   padding: 0;
 }
 .hero-stats .stat-value {
-  font-size: 34px;
+  font-size: 2.125rem;
 }
 .hero-stats .stat-total {
-  font-size: 17px;
+  font-size: 1.0625rem;
 }
 .hero-stats .stat-label {
   color: var(--dim);
@@ -147,10 +147,10 @@
   grid-column: 1 / -1;
   grid-row: 3;
   max-width: 70ch;
-  margin-top: -12px;
-  padding-left: 8px;
+  margin-top: -0.75rem;
+  padding-left: 0.5rem;
   color: var(--dim);
-  font-size: 15px;
+  font-size: 0.9375rem;
   white-space: pre-line;
 }
 .stat-bar {
@@ -162,7 +162,7 @@
 .stat-bar::before {
   content: "";
   position: absolute;
-  inset: 8px 0;
+  inset: 0.5rem 0;
   z-index: -1;
   background: rgb(20 18 26 / 0.7);
   transform: skewX(var(--skew));
@@ -174,17 +174,17 @@
 .level-switch-option {
   display: grid;
   place-items: center;
-  width: 62px;
+  width: 3.875rem;
   color: var(--dim);
-  font-size: 22px;
+  font-size: 1.375rem;
 }
 .level-switch-option:hover {
   color: var(--text);
 }
 .level-switch-option[aria-pressed="true"] {
-  width: 96px;
+  width: 6rem;
   color: var(--ink);
-  font-size: 34px;
+  font-size: 2.125rem;
 }
 .level-switch-option[aria-pressed="true"]::before {
   background: var(--white);
@@ -205,19 +205,19 @@
   align-items: center;
   justify-content: center;
   min-width: 0;
-  padding: 12px 8px;
+  padding: 0.75rem 0.5rem;
   text-align: center;
 }
 .stat-value {
-  font-size: 36px;
+  font-size: 2.25rem;
   font-weight: 400;
   line-height: 1.05;
 }
 .stat-total {
-  font-size: 18px;
+  font-size: 1.125rem;
 }
 .stat-label {
-  font-size: 14px;
+  font-size: 0.875rem;
   white-space: nowrap;
 }
 .negative {

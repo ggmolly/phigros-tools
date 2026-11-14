@@ -1,72 +1,72 @@
 /* ---------- Dialogs ---------- */
 dialog {
-  width: min(560px, calc(100% - 32px));
+  width: min(35rem, calc(100% - 2rem));
   margin: auto;
-  padding: 26px 30px 28px;
+  padding: 1.625rem 1.875rem 1.75rem;
   border: 0;
   background: rgb(16 10 16 / 0.96);
   color: var(--text);
-  box-shadow: 0 30px 90px rgb(0 0 0 / 0.6);
+  box-shadow: 0 1.875rem 5.625rem rgb(0 0 0 / 0.6);
 }
 dialog::backdrop {
   background: rgb(10 5 10 / 0.6);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(0.5rem);
 }
 dialog h2 {
   position: relative;
-  padding-left: 22px;
-  font-size: 26px;
+  padding-left: 1.375rem;
+  font-size: 1.625rem;
   font-weight: 400;
 }
 dialog h2::before {
   content: "";
   position: absolute;
   left: 0;
-  top: 6px;
-  bottom: 6px;
-  width: 7px;
+  top: 0.375rem;
+  bottom: 0.375rem;
+  width: 0.4375rem;
   background: var(--white);
   transform: skewX(var(--skew));
 }
 dialog > .meta {
-  margin: 14px 0 18px;
+  margin: 0.875rem 0 1.125rem;
 }
 .dialog-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: 1.25rem;
 }
 .dialog-close {
-  padding: 0 8px;
-  font-size: 32px;
+  padding: 0 0.5rem;
+  font-size: 2rem;
   line-height: 1;
 }
 .dialog-close:hover {
   color: var(--glow);
 }
 .dialog-field {
-  margin-top: 16px;
+  margin-top: 1rem;
 }
 .dialog-field .field-label {
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 0.375rem;
 }
 .dialog-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 0.75rem;
 }
 .dialog-row .field,
 .dialog-row .select-field {
-  flex: 1 1 200px;
+  flex: 1 1 12.5rem;
 }
 .guide-steps {
   list-style: revert;
-  margin: 18px 0 14px;
-  padding-left: 22px;
+  margin: 1.125rem 0 0.875rem;
+  padding-left: 1.375rem;
   display: grid;
-  gap: 10px;
+  gap: 0.625rem;
 }
 #taptapDialog .seg {
   padding: 0;
@@ -75,14 +75,14 @@ dialog > .meta {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 18px 26px;
-  margin: 18px 0 14px;
+  gap: 1.125rem 1.625rem;
+  margin: 1.125rem 0 0.875rem;
 }
 .qr-slot {
   display: grid;
   place-items: center;
   flex: none;
-  width: 200px;
+  width: 12.5rem;
   aspect-ratio: 1;
   background: rgb(255 255 255 / 0.06);
 }
@@ -92,13 +92,13 @@ dialog > .meta {
 }
 .taptap-side {
   display: flex;
-  flex: 1 1 200px;
+  flex: 1 1 12.5rem;
   flex-direction: column;
   align-items: flex-start;
-  gap: 12px;
+  gap: 0.75rem;
 }
 .taptap-code strong {
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: 500;
   letter-spacing: 0.12em;
 }
@@ -109,11 +109,11 @@ dialog strong {
 .dialog-actions {
   display: flex;
   justify-content: flex-end;
-  margin-top: 20px;
+  margin-top: 1.25rem;
 }
 /* Fades in with an animation, and out with transitions that keep it in the top layer until done. */
 #usbDialog {
-  width: min(720px, calc(100% - 24px));
+  width: min(45rem, calc(100% - 1.5rem));
   animation: usb-appear 0.2s ease-out;
 }
 #usbDialog,
@@ -126,7 +126,7 @@ dialog strong {
 }
 #usbDialog:not([open]) {
   opacity: 0;
-  transform: translateY(10px) scale(0.98);
+  transform: translateY(0.625rem) scale(0.98);
   pointer-events: none;
 }
 #usbDialog:not([open])::backdrop {
@@ -137,27 +137,27 @@ dialog strong {
   font-weight: 500;
 }
 .usb-progress {
-  max-height: 190px;
+  max-height: 11.875rem;
   overflow: auto;
-  padding: 12px 16px;
+  padding: 0.75rem 1rem;
   background: rgb(0 0 0 / 0.5);
   font:
-    14px / 1.6 ui-monospace,
+    0.875rem / 1.6 ui-monospace,
     monospace;
   overflow-wrap: anywhere;
 }
 .usb-progress p + p {
-  margin-top: 7px;
+  margin-top: 0.4375rem;
 }
 .usb-progress p:last-child {
   color: var(--glow);
 }
 .usb-done {
-  margin-top: 12px;
+  margin-top: 0.75rem;
 }
 @keyframes usb-appear {
   from {
     opacity: 0;
-    transform: translateY(10px) scale(0.98);
+    transform: translateY(0.625rem) scale(0.98);
   }
 }

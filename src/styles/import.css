@@ -5,9 +5,9 @@
   display: grid;
   grid-template-columns: auto repeat(4, minmax(0, 1fr));
   align-items: center;
-  gap: 10px 44px;
-  margin: 0 0 26px;
-  padding: 14px 64px;
+  gap: 0.625rem 2.75rem;
+  margin: 0 0 1.625rem;
+  padding: 0.875rem 4rem;
 }
 .import-band::before {
   content: "";
@@ -18,17 +18,17 @@
   transform: skewX(var(--skew));
 }
 .import-heading h2 {
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: 400;
   line-height: 1.1;
 }
 .import-heading p {
   color: var(--dim);
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 .import-option strong {
   display: block;
-  font-size: 19px;
+  font-size: 1.1875rem;
   font-weight: 400;
   line-height: 1.2;
 }
@@ -36,12 +36,12 @@
   display: block;
   margin-top: 1px;
   color: var(--dim);
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 .import-list {
   display: grid;
-  gap: 4px;
-  margin-top: 16px;
+  gap: 0.25rem;
+  margin-top: 1rem;
 }
 .import-open {
   flex: none;

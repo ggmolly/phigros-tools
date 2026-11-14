@@ -81,7 +81,7 @@
   position: absolute;
   border-radius: 50%;
   background: rgb(255 255 255 / 0.3);
-  box-shadow: 0 0 22px 8px rgb(255 255 255 / 0.12);
+  box-shadow: 0 0 1.375rem 0.5rem rgb(255 255 255 / 0.12);
   filter: blur(1.5px);
   animation: drift 24s ease-in-out infinite alternate;
 }
@@ -90,6 +90,6 @@
     transform: translate(0, 0);
   }
   to {
-    transform: translate(40px, -60px);
+    transform: translate(2.5rem, -3.75rem);
   }
 }

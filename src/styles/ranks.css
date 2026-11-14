@@ -3,19 +3,19 @@
   display: inline-grid;
   place-items: center;
   min-width: 1.15em;
-  font-size: 26px;
+  font-size: 1.625rem;
   font-weight: 600;
   line-height: 1;
 }
 .rank-phi {
   color: var(--phi);
   text-shadow:
-    0 0 5px rgb(245 242 91 / 0.85),
-    0 0 16px rgb(245 242 91 / 0.5);
+    0 0 0.3125rem rgb(245 242 91 / 0.85),
+    0 0 1rem rgb(245 242 91 / 0.5);
 }
 .rank-fc {
   color: var(--fc);
-  text-shadow: 0 0 10px rgb(79 141 245 / 0.65);
+  text-shadow: 0 0 0.625rem rgb(79 141 245 / 0.65);
 }
 .rank-plain {
   color: var(--text);
@@ -23,12 +23,12 @@
 .difficulty {
   display: inline-grid;
   place-items: center;
-  min-width: 38px;
-  padding: 0 9px;
+  min-width: 2.375rem;
+  padding: 0 0.5625rem;
   color: #fff;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
-  line-height: 21px;
+  line-height: 1.3125rem;
 }
 .difficulty::before {
   background: var(--at);
@@ -52,31 +52,31 @@
   font-size: 0.6em;
   line-height: 1;
   vertical-align: super;
-  text-shadow: 0 0 8px rgb(245 242 91 / 0.45);
+  text-shadow: 0 0 0.5rem rgb(245 242 91 / 0.45);
 }
 /* The rank icon sits in a flex row, where vertical-align does nothing. */
 .record-rank .phi-slot {
   align-self: flex-start;
   /* Pull it in past the rank icon's min-width, to sit against the φ. */
   margin-left: -3px;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 600;
 }
 .phi-note {
-  margin-left: 12px;
+  margin-left: 0.75rem;
   color: var(--phi);
-  font-size: 17px;
+  font-size: 1.0625rem;
   white-space: nowrap;
-  text-shadow: 0 0 8px rgb(245 242 91 / 0.45);
+  text-shadow: 0 0 0.5rem rgb(245 242 91 / 0.45);
 }
 
 /* How a play got on a leaderboard: a chip, lit when the server judged its replay again. */
 .status {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 1px 12px;
-  font-size: 13px;
+  gap: 0.3125rem;
+  padding: 1px 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 500;
   color: var(--dim);
   cursor: help;
@@ -85,8 +85,8 @@
   background: rgb(255 255 255 / 0.1);
 }
 .status svg {
-  width: 12px;
-  height: 12px;
+  width: 0.75rem;
+  height: 0.75rem;
   fill: none;
   stroke: currentcolor;
   stroke-width: 3;

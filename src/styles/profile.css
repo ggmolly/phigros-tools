@@ -17,43 +17,43 @@
   margin-right: 0;
 }
 .profile-cleared .stat-value {
-  text-shadow: 0 0 10px rgb(255 255 255 / 0.45);
+  text-shadow: 0 0 0.625rem rgb(255 255 255 / 0.45);
 }
 .profile-fc .stat-value {
   color: var(--fc);
-  text-shadow: 0 0 10px rgb(79 141 245 / 0.65);
+  text-shadow: 0 0 0.625rem rgb(79 141 245 / 0.65);
 }
 .profile-phi .stat-value {
   color: var(--phi);
   text-shadow:
-    0 0 5px rgb(245 242 91 / 0.85),
-    0 0 16px rgb(245 242 91 / 0.5);
+    0 0 0.3125rem rgb(245 242 91 / 0.85),
+    0 0 1rem rgb(245 242 91 / 0.5);
 }
 .profile-details {
   display: flex;
   flex-wrap: wrap;
   grid-column: 1 / -1;
-  gap: 10px 40px;
+  gap: 0.625rem 2.5rem;
   margin: 0;
-  padding: 18px 8px 0;
+  padding: 1.125rem 0.5rem 0;
   border-top: 1px solid var(--hairline);
 }
 .profile-details dt {
   color: var(--dim);
-  font-size: 14px;
+  font-size: 0.875rem;
 }
 .profile-details dd {
   margin: 0;
-  font-size: 20px;
+  font-size: 1.25rem;
 }
 .profile-number {
   color: var(--faint);
   font-size: 0.55em;
-  margin-left: 6px;
+  margin-left: 0.375rem;
 }
 .profile-card ~ .panel,
 .profile-card ~ .select-screen {
-  margin-top: 18px;
+  margin-top: 1.125rem;
 }
 .profile-list {
   margin: 0;
@@ -63,16 +63,16 @@
 .profile-list li {
   display: grid;
   align-items: center;
-  gap: 4px 14px;
-  padding: 10px 4px;
+  gap: 0.25rem 0.875rem;
+  padding: 0.625rem 0.25rem;
   border-bottom: 1px solid var(--hairline);
 }
 .profile-top li {
-  grid-template-columns: minmax(0, 1fr) 5.2em 4.8em 24px 6.8em 5.8em 48px;
+  grid-template-columns: minmax(0, 1fr) 5.2em 4.8em 1.5rem 6.8em 5.8em 3rem;
 }
 .profile-recent li {
   /* the date takes the RKS and status columns of the top plays, so both lists line up */
-  grid-template-columns: minmax(0, 1fr) 5.2em 4.8em 24px calc(12.6em + 14px) 48px;
+  grid-template-columns: minmax(0, 1fr) 5.2em 4.8em 1.5rem calc(12.6em + 0.875rem) 3rem;
 }
 .profile-activity li {
   grid-template-columns: minmax(0, 1fr) auto;
@@ -83,19 +83,19 @@
 .profile-chart {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
   min-width: 0;
 }
 .profile-chart .record-title {
   white-space: nowrap;
 }
 .profile-more {
-  margin-top: 12px;
+  margin-top: 0.75rem;
 }
-@media (max-width: 700px) {
+@media (max-width: 43.75em) {
   .profile-top li,
   .profile-recent li {
-    grid-template-columns: minmax(0, 1fr) 5.6em 28px 52px;
+    grid-template-columns: minmax(0, 1fr) 5.6em 1.75rem 3.25rem;
   }
   .profile-activity li {
     grid-template-columns: minmax(0, 1fr);
@@ -118,21 +118,21 @@
   flex-direction: column;
   gap: 2px;
   margin: 0;
-  padding: 8px 10px;
-  translate: 8px;
+  padding: 0.5rem 0.625rem;
+  translate: 0.5rem;
   background: var(--glass-strong);
   pointer-events: none;
   white-space: nowrap;
 }
 .rks-tip.end {
-  translate: calc(-100% - 8px);
+  translate: calc(-100% - 0.5rem);
 }
-@media (max-width: 720px) {
+@media (max-width: 45em) {
   .profile-card .stat-bar {
     flex-direction: row;
   }
   .profile-card .stat-bar::before {
-    inset: 8px 0;
+    inset: 0.5rem 0;
     transform: skewX(var(--skew));
   }
   .profile-card .hero-stats {
@@ -143,10 +143,10 @@
     white-space: normal;
   }
   .profile-details {
-    gap: 10px 28px;
-    padding: 14px 4px 0;
+    gap: 0.625rem 1.75rem;
+    padding: 0.875rem 0.25rem 0;
   }
   .profile-details dd {
-    font-size: 17px;
+    font-size: 1.0625rem;
   }
 }

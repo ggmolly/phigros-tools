@@ -118,7 +118,7 @@
     color: var(--text);
     background: transparent;
     font:
-      400 16px / 1.45 Saira,
+      400 1rem / 1.45 Saira,
       "Segoe UI",
       sans-serif;
     font-variant-numeric: tabular-nums;

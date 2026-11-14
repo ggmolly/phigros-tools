@@ -154,7 +154,7 @@ function ChartsPage() {
                     <img
                       src={`/covers/${song.id}.thumb.avif`}
                       srcSet={`/covers/${song.id}.thumb.avif 256w, /covers/${song.id}.avif 1024w`}
-                      sizes="(max-width: 640px) 50vw, 240px"
+                      sizes="(max-width: 40em) 50vw, 15rem"
                       width={256}
                       height={135}
                       loading="lazy"

@@ -1,8 +1,8 @@
 /* ---------- Charts gallery ---------- */
 .gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(13.75rem, 1fr));
+  gap: 0.75rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -28,10 +28,10 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 8px 12px;
+  padding: 0.5rem 0.75rem;
   background: var(--glass-strong);
-  font-size: 13px;
-  line-height: 17px;
+  font-size: 0.8125rem;
+  line-height: 1.0625rem;
   opacity: 0;
   transition: opacity 0.15s ease;
 }
@@ -44,8 +44,8 @@
   outline-offset: 2px;
 }
 .gallery-title {
-  font-size: 15px;
-  line-height: 21px;
+  font-size: 0.9375rem;
+  line-height: 1.3125rem;
   font-weight: 600;
 }
 .gallery-title,
@@ -59,8 +59,8 @@
   color: var(--dim);
 }
 .gallery-line .difficulty {
-  min-width: 30px;
+  min-width: 1.875rem;
   margin-right: 2px;
-  font-size: 11px;
-  line-height: 15px;
+  font-size: 0.6875rem;
+  line-height: 0.9375rem;
 }

@@ -1,4 +1,5 @@
-/* One file per part of the site. The order is the cascade: later files win over earlier ones. */
+/* One file per part of the site. The order is the cascade: later files win over earlier ones.
+ * Lengths are in rem (em in media queries) so the page follows the reader's text size; only lines up to 3px stay px. */
 @import "./styles/fonts.css";
 @import "./styles/base.css";
 @import "./styles/fog.css";
