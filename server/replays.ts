@@ -33,8 +33,9 @@ sqlite.run(`
 `);
 sqlite.run("CREATE INDEX IF NOT EXISTS idx_replays_key ON replays(key)");
 // each player's best on each chart, so a chart's ranking is read in order from the index: a verified replay (sha256),
-// or a record their game declared (imported, no sha256, no date). created is when it became the best, for ties. the
-// scope is what a leaderboard counts: 0 for all (both), 1 for verified replays only
+// or a record their game declared (imported, no sha256, no date). a tie goes to the earliest played replay, then to
+// the earliest record (created is when it became the best). the scope is what a leaderboard counts: 0 for all
+// (both), 1 for verified replays only
 sqlite.run(`
   CREATE TABLE IF NOT EXISTS bests (
     key BLOB NOT NULL,
@@ -50,8 +51,9 @@ sqlite.run(`
     PRIMARY KEY (key, song, level, scope)
   )
 `);
+sqlite.run("DROP INDEX IF EXISTS idx_bests_rank");
 sqlite.run(
-  "CREATE INDEX IF NOT EXISTS idx_bests_rank ON bests(scope, song, level, score DESC, created)",
+  "CREATE INDEX IF NOT EXISTS idx_bests_order ON bests(scope, song, level, score DESC, played IS NULL, played, created)",
 );
 
 /** What a leaderboard counts: all (verified replays and imported records), or verified replays only. */
@@ -196,14 +198,14 @@ const chartPage = sqlite.prepare<
   `SELECT b.sha256, b.score, b.accuracy, b.fc, b.played, r.status, p.id, p.name, p.number, p.avatar FROM bests b
    LEFT JOIN replays r ON r.sha256 = b.sha256 JOIN players p ON p.key = b.key
    WHERE b.scope = ? AND b.song = ? AND b.level = ? AND p.unlisted = 0
-   ORDER BY b.score DESC, b.created LIMIT ? OFFSET ?`,
+   ORDER BY b.score DESC, b.played IS NULL, b.played, b.created LIMIT ? OFFSET ?`,
 );
 const chartCount = sqlite.prepare<{ count: number }, [Scope, string, string]>(
   `SELECT COUNT(*) AS count FROM bests b JOIN players p ON p.key = b.key
    WHERE b.scope = ? AND b.song = ? AND b.level = ? AND p.unlisted = 0`,
 );
 
-/** A chart's players, best score first and the earliest to reach it on a tie. */
+/** A chart's players, best score first and on a tie the earliest verified replay, then the earliest record. */
 export function chartPlays(
   scope: Scope,
   song: string,
