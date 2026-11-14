@@ -44,3 +44,104 @@ main > .seg {
   height: 28px;
   flex: none;
 }
+
+/* a ranking's song: its cover and title are one link to the song's page, and say so */
+.song-link {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.song-link img {
+  width: 96px;
+  height: 54px;
+  object-fit: cover;
+  transform: skewX(var(--skew));
+  transition: filter 0.15s ease;
+}
+.song-link .panel-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: underline transparent;
+  text-underline-offset: 5px;
+  transition: text-decoration-color 0.15s ease;
+}
+.song-link .button-arrow {
+  opacity: 0.55;
+  transition:
+    opacity 0.15s ease,
+    transform 0.3s var(--ease);
+}
+.song-link:hover img,
+.song-link:focus-visible img {
+  filter: brightness(1.2);
+}
+.song-link:hover .panel-title,
+.song-link:focus-visible .panel-title {
+  text-decoration-color: currentcolor;
+}
+.song-link:hover .button-arrow,
+.song-link:focus-visible .button-arrow {
+  opacity: 1;
+  transform: translateX(5px);
+}
+
+/* a link whose arrow slides in when its row is pointed at: a chart to its ranking, a player to their profile.
+ * with no pointer to hover, the arrow is always there */
+.arrow-link .button-arrow {
+  width: 16px;
+  height: 16px;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition:
+    opacity 0.15s ease,
+    transform 0.3s var(--ease);
+}
+:is(tr, li):hover .arrow-link .button-arrow,
+.arrow-link:hover .button-arrow,
+.arrow-link:focus-visible .button-arrow {
+  opacity: 0.8;
+  transform: none;
+}
+@media (hover: none) {
+  .arrow-link .button-arrow {
+    opacity: 0.45;
+    transform: none;
+  }
+}
+.chart-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.chart-link img {
+  flex: none;
+  width: 48px;
+  height: 27px;
+  object-fit: cover;
+  transform: skewX(var(--skew));
+}
+
+/* the first three of a ranking: their place in the game's phi yellow, silver and bronze, their row a bit larger */
+.place {
+  font-size: 1.2em;
+  font-weight: 600;
+}
+.place-1 {
+  color: var(--phi);
+}
+.place-2 {
+  color: #d3dbe6;
+}
+.place-3 {
+  color: #e2a877;
+}
+.leaderboard-layout tr:has(.place) {
+  background: linear-gradient(90deg, rgb(255 255 255 / 0.07), transparent 70%);
+  font-size: 1.12em;
+}
+.leaderboard-layout tr:has(.place) .leaderboard-avatar {
+  width: 40px;
+  height: 40px;
+}

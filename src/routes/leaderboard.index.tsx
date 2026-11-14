@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Pager, PlayerTag } from "../components/plays";
+import { Pager, Place, PlayerTag } from "../components/plays";
 import { useT } from "../i18n";
 import { getPlayerRanking, PLAYS_PAGE } from "../plays";
 
@@ -56,7 +56,7 @@ function Players() {
           <tbody>
             {ranking.players.map((player) => (
               <tr key={player.player.id}>
-                <td className="num meta">{player.rank}</td>
+                <Place rank={player.rank} />
                 <td>
                   <PlayerTag player={player.player} />
                 </td>

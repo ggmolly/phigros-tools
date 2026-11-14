@@ -86,9 +86,7 @@
   gap: 8px;
   min-width: 0;
 }
-.profile-chart a {
-  overflow: hidden;
-  text-overflow: ellipsis;
+.profile-chart .record-title {
   white-space: nowrap;
 }
 .profile-more {

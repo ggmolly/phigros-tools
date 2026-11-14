@@ -10,7 +10,7 @@ import {
   type PlayedChart,
   type PlayerProfile,
 } from "../plays";
-import { PlayStatusLabel } from "./plays";
+import { ChartLink, PlayStatusLabel } from "./plays";
 import { Avatar, Difficulty, Rank, Stat, score7 } from "./primitives";
 
 // a player's public page in parts: their own Overview shows them around what only their save has
@@ -84,9 +84,7 @@ function ChartName({ chart }: { chart: { song: string; level: string } }) {
   return (
     <span className="profile-chart">
       <Difficulty level={chart.level} />
-      <Link to="/charts/$id/plays/$level" params={{ id: chart.song, level: chart.level }}>
-        {catalogSong(chart.song)?.title ?? chart.song}
-      </Link>
+      <ChartLink song={chart.song} level={chart.level} />
     </span>
   );
 }

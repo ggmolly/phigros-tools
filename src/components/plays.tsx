@@ -1,20 +1,52 @@
 import { Link } from "@tanstack/react-router";
 import * as v from "valibot";
+import { catalogSong } from "../catalog";
 import { useFormat, useT } from "../i18n";
 import type { Play, PlayerName, PlayStatus, ReplayInfo } from "../plays";
+import { Arrow } from "./arrow";
 import { Avatar, Rank, score7 } from "./primitives";
 
 /** The player's avatar and name#0042, linking to their page, the number dimmed so the name reads first. */
 export function PlayerTag({ player }: { player: PlayerName }) {
   return (
-    <Link to="/players/$id" params={{ id: player.id }} className="leaderboard-player">
+    <Link to="/players/$id" params={{ id: player.id }} className="leaderboard-player arrow-link">
       <Avatar name={player.avatar} className="leaderboard-avatar" />
       <span>
         {player.name}
         <span className="meta">#{String(player.number).padStart(4, "0")}</span>
       </span>
+      <Arrow />
     </Link>
   );
+}
+
+/** A chart as a link to its ranking: the song's cover, its title, and an arrow that says it leads somewhere. */
+export function ChartLink({
+  song,
+  level,
+  verified,
+}: {
+  song: string;
+  level: string;
+  verified?: boolean;
+}) {
+  return (
+    <Link
+      to="/charts/$id/plays/$level"
+      params={{ id: song, level }}
+      search={{ verified: verified || undefined }}
+      className="chart-link arrow-link"
+    >
+      <img src={`/covers/${song}.thumb.avif`} alt="" loading="lazy" />
+      <span className="record-title">{catalogSong(song)?.title ?? song}</span>
+      <Arrow />
+    </Link>
+  );
+}
+
+/** A rank's cell: the first three places stand out, in the game's phi yellow, then silver and bronze. */
+export function Place({ rank }: { rank: number }) {
+  return <td className={rank <= 3 ? `num place place-${rank}` : "num meta"}>{rank}</td>;
 }
 
 /** Verified, Imported, Pending or Unverified, with what it means on hover. */
@@ -36,7 +68,7 @@ export function PlayStatusLabel({ status }: { status: PlayStatus | ReplayInfo["s
 export function PlayCells({ play }: { play: Play }) {
   return (
     <>
-      <td className="num meta">{play.rank}</td>
+      <Place rank={play.rank} />
       <td>
         <PlayerTag player={play.player} />
       </td>

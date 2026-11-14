@@ -3,7 +3,7 @@ import { useState } from "react";
 import * as v from "valibot";
 import { catalogSong, searchFold } from "../catalog";
 import { SiteHeader } from "../components/chrome";
-import { RankingSearch, ScopeSwitch } from "../components/plays";
+import { ChartLink, RankingSearch, ScopeSwitch } from "../components/plays";
 import { Difficulty } from "../components/primitives";
 import { useFormat, useT } from "../i18n";
 import { getChartCounts } from "../plays";
@@ -80,13 +80,7 @@ function Charts() {
                   <Difficulty level={chart.level} />
                 </td>
                 <td>
-                  <Link
-                    to="/charts/$id/plays/$level"
-                    params={{ id: chart.song.id, level: chart.level }}
-                    search={{ verified: verified || undefined }}
-                  >
-                    <span className="record-title">{chart.song.title}</span>
-                  </Link>
+                  <ChartLink song={chart.song.id} level={chart.level} verified={verified} />
                 </td>
                 <td className="num">{format.number(chart.count)}</td>
               </tr>
