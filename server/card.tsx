@@ -9,13 +9,20 @@ import { avatarUrl, rankOf, score7 } from "../src/components/primitives";
 import { type ChartMetric, calculateRanking, type RankingResult } from "../src/metrics";
 import { countLevels, LEVELS, type SongRecord } from "../src/modules";
 import { DEFAULT_PALETTE, FOG_LAYOUT } from "../src/palettes";
-import { CARDS, type PlayerName, type PlayerProfile, type ReplayInfo } from "../src/plays";
+import {
+  CARDS,
+  type ChartPlays,
+  type Play,
+  type PlayerName,
+  type PlayerProfile,
+  type ReplayInfo,
+} from "../src/plays";
 import { songPalette } from "../src/song-palettes";
 
 const { width: W, height: H } = CARDS.player;
 
 /*
- * The link preview images of players and replays as JSX, laid out by satori (flexbox, like the page) into an SVG and rasterised by sharp. It's in
+ * The link preview images of players, replays and chart rankings as JSX, laid out by satori (flexbox, like the page) into an SVG and rasterised by sharp. It's in
  * English whatever the page's language.
  */
 
@@ -39,10 +46,13 @@ type Style = React.CSSProperties;
  */
 function Para({
   fill,
+  edge,
   style,
   children,
 }: {
   fill: string;
+  /** The colour of a line along the top. */
+  edge?: string;
   style?: Style;
   children?: React.ReactNode;
 }) {
@@ -57,6 +67,7 @@ function Para({
           height: "100%",
           background: fill,
           transform: SKEW,
+          ...(edge && { borderTop: `3px solid ${edge}` }),
         }}
       />
       {children}
@@ -133,6 +144,8 @@ function Header({ date }: { date: Date }) {
   );
 }
 
+const tag = (player: PlayerName) => `#${String(player.number).padStart(4, "0")}`;
+
 /** Profile ribbon: avatar tile cut on the same slant, like the in-game profile, then the name#0042. */
 function Ribbon({
   player,
@@ -170,9 +183,7 @@ function Ribbon({
         }}
       >
         <span style={{ ...ellipsis, fontSize: size }}>{player.name}</span>
-        <span style={{ fontSize: 30, color: FAINT }}>
-          #{String(player.number).padStart(4, "0")}
-        </span>
+        <span style={{ fontSize: 30, color: FAINT }}>{tag(player)}</span>
       </div>
     </Para>
   );
@@ -193,14 +204,24 @@ function Score({ value }: { value: number }) {
 }
 
 /** Value, small total, label underneath. */
-function Stat({ label, value, total }: { label: string; value: number; total?: number }) {
+function Stat({
+  label,
+  value,
+  total,
+  small,
+}: {
+  label: string;
+  value: number;
+  total?: number;
+  small?: boolean;
+}) {
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1 }}>
       <div style={baseline}>
-        <span style={{ fontSize: 60 }}>{value}</span>
+        <span style={{ fontSize: small ? 34 : 60 }}>{value}</span>
         {total !== undefined && <span style={{ fontSize: 26 }}>/{total}</span>}
       </div>
-      <span style={{ fontSize: 22 }}>{label}</span>
+      <span style={{ fontSize: small ? 18 : 22, ...(small && { color: DIM }) }}>{label}</span>
     </div>
   );
 }
@@ -389,22 +410,29 @@ const COVER_W = 440;
 const COVER_H = Math.round((COVER_W * 540) / 1024);
 
 /**
- * A replay's card: the player, score, rank, accuracy and judgements, beside the song's cover over its blur. No artist,
- * the card's fonts only hold the song titles' characters.
+ * The frame of a chart's cards: `children` on the left, beside the song's cover over its blur, its title and its
+ * level. No artist, the card's fonts only hold the song titles' characters.
  */
-function ReplayCard({
-  info,
-  avatar,
+function SongCard({
+  song: id,
+  level,
+  date,
   backdrop,
   cover,
+  note,
+  children,
 }: {
-  info: ReplayInfo;
-  avatar?: string;
+  song: string;
+  level: string;
+  date: Date;
   backdrop?: string;
   cover?: string;
+  /** Said next to the level. */
+  note?: string;
+  children: React.ReactNode;
 }) {
-  const song = catalogSong(info.song)!;
-  const constant = song.constants[LEVELS.indexOf(info.level as (typeof LEVELS)[number])] ?? 0;
+  const song = catalogSong(id)!;
+  const constant = song.constants[LEVELS.indexOf(level as (typeof LEVELS)[number])] ?? 0;
   const slant = COVER_H * TAN;
   return (
     <div
@@ -423,35 +451,9 @@ function ReplayCard({
       {backdrop && (
         <img src={backdrop} alt="" width={RW} height={RH} style={{ position: "absolute" }} />
       )}
-      <Header date={new Date(info.date)} />
+      <Header date={date} />
       <div style={{ display: "flex", marginTop: 32, paddingLeft: 40, gap: 36 }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: 18, width: 644 }}>
-          <Ribbon player={info.player} avatar={avatar} width={630} size={48} />
-          <Para
-            fill="rgba(8,4,12,.6)"
-            style={{ ...baseline, width: 630, height: 132, marginLeft: 8, paddingLeft: 36 }}
-          >
-            <span style={{ fontSize: 108, fontWeight: 300, marginTop: 12 }}>
-              {score7(info.score)}
-            </span>
-            <span style={{ fontSize: 84, marginLeft: 26 }}>
-              <RankGlyph score={info.score} fc={info.fc} />
-            </span>
-          </Para>
-          <div style={{ ...baseline, marginLeft: 44, gap: 28 }}>
-            <span style={{ fontSize: 40 }}>{info.accuracy.toFixed(2)}%</span>
-            <span style={{ fontSize: 24, color: DIM }}>Max Combo {info.maxcombo}</span>
-          </div>
-          <Para
-            fill="rgba(20,18,26,.8)"
-            style={{ width: 620, height: 96, marginLeft: 16, paddingLeft: 12, paddingRight: 12 }}
-          >
-            <Stat label="Perfect" value={info.perfect} />
-            <Stat label="Good" value={info.good} />
-            <Stat label="Bad" value={info.bad} />
-            <Stat label="Miss" value={info.miss} />
-          </Para>
-        </div>
+        {children}
         <div style={{ display: "flex", flexDirection: "column", width: COVER_W, marginTop: 8 }}>
           {cover && (
             <img
@@ -467,24 +469,151 @@ function ReplayCard({
           <span style={{ ...ellipsis, marginTop: 24, fontSize: 38, fontWeight: 500 }}>
             {song.title}
           </span>
-          <div style={{ ...row, marginTop: 18, gap: 18 }}>
+          <div style={{ ...row, marginTop: 18, gap: 20 }}>
             <Para
-              fill={LEVEL_COLORS[info.level]!}
+              fill={LEVEL_COLORS[level]!}
               style={{ height: 40, paddingLeft: 22, paddingRight: 22 }}
             >
               <span style={{ fontSize: 24, fontWeight: 600 }}>
-                {info.level} {constant.toFixed(1)}
+                {level} {constant.toFixed(1)}
               </span>
             </Para>
-            {info.status === "verified" && (
-              <Para fill="#fff" style={{ height: 40, paddingLeft: 22, paddingRight: 22 }}>
-                <span style={{ fontSize: 22, fontWeight: 500, color: "#000" }}>Verified</span>
-              </Para>
-            )}
+            {note && <span style={{ fontSize: 24, color: DIM }}>{note}</span>}
           </div>
         </div>
       </div>
       <Disclaimer />
+    </div>
+  );
+}
+
+// the left side of a `SongCard`
+const column: Style = { display: "flex", flexDirection: "column", gap: 18, width: 644 };
+
+/** A replay's card: the player, score, rank, accuracy and judgements. */
+function ReplayCard({ info, avatar }: { info: ReplayInfo; avatar?: string }) {
+  return (
+    <div style={column}>
+      <Ribbon player={info.player} avatar={avatar} width={630} size={48} />
+      <Para
+        fill="rgba(8,4,12,.6)"
+        style={{ ...baseline, width: 630, height: 92, marginLeft: 8, paddingLeft: 36 }}
+      >
+        <span style={{ fontSize: 64, fontWeight: 300, marginTop: 8 }}>{score7(info.score)}</span>
+        <span style={{ fontSize: 52, marginLeft: 20 }}>
+          <RankGlyph score={info.score} fc={info.fc} />
+        </span>
+      </Para>
+      <div style={{ ...baseline, marginLeft: 40, gap: 22 }}>
+        <span style={{ fontSize: 30 }}>{info.accuracy.toFixed(2)}%</span>
+        <span style={{ fontSize: 20, color: DIM }}>Max Combo {info.maxcombo}</span>
+      </div>
+      <Para
+        fill="rgba(20,18,26,.8)"
+        style={{ width: 620, height: 80, marginLeft: 2, paddingLeft: 12, paddingRight: 12 }}
+      >
+        <Stat small label="Perfect" value={info.perfect} />
+        <Stat small label="Good" value={info.good} />
+        <Stat small label="Bad" value={info.bad} />
+        <Stat small label="Miss" value={info.miss} />
+      </Para>
+    </div>
+  );
+}
+
+// the podium's steps left to right: the place they hold, their height and the colour of `.podium` in leaderboard.css
+const PODIUM = [
+  [1, 190, "#d3dbe6"],
+  [0, 220, "#f5f25b"],
+  [2, 168, "#e2a877"],
+] as const;
+const OTHERS = 5; // places listed under the podium
+
+/** A chart ranking's card: the three best on a podium with their avatars, then the next places as rows. */
+function PlaysCard({ plays, avatars }: { plays: Play[]; avatars: (string | undefined)[] }) {
+  return (
+    <div style={column}>
+      <div style={{ display: "flex", alignItems: "flex-end", gap: 10, marginLeft: 26 }}>
+        {PODIUM.filter(([place]) => plays[place]).map(([place, height, colour]) => {
+          const play = plays[place]!;
+          const size = place ? 60 : 76;
+          return (
+            <Para
+              key={place}
+              fill="linear-gradient(180deg, rgba(40,36,48,.86), rgba(14,12,18,.8))"
+              edge={colour}
+              style={{
+                flexDirection: "column",
+                justifyContent: "center",
+                width: 198,
+                height,
+                paddingTop: 14,
+                gap: 6,
+              }}
+            >
+              {/* in the slanted corner, like `.podium-place` */}
+              <span
+                style={{
+                  position: "absolute",
+                  top: 12,
+                  left: (height * TAN) / 2 + 14,
+                  color: colour,
+                  fontSize: 30,
+                  fontWeight: 600,
+                  lineHeight: 1,
+                }}
+              >
+                {place + 1}
+              </span>
+              {avatars[place] && <img src={avatars[place]} alt="" width={size} height={size} />}
+              <div style={{ ...baseline, maxWidth: 176 }}>
+                <span style={{ ...ellipsis, fontSize: 20 }}>{play.player.name}</span>
+                <span style={{ fontSize: 14, color: FAINT }}>{tag(play.player)}</span>
+              </div>
+              <div style={{ ...baseline, gap: 10, fontSize: 26 }}>
+                <span style={{ fontWeight: 300 }}>{score7(play.score)}</span>
+                <RankGlyph score={play.score} fc={play.fc} />
+              </div>
+            </Para>
+          );
+        })}
+      </div>
+      {plays.length > PODIUM.length && (
+        <Para
+          fill="rgba(20,18,26,.8)"
+          style={{
+            flexDirection: "column",
+            alignItems: "stretch",
+            width: 618,
+            marginLeft: 4,
+            padding: "8px 30px",
+          }}
+        >
+          {plays.slice(PODIUM.length).map((play) => (
+            <div key={play.id} style={{ ...row, height: 32, fontSize: 22 }}>
+              <span style={{ width: 44, fontSize: 17, color: FAINT }}>
+                {String(play.rank).padStart(2, "0")}
+              </span>
+              <div style={{ ...baseline, flex: 1 }}>
+                <span style={{ ...ellipsis, maxWidth: 250 }}>{play.player.name}</span>
+                <span style={{ fontSize: 15, color: FAINT }}>{tag(play.player)}</span>
+              </div>
+              <span style={{ width: 84, fontSize: 18, color: DIM }}>
+                {play.accuracy.toFixed(2)}%
+              </span>
+              <span style={{ width: 112, fontWeight: 300 }}>{score7(play.score)}</span>
+              <div style={{ ...row, width: 24, justifyContent: "center" }}>
+                <RankGlyph score={play.score} fc={play.fc} />
+              </div>
+            </div>
+          ))}
+        </Para>
+      )}
+      {!plays.length && (
+        <span style={{ marginLeft: 44, marginTop: 24, fontSize: 30, color: DIM }}>
+          No plays yet
+        </span>
+      )}
     </div>
   );
 }
@@ -563,20 +692,55 @@ export async function renderPlayerCard(origin: string, profile: PlayerProfile) {
   return render(origin, card, CARDS.player);
 }
 
+/** What `SongCard` shows of a song: its cover, and the same blurred behind the card. */
+async function coverImages(origin: string, song: string) {
+  const cover = `/covers/${encodeURIComponent(song)}.avif`;
+  return {
+    backdrop: await png(origin, cover, (image) =>
+      image.resize(RW, RH).blur(24).modulate({ brightness: 0.45 }),
+    ),
+    cover: await png(origin, cover, (image) => image.resize(COVER_W * 2)),
+  };
+}
+
 /** A replay's card as a JPEG, the site's own files (fonts, avatars, covers) read from `origin`. */
 export async function renderReplayCard(origin: string, info: ReplayInfo) {
-  const cover = `/covers/${encodeURIComponent(info.song)}.avif`;
   const card = (
-    <ReplayCard
-      info={info}
-      avatar={await png(origin, avatarUrl(info.player.avatar))}
-      backdrop={
-        await png(origin, cover, (image) =>
-          image.resize(RW, RH).blur(24).modulate({ brightness: 0.45 }),
-        )
-      }
-      cover={await png(origin, cover, (image) => image.resize(COVER_W * 2))}
-    />
+    <SongCard
+      song={info.song}
+      level={info.level}
+      date={new Date(info.date)}
+      {...(await coverImages(origin, info.song))}
+    >
+      <ReplayCard info={info} avatar={await png(origin, avatarUrl(info.player.avatar))} />
+    </SongCard>
+  );
+  return render(origin, card, CARDS.replay);
+}
+
+/** A chart ranking's card as a JPEG, from its first plays. */
+export async function renderPlaysCard(
+  origin: string,
+  song: string,
+  level: string,
+  { count, plays }: ChartPlays,
+) {
+  const shown = plays.slice(0, PODIUM.length + OTHERS);
+  const avatars = await Promise.all(
+    shown
+      .slice(0, PODIUM.length)
+      .map((play) => png(origin, avatarUrl(play.player.avatar), (image) => image.resize(152, 152))),
+  );
+  const card = (
+    <SongCard
+      song={song}
+      level={level}
+      date={new Date()}
+      note={count ? `${count} player${count > 1 ? "s" : ""}` : undefined}
+      {...(await coverImages(origin, song))}
+    >
+      <PlaysCard plays={shown} avatars={avatars} />
+    </SongCard>
   );
   return render(origin, card, CARDS.replay);
 }

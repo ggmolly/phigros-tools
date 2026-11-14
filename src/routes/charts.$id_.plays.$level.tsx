@@ -14,8 +14,8 @@ import { Difficulty } from "../components/primitives";
 import { useFormat, useT } from "../i18n";
 import { useLiveReload } from "../live";
 import { LEVELS, type LevelName } from "../modules";
-import { getChartPlays, PLAYS_PAGE } from "../plays";
-import { headT, pageLinks, pageMeta } from "../seo";
+import { CARDS, getChartPlays, PLAYS_PAGE } from "../plays";
+import { headT, pageLinks, pageMeta, SITE } from "../seo";
 import { topics } from "../topics";
 
 export const Route = createFileRoute("/charts/$id_/plays/$level")({
@@ -35,7 +35,17 @@ export const Route = createFileRoute("/charts/$id_/plays/$level")({
     const title = song ? `${song.title} (${params.level}) · ${t.song.plays}` : t.song.plays;
     return {
       meta: [
-        ...pageMeta({ title, description: title, path, locale }),
+        ...pageMeta({
+          title,
+          description: title,
+          path,
+          locale,
+          image: song && {
+            url: `${SITE}/og/plays/${encodeURIComponent(song.id)}/${params.level}.jpg`,
+            ...CARDS.replay,
+            alt: title,
+          },
+        }),
         { name: "robots", content: "noindex" },
       ],
       links: pageLinks(path, locale),
