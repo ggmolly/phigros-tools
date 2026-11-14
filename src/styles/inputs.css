@@ -14,8 +14,9 @@
 .field:hover {
   background: rgb(0 0 0 / 0.75);
 }
+/* transparent, not 0: forced colors drops the shadow and paints the outline instead */
 .field:focus {
-  outline: 0;
+  outline: 2px solid transparent;
   border-color: #fff;
   box-shadow:
     0 0 0 1px #fff,
@@ -39,7 +40,8 @@
   );
 }
 .field-white:focus {
-  outline: 0;
+  outline: 2px solid transparent;
+  outline-offset: -2px; /* inside the clip-path */
   background: #e8f6ff;
 }
 .select {
@@ -80,7 +82,8 @@
   background-color: rgb(0 0 0 / 0.9);
 }
 .select-field:focus-visible {
-  outline: 0;
+  outline: 2px solid transparent;
+  outline-offset: -2px;
   box-shadow: inset 0 -2px var(--glow);
 }
 .select-field option {
@@ -132,7 +135,8 @@
   }
   .select-field option:hover,
   .select-field option:focus-visible {
-    outline: 0;
+    outline: 2px solid transparent;
+    outline-offset: -2px;
     color: var(--glow);
   }
   .select-field option:checked {

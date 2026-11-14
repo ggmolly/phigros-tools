@@ -295,7 +295,7 @@
   border-bottom-color: var(--faint);
 }
 .simulator-value input:focus {
-  outline: 0;
+  outline: 2px solid transparent; /* painted by forced colors, see .field:focus */
   border-bottom-color: #fff;
 }
 .stepper {
