@@ -5,6 +5,7 @@ import type { SaveDocumentV1 } from "../document";
 import { useFormat, useT } from "../i18n";
 import { calculateRanking, chartRks, projectAccuracy } from "../metrics";
 import { LEVELS } from "../modules";
+import { Arrow } from "./arrow";
 import { Difficulty, DifficultyFilter, PhiSlot, Rank, score7 } from "./primitives";
 
 function rowsFor(document: SaveDocumentV1) {
@@ -171,10 +172,11 @@ export function ChartTable({ document }: { document: SaveDocumentV1 }) {
                       <Link
                         to="/charts/$id"
                         params={{ id: record.songId }}
-                        className="record-title record-pick"
+                        className="record-title record-pick arrow-link"
                         title={t.common.viewChart}
                       >
                         {record.title}
+                        <Arrow />
                       </Link>
                       <span className="record-artist">{record.artist}</span>
                     </div>

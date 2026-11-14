@@ -2,7 +2,14 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { catalogSong, isLevel, songLevels } from "../catalog";
 import { Arrow } from "../components/arrow";
 import { SiteHeader } from "../components/chrome";
-import { Pager, PlayCells, PlayHeadings, RankingSearch, ScopeSwitch } from "../components/plays";
+import {
+  Pager,
+  PlayCells,
+  PlayHeadings,
+  RankingSearch,
+  ScopeSwitch,
+  SongHeading,
+} from "../components/plays";
 import { Difficulty } from "../components/primitives";
 import { useFormat, useT } from "../i18n";
 import { LEVELS, type LevelName } from "../modules";
@@ -60,22 +67,11 @@ function PlaysPage() {
             </span>
             {t.tabs.leaderboard}
           </Link>
-          <Link
-            to="/charts/$id"
-            params={{ id: song.id }}
-            className="chart-player-heading song-link"
-          >
-            <img src={`/covers/${song.id}.thumb.avif`} alt="" />
-            <div>
-              <h1 className="panel-title">
-                {song.title}
-                <Arrow />
-              </h1>
-              <p className="meta">
-                {song.artist} · {level} {constant.toFixed(1)}
-              </p>
-            </div>
-          </Link>
+          <SongHeading song={song}>
+            <p className="meta">
+              {song.artist} · {level} {constant.toFixed(1)}
+            </p>
+          </SongHeading>
           <span className="chart-player-levels">
             {songLevels(song.id).map((name) => (
               <Link

@@ -8,6 +8,7 @@ import {
   chapterSearchText,
   searchFold,
 } from "../catalog";
+import { Arrow } from "../components/arrow";
 import { SiteHeader } from "../components/chrome";
 import { Difficulty, DifficultyFilter } from "../components/primitives";
 import { useFormat, useT } from "../i18n";
@@ -216,9 +217,10 @@ function ChartsPage() {
                             <Link
                               to="/charts/$id"
                               params={{ id: song.id }}
-                              className="record-title record-pick"
+                              className="record-title record-pick arrow-link"
                             >
                               {song.title}
+                              <Arrow />
                             </Link>
                             <Link
                               to="/charts"

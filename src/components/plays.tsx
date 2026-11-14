@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import type { ReactNode } from "react";
 import * as v from "valibot";
 import { catalogSong } from "../catalog";
 import { useFormat, useT } from "../i18n";
@@ -41,6 +42,31 @@ export function ChartLink({
       <span className="record-title">{catalogSong(song)?.title ?? song}</span>
       <Arrow />
     </Link>
+  );
+}
+
+/**
+ * The song a page is about (its ranking, its preview, a replay of it), over the lines that describe it: the cover
+ * and the title are one link to the song's page.
+ */
+export function SongHeading({
+  song,
+  children,
+}: {
+  song: { id: string; title: string };
+  children: ReactNode;
+}) {
+  return (
+    <div className="chart-player-heading song-heading">
+      <h1 className="panel-title">
+        <Link to="/charts/$id" params={{ id: song.id }} className="song-link">
+          <img src={`/covers/${song.id}.thumb.avif`} alt="" />
+          {song.title}
+          <Arrow />
+        </Link>
+      </h1>
+      {children}
+    </div>
   );
 }
 

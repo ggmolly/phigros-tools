@@ -4,7 +4,7 @@ import { catalogSong } from "../catalog";
 import { Arrow } from "../components/arrow";
 import { ChartPlayer } from "../components/chart-player";
 import { SiteHeader } from "../components/chrome";
-import { PlayerTag, PlayStatusLabel } from "../components/plays";
+import { PlayerTag, PlayStatusLabel, SongHeading } from "../components/plays";
 import { Rank, score7 } from "../components/primitives";
 import { useFormat, useT } from "../i18n";
 import { CHALLENGE, judge, type Result, WINDOWS } from "../judge";
@@ -224,8 +224,7 @@ function ReplayPage() {
               </span>
               {t.tabs.leaderboard}
             </Link>
-            <div className="chart-player-heading">
-              <h1 className="panel-title">{song.title}</h1>
+            <SongHeading song={song}>
               <p className="meta">
                 <PlayerTag player={info.player} /> · {level} {constant.toFixed(1)} ·{" "}
                 {score7(info.score)} · {info.accuracy.toFixed(2)}% · {format.date(info.date)}
@@ -234,7 +233,7 @@ function ReplayPage() {
                 <PlayStatusLabel status={info.status} /> · {t.song.playedWith(info.phigrospp)}
                 {info.files.length > 0 && ` · ${t.song.addedFiles(info.files.join(", "))}`}
               </p>
-            </div>
+            </SongHeading>
             <Rank score={info.score} fc={info.fc} />
           </div>
         )}

@@ -45,26 +45,32 @@ main > .seg {
   flex: none;
 }
 
-/* a ranking's song: its cover and title are one link to the song's page, and say so */
+/* the song a page is about: its cover sits left of the heading's lines, inside the title's link */
+.song-heading {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 54px;
+  padding-left: 114px;
+}
 .song-link {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-}
-.song-link img {
-  width: 96px;
-  height: 54px;
-  object-fit: cover;
-  transform: skewX(var(--skew));
-  transition: filter 0.15s ease;
-}
-.song-link .panel-title {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 10px;
   text-decoration: underline transparent;
   text-underline-offset: 5px;
   transition: text-decoration-color 0.15s ease;
+}
+.song-link img {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 96px;
+  height: 54px;
+  object-fit: cover;
+  transform: translateY(-50%) skewX(var(--skew));
+  transition: filter 0.15s ease;
 }
 .song-link .button-arrow {
   opacity: 0.55;
@@ -72,13 +78,13 @@ main > .seg {
     opacity 0.15s ease,
     transform 0.3s var(--ease);
 }
+.song-link:hover,
+.song-link:focus-visible {
+  text-decoration-color: currentcolor;
+}
 .song-link:hover img,
 .song-link:focus-visible img {
   filter: brightness(1.2);
-}
-.song-link:hover .panel-title,
-.song-link:focus-visible .panel-title {
-  text-decoration-color: currentcolor;
 }
 .song-link:hover .button-arrow,
 .song-link:focus-visible .button-arrow {
@@ -88,6 +94,11 @@ main > .seg {
 
 /* a link whose arrow slides in when its row is pointed at: a chart to its ranking, a player to their profile.
  * with no pointer to hover, the arrow is always there */
+:where(.arrow-link) {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
 .arrow-link .button-arrow {
   width: 16px;
   height: 16px;
@@ -137,9 +148,15 @@ main > .seg {
 .place-3 {
   color: #e2a877;
 }
-.leaderboard-layout tr:has(.place) {
+tr:has(.place) {
   background: linear-gradient(90deg, rgb(255 255 255 / 0.07), transparent 70%);
+}
+.leaderboard-layout tr:has(.place) {
   font-size: 1.12em;
+}
+.chart-links {
+  display: flex;
+  gap: 18px;
 }
 .leaderboard-layout tr:has(.place) .leaderboard-avatar {
   width: 40px;

@@ -303,13 +303,20 @@ function SongCharts({ song }: { song: CatalogSong }) {
                         {t.song.notPlayed}
                       </td>
                     ))}
-                  <td>
+                  <td className="chart-links">
                     <Link
                       to="/charts/$id/play/$level"
                       params={{ id: song.id, level }}
                       className="link-button"
                     >
                       {t.song.preview}
+                    </Link>
+                    <Link
+                      to="/charts/$id/plays/$level"
+                      params={{ id: song.id, level }}
+                      className="link-button"
+                    >
+                      {t.tabs.leaderboard}
                     </Link>
                   </td>
                 </tr>

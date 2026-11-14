@@ -6,6 +6,7 @@ import { getSongDetails } from "../chartStats";
 import { Arrow } from "../components/arrow";
 import { ChartPlayer } from "../components/chart-player";
 import { SiteHeader } from "../components/chrome";
+import { SongHeading } from "../components/plays";
 import { Difficulty } from "../components/primitives";
 import { useT } from "../i18n";
 import { LEVELS, type LevelName } from "../modules";
@@ -118,13 +119,12 @@ function PlayPage() {
             </span>
             {t.player.back}
           </Link>
-          <div className="chart-player-heading">
-            <h1 className="panel-title">{song.title}</h1>
+          <SongHeading song={song}>
             <p className="meta">
               {song.artist} · {level} {constant.toFixed(1)}
               {charter && ` · ${t.player.chartedBy(charter)}`}
             </p>
-          </div>
+          </SongHeading>
           <span className="chart-player-levels">
             {levels.map((name) => (
               <Link
