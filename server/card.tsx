@@ -118,7 +118,7 @@ function bokeh(width: number, height: number) {
   ));
 }
 
-/** Corner block with the white edge stripe carrying the site name, and the date on the right. */
+/** Corner block with the white edge stripe carrying the site name, and on the right the date over when the card was made. */
 function Header({ date }: { date: Date }) {
   return (
     <div style={{ ...row, height: 96 }}>
@@ -137,9 +137,34 @@ function Header({ date }: { date: Date }) {
         <span style={{ fontSize: 44, fontWeight: 300, color: DIM }}>tools</span>
       </Para>
       <Para fill="#fff" style={{ width: 11, height: "100%", marginLeft: 10 }} />
-      <span style={{ marginLeft: "auto", marginRight: 64, fontSize: 26, color: DIM }}>
-        {date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
-      </span>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-end",
+          gap: 4,
+          marginLeft: "auto",
+          marginRight: 64,
+        }}
+      >
+        <span style={{ fontSize: 26, color: DIM }}>
+          {date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+        </span>
+        {/* chat apps keep a preview for long, this tells how old the one shown is */}
+        <span style={{ fontSize: 16, color: FAINT }}>
+          Last updated at{" "}
+          {new Date().toLocaleString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hourCycle: "h23",
+            timeZone: "UTC",
+          })}{" "}
+          UTC
+        </span>
+      </div>
     </div>
   );
 }
