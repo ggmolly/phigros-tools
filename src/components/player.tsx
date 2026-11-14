@@ -32,7 +32,14 @@ export function Card({ profile }: { profile: PlayerProfile }) {
   const banner = catalogSong(profile.background);
   return (
     <section className="hero profile-card">
-      {banner && <img className="profile-banner" src={`/covers/${banner.id}.avif`} alt="" />}
+      {banner && (
+        <img
+          className="profile-banner"
+          src={`/covers/${banner.id}.avif`}
+          alt=""
+          fetchPriority="high"
+        />
+      )}
       <div className="hero-id">
         <Avatar className="hero-avatar" name={profile.player.avatar} />
         <h1 className="hero-name">

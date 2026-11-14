@@ -388,6 +388,7 @@ function SongPage() {
                       : t.seo.coverAlt(song.title)
                   }
                   decoding="async"
+                  fetchPriority="high"
                 />
               </div>
               <div className="song-detail-body">
