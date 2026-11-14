@@ -18,6 +18,13 @@
   background: var(--negative);
   transform: skewX(var(--skew));
 }
+body {
+  display: flex;
+  flex-direction: column;
+}
+.app-shell {
+  flex: 1 0 auto;
+}
 .site-footer {
   display: flex;
   flex-wrap: wrap;
