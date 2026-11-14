@@ -113,12 +113,14 @@ function Result({ play }: { play: PlayedChart }) {
 /** A panel listing the first page, and more on each "Show more" while there are. */
 function List<T>({
   title,
+  profile,
   first,
   load,
   className,
   row,
 }: {
   title: string;
+  profile: PlayerProfile;
   first: Page<T>;
   load: (offset: number) => Promise<Page<T>>;
   className: string;
@@ -127,10 +129,10 @@ function List<T>({
   const t = useT();
   const [shown, setShown] = useState(first);
   const [loading, setLoading] = useState(false);
-  // a live update brings a new first page: start again from it
-  const [from, setFrom] = useState(first);
-  if (from !== first) {
-    setFrom(first);
+  // a live update brings a new profile: start again from its first page
+  const [from, setFrom] = useState(profile);
+  if (from !== profile) {
+    setFrom(profile);
     setShown(first);
   }
   if (!shown.items.length) return null;
@@ -171,6 +173,7 @@ export function TopPlays({ profile }: { profile: PlayerProfile }) {
   return (
     <List
       title={t.profile.topPlays}
+      profile={profile}
       first={slice(profile.top, 0, LIST_FIRST)}
       load={async (offset) => slice(profile.top, offset, LIST_MORE)}
       className="profile-top"
@@ -210,6 +213,7 @@ export function RecentActivity({ profile }: { profile: PlayerProfile }) {
   return (
     <List
       title={t.profile.recentActivity}
+      profile={profile}
       first={profile.activity}
       load={fetchMore<Activity>(profile.player.id, "activity")}
       className="profile-activity"
@@ -232,6 +236,7 @@ export function RecentPlays({ profile }: { profile: PlayerProfile }) {
   return (
     <List
       title={t.profile.recentPlays}
+      profile={profile}
       first={profile.recent}
       load={fetchMore<PlayedChart>(profile.player.id, "recent")}
       className="profile-recent"
