@@ -164,9 +164,13 @@ export function dataAmount(money: readonly number[]) {
   };
 }
 
-/** URL of an in-game avatar by the name saves store (see scripts/build-avatars.ts); "" is the game's default. */
+/**
+ * URL of an in-game avatar by the name saves store (see scripts/build-avatars.ts). "" is the game's default, and one
+ * the site doesn't have yet (a newer game's) shows as the default too, like in Phigros++.
+ */
 export function avatarUrl(name: string) {
-  const file = (avatars as Record<string, string>)[name || "Introduction"] ?? name;
+  const files: Record<string, string> = avatars;
+  const file = files[name] ?? files.Introduction!;
   return `/avatars/${encodeURIComponent(file)}.avif`;
 }
 
