@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import * as v from "valibot";
 import {
   canonicalChapter,
   catalogChartTotals,
@@ -20,14 +21,22 @@ const CHART_TOTAL = catalogChartTotals.reduce((sum, total) => sum + total, 0);
 
 export const Route = createFileRoute("/charts/")({
   // Filters live in the URL, so song pages and artist names can link straight to a filtered list.
-  validateSearch: (
-    search: Record<string, unknown>,
-  ): { q?: string; chapter?: string; view?: "gallery" } => ({
-    ...(search.view === "gallery" ? { view: "gallery" as const } : {}),
-    ...(typeof search.q === "string" && search.q ? { q: search.q.slice(0, 100) } : {}),
-    ...(typeof search.chapter === "string" && CHAPTERS.includes(canonicalChapter(search.chapter))
-      ? { chapter: canonicalChapter(search.chapter) }
-      : {}),
+  validateSearch: v.object({
+    q: v.fallback(
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.nonEmpty(),
+          v.transform((q) => q.slice(0, 100)),
+        ),
+      ),
+      undefined,
+    ),
+    chapter: v.fallback(
+      v.optional(v.pipe(v.string(), v.transform(canonicalChapter), v.picklist(CHAPTERS))),
+      undefined,
+    ),
+    view: v.fallback(v.optional(v.literal("gallery")), undefined),
   }),
   head: ({ match }) => {
     const { locale, t } = headT(match);

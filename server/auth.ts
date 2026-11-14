@@ -1,5 +1,6 @@
 import { createPublicKey, verify } from "node:crypto";
 import { assertBodySize, type H3Event, HTTPError } from "nitro/h3";
+import * as v from "valibot";
 import { sqlite } from "./db";
 import { markSeen } from "./players";
 
@@ -79,4 +80,13 @@ export async function signed(
   const owner = device?.owner ?? key;
   markSeen(owner);
   return { key: owner, device: key, body: message.subarray(8) };
+}
+
+/** A signed request's JSON body as the schema reads it, a 400 when it doesn't fit. */
+export function signedJson<Schema extends v.GenericSchema>(schema: Schema, body: Uint8Array) {
+  try {
+    return v.parse(schema, JSON.parse(new TextDecoder().decode(body)));
+  } catch (error) {
+    throw HTTPError.status(400, (error as Error).message);
+  }
 }

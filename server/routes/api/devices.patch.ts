@@ -1,18 +1,18 @@
 import { defineHandler } from "nitro/h3";
+import * as v from "valibot";
 import { topics } from "../../../src/topics";
-import { signed } from "../../auth";
+import { signed, signedJson } from "../../auth";
 import { renameDevice } from "../../devices";
 import { playerId } from "../../players";
 import { announce } from "../../queue";
 
+const Rename = v.object({ key: v.pipe(v.string(), v.hexadecimal()), name: v.string() });
+
 // a key of the profile gets the name the player gave it: { key (hex), name } in
 export default defineHandler(async (event) => {
   const { key, body } = await signed(event);
-  const { key: device, name } = JSON.parse(new TextDecoder().decode(body)) as Record<
-    string,
-    unknown
-  >;
-  renameDevice(key, String(device), String(name));
+  const { key: device, name } = signedJson(Rename, body);
+  renameDevice(key, device, name);
   await announce(topics.player(playerId(key)));
   return { ok: true };
 });

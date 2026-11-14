@@ -2,10 +2,17 @@ import { createHmac } from "node:crypto";
 import { isbot, isbotMatch } from "isbot";
 import { defineHandler } from "nitro/h3";
 import { UAParser } from "ua-parser-js";
+import * as v from "valibot";
 import { config } from "../../config";
 import { insertEvent } from "../../db";
 
 const noContent = () => new Response(null, { status: 204 });
+
+const cut = (length: number) => v.transform((text: string) => text.slice(0, length));
+const Beacon = v.object({
+  path: v.pipe(v.string(), v.startsWith("/"), cut(512)),
+  referrer: v.fallback(v.optional(v.pipe(v.string(), cut(255))), undefined),
+});
 
 function hostnameOf(value: string): string | null {
   try {
@@ -23,11 +30,10 @@ export default defineHandler(async (event) => {
   const ua = event.req.headers.get("user-agent") ?? "";
   const bot = !ua || isbot(ua);
 
-  const body = await event.req.json().catch(() => null);
-  const path = typeof body?.path === "string" ? body.path.slice(0, 512) : null;
-  if (!path?.startsWith("/")) return new Response(null, { status: 400 });
-  const rawReferrer = typeof body?.referrer === "string" ? body.referrer.slice(0, 255) : null;
-  const referrerDomain = rawReferrer ? hostnameOf(rawReferrer) : null;
+  const beacon = v.safeParse(Beacon, await event.req.json().catch(() => null));
+  if (!beacon.success) return new Response(null, { status: 400 });
+  const { path, referrer } = beacon.output;
+  const referrerDomain = referrer ? hostnameOf(referrer) : null;
 
   const ip = event.req.headers.get("cf-connecting-ip") ?? "";
 
