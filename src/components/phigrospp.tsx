@@ -21,6 +21,8 @@ export function SignInDialog() {
   const [phrase, setPhrase] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  // the code as typed so far, for the key caps that show it
+  const [code, setCode] = useState("");
   const t = useT();
   useEffect(() => {
     openSignIn.current = () => {
@@ -53,6 +55,7 @@ export function SignInDialog() {
       </form>
       <form
         className="sign-in"
+        onReset={() => setCode("")}
         onSubmit={(e) => {
           e.preventDefault();
           void submit(e.currentTarget);
@@ -84,15 +87,27 @@ export function SignInDialog() {
             spellCheck={false}
           />
         ) : (
-          <input
-            id="sign-in-value"
-            name="value"
-            className="field code-field"
-            required
-            autoComplete="one-time-code"
-            spellCheck={false}
-            placeholder="XXXX XXXX"
-          />
+          // one field, unseen, takes the typing and the paste over the key caps that show it
+          <div className="code-caps">
+            <input
+              id="sign-in-value"
+              name="value"
+              required
+              maxLength={9}
+              autoComplete="one-time-code"
+              autoCapitalize="characters"
+              spellCheck={false}
+              onInput={(e) => setCode(e.currentTarget.value.replace(/\W/g, "").toUpperCase())}
+            />
+            <p className="invite-code" aria-hidden="true">
+              {Array.from({ length: 8 }, (_, at) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: a code's letters never move
+                <b key={at} className={at === Math.min(code.length, 7) ? "next" : undefined}>
+                  {code[at]}
+                </b>
+              ))}
+            </p>
+          </div>
         )}
         {phrase && <p className="meta small">{t.ppp.phraseNote}</p>}
         <p role="status" className="negative" hidden={!error}>

@@ -35,11 +35,22 @@
   display: grid;
   gap: 8px;
 }
-.code-field {
-  height: 52px;
-  font-size: 24px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+/* typing a code: the field covers the key caps and can't be seen, the cap being typed is lit while it has focus */
+.code-caps {
+  position: relative;
+  margin-bottom: 4px;
+}
+.code-caps input {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  opacity: 0;
+  cursor: text;
+}
+.code-caps:focus-within .next::before {
+  background: rgb(255 255 255 / 0.24);
+  outline: 2px solid var(--glow);
 }
 .phrase-field {
   height: auto;
@@ -73,6 +84,7 @@
   position: relative;
   isolation: isolate;
   flex: 0 1 52px;
+  min-height: 1.6em;
   font-weight: 500;
   line-height: 1.6;
   text-align: center;
