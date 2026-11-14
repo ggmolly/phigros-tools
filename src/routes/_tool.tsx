@@ -132,7 +132,12 @@ function ToolLayout() {
             <ImportOptions />
           </section>
         )}
-        <dialog ref={importDialog} id="importDialog" aria-labelledby="import-dialog-heading">
+        <dialog
+          ref={importDialog}
+          id="importDialog"
+          closedby="any"
+          aria-labelledby="import-dialog-heading"
+        >
           <form method="dialog" className="dialog-head">
             <h2 id="import-dialog-heading">{t.menu.importSave}</h2>
             {/* biome-ignore lint/a11y/useButtonType: the default submit type is intentional; submitting a method="dialog" form is how this button closes the dialog without JS. */}
@@ -193,9 +198,9 @@ function ToolLayout() {
         <TapTapDialog />
         <SignInDialog />
         <OtherWaysDialog />
-        <dialog ref={dialog} id="tokenDialog">
+        <dialog ref={dialog} id="tokenDialog" closedby="any" aria-labelledby="token-heading">
           <form method="dialog" className="dialog-head">
-            <h2>{t.tool.tokenTitle}</h2>
+            <h2 id="token-heading">{t.tool.tokenTitle}</h2>
             {/* biome-ignore lint/a11y/useButtonType: the default submit type is intentional; submitting a method="dialog" form is how this button closes the dialog without JS. */}
             <button className="dialog-close" aria-label={t.tool.closeToken}>
               ×

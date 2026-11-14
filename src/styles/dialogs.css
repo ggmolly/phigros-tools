@@ -7,8 +7,12 @@ dialog {
   background: rgb(16 10 16 / 0.96);
   color: var(--text);
   box-shadow: 0 1.875rem 5.625rem rgb(0 0 0 / 0.6);
+  overscroll-behavior: contain;
 }
+/* the page stays still under a dialog; the backdrop only contains scrolling once it's a scroll container */
 dialog::backdrop {
+  overflow: hidden;
+  overscroll-behavior: contain;
   background: rgb(10 5 10 / 0.6);
   backdrop-filter: blur(0.5rem);
 }

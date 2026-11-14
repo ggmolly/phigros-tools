@@ -55,7 +55,7 @@ export function OtherWaysDialog() {
     </button>
   );
   return (
-    <dialog ref={openOtherWays} aria-labelledby="other-ways-heading">
+    <dialog ref={openOtherWays} closedby="any" aria-labelledby="other-ways-heading">
       <form method="dialog" className="dialog-head">
         <h2 id="other-ways-heading">{t.ppp.otherWays}</h2>
         {/* biome-ignore lint/a11y/useButtonType: the default submit type closes the method="dialog" form. */}
@@ -137,6 +137,7 @@ export function TapTapDialog() {
     <dialog
       ref={dialog}
       id="taptapDialog"
+      closedby="any"
       aria-labelledby="taptap-heading"
       onClose={() => controller.current?.abort()}
     >

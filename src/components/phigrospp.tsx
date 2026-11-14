@@ -45,7 +45,7 @@ export function SignInDialog() {
     }
   }
   return (
-    <dialog ref={dialog} id="signInDialog" aria-labelledby="sign-in-heading">
+    <dialog ref={dialog} id="signInDialog" closedby="any" aria-labelledby="sign-in-heading">
       <form method="dialog" className="dialog-head">
         <h2 id="sign-in-heading">{phrase ? t.ppp.phraseTitle : t.ppp.signInTitle}</h2>
         {/* biome-ignore lint/a11y/useButtonType: the default submit type closes the method="dialog" form. */}
