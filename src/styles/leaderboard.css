@@ -92,6 +92,26 @@ main > .seg {
   transform: translateX(5px);
 }
 
+/* a replay's result, at the end of its heading: the score in the game's lettering, the accuracy and the grade */
+.replay-result {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-left: auto;
+  font-family: "Saira HUD", Saira, sans-serif;
+  font-size: 44px;
+  line-height: 1;
+}
+.replay-result .meta {
+  font-size: 21px;
+}
+.replay-result .rank {
+  font-size: 44px;
+}
+.song-heading .difficulty {
+  vertical-align: 1px;
+}
+
 /* a link whose arrow slides in when its row is pointed at: a chart to its ranking, a player to their profile.
  * with no pointer to hover, the arrow is always there */
 :where(.arrow-link) {

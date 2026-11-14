@@ -5,7 +5,7 @@ import { Arrow } from "../components/arrow";
 import { ChartPlayer } from "../components/chart-player";
 import { SiteHeader } from "../components/chrome";
 import { PlayerTag, PlayStatusLabel, SongHeading } from "../components/plays";
-import { Rank, score7 } from "../components/primitives";
+import { Difficulty, Rank, score7 } from "../components/primitives";
 import { useFormat, useT } from "../i18n";
 import { CHALLENGE, judge, type Result, WINDOWS } from "../judge";
 import { useLive } from "../live";
@@ -226,15 +226,19 @@ function ReplayPage() {
             </Link>
             <SongHeading song={song}>
               <p className="meta">
-                <PlayerTag player={info.player} /> · {level} {constant.toFixed(1)} ·{" "}
-                {score7(info.score)} · {info.accuracy.toFixed(2)}% · {format.date(info.date)}
+                <PlayerTag player={info.player} /> · <Difficulty level={level} />{" "}
+                {constant.toFixed(1)} · {format.date(info.date)}
               </p>
               <p className="meta">
                 <PlayStatusLabel status={info.status} /> · {t.song.playedWith(info.phigrospp)}
                 {info.files.length > 0 && ` · ${t.song.addedFiles(info.files.join(", "))}`}
               </p>
             </SongHeading>
-            <Rank score={info.score} fc={info.fc} />
+            <p className="replay-result">
+              <span>{score7(info.score)}</span>
+              <span className="meta">{info.accuracy.toFixed(2)}%</span>
+              <Rank score={info.score} fc={info.fc} />
+            </p>
           </div>
         )}
         {error && <p className="meta">{error}</p>}
