@@ -26,11 +26,6 @@
   color: var(--dim);
   font-size: 15px;
 }
-.panel-actions {
-  display: flex;
-  gap: 16px;
-  margin-left: auto;
-}
 .meta {
   color: var(--dim);
 }

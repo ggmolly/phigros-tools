@@ -76,7 +76,4 @@
   .song-list {
     height: 520px;
   }
-  .history-grid {
-    grid-template-columns: 1fr;
-  }
 }

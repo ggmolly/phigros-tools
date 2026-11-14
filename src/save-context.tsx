@@ -59,7 +59,6 @@ interface SaveContextValue {
   fileInput: RefObject<HTMLInputElement | null>;
   say: (text: string) => void;
   refresh: () => Promise<void>;
-  storeSave: (next: Loaded) => Promise<boolean>;
   cloudImport: (
     getSession: () => Promise<{ token: string; account?: Account; region?: Region }>,
     report?: (text: string) => void,
@@ -455,7 +454,6 @@ export function SaveProvider({ children, home }: { children: React.ReactNode; ho
     fileInput,
     say,
     refresh,
-    storeSave,
     cloudImport,
     signIn,
     signOut,

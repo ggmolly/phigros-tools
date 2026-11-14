@@ -6,7 +6,7 @@ import type { Device } from "../phigrospp";
 import { message, useSave } from "../save-context";
 import type { Credential } from "../store";
 import { Arrow } from "./arrow";
-import { DATE_TIME } from "./history-panels";
+import { DATE_TIME } from "./primitives";
 
 /** The Phigros++ profile this browser is signed in to that the open save belongs to, if any. */
 export function useProfileCredential(): Credential | undefined {

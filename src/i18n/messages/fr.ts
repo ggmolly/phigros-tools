@@ -4,7 +4,6 @@ export const fr = {
   tabs: {
     overview: "Aperçu",
     records: "Scores",
-    history: "Historique",
     charts: "Charts",
     leaderboard: "Classement",
     devices: "Appareils",
@@ -77,9 +76,6 @@ export const fr = {
     recordsTitle: "Scores des charts",
     recordsDescription:
       "Tous les charts que vous avez joués dans Phigros, avec recherche et tri, y compris selon ce qu'un All Perfect ferait gagner à votre ranking score.",
-    historyTitle: "Historique",
-    historyDescription:
-      "L'évolution de votre ranking score Phigros et ce qui a changé entre deux saves, à partir de snapshots conservés dans votre navigateur.",
     songIntro: (title: string, artist: string, chapter: string) =>
       `${title} est une chanson de Phigros par ${artist}, issue de ${chapter}.`,
     oneChart: (list: string, charters: string) => `Elle a un seul chart : ${list}${charters}.`,
@@ -494,8 +490,7 @@ export const fr = {
       "Les mots deviennent votre clé dans ce navigateur et ne sont jamais envoyés. Ce navigateur reçoit ensuite sa propre clé, que vous pouvez retirer dans Appareils.",
     close: "Fermer",
     signOut: "Se déconnecter",
-    signOutConfirm:
-      "Déconnecter ce navigateur de votre profil Phigros++ ? Ses snapshots restent dans l’historique.",
+    signOutConfirm: "Déconnecter ce navigateur de votre profil Phigros++ ?",
     move: "Cette save n’existe que dans ce navigateur. Envoyez-la à Phigros++ pour continuer à y jouer, avec les replays et vos parties au classement.",
     send: "Envoyer à Phigros++",
     sendConfirm: (name: string) =>
@@ -558,7 +553,7 @@ export const fr = {
       "Phigros++ démarre avec une save vide, et comme le cloud de TapTap ne répond plus, il ne peut pas y récupérer la vôtre.",
     browser: "Vous avez déjà ouvert votre save sur phigros.tools",
     browserText:
-      "Ce navigateur en a gardé une copie. Connectez-vous depuis Phigros++, ouvrez cette save depuis l’historique et choisissez **Envoyer à Phigros++** : le jeu propose de la charger à son prochain lancement.",
+      "Ce navigateur en a gardé une copie. Connectez-vous depuis Phigros++, ouvrez cette save et choisissez **Envoyer à Phigros++** : le jeu propose de la charger à son prochain lancement.",
     device: "Vous utilisez déjà Phigros++ sur un autre appareil",
     deviceText:
       "Choisissez **Sign in another device** sur celui-ci, puis **Sign in to my profile** sur le nouveau et saisissez son code ou vos 16 mots. Phigros++ propose alors la save envoyée par votre autre appareil.",
@@ -568,31 +563,7 @@ export const fr = {
     source: "Code source",
   },
   history: {
-    snapshots: "Snapshots",
-    saveCurrent: "Enregistrer l’actuelle",
-    clearConfirm: "Supprimer tous les snapshots locaux ?",
-    deleteAll: "Tout supprimer",
-    playerHistory: "Historique du joueur",
-    legacy: "Ancien joueur / inconnu",
-    saveFallback: "save",
-    open: "Ouvrir",
-    compare: "Comparer à l’actuelle",
-    delete: "Supprimer",
-    empty: "Aucun snapshot enregistré. Importez une save pour commencer votre historique local.",
-    changed: (count: number) => `${count} records de charts modifiés ou nouveaux`,
-    change: (song: string, level: string, score: string, accuracy: string) =>
-      `${song} ${level} : ${score} de score, ${accuracy} %`,
-    sinceLast: "Depuis le dernier snapshot",
-    rksIncomparable:
-      "Le RKS ne peut pas être comparé entre des révisions du catalogue ou des règles de classement différentes.",
-    improved: (count: number) => `${count} records nouveaux ou améliorés`,
-    savesToCompare: "Saves à comparer",
-    importAnother: "Importez une autre save de ce joueur pour comparer le RKS, les FC et les AP.",
-    importTwo: "Importez deux saves du même joueur pour comparer le RKS, les FC et les AP.",
-    rksHistory: "Historique du RKS",
-    thirdTime: "Enregistrez une troisième fois pour débloquer la courbe de tendance.",
     trend: (count: number, from: string, to: string) =>
       `Évolution du RKS sur ${count} snapshots : de ${from} à ${to}`,
-    catalogUpdate: "Mise à jour du catalogue",
   },
 } satisfies Messages;

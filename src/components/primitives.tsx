@@ -3,6 +3,15 @@ import avatars from "../avatars.json";
 import { useFormat, useT } from "../i18n";
 import { LEVELS } from "../modules";
 
+// toLocaleDateString rejects timeStyle, so the time is asked for field by field.
+export const DATE_TIME: Intl.DateTimeFormatOptions = {
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+  hour: "numeric",
+  minute: "2-digit",
+};
+
 const RANKS: [number, string][] = [
   [960_000, "V"],
   [920_000, "S"],

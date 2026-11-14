@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useFormat, useT } from "../i18n";
 import type { PlayerProfile } from "../plays";
-import { DATE_TIME } from "./history-panels";
-import { signed } from "./primitives";
+import { DATE_TIME, signed } from "./primitives";
 
 const MIN_SPAN = 0.1;
 
@@ -15,16 +14,13 @@ export interface RksPoint {
 
 /**
  * RKS over time as a glowing white line over a faint area, from first to last with the change between them. Hovering
- * reads a point's date, RKS and rank. `marks` are labelled dashed lines (game updates) at a point's index, drawn
- * halfway from the point before.
+ * reads a point's date, RKS and rank.
  */
 export function RksChart({
   points,
-  marks = [],
   dates = DATE_TIME,
 }: {
   points: RksPoint[];
-  marks?: { index: number; label: string }[];
   dates?: Intl.DateTimeFormatOptions;
 }) {
   const t = useT();
@@ -43,10 +39,6 @@ export function RksChart({
       [(index / (drawn.length - 1)) * 100, 50 - ((point.rks - middle) / span) * 84] as const,
   );
   const line = coords.map(([x, y]) => `${x},${y}`).join(" ");
-  const lines = marks.map(({ index, label }) => ({
-    label,
-    x: (coords[index - 1]![0] + coords[index]![0]) / 2,
-  }));
   // as shown: two values that read the same make no change
   const shownRks = (rks: number) => Number(rks.toFixed(3));
   const delta = Number((shownRks(values.at(-1)!) - shownRks(values[0]!)).toFixed(3));
@@ -75,17 +67,6 @@ export function RksChart({
           )}
         >
           <polygon className="rks-area" points={`0,100 ${line} 100,100`} />
-          {lines.map(({ label, x }) => (
-            <line
-              key={`${label}-${x}`}
-              className="rks-version"
-              x1={x}
-              x2={x}
-              y1={0}
-              y2={100}
-              vectorEffect="non-scaling-stroke"
-            />
-          ))}
           {hover !== undefined && (
             <line
               className="rks-version"
@@ -98,15 +79,6 @@ export function RksChart({
           )}
           <polyline className="rks-line" points={line} vectorEffect="non-scaling-stroke" />
         </svg>
-        {lines.map(({ label, x }) => (
-          <span
-            key={`${label}-${x}`}
-            className={`rks-version-label${x > 70 ? " end" : ""}`}
-            style={{ left: `${x}%` }}
-          >
-            {label}
-          </span>
-        ))}
         {shown && hover !== undefined && (
           <p
             className={`rks-tip${coords[hover]![0] > 70 ? " end" : ""}`}

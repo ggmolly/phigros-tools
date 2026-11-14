@@ -4,7 +4,6 @@ export const it = {
   tabs: {
     overview: "Panoramica",
     records: "Record",
-    history: "Cronologia",
     charts: "Chart",
     leaderboard: "Classifica",
     devices: "Dispositivi",
@@ -77,9 +76,6 @@ export const it = {
     recordsTitle: "Record dei chart",
     recordsDescription:
       "Tutti i chart che hai giocato in Phigros, con ricerca e ordinamento, anche in base a quanto un All Perfect alzerebbe il tuo ranking score.",
-    historyTitle: "Cronologia",
-    historyDescription:
-      "Il tuo ranking score di Phigros nel tempo e cosa è cambiato tra un salvataggio e l'altro, da istantanee conservate nel browser.",
     songIntro: (title: string, artist: string, chapter: string) =>
       `${title} è un brano di Phigros di ${artist}, da ${chapter}.`,
     oneChart: (list: string, charters: string) => `Ha un solo chart: ${list}${charters}.`,
@@ -491,8 +487,7 @@ export const it = {
       "Le parole diventano la tua chiave in questo browser e non vengono mai inviate. Poi questo browser riceve una chiave tutta sua, che puoi rimuovere in Dispositivi.",
     close: "Chiudi",
     signOut: "Esci",
-    signOutConfirm:
-      "Disconnettere questo browser dal tuo profilo Phigros++? I suoi snapshot restano nella cronologia.",
+    signOutConfirm: "Disconnettere questo browser dal tuo profilo Phigros++?",
     move: "Questo salvataggio esiste solo in questo browser. Invialo a Phigros++ per continuare a giocarci, con i replay e le tue partite in classifica.",
     send: "Invia a Phigros++",
     sendConfirm: (name: string) =>
@@ -553,7 +548,7 @@ export const it = {
       "Phigros++ parte con un salvataggio vuoto e, dato che il cloud di TapTap non risponde più, non può recuperare il tuo da lì.",
     browser: "Hai già aperto il tuo salvataggio su phigros.tools",
     browserText:
-      "Questo browser ne ha tenuto una copia. Accedi da Phigros++, apri quel salvataggio dalla cronologia e scegli **Invia a Phigros++**: al prossimo avvio il gioco propone di caricarlo.",
+      "Questo browser ne ha tenuto una copia. Accedi da Phigros++, apri quel salvataggio e scegli **Invia a Phigros++**: al prossimo avvio il gioco propone di caricarlo.",
     device: "Usi già Phigros++ su un altro dispositivo",
     deviceText:
       "Scegli **Sign in another device** su quello, quindi **Sign in to my profile** su quello nuovo e inserisci il suo codice o le tue 16 parole. Phigros++ ti propone poi il salvataggio caricato dall’altro dispositivo.",
@@ -563,31 +558,7 @@ export const it = {
     source: "Codice sorgente",
   },
   history: {
-    snapshots: "Snapshot",
-    saveCurrent: "Salva l’attuale",
-    clearConfirm: "Eliminare tutti gli snapshot locali?",
-    deleteAll: "Elimina tutto",
-    playerHistory: "Cronologia del giocatore",
-    legacy: "Giocatore precedente / sconosciuto",
-    saveFallback: "salvataggio",
-    open: "Apri",
-    compare: "Confronta con l’attuale",
-    delete: "Elimina",
-    empty: "Nessuno snapshot salvato. Importa un salvataggio per iniziare la cronologia locale.",
-    changed: (count: number) => `${count} record di chart nuovi o modificati`,
-    change: (song: string, level: string, score: string, accuracy: string) =>
-      `${song} ${level}: ${score} di punteggio, ${accuracy}%`,
-    sinceLast: "Dall’ultimo snapshot",
-    rksIncomparable:
-      "L’RKS non è confrontabile tra revisioni del catalogo o regole di classifica diverse.",
-    improved: (count: number) => `${count} record nuovi o migliorati`,
-    savesToCompare: "Salvataggi da confrontare",
-    importAnother: "Importa un altro salvataggio di questo giocatore per confrontare RKS, FC e AP.",
-    importTwo: "Importa due salvataggi dello stesso giocatore per confrontare RKS, FC e AP.",
-    rksHistory: "Cronologia RKS",
-    thirdTime: "Salva una terza volta per sbloccare la linea di tendenza.",
     trend: (count: number, from: string, to: string) =>
       `Andamento dell’RKS su ${count} snapshot: da ${from} a ${to}`,
-    catalogUpdate: "Aggiornamento del catalogo",
   },
 } satisfies Messages;

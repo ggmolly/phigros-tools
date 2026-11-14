@@ -4,7 +4,6 @@ export const ko = {
   tabs: {
     overview: "개요",
     records: "기록",
-    history: "기록 내역",
     charts: "채보",
     leaderboard: "리더보드",
     devices: "기기",
@@ -77,9 +76,6 @@ export const ko = {
     recordsTitle: "채보 기록",
     recordsDescription:
       "Phigros에서 플레이한 모든 채보를 검색하고 정렬하세요. All Perfect가 랭킹 스코어를 얼마나 올리는지로도 정렬할 수 있습니다.",
-    historyTitle: "기록 내역",
-    historyDescription:
-      "브라우저에 저장된 스냅샷으로 보는 Phigros 랭킹 스코어 변화와 세이브 간 차이.",
     songIntro: (title: string, artist: string, chapter: string) =>
       `${title}은(는) ${artist}의 Phigros 곡으로, ${chapter}에 수록되어 있습니다.`,
     oneChart: (list: string, charters: string) => `채보는 1개입니다: ${list}${charters}.`,
@@ -484,8 +480,7 @@ export const ko = {
       "단어는 이 브라우저 안에서 키로 바뀌며 전송되지 않습니다. 그다음 이 브라우저는 자체 키를 받으며, 기기에서 삭제할 수 있습니다.",
     close: "닫기",
     signOut: "로그아웃",
-    signOutConfirm:
-      "이 브라우저를 Phigros++ 프로필에서 로그아웃할까요? 스냅샷은 기록 내역에 그대로 남습니다.",
+    signOutConfirm: "이 브라우저를 Phigros++ 프로필에서 로그아웃할까요?",
     move: "이 세이브는 이 브라우저에만 있습니다. Phigros++로 보내면 리플레이와 함께 계속 플레이할 수 있고 플레이 기록이 리더보드에 올라갑니다.",
     send: "Phigros++로 보내기",
     sendConfirm: (name: string) =>
@@ -546,7 +541,7 @@ export const ko = {
       "Phigros++는 빈 세이브로 시작하며, TapTap 클라우드가 더 이상 응답하지 않아 그곳에서 세이브를 가져올 수 없습니다.",
     browser: "전에 phigros.tools에서 세이브를 연 적이 있다면",
     browserText:
-      "이 브라우저에 사본이 남아 있습니다. Phigros++에서 로그인하고, 기록 내역에서 그 세이브를 연 다음 **Phigros++로 보내기**를 선택하세요. 다음에 시작할 때 게임이 불러오기를 제안합니다.",
+      "이 브라우저에 사본이 남아 있습니다. Phigros++에서 로그인하고, 그 세이브를 연 다음 **Phigros++로 보내기**를 선택하세요. 다음에 시작할 때 게임이 불러오기를 제안합니다.",
     device: "이미 다른 기기에서 Phigros++를 쓰고 있다면",
     deviceText:
       "그 기기에서 **Sign in another device**를 선택한 다음, 새 기기에서 **Sign in to my profile**을 선택하고 그 코드나 16개 단어를 입력하세요. 그러면 Phigros++가 다른 기기에서 업로드한 세이브를 제안합니다.",
@@ -556,30 +551,7 @@ export const ko = {
     source: "소스 코드",
   },
   history: {
-    snapshots: "스냅샷",
-    saveCurrent: "현재 세이브 저장",
-    clearConfirm: "로컬 스냅샷을 모두 삭제할까요?",
-    deleteAll: "모두 삭제",
-    playerHistory: "플레이어 기록",
-    legacy: "이전 형식 / 알 수 없는 플레이어",
-    saveFallback: "세이브",
-    open: "열기",
-    compare: "현재와 비교",
-    delete: "삭제",
-    empty: "저장된 스냅샷이 없습니다. 세이브를 가져오면 로컬 기록이 시작됩니다.",
-    changed: (count: number) => `변경되거나 새로운 채보 기록 ${count}개`,
-    change: (song: string, level: string, score: string, accuracy: string) =>
-      `${song} ${level}: 점수 ${score}, 정확도 ${accuracy}%`,
-    sinceLast: "지난 스냅샷 이후",
-    rksIncomparable: "카탈로그 버전이나 랭킹 규칙이 다르면 RKS를 비교할 수 없습니다.",
-    improved: (count: number) => `새로운 기록 또는 갱신된 기록 ${count}개`,
-    savesToCompare: "비교할 세이브",
-    importAnother: "이 플레이어의 세이브를 하나 더 가져오면 RKS, FC, AP를 비교할 수 있습니다.",
-    importTwo: "같은 플레이어의 세이브 두 개를 가져오면 RKS, FC, AP를 비교할 수 있습니다.",
-    rksHistory: "RKS 기록",
-    thirdTime: "세 번째로 저장하면 추세선이 표시됩니다.",
     trend: (count: number, from: string, to: string) =>
       `스냅샷 ${count}개의 RKS 추세: ${from}에서 ${to}까지`,
-    catalogUpdate: "카탈로그 업데이트",
   },
 } satisfies Messages;

@@ -2,7 +2,6 @@ export const en = {
   tabs: {
     overview: "Overview",
     records: "Records",
-    history: "History",
     charts: "Charts",
     leaderboard: "Leaderboard",
     devices: "Devices",
@@ -75,9 +74,6 @@ export const en = {
     recordsTitle: "Chart Records",
     recordsDescription:
       "Every chart you've played in Phigros, searchable and sortable, including by how much an All Perfect would raise your ranking score.",
-    historyTitle: "History",
-    historyDescription:
-      "Your Phigros ranking score over time and what changed between saves, from snapshots kept in your browser.",
     songIntro: (title: string, artist: string, chapter: string) =>
       `${title} is a Phigros song by ${artist}, from ${chapter}.`,
     oneChart: (list: string, charters: string) => `It has one chart: ${list}${charters}.`,
@@ -481,8 +477,7 @@ export const en = {
       "The words turn into your key in this browser and are never sent. This browser then gets a key of its own, which you can remove in Devices.",
     close: "Close",
     signOut: "Sign out",
-    signOutConfirm:
-      "Sign this browser out of your Phigros++ profile? Its snapshots stay in History.",
+    signOutConfirm: "Sign this browser out of your Phigros++ profile?",
     move: "This save only lives in this browser. Send it to Phigros++ to keep playing it, with replays and your plays on the leaderboard.",
     send: "Send to Phigros++",
     sendConfirm: (name: string) =>
@@ -542,7 +537,7 @@ export const en = {
       "Phigros++ starts with an empty save, and TapTap’s cloud no longer answers, so it can’t fetch yours from there.",
     browser: "You opened your save on phigros.tools before",
     browserText:
-      "This browser kept a copy. Sign in from Phigros++, open that save from History and choose **Send to Phigros++**: the game offers to load it next time it starts.",
+      "This browser kept a copy. Sign in from Phigros++, open that save and choose **Send to Phigros++**: the game offers to load it next time it starts.",
     device: "You already use Phigros++ on another device",
     deviceText:
       "Choose **Sign in another device** there, then **Sign in to my profile** on the new one and type its code or your 16 words. Phigros++ then offers the save your other device uploaded.",
@@ -552,30 +547,7 @@ export const en = {
     source: "Source code",
   },
   history: {
-    snapshots: "Snapshots",
-    saveCurrent: "Save current",
-    clearConfirm: "Delete every local snapshot?",
-    deleteAll: "Delete all",
-    playerHistory: "Player history",
-    legacy: "Legacy / unknown player",
-    saveFallback: "save",
-    open: "Open",
-    compare: "Compare current",
-    delete: "Delete",
-    empty: "No snapshots saved. Import a save to start your local history.",
-    changed: (count: number) => `${count} changed/new chart records`,
-    change: (song: string, level: string, score: string, accuracy: string) =>
-      `${song} ${level}: ${score} score, ${accuracy}%`,
-    sinceLast: "Since Last Snapshot",
-    rksIncomparable: "RKS can’t be compared across catalog revisions or ranking rules.",
-    improved: (count: number) => `${count} new or improved records`,
-    savesToCompare: "Saves to compare",
-    importAnother: "Import another save from this player to compare RKS, FC and AP.",
-    importTwo: "Import two saves from the same player to compare RKS, FC and AP.",
-    rksHistory: "RKS History",
-    thirdTime: "Save a third time to unlock the trend line.",
     trend: (count: number, from: string, to: string) =>
       `RKS trend across ${count} snapshots: from ${from} to ${to}`,
-    catalogUpdate: "Catalog update",
   },
 };

@@ -4,7 +4,6 @@ export const de = {
   tabs: {
     overview: "Übersicht",
     records: "Rekorde",
-    history: "Verlauf",
     charts: "Charts",
     leaderboard: "Rangliste",
     devices: "Geräte",
@@ -77,9 +76,6 @@ export const de = {
     recordsTitle: "Chart-Rekorde",
     recordsDescription:
       "Alle Charts, die du in Phigros gespielt hast, durchsuchbar und sortierbar, auch danach, wie sehr ein All Perfect deinen Ranking Score erhöhen würde.",
-    historyTitle: "Verlauf",
-    historyDescription:
-      "Dein Phigros-Ranking-Score im Zeitverlauf und was sich zwischen Spielständen geändert hat, aus Snapshots in deinem Browser.",
     songIntro: (title: string, artist: string, chapter: string) =>
       `${title} ist ein Phigros-Song von ${artist} aus ${chapter}.`,
     oneChart: (list: string, charters: string) => `Er hat einen Chart: ${list}${charters}.`,
@@ -494,8 +490,7 @@ export const de = {
       "Die Wörter werden in diesem Browser zu deinem Schlüssel und nie verschickt. Danach bekommt dieser Browser einen eigenen Schlüssel, den du unter Geräte entfernen kannst.",
     close: "Schließen",
     signOut: "Abmelden",
-    signOutConfirm:
-      "Diesen Browser von deinem Phigros++-Profil abmelden? Seine Snapshots bleiben im Verlauf.",
+    signOutConfirm: "Diesen Browser von deinem Phigros++-Profil abmelden?",
     move: "Dieser Spielstand existiert nur in diesem Browser. Schick ihn an Phigros++, um damit weiterzuspielen, mit Replays und deinen Runs in der Rangliste.",
     send: "An Phigros++ senden",
     sendConfirm: (name: string) =>
@@ -558,7 +553,7 @@ export const de = {
       "Phigros++ startet mit einem leeren Spielstand, und da die TapTap-Cloud nicht mehr antwortet, kann es deinen nicht von dort holen.",
     browser: "Du hast deinen Spielstand schon einmal auf phigros.tools geöffnet",
     browserText:
-      "Dieser Browser hat eine Kopie behalten. Melde dich über Phigros++ an, öffne diesen Spielstand im Verlauf und wähle **An Phigros++ senden**: Beim nächsten Start bietet das Spiel an, ihn zu laden.",
+      "Dieser Browser hat eine Kopie behalten. Melde dich über Phigros++ an, öffne diesen Spielstand und wähle **An Phigros++ senden**: Beim nächsten Start bietet das Spiel an, ihn zu laden.",
     device: "Du nutzt Phigros++ schon auf einem anderen Gerät",
     deviceText:
       "Wähle dort **Sign in another device**, danach auf dem neuen Gerät **Sign in to my profile** und gib dessen Code oder deine 16 Wörter ein. Phigros++ bietet dir dann den Spielstand an, den dein anderes Gerät hochgeladen hat.",
@@ -568,33 +563,7 @@ export const de = {
     source: "Quellcode",
   },
   history: {
-    snapshots: "Snapshots",
-    saveCurrent: "Aktuellen speichern",
-    clearConfirm: "Alle lokalen Snapshots löschen?",
-    deleteAll: "Alle löschen",
-    playerHistory: "Spielerverlauf",
-    legacy: "Alter / unbekannter Spieler",
-    saveFallback: "Spielstand",
-    open: "Öffnen",
-    compare: "Mit aktuellem vergleichen",
-    delete: "Löschen",
-    empty:
-      "Keine Snapshots gespeichert. Importiere einen Spielstand, um deinen lokalen Verlauf zu beginnen.",
-    changed: (count: number) => `${count} geänderte oder neue Chart-Rekorde`,
-    change: (song: string, level: string, score: string, accuracy: string) =>
-      `${song} ${level}: ${score} Punkte, ${accuracy} %`,
-    sinceLast: "Seit dem letzten Snapshot",
-    rksIncomparable:
-      "RKS lässt sich nicht über verschiedene Katalogstände oder Ranglistenregeln hinweg vergleichen.",
-    improved: (count: number) => `${count} neue oder verbesserte Rekorde`,
-    savesToCompare: "Spielstände zum Vergleichen",
-    importAnother:
-      "Importiere einen weiteren Spielstand dieses Spielers, um RKS, FC und AP zu vergleichen.",
-    importTwo: "Importiere zwei Spielstände desselben Spielers, um RKS, FC und AP zu vergleichen.",
-    rksHistory: "RKS-Verlauf",
-    thirdTime: "Speichere ein drittes Mal, um die Trendlinie freizuschalten.",
     trend: (count: number, from: string, to: string) =>
       `RKS-Verlauf über ${count} Snapshots: von ${from} auf ${to}`,
-    catalogUpdate: "Katalog-Update",
   },
 } satisfies Messages;

@@ -4,7 +4,6 @@ export const vi = {
   tabs: {
     overview: "Tổng quan",
     records: "Kỷ lục",
-    history: "Lịch sử",
     charts: "Chart",
     leaderboard: "Bảng xếp hạng",
     devices: "Thiết bị",
@@ -77,9 +76,6 @@ export const vi = {
     recordsTitle: "Kỷ lục chart",
     recordsDescription:
       "Mọi chart bạn đã chơi trong Phigros, có thể tìm kiếm và sắp xếp, kể cả theo mức một All Perfect sẽ tăng ranking score của bạn.",
-    historyTitle: "Lịch sử",
-    historyDescription:
-      "Ranking score Phigros của bạn theo thời gian và những gì thay đổi giữa các save, từ các bản lưu trong trình duyệt.",
     songIntro: (title: string, artist: string, chapter: string) =>
       `${title} là một bài hát Phigros của ${artist}, thuộc ${chapter}.`,
     oneChart: (list: string, charters: string) => `Bài có một chart: ${list}${charters}.`,
@@ -487,8 +483,7 @@ export const vi = {
       "Các từ được chuyển thành khóa ngay trong trình duyệt này và không bao giờ được gửi đi. Sau đó trình duyệt này nhận một khóa riêng, bạn có thể gỡ nó trong Thiết bị.",
     close: "Đóng",
     signOut: "Đăng xuất",
-    signOutConfirm:
-      "Đăng xuất trình duyệt này khỏi hồ sơ Phigros++? Các snapshot của nó vẫn ở lại trong Lịch sử.",
+    signOutConfirm: "Đăng xuất trình duyệt này khỏi hồ sơ Phigros++?",
     move: "Save này chỉ có trong trình duyệt này. Hãy gửi nó sang Phigros++ để tiếp tục chơi, có replay và lượt chơi được đưa lên bảng xếp hạng.",
     send: "Gửi sang Phigros++",
     sendConfirm: (name: string) =>
@@ -550,7 +545,7 @@ export const vi = {
       "Phigros++ bắt đầu với save trống, và đám mây TapTap không còn phản hồi, nên nó không thể lấy save của bạn từ đó.",
     browser: "Bạn đã từng mở save trên phigros.tools",
     browserText:
-      "Trình duyệt này đã giữ một bản sao. Hãy đăng nhập từ Phigros++, mở save đó trong Lịch sử và chọn **Gửi sang Phigros++**: game sẽ đề nghị tải nó ở lần khởi động tới.",
+      "Trình duyệt này đã giữ một bản sao. Hãy đăng nhập từ Phigros++, mở save đó và chọn **Gửi sang Phigros++**: game sẽ đề nghị tải nó ở lần khởi động tới.",
     device: "Bạn đã dùng Phigros++ trên thiết bị khác",
     deviceText:
       "Chọn **Sign in another device** trên thiết bị đó, rồi chọn **Sign in to my profile** trên thiết bị mới và nhập mã của nó hoặc 16 từ của bạn. Sau đó Phigros++ sẽ đề nghị save mà thiết bị kia đã tải lên.",
@@ -560,31 +555,7 @@ export const vi = {
     source: "Mã nguồn",
   },
   history: {
-    snapshots: "Snapshot",
-    saveCurrent: "Lưu save hiện tại",
-    clearConfirm: "Xóa mọi snapshot cục bộ?",
-    deleteAll: "Xóa tất cả",
-    playerHistory: "Lịch sử người chơi",
-    legacy: "Người chơi cũ / không rõ",
-    saveFallback: "save",
-    open: "Mở",
-    compare: "So với hiện tại",
-    delete: "Xóa",
-    empty: "Chưa lưu snapshot nào. Hãy nhập một save để bắt đầu lịch sử cục bộ.",
-    changed: (count: number) => `${count} kỷ lục chart mới hoặc thay đổi`,
-    change: (song: string, level: string, score: string, accuracy: string) =>
-      `${song} ${level}: ${score} điểm, ${accuracy}%`,
-    sinceLast: "Từ snapshot gần nhất",
-    rksIncomparable:
-      "Không thể so sánh RKS giữa các phiên bản danh mục hoặc quy tắc xếp hạng khác nhau.",
-    improved: (count: number) => `${count} kỷ lục mới hoặc được cải thiện`,
-    savesToCompare: "Save để so sánh",
-    importAnother: "Nhập thêm một save của người chơi này để so sánh RKS, FC và AP.",
-    importTwo: "Nhập hai save của cùng một người chơi để so sánh RKS, FC và AP.",
-    rksHistory: "Lịch sử RKS",
-    thirdTime: "Lưu lần thứ ba để mở khóa đường xu hướng.",
     trend: (count: number, from: string, to: string) =>
       `Xu hướng RKS qua ${count} snapshot: từ ${from} đến ${to}`,
-    catalogUpdate: "Cập nhật danh mục",
   },
 } satisfies Messages;

@@ -4,7 +4,6 @@ export const ja = {
   tabs: {
     overview: "概要",
     records: "記録",
-    history: "履歴",
     charts: "譜面",
     leaderboard: "ランキング",
     devices: "デバイス",
@@ -77,9 +76,6 @@ export const ja = {
     recordsTitle: "譜面の記録",
     recordsDescription:
       "Phigros でプレイした全譜面を検索・並べ替え。All Perfect でランキングスコアがどれだけ上がるかでも並べ替えられます。",
-    historyTitle: "履歴",
-    historyDescription:
-      "ブラウザに保存したスナップショットから、Phigros のランキングスコアの推移とセーブ間の変化を確認。",
     songIntro: (title: string, artist: string, chapter: string) =>
       `${title} は ${artist} による Phigros の楽曲で、${chapter} に収録されています。`,
     oneChart: (list: string, charters: string) => `譜面は 1 つ：${list}${charters}。`,
@@ -490,8 +486,7 @@ export const ja = {
       "単語はこのブラウザ内で鍵に変換され、送信されることはありません。その後このブラウザには専用の鍵が発行され、デバイスから削除できます。",
     close: "閉じる",
     signOut: "サインアウト",
-    signOutConfirm:
-      "このブラウザを Phigros++ プロフィールからサインアウトしますか？スナップショットは履歴に残ります。",
+    signOutConfirm: "このブラウザを Phigros++ プロフィールからサインアウトしますか？",
     move: "このセーブはこのブラウザにしかありません。Phigros++ に送ると、リプレイ付きで続きをプレイでき、プレイがランキングに載ります。",
     send: "Phigros++ に送る",
     sendConfirm: (name: string) =>
@@ -555,7 +550,7 @@ export const ja = {
       "Phigros++ は空のセーブで始まり、TapTap のクラウドはもう応答しないため、そこからセーブを取得することはできません。",
     browser: "以前 phigros.tools でセーブを開いたことがある場合",
     browserText:
-      "このブラウザにコピーが残っています。Phigros++ からサインインし、履歴からそのセーブを開いて **Phigros++ に送る** を選んでください。次回の起動時にゲームが読み込みを提案します。",
+      "このブラウザにコピーが残っています。Phigros++ からサインインし、そのセーブを開いて **Phigros++ に送る** を選んでください。次回の起動時にゲームが読み込みを提案します。",
     device: "すでに別のデバイスで Phigros++ を使っている場合",
     deviceText:
       "そのデバイスで **Sign in another device** を選び、新しいデバイスで **Sign in to my profile** を選んで、そのコードか 16 語を入力してください。すると Phigros++ が、もう一方のデバイスがアップロードしたセーブを提案します。",
@@ -565,31 +560,7 @@ export const ja = {
     source: "ソースコード",
   },
   history: {
-    snapshots: "スナップショット",
-    saveCurrent: "現在のセーブを保存",
-    clearConfirm: "ローカルのスナップショットをすべて削除しますか？",
-    deleteAll: "すべて削除",
-    playerHistory: "プレイヤーの履歴",
-    legacy: "旧形式 / 不明なプレイヤー",
-    saveFallback: "セーブ",
-    open: "開く",
-    compare: "現在と比較",
-    delete: "削除",
-    empty:
-      "保存されたスナップショットはありません。セーブをインポートするとローカル履歴が始まります。",
-    changed: (count: number) => `変更・新規の譜面記録 ${count} 件`,
-    change: (song: string, level: string, score: string, accuracy: string) =>
-      `${song} ${level}：スコア ${score}、精度 ${accuracy}%`,
-    sinceLast: "前回のスナップショットから",
-    rksIncomparable: "楽曲カタログの版やランキングのルールが異なると RKS は比較できません。",
-    improved: (count: number) => `新規・更新された記録 ${count} 件`,
-    savesToCompare: "比較用のセーブ",
-    importAnother: "このプレイヤーのセーブをもう一つインポートすると、RKS・FC・AP を比較できます。",
-    importTwo: "同じプレイヤーのセーブを二つインポートすると、RKS・FC・AP を比較できます。",
-    rksHistory: "RKS の推移",
-    thirdTime: "3 回目の保存でトレンドラインが表示されます。",
     trend: (count: number, from: string, to: string) =>
       `${count} 件のスナップショットでの RKS の推移：${from} から ${to}`,
-    catalogUpdate: "楽曲データ更新",
   },
 } satisfies Messages;

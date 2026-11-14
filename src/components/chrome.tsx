@@ -56,19 +56,11 @@ function GithubLink() {
   );
 }
 
-export type TabId =
-  | "/"
-  | "/records"
-  | "/history"
-  | "/devices"
-  | "/charts"
-  | "/leaderboard"
-  | "/phigrospp";
+export type TabId = "/" | "/records" | "/devices" | "/charts" | "/leaderboard" | "/phigrospp";
 /** The tab ids double as their message keys. */
 export const TAB_KEY = {
   "/": "overview",
   "/records": "records",
-  "/history": "history",
   "/devices": "devices",
   "/charts": "charts",
   "/leaderboard": "leaderboard",
@@ -96,16 +88,15 @@ function LanguageSwitch() {
   );
 }
 
-/** The save-analyzer tabs that have something to show right now: a Phigros++ profile's save has Devices, and the
- * server keeps its history, while History holds the snapshots of saves kept in this browser. */
-export function toolTabs(hasSave: boolean, hasSnapshots: boolean, signedIn: boolean): TabId[] {
-  if (hasSave) return ["/", "/records", signedIn ? "/devices" : "/history"];
-  return hasSnapshots ? ["/", "/history"] : ["/"];
+/** The save-analyzer tabs that have something to show right now: a save has Records, a Phigros++ profile's Devices. */
+export function toolTabs(hasSave: boolean, signedIn: boolean): TabId[] {
+  if (!hasSave) return ["/"];
+  return signedIn ? ["/", "/records", "/devices"] : ["/", "/records"];
 }
 
 /** Every page's header: brand mark, the tabs (the tool's sections plus Charts), the page's own actions, then the GitHub link at the far right. */
 export function SiteHeader({ children }: { children?: React.ReactNode }) {
-  const { loaded, snapshots, account } = useSave();
+  const { loaded, account } = useSave();
   const t = useT();
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (state) => state.location.pathname });
@@ -113,7 +104,7 @@ export function SiteHeader({ children }: { children?: React.ReactNode }) {
   // a Phigros++ player has the app already
   const hasApp = !!account;
   const tabIds = [
-    ...toolTabs(!!loaded, snapshots.length > 0, signedIn),
+    ...toolTabs(!!loaded, signedIn),
     "/charts" as const,
     "/leaderboard" as const,
     ...(hasApp ? [] : ["/phigrospp" as const]),

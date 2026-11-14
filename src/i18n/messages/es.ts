@@ -4,7 +4,6 @@ export const es = {
   tabs: {
     overview: "Resumen",
     records: "Registros",
-    history: "Historial",
     charts: "Charts",
     leaderboard: "Clasificación",
     devices: "Dispositivos",
@@ -78,9 +77,6 @@ export const es = {
     recordsTitle: "Registros de charts",
     recordsDescription:
       "Todos los charts que has jugado en Phigros, con búsqueda y orden, incluso por cuánto subiría tu ranking score un All Perfect.",
-    historyTitle: "Historial",
-    historyDescription:
-      "Tu ranking score de Phigros a lo largo del tiempo y lo que cambió entre partidas, a partir de instantáneas guardadas en tu navegador.",
     songIntro: (title: string, artist: string, chapter: string) =>
       `${title} es una canción de Phigros de ${artist}, de ${chapter}.`,
     oneChart: (list: string, charters: string) => `Tiene un chart: ${list}${charters}.`,
@@ -491,8 +487,7 @@ export const es = {
       "Las palabras se convierten en tu clave dentro de este navegador y nunca se envían. Después, este navegador recibe su propia clave, que puedes quitar en Dispositivos.",
     close: "Cerrar",
     signOut: "Cerrar sesión",
-    signOutConfirm:
-      "¿Cerrar la sesión de tu perfil de Phigros++ en este navegador? Sus instantáneas se quedan en el Historial.",
+    signOutConfirm: "¿Cerrar la sesión de tu perfil de Phigros++ en este navegador?",
     move: "Esta partida solo existe en este navegador. Envíala a Phigros++ para seguir jugándola, con repeticiones y tus jugadas en la clasificación.",
     send: "Enviar a Phigros++",
     sendConfirm: (name: string) =>
@@ -553,7 +548,7 @@ export const es = {
       "Phigros++ empieza con una partida vacía, y la nube de TapTap ya no responde, así que no puede traer la tuya desde allí.",
     browser: "Ya abriste tu partida en phigros.tools",
     browserText:
-      "Este navegador guardó una copia. Inicia sesión desde Phigros++, abre esa partida desde el Historial y elige **Enviar a Phigros++**: el juego ofrecerá cargarla la próxima vez que se abra.",
+      "Este navegador guardó una copia. Inicia sesión desde Phigros++, abre esa partida y elige **Enviar a Phigros++**: el juego ofrecerá cargarla la próxima vez que se abra.",
     device: "Ya usas Phigros++ en otro dispositivo",
     deviceText:
       "Elige **Sign in another device** allí, luego **Sign in to my profile** en el nuevo y escribe su código o tus 16 palabras. Después, Phigros++ te ofrece la partida que subió tu otro dispositivo.",
@@ -563,31 +558,7 @@ export const es = {
     source: "Código fuente",
   },
   history: {
-    snapshots: "Instantáneas",
-    saveCurrent: "Guardar la actual",
-    clearConfirm: "¿Eliminar todas las instantáneas locales?",
-    deleteAll: "Eliminar todo",
-    playerHistory: "Historial del jugador",
-    legacy: "Jugador antiguo / desconocido",
-    saveFallback: "partida",
-    open: "Abrir",
-    compare: "Comparar con la actual",
-    delete: "Eliminar",
-    empty: "No hay instantáneas guardadas. Importa una partida para empezar tu historial local.",
-    changed: (count: number) => `${count} récords de charts nuevos o cambiados`,
-    change: (song: string, level: string, score: string, accuracy: string) =>
-      `${song} ${level}: ${score} de puntuación, ${accuracy} %`,
-    sinceLast: "Desde la última instantánea",
-    rksIncomparable:
-      "El RKS no se puede comparar entre revisiones del catálogo o reglas de clasificación distintas.",
-    improved: (count: number) => `${count} récords nuevos o mejorados`,
-    savesToCompare: "Partidas para comparar",
-    importAnother: "Importa otra partida de este jugador para comparar RKS, FC y AP.",
-    importTwo: "Importa dos partidas del mismo jugador para comparar RKS, FC y AP.",
-    rksHistory: "Historial de RKS",
-    thirdTime: "Guarda una tercera vez para desbloquear la línea de tendencia.",
     trend: (count: number, from: string, to: string) =>
       `Tendencia de RKS en ${count} instantáneas: de ${from} a ${to}`,
-    catalogUpdate: "Actualización del catálogo",
   },
 } satisfies Messages;

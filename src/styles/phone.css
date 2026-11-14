@@ -316,10 +316,4 @@
   .gallery-info {
     display: none;
   }
-  .panel-actions {
-    margin-left: 0;
-  }
-  .snapshot-actions .btn {
-    padding: 3px 16px;
-  }
 }

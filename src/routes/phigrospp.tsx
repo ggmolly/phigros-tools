@@ -26,7 +26,7 @@ export const Route = createFileRoute("/phigrospp")({
 // what each feature looks like, drawn small over its text like in the trailer. decorative: the text says it all
 const REPLAY = (
   <div className="ppp-visual ppp-replay" aria-hidden="true">
-    <svg viewBox="0 0 24 24">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
       <path d="M6 3.5v17l14-8.5z" />
     </svg>
     <span className="ppp-seek">

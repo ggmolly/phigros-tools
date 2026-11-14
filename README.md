@@ -35,12 +35,6 @@ Every chart you've played, searchable, filterable by difficulty and clear status
 
 ![Chart records table filtered to IN](docs/screenshots/04-records.png)
 
-### History
-
-Save snapshots (stored in your browser) to chart your RKS over time and see what changed since the last one.
-
-![RKS history, changes since the last snapshot, and saved snapshots](docs/screenshots/06-history.png)
-
 ### Charts
 
 The full chart list with difficulty constants, filterable by title, artist, illustrator, chapter and difficulty. No save needed.

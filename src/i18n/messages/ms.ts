@@ -4,7 +4,6 @@ export const ms = {
   tabs: {
     overview: "Gambaran",
     records: "Rekod",
-    history: "Sejarah",
     charts: "Chart",
     leaderboard: "Papan pendahulu",
     devices: "Peranti",
@@ -77,9 +76,6 @@ export const ms = {
     recordsTitle: "Rekod Chart",
     recordsDescription:
       "Semua chart yang telah anda mainkan dalam Phigros, boleh dicari dan disusun, termasuk mengikut berapa banyak All Perfect akan menaikkan ranking score anda.",
-    historyTitle: "Sejarah",
-    historyDescription:
-      "Ranking score Phigros anda dari semasa ke semasa dan apa yang berubah antara save, daripada snapshot yang disimpan dalam pelayar anda.",
     songIntro: (title: string, artist: string, chapter: string) =>
       `${title} ialah lagu Phigros oleh ${artist}, daripada ${chapter}.`,
     oneChart: (list: string, charters: string) =>
@@ -490,8 +486,7 @@ export const ms = {
       "Perkataan ini menjadi kunci anda dalam pelayar ini dan tidak pernah dihantar. Pelayar ini kemudian mendapat kuncinya sendiri, yang boleh anda buang dalam Peranti.",
     close: "Tutup",
     signOut: "Log keluar",
-    signOutConfirm:
-      "Log keluar pelayar ini daripada profil Phigros++ anda? Snapshotnya kekal dalam Sejarah.",
+    signOutConfirm: "Log keluar pelayar ini daripada profil Phigros++ anda?",
     move: "Save ini hanya wujud dalam pelayar ini. Hantar ke Phigros++ untuk terus memainkannya, dengan main semula dan permainan anda di papan pendahulu.",
     send: "Hantar ke Phigros++",
     sendConfirm: (name: string) =>
@@ -554,7 +549,7 @@ export const ms = {
       "Phigros++ bermula dengan save kosong, dan awan TapTap tidak lagi menjawab, jadi ia tidak dapat mengambil save anda dari sana.",
     browser: "Anda pernah membuka save anda di phigros.tools",
     browserText:
-      "Pelayar ini menyimpan salinannya. Log masuk dari Phigros++, buka save itu dari Sejarah dan pilih **Hantar ke Phigros++**: permainan akan menawarkan untuk memuatkannya apabila dibuka seterusnya.",
+      "Pelayar ini menyimpan salinannya. Log masuk dari Phigros++, buka save itu dan pilih **Hantar ke Phigros++**: permainan akan menawarkan untuk memuatkannya apabila dibuka seterusnya.",
     device: "Anda sudah menggunakan Phigros++ pada peranti lain",
     deviceText:
       "Pilih **Sign in another device** di sana, lalu **Sign in to my profile** pada peranti baharu dan taip kodnya atau 16 perkataan anda. Phigros++ kemudian menawarkan save yang dimuat naik oleh peranti lain anda.",
@@ -564,31 +559,7 @@ export const ms = {
     source: "Kod sumber",
   },
   history: {
-    snapshots: "Snapshot",
-    saveCurrent: "Simpan yang semasa",
-    clearConfirm: "Padam semua snapshot setempat?",
-    deleteAll: "Padam semua",
-    playerHistory: "Sejarah pemain",
-    legacy: "Pemain lama / tidak diketahui",
-    saveFallback: "save",
-    open: "Buka",
-    compare: "Banding dengan semasa",
-    delete: "Padam",
-    empty: "Tiada snapshot disimpan. Import save untuk memulakan sejarah setempat anda.",
-    changed: (count: number) => `${count} rekod chart berubah atau baharu`,
-    change: (song: string, level: string, score: string, accuracy: string) =>
-      `${song} ${level}: skor ${score}, ketepatan ${accuracy}%`,
-    sinceLast: "Sejak Snapshot Terakhir",
-    rksIncomparable:
-      "RKS tidak boleh dibandingkan merentas semakan katalog atau peraturan kedudukan yang berbeza.",
-    improved: (count: number) => `${count} rekod baharu atau bertambah baik`,
-    savesToCompare: "Save untuk dibandingkan",
-    importAnother: "Import satu lagi save daripada pemain ini untuk membandingkan RKS, FC dan AP.",
-    importTwo: "Import dua save daripada pemain yang sama untuk membandingkan RKS, FC dan AP.",
-    rksHistory: "Sejarah RKS",
-    thirdTime: "Simpan kali ketiga untuk membuka garis trend.",
     trend: (count: number, from: string, to: string) =>
       `Trend RKS merentas ${count} snapshot: daripada ${from} kepada ${to}`,
-    catalogUpdate: "Kemas kini katalog",
   },
 } satisfies Messages;

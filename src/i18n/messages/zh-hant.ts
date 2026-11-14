@@ -4,7 +4,6 @@ export const zhHant = {
   tabs: {
     overview: "總覽",
     records: "成績",
-    history: "歷史",
     charts: "譜面",
     leaderboard: "排行榜",
     devices: "裝置",
@@ -77,8 +76,6 @@ export const zhHant = {
     recordsTitle: "譜面成績",
     recordsDescription:
       "你在 Phigros 中玩過的所有譜面，可搜尋和排序，包括依 All Perfect 能提升多少 RKS 排序。",
-    historyTitle: "歷史",
-    historyDescription: "根據保存在瀏覽器中的快照，查看你的 Phigros RKS 變化以及存檔之間的差異。",
     songIntro: (title: string, artist: string, chapter: string) =>
       `${title} 是 ${artist} 的 Phigros 曲目，收錄於 ${chapter}。`,
     oneChart: (list: string, charters: string) => `共有一張譜面：${list}${charters}。`,
@@ -467,7 +464,7 @@ export const zhHant = {
       "這些單字只在此瀏覽器中轉換為你的金鑰，從不會被傳送。之後此瀏覽器會取得自己的金鑰，你可以在裝置頁中移除它。",
     close: "關閉",
     signOut: "登出",
-    signOutConfirm: "要讓此瀏覽器登出你的 Phigros++ 個人資料嗎？它的快照會保留在歷史中。",
+    signOutConfirm: "要讓此瀏覽器登出你的 Phigros++ 個人資料嗎？",
     move: "此存檔只保存在這個瀏覽器中。把它傳送到 Phigros++ 即可繼續遊玩，還能錄製回放並讓你的成績登上排行榜。",
     send: "傳送到 Phigros++",
     sendConfirm: (name: string) =>
@@ -522,7 +519,7 @@ export const zhHant = {
     bringText: "Phigros++ 從空存檔開始，而 TapTap 雲端已不再回應，所以無法從那裡取得你的存檔。",
     browser: "你以前在 phigros.tools 上開啟過存檔",
     browserText:
-      "此瀏覽器保留了一份副本。從 Phigros++ 登入，在歷史中開啟該存檔並選擇**傳送到 Phigros++**，遊戲下次啟動時會提示載入它。",
+      "此瀏覽器保留了一份副本。從 Phigros++ 登入，開啟該存檔並選擇**傳送到 Phigros++**，遊戲下次啟動時會提示載入它。",
     device: "你已經在另一台裝置上使用 Phigros++",
     deviceText:
       "在那台裝置上選擇 **Sign in another device**，然後在新裝置上選擇 **Sign in to my profile**，輸入它的代碼或你的 16 個單字。之後 Phigros++ 會提供另一台裝置上傳的存檔。",
@@ -532,30 +529,7 @@ export const zhHant = {
     source: "原始碼",
   },
   history: {
-    snapshots: "快照",
-    saveCurrent: "儲存目前存檔",
-    clearConfirm: "要刪除所有本機快照嗎？",
-    deleteAll: "全部刪除",
-    playerHistory: "玩家歷史",
-    legacy: "舊版 / 未知玩家",
-    saveFallback: "存檔",
-    open: "開啟",
-    compare: "與目前比較",
-    delete: "刪除",
-    empty: "還沒有儲存快照。匯入一份存檔即可開始記錄本機歷史。",
-    changed: (count: number) => `${count} 筆譜面紀錄有變動或新增`,
-    change: (song: string, level: string, score: string, accuracy: string) =>
-      `${song} ${level}：分數 ${score}，準確率 ${accuracy}%`,
-    sinceLast: "自上次快照以來",
-    rksIncomparable: "不同曲庫版本或排名規則之間無法比較 RKS。",
-    improved: (count: number) => `${count} 筆新增或提升的紀錄`,
-    savesToCompare: "可比較的存檔",
-    importAnother: "再匯入一份該玩家的存檔，即可比較 RKS、FC 和 AP。",
-    importTwo: "匯入同一玩家的兩份存檔，即可比較 RKS、FC 和 AP。",
-    rksHistory: "RKS 歷史",
-    thirdTime: "再儲存一次即可解鎖趨勢線。",
     trend: (count: number, from: string, to: string) =>
       `${count} 個快照的 RKS 趨勢：從 ${from} 到 ${to}`,
-    catalogUpdate: "曲庫更新",
   },
 } satisfies Messages;

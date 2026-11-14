@@ -30,7 +30,6 @@ function ToolLayout() {
   const {
     loaded,
     account,
-    snapshots,
     credentials,
     busy,
     log,
@@ -62,7 +61,7 @@ function ToolLayout() {
   // the open save is the signed-in Phigros++ profile's, known from the page's cookie before storage is read
   const profileSave = !!loaded && account === loaded.playerId;
   const playerName = loaded && (loadedCredential?.nickname ?? loaded.playerId);
-  const tabIds = toolTabs(!!loaded, snapshots.length > 0, profileSave);
+  const tabIds = toolTabs(!!loaded, profileSave);
   const activeTab = tabIds.includes(pathname) ? pathname : "/";
   // the token dialog only knows TapTap logins
   const tokens = credentials.filter((c) => c.token);
@@ -73,7 +72,7 @@ function ToolLayout() {
   // biome-ignore lint/correctness/useExhaustiveDependencies: navigate isn't wrapped in useCallback (the project relies on the React Compiler instead), so listing it would re-run this every render.
   useEffect(() => {
     // Only for the tool's own tabs: while following a link out (e.g. to /charts/$id) this layout briefly sees the new path.
-    const anyTab = [...toolTabs(true, true, true), ...toolTabs(true, true, false)];
+    const anyTab = toolTabs(true, true);
     if (storageReady && anyTab.includes(pathname) && pathname !== activeTab)
       void navigate({ to: activeTab, replace: true });
   }, [storageReady, pathname, activeTab]);
