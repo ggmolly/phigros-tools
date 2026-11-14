@@ -103,7 +103,20 @@ export function SnapshotHistory({ history }: { history: SnapshotV1[] }) {
         </h2>
       </div>
       {series.length < 3 ? (
-        <p className="meta rks-hint">{t.history.thirdTime}</p>
+        <div className="rks-empty">
+          <svg viewBox="0 0 1000 380" preserveAspectRatio="none" aria-hidden="true">
+            <path
+              d="M0 340C60 338 90 322 140 318S220 300 260 276 330 270 380 262 450 214 500 204 580 196 620 170 700 150 740 122 820 112 860 78 940 52 1000 30"
+              vectorEffect="non-scaling-stroke"
+            />
+          </svg>
+          <p className="rks-pips" aria-hidden="true">
+            {[0, 1, 2].map((save) => (
+              <i key={save} className={save < series.length ? "on" : undefined} />
+            ))}
+          </p>
+          <p className="meta rks-hint">{t.history.thirdTime}</p>
+        </div>
       ) : (
         <RksChart
           points={series.map((point) => ({ at: point.capturedAt, rks: point.rks }))}
