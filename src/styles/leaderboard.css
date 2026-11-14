@@ -64,7 +64,7 @@ main > .seg {
     top: 1.125rem;
   }
   .leaderboard-layout > :last-child .chart-stats-scroll {
-    max-height: calc(100vh - 9.375rem);
+    max-height: calc(100svh - 9.375rem);
     overflow-y: auto;
   }
 }

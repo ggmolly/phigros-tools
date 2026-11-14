@@ -78,7 +78,7 @@
   }
 }
 .table-scroll {
-  max-height: calc(100vh - 18.125rem);
+  max-height: calc(100svh - 18.125rem);
   min-height: 20rem;
   overflow: auto;
   margin: 0 -0.75rem;
