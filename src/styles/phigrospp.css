@@ -110,10 +110,162 @@
   display: grid;
   gap: 18px;
 }
+/* the title glows like the game's logo, its ++ in the pink Phigros++ adds to it */
 .ppp-title {
-  font-size: 56px;
-  font-weight: 400;
+  font-size: clamp(56px, 7vw, 92px);
+  font-weight: 500;
   line-height: 1.1;
+  text-shadow:
+    0 0 4px #bfeaff,
+    0 0 16px #5cc4ff,
+    0 0 44px rgb(64 160 255 / 0.5);
+}
+.ppp-title span {
+  margin-left: 0.04em;
+  font-size: 0.5em;
+  font-weight: 700;
+  vertical-align: 0.62em;
+  color: #ffe3f2;
+  text-shadow:
+    0 0 6px rgb(255 79 168),
+    0 0 20px rgb(255 79 168);
+}
+/* each feature drawn small: a replay's seek bar with its marks, the hud's lines, the first recovery words */
+.ppp-visual {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 78px;
+  margin-bottom: 14px;
+  padding: 0 4px;
+}
+.ppp-replay svg {
+  flex: none;
+  width: 24px;
+  fill: none;
+  stroke: var(--white);
+  stroke-width: 2.2;
+  stroke-linejoin: round;
+}
+.ppp-replay b {
+  color: var(--glow);
+  font-size: 19px;
+  font-weight: 600;
+}
+.ppp-seek {
+  position: relative;
+  flex: 1;
+  height: 8px;
+  background: rgb(255 255 255 / 0.14);
+  transform: skewX(var(--skew));
+}
+.ppp-seek i {
+  position: absolute;
+  top: -5px;
+  left: 24%;
+  width: 3px;
+  height: 18px;
+  background: #a2eeff;
+}
+.ppp-seek i:first-child {
+  inset: 0 58% 0 0;
+  width: auto;
+  height: auto;
+  background: var(--white);
+}
+.ppp-seek i:nth-child(2) {
+  top: -9px;
+  left: 42%;
+  width: 12px;
+  height: 26px;
+  margin-left: -6px;
+  background: var(--white);
+}
+.ppp-seek i:nth-child(4) {
+  left: 71%;
+  background: #e2696d;
+}
+.ppp-hud {
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0;
+  font-family: "Saira HUD", Saira, sans-serif;
+  font-size: 17px;
+  line-height: 1.15;
+}
+.ppp-hud span:first-child {
+  font-size: 34px;
+}
+.ppp-hud b {
+  color: var(--fc);
+  font-weight: 400;
+}
+.ppp-timing {
+  position: relative;
+  align-self: stretch;
+  height: 3px;
+  margin-top: 12px;
+  background: linear-gradient(
+    90deg,
+    #e2696d 9%,
+    #a2eeff 9% 32%,
+    #ffeca0 32% 68%,
+    #a2eeff 68% 91%,
+    #e2696d 91%
+  );
+}
+.ppp-timing i {
+  position: absolute;
+  top: -6px;
+  left: 47%;
+  width: 3px;
+  height: 15px;
+  background: #ffeca0;
+  opacity: 0.7;
+}
+.ppp-timing i:nth-child(2) {
+  left: 52%;
+}
+.ppp-timing i:nth-child(3) {
+  left: 44%;
+}
+.ppp-timing i:nth-child(4) {
+  left: 55%;
+  opacity: 0.4;
+}
+.ppp-timing i:nth-child(5) {
+  left: 27%;
+  background: #a2eeff;
+}
+.ppp-words {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 0;
+  list-style: none;
+  counter-reset: word;
+}
+.ppp-words li {
+  position: relative;
+  isolation: isolate;
+  padding: 4px 12px;
+  font-size: 15px;
+  counter-increment: word;
+}
+.ppp-words li::before {
+  content: counter(word);
+  margin-right: 8px;
+  color: var(--faint);
+  font-size: 11px;
+}
+.ppp-words li::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: rgb(255 255 255 / 0.09);
+  transform: skewX(var(--skew));
 }
 .ppp-lead {
   max-width: 60ch;

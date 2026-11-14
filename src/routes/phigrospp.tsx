@@ -23,6 +23,44 @@ export const Route = createFileRoute("/phigrospp")({
   component: PhigrosppPage,
 });
 
+// what each feature looks like, drawn small over its text like in the trailer. decorative: the text says it all
+const REPLAY = (
+  <div className="ppp-visual ppp-replay" aria-hidden="true">
+    <svg viewBox="0 0 24 24">
+      <path d="M6 3.5v17l14-8.5z" />
+    </svg>
+    <span className="ppp-seek">
+      <i />
+      <i />
+      <i />
+      <i />
+    </span>
+    <b>16×</b>
+  </div>
+);
+const HUD = (
+  <div className="ppp-visual ppp-hud" aria-hidden="true">
+    <span>0996761</span>
+    <span>
+      <b>V</b> 99.57%
+    </span>
+    <span className="ppp-timing">
+      <i />
+      <i />
+      <i />
+      <i />
+      <i />
+    </span>
+  </div>
+);
+const WORDS = (
+  <ol className="ppp-visual ppp-words" aria-hidden="true">
+    {["pigeon", "geopelia", "gino", "coo", "rhythm", "bpm"].map((word) => (
+      <li key={word}>{word}</li>
+    ))}
+  </ol>
+);
+
 function PhigrosppPage() {
   const t = useT();
   const p = t.pppPage;
@@ -31,7 +69,9 @@ function PhigrosppPage() {
       <SiteHeader />
       <main className="app-shell ppp-page">
         <section className="panel ppp-hero">
-          <h1 className="ppp-title">Phigros++</h1>
+          <h1 className="ppp-title">
+            Phigros<span>++</span>
+          </h1>
           <p className="ppp-lead">{p.description}</p>
           <div className="ppp-download">
             <a className="btn" href={INSTALLER} target="_blank" rel="noopener noreferrer">
@@ -46,12 +86,13 @@ function PhigrosppPage() {
         <div className="ppp-features">
           {(
             [
-              [p.replays, p.replaysText],
-              [p.hud, p.hudText],
-              [p.sync, p.syncText],
+              [p.replays, p.replaysText, REPLAY],
+              [p.hud, p.hudText, HUD],
+              [p.sync, p.syncText, WORDS],
             ] as const
-          ).map(([title, text]) => (
+          ).map(([title, text, visual]) => (
             <section key={title} className="panel">
+              {visual}
               <h2 className="panel-title">{title}</h2>
               <p className="meta">{text}</p>
             </section>
