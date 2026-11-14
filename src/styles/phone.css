@@ -52,7 +52,7 @@
   .stepper {
     gap: 0.625rem;
   }
-  .tab[aria-selected="true"] {
+  .tab[aria-current] {
     font-size: 1.0625rem;
   }
   .import-band {

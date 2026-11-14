@@ -115,14 +115,14 @@
   white-space: nowrap;
   transition: color 0.15s ease;
 }
-.tab:hover:not([aria-selected="true"]) {
+.tab:hover:not([aria-current]) {
   color: var(--glow);
 }
-.tab[aria-selected="true"] {
+.tab[aria-current] {
   color: var(--ink);
   font-size: 1.3125rem;
 }
-.tab[aria-selected="true"]::before {
+.tab[aria-current]::before {
   background: var(--white);
 }
 .tab:focus-visible {

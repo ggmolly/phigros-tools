@@ -1,5 +1,5 @@
-import { Link, useLoaderData, useNavigate, useRouterState } from "@tanstack/react-router";
-import { Fragment, type KeyboardEvent } from "react";
+import { Link, useLoaderData, useRouterState } from "@tanstack/react-router";
+import { Fragment } from "react";
 import { setLocale, useFormat, useLocale, useT } from "../i18n";
 import { isLocale, LOCALE_NAME, LOCALES } from "../i18n/locales";
 import { useSave } from "../save-context";
@@ -66,7 +66,6 @@ export const TAB_KEY = {
   "/leaderboard": "leaderboard",
   "/phigrospp": "phigrospp",
 } as const satisfies Record<TabId, string>;
-const slug = (id: TabId) => TAB_KEY[id];
 
 /** Overrides the browser's language; the choice is kept in a cookie and in the URL prefix. */
 function LanguageSwitch() {
@@ -98,7 +97,6 @@ export function toolTabs(hasSave: boolean, signedIn: boolean): TabId[] {
 export function SiteHeader({ children }: { children?: React.ReactNode }) {
   const { loaded, account } = useSave();
   const t = useT();
-  const navigate = useNavigate();
   const pathname = useRouterState({ select: (state) => state.location.pathname });
   const signedIn = !!account && account === loaded?.playerId;
   // a Phigros++ player has the app already
@@ -119,13 +117,6 @@ export function SiteHeader({ children }: { children?: React.ReactNode }) {
       : pathname.startsWith("/charts")
         ? "/charts"
         : (tabIds.find((id) => id === pathname) ?? "/");
-  function tabKeys(event: KeyboardEvent) {
-    const step = event.key === "ArrowRight" ? 1 : event.key === "ArrowLeft" ? -1 : 0;
-    if (!step) return;
-    const next = tabIds[(tabIds.indexOf(activeTab) + step + tabIds.length) % tabIds.length]!;
-    void navigate({ to: next });
-    document.getElementById(`tab-${slug(next)}`)?.focus();
-  }
   return (
     <header className="topbar">
       <Link className="corner brand" to="/" aria-label={t.header.home}>
@@ -134,27 +125,21 @@ export function SiteHeader({ children }: { children?: React.ReactNode }) {
           <span className="brand-sub">tools</span>
         </span>
       </Link>
-      <div className="tabs" role="tablist" aria-label={t.tabs.label} onKeyDown={tabKeys}>
+      <nav className="tabs" aria-label={t.tabs.label}>
         {tabIds.map((id) => (
           <Link
             key={id}
             to={id}
-            id={`tab-${slug(id)}`}
-            role="tab"
             className="tab"
-            aria-selected={activeTab === id}
-            aria-controls={
-              activeTab === id && id !== "/charts" && id !== "/leaderboard" && id !== "/phigrospp"
-                ? `panel-${slug(id)}`
-                : undefined
-            }
-            tabIndex={activeTab === id ? 0 : -1}
+            // exact, or the router also marks "/" and "/charts" as current on the pages under them
+            activeOptions={{ exact: true }}
+            aria-current={activeTab === id ? "page" : undefined}
           >
             {/* a Phigros++ save's Overview is its player's profile */}
             {id === "/" && signedIn ? t.tabs.profile : t.tabs[TAB_KEY[id]]}
           </Link>
         ))}
-      </div>
+      </nav>
       {children}
       <GithubLink />
     </header>

@@ -55,7 +55,7 @@ function OverviewRoute() {
       });
   }, [profileId, masked, here, navigate]);
   return (
-    <div id="panel-overview" role="tabpanel" aria-labelledby="tab-overview" className="tab-panel">
+    <div className="tab-panel">
       {loaded && <PhigrosppBar />}
       {loaded ? (
         <Overview

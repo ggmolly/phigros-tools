@@ -20,7 +20,7 @@ function DevicesRoute() {
   const credential = useProfileCredential();
   if (!credential) return null; // _tool.tsx redirects to "/" when the open save isn't a profile's
   return (
-    <div id="panel-devices" role="tabpanel" aria-labelledby="tab-devices" className="tab-panel">
+    <div className="tab-panel">
       <DevicesPanel key={credential.playerId} credential={credential} />
     </div>
   );
