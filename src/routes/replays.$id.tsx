@@ -57,6 +57,7 @@ export const Route = createFileRoute("/replays/$id")({
 const TAP = 110;
 const OUTLINE = 14;
 const FADE = 0.35; // seconds of song time
+const TRAIL = 0.2; // how long a finger's path stays behind it
 const LANDED = "255 217 77";
 const HELD = "255 255 255";
 
@@ -77,9 +78,11 @@ function frameIndex(frames: ReplayFrame[], t: number) {
 function drawFingers(header: ReplayHeader, frames: ReplayFrame[]) {
   return (ctx: CanvasRenderingContext2D, t: number, W: number, H: number) => {
     const scale = H / header.height;
+    const screenX = (x: number) => (x / header.width) * W;
+    const screenY = (y: number) => (1 - y / header.height) * H;
     const diamond = (x: number, y: number, rgb: string, alpha: number) => {
       ctx.save();
-      ctx.translate((x / header.width) * W, (1 - y / header.height) * H);
+      ctx.translate(screenX(x), screenY(y));
       ctx.rotate(Math.PI / 4);
       const outer = ((TAP + OUTLINE) / 2) * scale;
       const inner = (TAP / 2) * scale;
@@ -91,6 +94,29 @@ function drawFingers(header: ReplayHeader, frames: ReplayFrame[]) {
     };
     const index = frameIndex(frames, t);
     if (index < 0) return;
+    // the path of held fingers over the last TRAIL seconds, one segment per frame, thinner and fainter with age
+    let start = index;
+    while (start > 0 && frames[start - 1]!.t > t - TRAIL) start--;
+    const last = new Map<number, { x: number; y: number }>();
+    ctx.lineCap = "round";
+    ctx.strokeStyle = "#fff";
+    for (let i = Math.max(0, start - 1); i <= index; i++) {
+      const fade = 1 - (t - frames[i]!.t) / TRAIL;
+      for (const { id, phase, x, y } of frames[i]!.touches) {
+        const from = phase === 0 ? undefined : last.get(id);
+        if (from && fade > 0) {
+          ctx.globalAlpha = 0.5 * fade;
+          ctx.lineWidth = TAP * 0.5 * scale * fade;
+          ctx.beginPath();
+          ctx.moveTo(screenX(from.x), screenY(from.y));
+          ctx.lineTo(screenX(x), screenY(y));
+          ctx.stroke();
+        }
+        if (phase === 3 || phase === 4) last.delete(id);
+        else last.set(id, { x, y });
+      }
+    }
+    ctx.globalAlpha = 1;
     // lifted fingers of the last FADE seconds, oldest first so newer ones draw on top
     let from = index;
     while (from > 0 && frames[from - 1]!.t > t - FADE) from--;
