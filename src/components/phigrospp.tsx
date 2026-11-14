@@ -284,6 +284,8 @@ export function DevicesPanel({ credential }: { credential: Credential }) {
                   aria-label={t.ppp.rename}
                   maxLength={64}
                   onKeyDown={(e) => {
+                    // keys that drive an IME aren't ours; Safari only tells them by keyCode 229
+                    if (e.nativeEvent.isComposing || e.keyCode === 229) return;
                     if (e.key === "Enter") e.currentTarget.blur();
                     if (e.key === "Escape") setEditing(undefined);
                   }}
