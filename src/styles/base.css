@@ -23,6 +23,11 @@
   h6 {
     font-size: inherit;
     font-weight: inherit;
+    text-wrap: balance;
+  }
+  p,
+  li {
+    text-wrap: pretty;
   }
   a {
     color: inherit;
