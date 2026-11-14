@@ -9,6 +9,24 @@
 main > .seg {
   margin-bottom: 18px;
 }
+/* the page's title over what the leaderboard is, the All / Verified switch at its end */
+.leaderboard-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 12px 24px;
+  margin-bottom: 18px;
+  padding-inline: 10px;
+}
+.leaderboard-head h1 {
+  font-size: 44px;
+  font-weight: 300;
+  line-height: 1.1;
+}
+.leaderboard-head .ppp-cta {
+  margin: 4px 0 0;
+}
 .leaderboard-layout {
   display: flex;
   flex-direction: column;
@@ -22,15 +40,160 @@ main > .seg {
 .leaderboard-layout td {
   white-space: normal;
 }
-.leaderboard-layout .search-field {
-  width: 100%;
-  margin-bottom: 12px;
+/* a narrow first column, and the numbers that rank (rks, players) at the row's end */
+.leaderboard-layout :is(th, td):first-child {
+  width: 72px;
 }
+.leaderboard-layout :is(th, td):last-child {
+  padding-right: 18px;
+  text-align: right;
+}
+.leaderboard-layout .search-field {
+  flex: 0 1 300px;
+  margin-left: auto;
+}
+/* wide screens: the players lead, the charts stay beside them and scroll on their own */
 @media (min-width: 1101px) {
   .leaderboard-layout {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
     align-items: start;
+  }
+  .leaderboard-layout > :last-child {
+    position: sticky;
+    top: 18px;
+  }
+  .leaderboard-layout > :last-child .chart-stats-scroll {
+    max-height: calc(100vh - 150px);
+    overflow-y: auto;
+  }
+}
+
+/* the first three players, the first in the middle and a step higher: slanted cards under their place's colour */
+.podium {
+  display: grid;
+  grid-template-columns: 1fr 1.12fr 1fr;
+  align-items: end;
+  gap: 16px;
+  margin: 4px 30px 26px;
+}
+.podium li:nth-child(1) {
+  order: 2;
+  --place: var(--phi);
+}
+.podium li:nth-child(2) {
+  order: 1;
+  --place: #d3dbe6;
+}
+.podium li:nth-child(3) {
+  order: 3;
+  --place: #e2a877;
+}
+.podium-card {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 24px 18px 20px;
+  text-align: center;
+}
+.podium-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-top: 3px solid var(--place);
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.13), rgb(255 255 255 / 0.03));
+  transform: skewX(var(--skew));
+  transition: background-color 0.15s ease;
+}
+.podium-card:hover::before,
+.podium-card:focus-visible::before {
+  background-color: rgb(255 255 255 / 0.08);
+}
+.podium-place {
+  position: absolute;
+  top: 10px;
+  left: 22px;
+  color: var(--place);
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 1;
+}
+.podium-avatar {
+  width: 84px;
+  height: 84px;
+  margin-bottom: 6px;
+}
+.podium-name {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.podium-rks {
+  font-size: 32px;
+  font-weight: 300;
+  line-height: 1.1;
+}
+.podium-card .button-arrow {
+  position: absolute;
+  top: 16px;
+  right: 24px;
+}
+.podium li:nth-child(1) .podium-card {
+  padding-block: 34px 30px;
+}
+.podium li:nth-child(1) .podium-card::before {
+  box-shadow: 0 0 34px rgb(245 242 91 / 0.12);
+}
+.podium li:nth-child(1) .podium-avatar {
+  width: 112px;
+  height: 112px;
+}
+.podium li:nth-child(1) .podium-rks {
+  font-size: 42px;
+}
+/* phones: the podium becomes three rows, in order */
+@media (max-width: 700px) {
+  .podium {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-inline: 12px;
+  }
+  .podium li:nth-child(n) {
+    order: 0;
+  }
+  .podium li:nth-child(n) .podium-card {
+    grid-template-columns: 30px 52px minmax(0, 1fr) auto;
+    align-items: center;
+    justify-items: start;
+    gap: 12px;
+    padding: 12px 22px;
+    text-align: left;
+  }
+  .podium-place {
+    position: static;
+    font-size: 28px;
+  }
+  .podium li:nth-child(n) .podium-avatar {
+    width: 52px;
+    height: 52px;
+    margin: 0;
+  }
+  .podium li:nth-child(n) .podium-rks {
+    font-size: 26px;
+  }
+  .podium-card .button-arrow {
+    display: none;
+  }
+  .podium-name {
+    font-size: 17px;
+  }
+  .leaderboard-layout .search-field {
+    flex-basis: 100%;
   }
 }
 

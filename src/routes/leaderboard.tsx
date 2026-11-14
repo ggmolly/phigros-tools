@@ -53,15 +53,15 @@ function Charts() {
     <section className="panel">
       <div className="panel-head">
         <h2 className="panel-title">{t.tabs.charts}</h2>
+        <input
+          className="field search-field"
+          type="search"
+          placeholder={t.charts.searchPlaceholder}
+          aria-label={t.charts.searchLabel}
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+        />
       </div>
-      <input
-        className="field search-field"
-        type="search"
-        placeholder={t.charts.searchPlaceholder}
-        aria-label={t.charts.searchLabel}
-        value={query}
-        onChange={(event) => setQuery(event.target.value)}
-      />
       <div className="chart-stats-scroll">
         <table className="song-diff-table">
           <thead>
@@ -101,14 +101,18 @@ function LeaderboardPage() {
     <>
       <SiteHeader />
       <main className="app-shell">
-        <h1 className="sr-only">{t.tabs.leaderboard}</h1>
-        <ScopeSwitch verified={verified} />
-        <p className="ppp-cta">
-          {t.ppp.leaderboardCta}{" "}
-          <Link to="/phigrospp" className="text-link">
-            {t.ppp.leaderboardJoin}
-          </Link>
-        </p>
+        <div className="leaderboard-head">
+          <div>
+            <h1>{t.tabs.leaderboard}</h1>
+            <p className="ppp-cta">
+              {t.ppp.leaderboardCta}{" "}
+              <Link to="/phigrospp" className="text-link">
+                {t.ppp.leaderboardJoin}
+              </Link>
+            </p>
+          </div>
+          <ScopeSwitch verified={verified} />
+        </div>
         <div className="leaderboard-layout">
           <Outlet />
           <Charts />
