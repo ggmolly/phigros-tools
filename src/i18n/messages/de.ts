@@ -204,6 +204,7 @@ export const de = {
         "Noch nicht geprüft. Nach einem Spielupdate wartet es, bis phigros.tools die neue Version kennt.",
       unverified: "Die Berührungen erneut abgespielt ergeben nicht das gespeicherte Ergebnis.",
     },
+    timing: "Timing",
     timingHelp:
       "Timing-Genauigkeit: wie genau Taps und Holds auf den Takt getroffen wurden, von 100 %, wenn alle exakt darauf liegen, bis 0 %, wenn alle am Rand eines Bad liegen. Drags, Flicks und Misses zählen nicht.",
     pageOf: (page: string, pages: string) => `Seite ${page} von ${pages}`,

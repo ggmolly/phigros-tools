@@ -90,18 +90,14 @@ export function PlayStatusLabel({ status }: { status: PlayStatus | ReplayInfo["s
   );
 }
 
-/** A play's accuracy, then its replay's timing accuracy in small, explained on hover. */
-export function Accuracy({ accuracy, timing }: { accuracy: number; timing: number | null }) {
+/** A replay's timing accuracy, explained on hover, "-" without a replay. */
+export function Timing({ timing }: { timing: number | null }) {
   const t = useT();
+  if (timing === null) return <span className="meta">-</span>;
   return (
-    <>
-      {accuracy.toFixed(2)}%
-      {timing !== null && (
-        <sub className="timing" title={t.song.timingHelp}>
-          {timing.toFixed(1)}%
-        </sub>
-      )}
-    </>
+    <span className="timing" title={t.song.timingHelp}>
+      {timing.toFixed(2)}%
+    </span>
   );
 }
 
@@ -114,8 +110,9 @@ export function PlayCells({ play }: { play: Play }) {
         <PlayerTag player={play.player} />
       </td>
       <td className="num record-score">{score7(play.score)}</td>
+      <td className="num">{play.accuracy.toFixed(2)}%</td>
       <td className="num">
-        <Accuracy accuracy={play.accuracy} timing={play.timing} />
+        <Timing timing={play.timing} />
       </td>
       <td>
         <Rank score={play.score} fc={play.fc} />
@@ -136,6 +133,7 @@ export function PlayHeadings({ before = [], after = [] }: { before?: string[]; a
     t.song.player,
     t.song.score,
     t.song.acc,
+    t.song.timing,
     t.song.rank,
     t.song.status,
     ...after,
@@ -144,7 +142,7 @@ export function PlayHeadings({ before = [], after = [] }: { before?: string[]; a
     <thead>
       <tr>
         {names.map((name) => (
-          <th key={name} scope="col">
+          <th key={name} scope="col" title={name === t.song.timing ? t.song.timingHelp : undefined}>
             {name}
           </th>
         ))}

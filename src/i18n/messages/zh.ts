@@ -200,6 +200,7 @@ export const zh = {
       pending: "尚未检查。游戏更新后，会等到 phigros.tools 支持新版本。",
       unverified: "重放这些触摸得不到记录的结果。",
     },
+    timing: "判定精度",
     timingHelp:
       "判定精度：Tap 与 Hold 的击打时机有多接近节拍，全部正中为 100%，全部处于 Bad 边缘为 0%。不计入 Drag、Flick 和 Miss。",
     pageOf: (page: string, pages: string) => `第 ${page} / ${pages} 页`,

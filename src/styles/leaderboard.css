@@ -269,15 +269,10 @@ main > .seg {
   transform: translateX(0.3125rem);
 }
 
-/* a replay's result, at the end of its heading: the score in the game's lettering, the accuracy and the grade */
-/* the timing accuracy after a play's accuracy, kept off the line height */
 .timing {
-  margin-left: 0.3em;
-  color: var(--dim);
-  font-size: 0.7em;
-  line-height: 0;
   cursor: help;
 }
+/* a replay's result, at the end of its heading: the score in the game's lettering, the accuracy and the grade */
 .replay-result {
   display: flex;
   align-items: baseline;

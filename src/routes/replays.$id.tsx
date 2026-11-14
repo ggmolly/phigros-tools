@@ -4,7 +4,7 @@ import { catalogSong } from "../catalog";
 import { Arrow } from "../components/arrow";
 import { ChartPlayer } from "../components/chart-player";
 import { SiteHeader } from "../components/chrome";
-import { Accuracy, PlayerTag, PlayStatusLabel, SongHeading } from "../components/plays";
+import { PlayerTag, PlayStatusLabel, SongHeading, Timing } from "../components/plays";
 import { Difficulty, Rank, score7 } from "../components/primitives";
 import { useFormat, useT } from "../i18n";
 import { CHALLENGE, judge, type Result, WINDOWS } from "../judge";
@@ -236,9 +236,12 @@ function ReplayPage() {
             </SongHeading>
             <p className="replay-result">
               <span>{score7(info.score)}</span>
-              <span className="meta">
-                <Accuracy accuracy={info.accuracy} timing={info.timing} />
-              </span>
+              <span className="meta">{info.accuracy.toFixed(2)}%</span>
+              {info.timing !== null && (
+                <span className="meta">
+                  {t.song.timing} <Timing timing={info.timing} />
+                </span>
+              )}
               <Rank score={info.score} fc={info.fc} />
             </p>
           </div>

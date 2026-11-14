@@ -205,6 +205,7 @@ export const es = {
         "Aún no se ha comprobado. Tras una actualización del juego, espera a que phigros.tools conozca la nueva versión.",
       unverified: "Volver a reproducir los toques no da el resultado registrado.",
     },
+    timing: "Timing",
     timingHelp:
       "Precisión de timing: lo cerca del ritmo que se tocaron los taps y holds, desde 100 % si todos van justo a tiempo hasta 0 % si todos quedan al límite de un Bad. No cuentan los drags, los flicks ni los miss.",
     pageOf: (page: string, pages: string) => `Página ${page} de ${pages}`,

@@ -205,6 +205,7 @@ export const vi = {
         "Chưa được kiểm tra. Sau khi trò chơi cập nhật, nó chờ đến khi phigros.tools hỗ trợ phiên bản mới.",
       unverified: "Phát lại các lần chạm không cho ra kết quả đã ghi.",
     },
+    timing: "Timing",
     timingHelp:
       "Độ chính xác timing: mức độ bấm tap và hold đúng nhịp, từ 100% khi tất cả đều chính xác đến 0% khi tất cả nằm ở rìa của Bad. Drag, flick và miss không được tính.",
     pageOf: (page: string, pages: string) => `Trang ${page}/${pages}`,

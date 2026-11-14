@@ -68,11 +68,11 @@
   border-bottom: 1px solid var(--hairline);
 }
 .profile-top li {
-  grid-template-columns: minmax(0, 1fr) 5.2em 7.4em 1.5rem 6.8em 5.8em 3rem;
+  grid-template-columns: minmax(0, 1fr) 5.2em 4.8em 4.8em 1.5rem 6.8em 5.8em 3rem;
 }
 .profile-recent li {
   /* the date takes the RKS and status columns of the top plays, so both lists line up */
-  grid-template-columns: minmax(0, 1fr) 5.2em 7.4em 1.5rem calc(12.6em + 0.875rem) 3rem;
+  grid-template-columns: minmax(0, 1fr) 5.2em 4.8em 4.8em 1.5rem calc(12.6em + 0.875rem) 3rem;
 }
 .profile-activity li {
   grid-template-columns: minmax(0, 1fr) auto;
@@ -100,11 +100,8 @@
   .profile-activity li {
     grid-template-columns: minmax(0, 1fr);
   }
-  .profile-top li > :nth-child(3),
-  .profile-top li > :nth-child(5),
-  .profile-top li > :nth-child(6),
-  .profile-recent li > :nth-child(3),
-  .profile-recent li > :nth-child(5) {
+  .profile-top li > :is(:nth-child(3), :nth-child(4), :nth-child(6), :nth-child(7)),
+  .profile-recent li > :is(:nth-child(3), :nth-child(4), :nth-child(6)) {
     display: none;
   }
 }

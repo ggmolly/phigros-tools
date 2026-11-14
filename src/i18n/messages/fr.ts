@@ -204,6 +204,7 @@ export const fr = {
         "Pas encore vérifiée. Après une mise à jour du jeu, elle attend que phigros.tools connaisse la nouvelle version.",
       unverified: "Rejouer les touches ne donne pas le résultat enregistré.",
     },
+    timing: "Timing",
     timingHelp:
       "Précision du timing : à quel point les taps et les holds ont été joués sur le temps, de 100 % s'ils le sont tous pile à 0 % s'ils sont tous à la limite d'un Bad. Les drags, les flicks et les miss ne comptent pas.",
     pageOf: (page: string, pages: string) => `Page ${page} sur ${pages}`,
