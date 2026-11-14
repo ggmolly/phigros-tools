@@ -1,6 +1,9 @@
 import { defineHandler } from "nitro/h3";
+import { topics } from "../../../src/topics";
 import { signed } from "../../auth";
 import { renameDevice } from "../../devices";
+import { playerId } from "../../players";
+import { announce } from "../../queue";
 
 // a key of the profile gets the name the player gave it: { key (hex), name } in
 export default defineHandler(async (event) => {
@@ -10,5 +13,6 @@ export default defineHandler(async (event) => {
     unknown
   >;
   renameDevice(key, String(device), String(name));
+  await announce(topics.player(playerId(key)));
   return { ok: true };
 });

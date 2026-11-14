@@ -1,4 +1,5 @@
 import { defineHandler, HTTPError } from "nitro/h3";
+import { topics } from "../../../src/topics";
 import { signed } from "../../auth";
 import { player } from "../../players";
 import { announce } from "../../queue";
@@ -9,6 +10,6 @@ export default defineHandler(async (event) => {
   const found = player((await signed(event)).key);
   if (!found) throw HTTPError.status(403, "Not registered");
   dropOffer(found.id);
-  await announce(found.id, "change");
+  await announce(topics.player(found.id));
   return { ok: true };
 });

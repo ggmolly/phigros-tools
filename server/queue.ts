@@ -1,8 +1,9 @@
 import amqp, { type ConfirmChannel } from "amqplib";
+import type { LiveEvent } from "../src/topics";
 
 /** The queue of uploaded replays waiting to be judged (server/worker.ts), by their sha256. */
 export const VERIFY_QUEUE = "replays.verify";
-/** What changed for a player, from the server or the worker, for the pages open on them (server/events.ts). */
+/** What changed, from the server or the worker, for the pages following it (server/live.ts). */
 export const EVENTS = "events";
 const URL = process.env.AMQP_URL ?? "amqp://localhost";
 
@@ -43,14 +44,11 @@ export async function queueVerify(sha256: string) {
   }
 }
 
-/** A player's event: "save" with the upload time when their game sent a save, "change" for anything else they show. */
-export type LiveEvent = "save" | "change";
-
-/** Tells the pages open on a player that something changed. A lost one only waits for their next reconnect. */
-export async function announce(id: string, event: LiveEvent, data = "") {
+/** Tells the pages following a topic that something changed. A lost one only waits for their next reconnect. */
+export async function announce(topic: string, event: LiveEvent = "change", data = "") {
   try {
-    (await openQueue()).publish(EVENTS, "", Buffer.from(JSON.stringify({ id, event, data })));
+    (await openQueue()).publish(EVENTS, "", Buffer.from(JSON.stringify({ topic, event, data })));
   } catch (error) {
-    console.error(`event ${event} of ${id} not sent:`, error);
+    console.error(`event ${event} of ${topic} not sent:`, error);
   }
 }

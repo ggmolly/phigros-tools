@@ -12,9 +12,11 @@ import {
 } from "../components/plays";
 import { Difficulty } from "../components/primitives";
 import { useFormat, useT } from "../i18n";
+import { useLiveReload } from "../live";
 import { LEVELS, type LevelName } from "../modules";
 import { getChartPlays, PLAYS_PAGE } from "../plays";
 import { headT, pageLinks, pageMeta } from "../seo";
+import { topics } from "../topics";
 
 export const Route = createFileRoute("/charts/$id_/plays/$level")({
   validateSearch: RankingSearch,
@@ -52,6 +54,7 @@ function PlaysPage() {
   const level = params.level as LevelName;
   const pages = Math.ceil(chart.count / PLAYS_PAGE);
   const constant = song.constants[LEVELS.indexOf(level)] ?? 0;
+  useLiveReload([topics.chart(song.id, level)]);
   return (
     <>
       <SiteHeader />

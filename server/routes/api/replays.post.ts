@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { defineHandler, HTTPError } from "nitro/h3";
 import { canonicalSongId, isLevel } from "../../../src/catalog";
 import { REPLAY_DOMAIN, REPLAY_SIGNED, replayHeader } from "../../../src/pigeon";
+import { topics } from "../../../src/topics";
 import { signed, verifySignature } from "../../auth";
 import { player } from "../../players";
 import { announce, queueVerify } from "../../queue";
@@ -38,6 +39,6 @@ export default defineHandler(async (event) => {
   await Bun.write(`${REPLAY_DIR}/${sha256}.pigeon`, body);
   addReplay(sha256, key, song, header);
   await queueVerify(sha256);
-  await announce(found.id, "change");
+  await announce(topics.player(found.id));
   return { id: sha256 };
 });

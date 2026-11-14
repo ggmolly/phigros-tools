@@ -30,9 +30,9 @@ const upsert = sqlite.prepare<
 
 /**
  * A player's records, one per line: `<game song id>\t<level>\t<score>\t<accuracy>\t<1 if full combo>`. Levels the site
- * doesn't rank (the game's Legacy charts) are skipped.
+ * doesn't rank (the game's Legacy charts) are skipped. How many were read, and the ones that became the player's best.
  */
-export function importRecords(key: Uint8Array, text: string): number {
+export function importRecords(key: Uint8Array, text: string) {
   const lines = text
     .split("\n")
     .filter((line) => LEVELS.includes(line.split("\t")[1] as LevelName));
@@ -57,12 +57,13 @@ export function importRecords(key: Uint8Array, text: string): number {
   });
   const now = Date.now();
   // they count on the leaderboard like replays, where nothing better from the player is there
-  sqlite.transaction(() => {
-    for (const r of records) {
+  const raised = sqlite.transaction(() => {
+    const raised = records.filter((r) => {
       upsert.run(key, r.song, r.level, r.score, r.accuracy, r.fc, now);
-      raiseBest(key, r.song, r.level, { ...r, fc: r.fc === 1, played: null, sha256: null });
-    }
+      return raiseBest(key, r.song, r.level, { ...r, fc: r.fc === 1, played: null, sha256: null });
+    });
     updateRks(key);
+    return raised;
   })();
-  return records.length;
+  return { count: records.length, raised };
 }

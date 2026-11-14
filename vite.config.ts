@@ -10,6 +10,9 @@ export default defineConfig({
     react(),
     babel({ presets: [reactCompilerPreset()] }),
     nitro({
+      // the server runs on Bun (deploy.sh), whose own WebSocket server carries the pages' live events (server/live.ts)
+      preset: "bun",
+      features: { websocket: true },
       serverDir: "server",
       compressPublicAssets: { gzip: true, zstd: true },
       routeRules: {

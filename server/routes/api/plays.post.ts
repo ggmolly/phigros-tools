@@ -1,4 +1,5 @@
 import { defineHandler, HTTPError } from "nitro/h3";
+import { topics } from "../../../src/topics";
 import { signed } from "../../auth";
 import { player } from "../../players";
 import { addPlays } from "../../profiles";
@@ -10,6 +11,6 @@ export default defineHandler(async (event) => {
   const found = player(key);
   if (!found) throw HTTPError.status(403, "Not registered");
   const count = addPlays(key, new TextDecoder().decode(body));
-  await announce(found.id, "change");
+  await announce(topics.player(found.id));
   return { count };
 });

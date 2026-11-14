@@ -1,46 +1,86 @@
-import { useEffect, useEffectEvent } from "react";
+import { rootRouteId, useRouter } from "@tanstack/react-router";
+import { useEffect, useEffectEvent, useRef } from "react";
+import type { LiveEvent } from "./topics";
 
-/** A player's event (server/events.ts): "save" with when their game uploaded it (ms), "change" for anything else. */
-export type LiveListener = (event: "save" | "change", data: string) => void;
+export type LiveListener = (event: LiveEvent, data: string) => void;
 
-// one connection per player, shared by everything on the page that follows them
-const sources = new Map<string, { source: EventSource; listeners: Set<LiveListener> }>();
+// one WebSocket per page (server/live.ts), following the topics of everything mounted
+const listeners = new Map<string, Set<LiveListener>>();
+let socket: WebSocket | undefined;
+let retries = 0;
+let retry: ReturnType<typeof setTimeout> | undefined;
 
-function follow(id: string, listener: LiveListener) {
-  let entry = sources.get(id);
-  if (!entry) {
-    const source = new EventSource(`/api/players/${id}/events`);
-    const listeners = new Set<LiveListener>();
-    const emit = (event: "save" | "change", data = "") => {
-      for (const each of listeners) each(event, data);
-    };
-    source.addEventListener("save", (e) => emit("save", e.data));
-    source.addEventListener("change", () => emit("change"));
-    // the browser reconnects on its own, what changed meanwhile is fetched again
-    let lost = false;
-    source.addEventListener("error", () => {
-      lost = true;
-    });
-    source.addEventListener("open", () => {
-      if (lost) emit("change");
-      lost = false;
-    });
-    entry = { source, listeners };
-    sources.set(id, entry);
-  }
-  entry.listeners.add(listener);
-  return () => {
-    entry.listeners.delete(listener);
-    if (entry.listeners.size) return;
-    entry.source.close();
-    sources.delete(id);
+// the server is told the whole list, once per change of the mounted pages
+let sending = false;
+function sendTopics() {
+  if (sending) return;
+  sending = true;
+  queueMicrotask(() => {
+    sending = false;
+    if (socket?.readyState === WebSocket.OPEN) socket.send(JSON.stringify([...listeners.keys()]));
+  });
+}
+
+function connect() {
+  retry = undefined;
+  socket = new WebSocket(`${location.origin.replace(/^http/, "ws")}/api/ws`);
+  socket.onopen = () => {
+    sendTopics();
+    // what changed while it was gone is fetched again
+    if (retries)
+      for (const each of listeners.values()) for (const listener of each) listener("change", "");
+    retries = 0;
+  };
+  socket.onmessage = (message) => {
+    const { topic, event, data } = JSON.parse(message.data);
+    for (const listener of listeners.get(topic) ?? []) listener(event, data);
+  };
+  socket.onclose = () => {
+    socket = undefined;
+    if (listeners.size) retry = setTimeout(connect, Math.min(30_000, 1000 * 2 ** retries++));
   };
 }
 
-/** Calls the listener with the player's events while the component is mounted, none for no player. */
-export function useLive(id: string | undefined, listener: LiveListener) {
+function follow(topic: string, listener: LiveListener) {
+  const each = listeners.get(topic) ?? new Set();
+  if (!each.size) sendTopics();
+  listeners.set(topic, each.add(listener));
+  if (!socket && !retry) connect();
+  return () => {
+    each.delete(listener);
+    if (each.size) return;
+    listeners.delete(topic);
+    sendTopics();
+  };
+}
+
+/** Calls the listener with the topics' events while the component is mounted, skipping the falsy ones. */
+export function useLive(topics: (string | false | undefined)[], listener: LiveListener) {
   const onEvent = useEffectEvent(listener);
+  const key = topics.filter(Boolean).join("\n");
   useEffect(() => {
-    if (id) return follow(id, (event, data) => onEvent(event, data));
-  }, [id]);
+    if (!key) return;
+    const stops = key.split("\n").map((topic) => follow(topic, onEvent));
+    return () => {
+      for (const stop of stops) stop();
+    };
+  }, [key]);
+}
+
+/**
+ * Reloads once a burst of the topics' events is over (the game sends a few in a row after each song): the page's own
+ * data by default, never the root's.
+ */
+export function useLiveReload(topics: (string | false | undefined)[], reload?: () => void) {
+  const router = useRouter();
+  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  useEffect(() => () => clearTimeout(timer.current), []);
+  useLive(topics, () => {
+    clearTimeout(timer.current);
+    timer.current = setTimeout(
+      reload ??
+        (() => void router.invalidate({ filter: (match) => match.routeId !== rootRouteId })),
+      500,
+    );
+  });
 }

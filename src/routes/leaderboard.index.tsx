@@ -3,7 +3,9 @@ import { Arrow } from "../components/arrow";
 import { Pager, Place, PlayerTag } from "../components/plays";
 import { Avatar } from "../components/primitives";
 import { useT } from "../i18n";
+import { useLiveReload } from "../live";
 import { getPlayerRanking, PLAYS_PAGE } from "../plays";
+import { topics } from "../topics";
 
 export const Route = createFileRoute("/leaderboard/")({
   loaderDeps: ({ search }) => ({
@@ -21,6 +23,7 @@ function Players() {
   const ranking = Route.useLoaderData();
   const navigate = useNavigate({ from: Route.fullPath });
   const t = useT();
+  useLiveReload([topics.ranking]);
   // the first three stand on a podium, on the ranking's first page only: a search or a later page is a plain list
   const podium = page === 1 && !q ? ranking.players.filter((player) => player.rank <= 3) : [];
   const rest = ranking.players.slice(podium.length);

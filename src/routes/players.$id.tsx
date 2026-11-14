@@ -1,13 +1,14 @@
-import { createFileRoute, notFound, useNavigate, useRouter } from "@tanstack/react-router";
+import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { SiteHeader } from "../components/chrome";
 import { useProfileCredential } from "../components/phigrospp";
 import { Card, RecentActivity, RecentPlays, TopPlays } from "../components/player";
 import { RksHistory } from "../components/rks-history";
-import { useLive } from "../live";
+import { useLiveReload } from "../live";
 import { CARDS, getProfile } from "../plays";
 import { useSave } from "../save-context";
 import { headT, pageMeta, SITE } from "../seo";
+import { topics } from "../topics";
 
 // players' pages change with every upload and unlisted ones must stay out of search results, so none are indexed. their
 // link previews show the player's card (server/card.tsx)
@@ -56,8 +57,7 @@ function PlayerPage() {
   const profile = Route.useLoaderData();
   const { loaded } = useSave();
   const navigate = useNavigate();
-  const router = useRouter();
-  useLive(profile.player.id, () => void router.invalidate());
+  useLiveReload([topics.player(profile.player.id), topics.ranking]);
   const mine = useProfileCredential()?.playerId === profile.player.id;
   // a player's own page is their Overview, with their save around it
   useEffect(() => {

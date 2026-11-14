@@ -3,6 +3,7 @@ import { catalogManifest } from "../src/catalog";
 import { judge } from "../src/judge";
 import { decodeReplay } from "../src/pigeon";
 import { decodePhc } from "../src/player/phc";
+import { topics } from "../src/topics";
 import { sqlite } from "./db";
 import { playerId } from "./players";
 import { addAchievement, snapshotHistory } from "./profiles";
@@ -44,8 +45,10 @@ function verify(sha256: string) {
   if (same) {
     const { key, song, level, raised } = countReplay(sha256, header);
     if (raised) addAchievement(key, song, level, header.score);
+    void announce(topics.chart(song, level));
+    void announce(topics.ranking);
   }
-  void announce(playerId(row.key), "change");
+  void announce(topics.player(playerId(row.key)));
   console.log(`${sha256} ${row.song} ${row.level}: ${same ? "verified" : "unverified"}`);
 }
 

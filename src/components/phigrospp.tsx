@@ -1,10 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Rich, useFormat, useT } from "../i18n";
+import { useLiveReload } from "../live";
 import { calculateRanking } from "../metrics";
 import type { Device } from "../phigrospp";
 import { message, useSave } from "../save-context";
 import type { Credential } from "../store";
+import { topics } from "../topics";
 import { Arrow } from "./arrow";
 import { DATE_TIME } from "./primitives";
 
@@ -214,9 +216,12 @@ export function DevicesPanel({ credential }: { credential: Credential }) {
   const [editing, setEditing] = useState<string>();
   async function load() {
     const ppp = await import("../phigrospp");
-    setDevices(
-      await ppp.answer<Device[]>(await ppp.call(credential.signer!, "POST", "/api/devices")),
+    const listed = await ppp.answer<Device[]>(
+      await ppp.call(credential.signer!, "POST", "/api/devices"),
     );
+    // a new device used the code shown
+    if (devices && listed.length > devices.length) setInvite(undefined);
+    setDevices(listed);
   }
   // biome-ignore lint/correctness/useExhaustiveDependencies: loads once per profile; load isn't wrapped in useCallback (the React Compiler handles memoisation).
   useEffect(() => {
@@ -247,6 +252,7 @@ export function DevicesPanel({ credential }: { credential: Credential }) {
     await load();
   }
   const fail = (e: unknown) => say(`✗ ${message(e)}`);
+  useLiveReload([topics.player(credential.playerId)], () => void load().catch(fail));
   return (
     <section className="panel" aria-labelledby="devices-heading">
       <div className="panel-head devices-head">

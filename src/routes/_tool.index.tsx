@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 import { MainMenu } from "../components/main-menu";
 import { Overview } from "../components/overview";
 import { PhigrosppBar } from "../components/phigrospp";
+import { useLiveReload } from "../live";
 import { getProfile, type PlayerProfile } from "../plays";
 import { useSave } from "../save-context";
 import { headT, jsonLd, localeUrl, SITE_NAME } from "../seo";
+import { topics } from "../topics";
 
 export const Route = createFileRoute("/_tool/")({
   head: ({ match }) => {
@@ -30,15 +32,18 @@ function OverviewRoute() {
   const { loaded, credentials, account, home } = useSave();
   const loadedCredential = loaded && credentials.find((c) => c.playerId === loaded.playerId);
   // a Phigros++ save is the player's public page too: the server rendered it with the page, or it's fetched once the
-  // player signs in here
+  // player signs in here, and again when it changes
   const profileId = account === loaded?.playerId ? account : undefined;
   const [fetched, setFetched] = useState<PlayerProfile>();
   const rendered = home?.id === profileId ? home?.profile : undefined;
+  const fetch = () =>
+    void getProfile({ data: profileId! }).then((found) => setFetched(found ?? undefined));
+  // biome-ignore lint/correctness/useExhaustiveDependencies: fetches once per profile; fetch isn't wrapped in useCallback (the React Compiler handles memoisation).
   useEffect(() => {
-    if (profileId && !rendered)
-      void getProfile({ data: profileId }).then((found) => setFetched(found ?? undefined));
+    if (profileId && !rendered) fetch();
   }, [profileId, rendered]);
-  const profile = rendered ?? (fetched?.player.id === profileId ? fetched : undefined);
+  useLiveReload([profileId && topics.player(profileId), profileId && topics.ranking], fetch);
+  const profile = (fetched?.player.id === profileId ? fetched : undefined) ?? rendered;
   const navigate = useNavigate();
   const masked = useRouterState({ select: (state) => !!state.location.maskedLocation });
   // false once a navigation away has started: this tab is still mounted then, and must not pull the address back

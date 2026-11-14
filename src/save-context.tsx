@@ -1,4 +1,4 @@
-import { useNavigate, useParams, useRouter } from "@tanstack/react-router";
+import { useNavigate, useParams } from "@tanstack/react-router";
 import { createContext, type RefObject, use, useEffect, useRef, useState } from "react";
 import type { Account } from "./adb";
 import { catalogRevision } from "./catalog";
@@ -20,6 +20,7 @@ import {
   saveCredential,
   saveSnapshot,
 } from "./store";
+import { topics } from "./topics";
 
 export type Loaded = { document: SaveDocumentV1; archive?: SaveArchive; playerId?: string };
 
@@ -89,7 +90,6 @@ export function SaveProvider({ children, home }: { children: React.ReactNode; ho
   const t = useT();
   const format = useFormat();
   const navigate = useNavigate();
-  const router = useRouter();
   // a signed-in Phigros++ player's page renders with their save on the server (see getHome)
   const [loaded, setLoaded] = useState<Loaded | undefined>(
     home?.document && { document: home.document, playerId: home.id },
@@ -267,8 +267,8 @@ export function SaveProvider({ children, home }: { children: React.ReactNode; ho
   }
   // the save the profile's game uploads opens on its own, in place of the open one. a save of another player stays
   // open, the profile's comes with its next event
-  useLive(account, (event, data) => {
-    if (event === "change") return void router.invalidate();
+  useLive([account && topics.player(account)], (event, data) => {
+    if (event !== "save") return;
     const credential = credentials.find((c) => c.signer && c.playerId === account);
     if (!credential || pulling.current || Number(data) <= pulled.current) return;
     if (loaded && loaded.playerId !== credential.playerId) return;

@@ -1,4 +1,5 @@
 import { defineHandler } from "nitro/h3";
+import { topics } from "../../../src/topics";
 import { signed } from "../../auth";
 import { player, setLook, setName } from "../../players";
 import { announce } from "../../queue";
@@ -15,6 +16,7 @@ export default defineHandler(async (event) => {
     background: String(profile.background ?? ""),
     unlisted: profile.unlisted === true,
   });
-  await announce(id, "change");
+  // the name, avatar and listing show on the rankings
+  await Promise.all([announce(topics.player(id)), announce(topics.ranking)]);
   return player(key);
 });
