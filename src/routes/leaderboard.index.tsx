@@ -52,7 +52,9 @@ function Players() {
           {podium.map(({ rank, player, rks }) => (
             <li key={player.id}>
               <Link to="/players/$id" params={{ id: player.id }} className="podium-card arrow-link">
-                <b className="podium-place">{rank}</b>
+                <span className="podium-place">
+                  <b>{rank}</b>
+                </span>
                 <Avatar name={player.avatar} className="podium-avatar" />
                 <span className="podium-name">
                   {player.name}

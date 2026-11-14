@@ -95,7 +95,7 @@ main > .seg {
   display: grid;
   justify-items: center;
   gap: 6px;
-  padding: 24px 18px 20px;
+  padding: 56px 18px 20px;
   text-align: center;
 }
 .podium-card::before {
@@ -112,14 +112,24 @@ main > .seg {
 .podium-card:focus-visible::before {
   background-color: rgb(255 255 255 / 0.08);
 }
+/* the place sits in the card's slanted corner, over the avatar: its layer leans with the card, the digit is
+ * straightened back */
 .podium-place {
   position: absolute;
-  top: 10px;
-  left: 22px;
+  inset: 0;
+  transform: skewX(var(--skew));
+  pointer-events: none;
+}
+.podium-place b {
+  position: absolute;
+  top: 12px;
+  left: 16px;
   color: var(--place);
-  font-size: 40px;
+  font-size: 36px;
   font-weight: 600;
   line-height: 1;
+  transform: skewX(calc(-1 * var(--skew)));
+  transform-origin: top left;
 }
 .podium-avatar {
   width: 84px;
@@ -144,7 +154,7 @@ main > .seg {
   right: 24px;
 }
 .podium li:nth-child(1) .podium-card {
-  padding-block: 34px 30px;
+  padding-block: 62px 30px;
 }
 .podium li:nth-child(1) .podium-card::before {
   box-shadow: 0 0 34px rgb(245 242 91 / 0.12);
@@ -174,8 +184,12 @@ main > .seg {
     padding: 12px 22px;
     text-align: left;
   }
-  .podium-place {
+  .podium-place,
+  .podium-place b {
     position: static;
+    transform: none;
+  }
+  .podium-place b {
     font-size: 28px;
   }
   .podium li:nth-child(n) .podium-avatar {
