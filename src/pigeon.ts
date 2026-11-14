@@ -2,10 +2,10 @@
  * A Phigros++ replay (`mod/phigrospp/lua/replayfile.lua`): its header and the range coded frames. Uploaded, it's
  * followed by the player's public key and an ed25519 signature of `REPLAY_DOMAIN` and everything before them.
  */
-export const REPLAY_DOMAIN = "phigros++ replay v4\0";
+export const REPLAY_DOMAIN = "phigros++ replay v5\0";
 export const REPLAY_SIGNED = 96;
 const MAGIC = "PIGEON";
-const VERSION = 4;
+const VERSION = 5;
 
 export interface ReplayHeader {
   id: string;
@@ -125,7 +125,7 @@ export interface ReplayFrame {
 // contexts by the same names, and the same predictions, so every value comes back bit for bit
 const BITS = 15;
 const LIMIT = 30;
-const MANT = 4;
+const MANT = 16;
 const ONE = 1 << BITS;
 const TOP = 2 ** 24;
 const U32 = 2 ** 32;
@@ -150,9 +150,9 @@ function bucket(v: number, cap: number) {
 }
 const signedBucket = (v: number, cap: number) => (v < 0 ? -bucket(v, cap) : bucket(v, cap));
 const near = (v: number, cap: number) => Math.max(-cap, Math.min(cap, v));
-const join = (n: number, rest: number) => Math.floor((n * 1024 + 5) / 10) + rest;
+const join = (n: number, rest: number, grid: number) =>
+  Math.floor((n * 1024 + Math.floor(grid / 2)) / grid) + rest;
 const us = (seconds: number) => Math.floor(seconds * 1e6 + 0.5);
-const FRAME = ordf(Math.fround(1 / 120));
 
 class Decoder {
   private range = U32 - 1;
@@ -230,7 +230,7 @@ class Decoder {
     const below = n - 1;
     let m = 1;
     const adaptive = Math.min(MANT, below);
-    for (let i = 1; i <= adaptive; i++) m = m * 2 + this.bit(probs, 100 + n * 32 + m);
+    for (let i = 1; i <= adaptive; i++) m = m * 2 + this.bit(probs, 100 + (n << (MANT + 1)) + m);
     const rest = below - adaptive;
     if (rest > 0) m = m * 2 ** rest + this.raw(rest);
     return negative ? -m : m;
@@ -259,15 +259,18 @@ export function decodeReplay(
   const float = (name: string, predicted: number) => unordf(ordf(predicted) + c.int(name));
   const frames: ReplayFrame[] = [];
   let t1 = 0;
+  let guess = 0;
   let rdt = 0;
   let fix = 0;
   let fix2 = 0;
-  const clock = { scale: 1, mono: 0, real: 0, dsp: 0, dspStep: 0, focus: 1 };
+  const clock = { scale: 1, mono: 0, real: 0, dsp: 0, dspStep: 0, music: 0, focus: 1 };
   let fingers: Finger[] = [];
   const count = c.int("count");
+  const grid = c.int("grid");
   for (let k = 0; k < count; k++) {
     rdt = c.int(`dt${near(Math.floor(rdt / 8), 6)}`);
-    const dt = unordf(FRAME + rdt);
+    const dt = unordf(guess + rdt);
+    guess += Math.floor(rdt / 2);
     const step = ordf(Math.fround(t1 + dt));
     const correction = c.int(`t${signedBucket(fix, 3)}.${signedBucket(fix - fix2, 3)}`);
     fix2 = fix;
@@ -330,7 +333,7 @@ export function decodeReplay(
     clock.mono = mono;
     clock.dspStep = c.int(`dsp${bucket(clock.dspStep, 20)}`);
     clock.dsp += clock.dspStep;
-    float("music", Math.fround(t + header.offset));
+    clock.music = float("music", Math.fround(clock.music + clock.dspStep / 1e6));
     clock.focus = c.flag(`focus${clock.focus}`);
 
     frames.push({
@@ -339,8 +342,8 @@ export function decodeReplay(
       touches: now.map((f) => ({
         id: f.id,
         phase: f.phase,
-        x: join(f.nx, f.rx) / 1024,
-        y: join(f.ny, f.ry) / 1024,
+        x: join(f.nx, f.rx, grid) / 1024,
+        y: join(f.ny, f.ry, grid) / 1024,
       })),
     });
     t1 = t;
