@@ -1,9 +1,9 @@
 import { catalogSong } from "../src/catalog";
 import { LEVEL_COLORS, LEVELS } from "../src/modules";
 import { SITE } from "../src/seo";
+import { config } from "./config";
 import { chartPlays } from "./replays";
 
-const WEBHOOK = process.env.DISCORD_WEBHOOK;
 const TOP = 10; // the places worth a post
 
 /**
@@ -11,7 +11,7 @@ const TOP = 10; // the places worth a post
  * `was` is the player's place before it, undefined if they had none.
  */
 export async function announceRank(sha256: string, song: string, level: string, was?: number) {
-  if (!WEBHOOK) return;
+  if (!config.discord_webhook) return;
   // an unlisted player isn't in the ranking, so isn't announced either
   const play = chartPlays(0, song, level, TOP, 0).plays.find((play) => play.replay === sha256);
   if (!play || (was && was <= play.rank)) return;
@@ -41,6 +41,6 @@ export async function announceRank(sha256: string, song: string, level: string, 
     }),
   );
   form.append("files[0]", await card.blob(), "podium.jpg");
-  const response = await fetch(WEBHOOK, { method: "POST", body: form });
+  const response = await fetch(config.discord_webhook, { method: "POST", body: form });
   if (!response.ok) throw new Error(`discord: HTTP ${response.status} ${await response.text()}`);
 }

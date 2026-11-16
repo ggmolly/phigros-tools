@@ -3,6 +3,8 @@ import * as v from "valibot";
 
 const configSchema = v.object({
   hash_secret: v.optional(v.string(), "dev-secret"),
+  // where new top 10 chart places are posted (server/discord.ts), none in dev
+  discord_webhook: v.optional(v.string()),
 });
 
 const path = "./data/config.toml";
