@@ -26,7 +26,7 @@ export interface ReplayHeader {
   game: number;
   phigrospp: string;
   device: string;
-  android: string;
+  os: string;
   refresh: number;
   fps: number;
   offset: number;
@@ -57,7 +57,7 @@ const FIELDS: [keyof ReplayHeader, Format][] = [
   ["game", "I4"],
   ["phigrospp", "s1"],
   ["device", "s1"],
-  ["android", "s1"],
+  ["os", "s1"],
   ["refresh", "d"],
   ["fps", "i2"],
   ["offset", "f"],
