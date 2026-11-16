@@ -12,6 +12,13 @@ export const PARSEABLE_VERSIONS: Record<ModuleName, number> = {
 
 export const LEVELS = ["EZ", "HD", "IN", "AT"] as const;
 export type LevelName = (typeof LEVELS)[number];
+/** Each level's colour, as `--ez`... in base.css, for what the stylesheet doesn't reach (cards, Discord). */
+export const LEVEL_COLORS: Record<string, string> = {
+  EZ: "#4aa84a",
+  HD: "#3a78c0",
+  IN: "#c43a33",
+  AT: "#4a4a52",
+};
 export type ModuleName = "gameKey" | "gameProgress" | "gameRecord" | "settings" | "user";
 export const MODULE_NAMES: ModuleName[] = [
   "gameKey",

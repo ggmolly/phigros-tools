@@ -7,7 +7,7 @@ import sharp, { type Sharp } from "sharp";
 import { catalogChartTotals, catalogSong } from "../src/catalog";
 import { avatarUrl, rankOf, score7 } from "../src/components/primitives";
 import { type ChartMetric, calculateRanking, type RankingResult } from "../src/metrics";
-import { countLevels, LEVELS, type SongRecord } from "../src/modules";
+import { countLevels, LEVEL_COLORS, LEVELS, type SongRecord } from "../src/modules";
 import { DEFAULT_PALETTE, FOG_LAYOUT } from "../src/palettes";
 import {
   CARDS,
@@ -30,12 +30,6 @@ const TAN = 0.25; // same slope as --skew in style.css
 const SKEW = `skewX(${(-Math.atan(TAN) * 180) / Math.PI}deg)`;
 const DIM = "rgba(255,255,255,.7)";
 const FAINT = "rgba(255,255,255,.45)";
-const LEVEL_COLORS: Record<string, string> = {
-  EZ: "#4aa84a",
-  HD: "#3a78c0",
-  IN: "#c43a33",
-  AT: "#4a4a52",
-};
 const RIBBON = 104; // profile ribbon height; the avatar tile is cut to it
 
 type Style = React.CSSProperties;

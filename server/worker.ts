@@ -5,10 +5,11 @@ import { decodeReplay } from "../src/pigeon";
 import { decodePhc } from "../src/player/phc";
 import { topics } from "../src/topics";
 import { sqlite } from "./db";
+import { announceRank } from "./discord";
 import { playerId } from "./players";
 import { addAchievement, snapshotHistory } from "./profiles";
 import { announce, openQueue, VERIFY_QUEUE } from "./queue";
-import { countReplay, REPLAY_DIR } from "./replays";
+import { chartPlace, countReplay, REPLAY_DIR } from "./replays";
 
 // judges uploaded replays like the game did and marks them verified when the game's recorded result is what their
 // touches give, unverified otherwise (with both results). only a verified one counts on the leaderboard. it also keeps
@@ -44,8 +45,14 @@ function verify(sha256: string) {
   const result = JSON.stringify({ recorded, replayed });
   settle.run(same ? "verified" : "unverified", result, timingAccuracy(judged.hits), sha256);
   if (same) {
+    const was = chartPlace(row.key, row.song, row.level);
     const { key, song, level, raised } = countReplay(sha256, header);
-    if (raised) addAchievement(key, song, level, header.score);
+    if (raised) {
+      addAchievement(key, song, level, header.score);
+      announceRank(sha256, song, level, was).catch((error) =>
+        console.error(`${sha256} not announced:`, error),
+      );
+    }
     void announce(topics.chart(song, level));
     void announce(topics.ranking);
   }

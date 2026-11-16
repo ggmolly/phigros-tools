@@ -244,6 +244,16 @@ export function chartPlays(
   return { count: chartCount.get(scope, song, level)!.count, plays };
 }
 
+const place = sqlite.prepare<{ rank: number }, [Uint8Array, string, string]>(
+  `SELECT 1 + (SELECT COUNT(*) FROM bests b JOIN players p ON p.key = b.key
+     WHERE b.scope = 0 AND b.song = mine.song AND b.level = mine.level AND b.score > mine.score AND p.unlisted = 0)
+   AS rank FROM bests mine WHERE mine.key = ? AND mine.song = ? AND mine.level = ? AND mine.scope = 0`,
+);
+
+/** Where a player's best stands on a chart counting all plays, undefined if they have none there. */
+export const chartPlace = (key: Uint8Array, song: string, level: string) =>
+  place.get(key, song, level)?.rank;
+
 // the listed players with their rank by the scope's RKS, the ones whose name holds the search (a pattern for LIKE,
 // "%" for all) and whose number is the searched one (0 for any)
 const ranked = (
