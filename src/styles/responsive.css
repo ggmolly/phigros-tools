@@ -47,12 +47,12 @@
     gap: 0 1.25rem;
     padding: 0 1rem 0 0;
   }
-  /* Top row: brand left, GitHub link right; the player tag follows it, or wraps below on phones. */
+  /* Top row: brand left, Discord and GitHub links right; the player tag follows it, or wraps below on phones. */
   .corner {
     height: 3.5rem;
   }
-  .github-link,
-  .player-area ~ .github-link {
+  .header-links,
+  .player-area ~ .header-links {
     order: 1;
     margin-left: auto;
   }

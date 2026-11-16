@@ -52,23 +52,28 @@
   color: var(--dim);
   font-weight: 300;
 }
-.github-link {
+.header-links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: none;
+  margin-left: auto;
+}
+.player-area ~ .header-links {
+  margin-left: 0;
+}
+.header-link {
   display: flex;
   align-items: center;
   gap: 0.4375rem;
-  flex: none;
-  margin-left: auto;
   color: var(--dim);
   font-size: 0.875rem;
   transition: color 0.15s ease;
 }
-.player-area ~ .github-link {
-  margin-left: 0;
-}
-.github-link:hover {
+.header-link:hover {
   color: var(--text);
 }
-.github-icon {
+.header-icon {
   width: 1.25rem;
   height: 1.25rem;
 }
