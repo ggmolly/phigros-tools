@@ -5,16 +5,16 @@ import { player } from "../../players";
 import { announce } from "../../queue";
 import { importRecords } from "../../records";
 
-// a registered player's records as their game has them, marked imported
+// a registered player's records as their game has them, marked imported, answered with the bests the game lacks
 export default defineHandler(async (event) => {
   const { key, body } = await signed(event);
   const found = player(key);
   if (!found) throw HTTPError.status(403, "Not registered");
-  const { count, raised } = importRecords(key, new TextDecoder().decode(body));
+  const { count, raised, better } = importRecords(key, new TextDecoder().decode(body));
   await Promise.all([
     announce(topics.player(found.id)),
     ...raised.map(({ song, level }) => announce(topics.chart(song, level))),
     raised.length > 0 && announce(topics.ranking),
   ]);
-  return { count };
+  return { count, better };
 });

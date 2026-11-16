@@ -27,10 +27,15 @@ const upsert = sqlite.prepare<
    ON CONFLICT (key, song, level) DO UPDATE SET score = excluded.score, accuracy = excluded.accuracy,
    fc = excluded.fc, updated = excluded.updated`,
 );
+const bests = sqlite.prepare<
+  { song: string; level: string; score: number; accuracy: number; fc: number },
+  [Uint8Array]
+>("SELECT song, level, score, accuracy, fc FROM bests WHERE key = ? AND scope = 0");
 
 /**
  * A player's records, one per line: `<game song id>\t<level>\t<score>\t<accuracy>\t<1 if full combo>`. Levels the site
- * doesn't rank (the game's Legacy charts) are skipped. How many were read, and the ones that became the player's best.
+ * doesn't rank (the game's Legacy charts) are skipped. How many were read, the ones that became the player's best, and
+ * the player's bests that beat what was sent (from another device or install), for the game to take them back.
  */
 export function importRecords(key: Uint8Array, text: string) {
   const lines = text
@@ -65,5 +70,10 @@ export function importRecords(key: Uint8Array, text: string) {
     updateRks(key);
     return raised;
   })();
-  return { count: records.length, raised };
+  const sent = new Map(records.map((r) => [`${r.song}\t${r.level}`, r]));
+  const better = bests.all(key).filter((best) => {
+    const mine = sent.get(`${best.song}\t${best.level}`);
+    return !mine || best.score > mine.score || best.accuracy > mine.accuracy || best.fc > mine.fc;
+  });
+  return { count: records.length, raised, better };
 }
