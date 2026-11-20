@@ -1,1 +1,3 @@
 hash_secret = "replace-with-a-long-random-value"
+# optional: a GitHub token (no scope needed) for the mod catalog, which is limited to 60 requests an hour without
+# github_token = "github_pat_..."

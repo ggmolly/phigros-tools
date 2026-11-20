@@ -6,6 +6,7 @@ import { decodePhc } from "../src/player/phc";
 import { topics } from "../src/topics";
 import { sqlite } from "./db";
 import { announceRank } from "./discord";
+import { refreshMods } from "./mods";
 import { playerId } from "./players";
 import { addAchievement, snapshotHistory } from "./profiles";
 import { announce, openQueue, VERIFY_QUEUE } from "./queue";
@@ -14,7 +15,7 @@ import { chartPlace, countReplay, REPLAY_DIR } from "./replays";
 // judges uploaded replays like the game did and marks them verified when the game's recorded result is what their
 // touches give, unverified otherwise (with both results). only a verified one counts on the leaderboard. it also keeps
 // the players' daily RKS history. a replay of a game version whose charts the site doesn't
-// have stays pending. run beside the server: bun worker.mjs
+// have stays pending. it also keeps the mod catalog up to date. run beside the server: bun worker.mjs
 const CHARTS = process.env.CHART_DIR ?? "./public/chart-data";
 const RESULT = ["score", "maxcombo", "perfect", "good", "bad", "miss", "early", "late"] as const;
 
@@ -71,6 +72,12 @@ function attempt(sha256: string) {
 // every player's RKS and rank of the day, kept hourly so the day's last one stays
 snapshotHistory();
 setInterval(snapshotHistory, 3_600_000);
+
+// the mod catalog follows its mods' releases and READMEs on GitHub
+const followMods = () =>
+  refreshMods().catch((error) => console.error("mods not refreshed:", error));
+void followMods();
+setInterval(followMods, 900_000);
 
 const channel = await openQueue();
 // the broker went away: exit so the container restarts and reconnects, the queue keeps what came meanwhile
