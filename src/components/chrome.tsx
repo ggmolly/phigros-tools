@@ -69,7 +69,14 @@ function HeaderLinks() {
   );
 }
 
-export type TabId = "/" | "/records" | "/devices" | "/charts" | "/leaderboard" | "/phigrospp";
+export type TabId =
+  | "/"
+  | "/records"
+  | "/devices"
+  | "/charts"
+  | "/leaderboard"
+  | "/mods"
+  | "/phigrospp";
 /** The tab ids double as their message keys. */
 export const TAB_KEY = {
   "/": "overview",
@@ -77,6 +84,7 @@ export const TAB_KEY = {
   "/devices": "devices",
   "/charts": "charts",
   "/leaderboard": "leaderboard",
+  "/mods": "mods",
   "/phigrospp": "phigrospp",
 } as const satisfies Record<TabId, string>;
 
@@ -118,6 +126,7 @@ export function SiteHeader({ children }: { children?: React.ReactNode }) {
     ...toolTabs(!!loaded, signedIn),
     "/charts" as const,
     "/leaderboard" as const,
+    "/mods" as const,
     ...(hasApp ? [] : ["/phigrospp" as const]),
   ];
   // a chart's ranking, a player's page and a replay are reached from the leaderboard
@@ -129,7 +138,9 @@ export function SiteHeader({ children }: { children?: React.ReactNode }) {
       ? "/leaderboard"
       : pathname.startsWith("/charts")
         ? "/charts"
-        : (tabIds.find((id) => id === pathname) ?? "/");
+        : pathname.startsWith("/mods")
+          ? "/mods"
+          : (tabIds.find((id) => id === pathname) ?? "/");
   return (
     <header className="topbar">
       <Link className="corner brand" to="/" aria-label={t.header.home}>

@@ -1,0 +1,226 @@
+/* ---------- Mods ---------- */
+/* the catalog and a mod's page: panels as high as what they hold, under a head like the leaderboard's */
+.mods-page {
+  display: grid;
+  align-content: start;
+  gap: 1.125rem;
+  container-type: inline-size;
+}
+.mods-page .leaderboard-head {
+  margin-bottom: 0;
+}
+/* a row per mod, two abreast once both stay wide enough for the clip beside the text */
+.mods {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 40rem), 1fr));
+  gap: 1.125rem;
+}
+.mods > li {
+  container-type: inline-size;
+}
+
+/* a mod, in source order: what it shows, its name, its facts, what it does, what can be done with it */
+.mod {
+  display: grid;
+  align-content: start;
+  gap: 0.5rem 1.875rem;
+  transition: background-color 0.15s ease;
+}
+.mod-name {
+  font-size: 1.9375rem;
+  line-height: 1.15;
+}
+.mod-hero .mod-name {
+  font-size: 2.75rem;
+  font-weight: 300;
+}
+.mod-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.125rem;
+  color: var(--dim);
+  font-size: 0.9375rem;
+}
+.mod-facts span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3125rem;
+}
+.mod-icon {
+  width: 1.125em;
+  height: 1.125em;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.mod-verified {
+  stroke: var(--glow);
+}
+.mod-text {
+  max-width: 70ch;
+}
+.mods .mod-text {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+.mod > footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin-top: 0.75rem;
+}
+
+/* what a mod shows keeps its shape, and is cut on the game's slant where it leads: the lean follows its height */
+.mod-media {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  background: var(--glass-strong);
+}
+.mod-media.slanted {
+  clip-path: polygon(var(--lean) 0, 100% 0, calc(100% - var(--lean)) 100%, 0 100%);
+}
+
+/* with room, the media stands beside the rest. a mod that shows nothing keeps one column */
+@container (min-width: 42rem) {
+  .mod:has(> .mod-media) {
+    grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr auto;
+  }
+  .mod:has(> .mod-media) > .mod-media {
+    grid-row: 1 / -1;
+    align-self: center;
+  }
+  .mod:has(> .mod-media) > :not(.mod-media) {
+    grid-column: 2;
+  }
+}
+
+/* a mod's page, under the way back to the catalog: what leads it stays beside its README once both fit, and follows
+ * the reader down */
+.mod-page > .chart-player-bar {
+  grid-column: 1 / -1;
+  margin-bottom: 0;
+}
+.mod-side {
+  container-type: inline-size;
+}
+@media (min-width: 64em) {
+  .mod-page {
+    grid-template-columns: minmax(0, 26rem) minmax(0, 1fr);
+    align-items: start;
+  }
+  .mod-side {
+    position: sticky;
+    top: 1.125rem;
+  }
+}
+
+/* a row is its mod's page: the name's link covers it, what else can be pressed stays above */
+.mod .card-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.mod:has(.card-link) footer a {
+  z-index: 1;
+}
+.mod:has(.card-link) footer .text-link {
+  position: relative;
+}
+.mod .card-link:focus-visible {
+  outline: 0;
+}
+.mod:has(.card-link:focus-visible) {
+  outline: 2px solid var(--glow);
+  outline-offset: 3px;
+}
+.mod:has(.card-link:hover) {
+  background: var(--glass-strong);
+}
+
+/* ---------- A mod's README ---------- */
+.readme {
+  display: grid;
+  gap: 0.875rem;
+  max-width: 52rem;
+}
+.readme :is(h2, h3, h4) {
+  margin-top: 0.75rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+.readme > :first-child {
+  margin-top: 0;
+}
+/* a line under the biggest, as on github and in the game */
+.readme h2 {
+  padding-bottom: 0.375rem;
+  border-bottom: 1px solid var(--hairline);
+  font-size: 1.5625rem;
+  font-weight: 400;
+}
+.readme h3 {
+  font-size: 1.25rem;
+}
+.readme h4 {
+  font-size: 1.0625rem;
+}
+.readme strong {
+  font-weight: 600;
+}
+.readme :is(code, pre) {
+  background: var(--glass-strong);
+  color: #ffd9a0;
+  font-family: ui-monospace, "Cascadia Mono", Menlo, monospace;
+}
+.readme code {
+  padding: 0.0625rem 0.3125rem;
+  font-size: 0.875em;
+}
+.readme pre {
+  padding: 0.875rem 1rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  tab-size: 2;
+}
+.readme blockquote {
+  position: relative;
+  padding-left: 1.25rem;
+  color: var(--dim);
+}
+.readme blockquote::before {
+  content: "";
+  position: absolute;
+  left: 0.25rem;
+  top: 0.125rem;
+  bottom: 0.125rem;
+  width: 0.25rem;
+  background: var(--faint);
+  transform: skewX(var(--skew));
+}
+.readme hr {
+  height: 1px;
+  background: var(--hairline);
+}
+.readme-item {
+  display: grid;
+  grid-template-columns: 1.5rem minmax(0, 1fr);
+  margin-top: -0.375rem;
+  padding-left: calc(var(--depth) * 1.5rem);
+}
+.readme-item > :first-child {
+  color: var(--dim);
+}
+.readme .mod-media {
+  width: auto;
+  max-width: 100%;
+  max-height: 30rem;
+}
