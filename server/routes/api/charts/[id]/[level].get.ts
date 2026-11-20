@@ -8,7 +8,7 @@ import { chartPlays } from "../../../../replays";
 export default defineHandler((event) =>
   chartPlays(
     scopeOf(event),
-    canonicalSongId(getRouterParam(event, "id")!),
+    canonicalSongId(getRouterParam(event, "id", { decode: true })!),
     getRouterParam(event, "level")!,
     PLAYS_PAGE,
     pageOffset(event, PLAYS_PAGE),

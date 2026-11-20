@@ -5,7 +5,7 @@ import { chartPlays } from "../../../../replays";
 
 // a chart ranking's card, the image of its page's link previews (<LEVEL>.jpg)
 export default defineHandler(async (event) => {
-  const song = catalogSong(getRouterParam(event, "id")!);
+  const song = catalogSong(getRouterParam(event, "id", { decode: true })!);
   const level = /^(\w+)\.jpg$/.exec(getRouterParam(event, "file")!)?.[1];
   if (!song || !level || !isLevel(level) || !songLevels(song.id).includes(level))
     throw HTTPError.status(404);
