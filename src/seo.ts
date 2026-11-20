@@ -25,6 +25,24 @@ export function pageLinks(path: string, locale: Locale) {
   ];
 }
 
+/**
+ * A page's entry in a sitemap: listed once, in English, with every language version as an hreflang alternate (listing
+ * them all made Google leave most of the site uncrawled, the alternates still let it find each language).
+ */
+export function sitemapEntry(path: string, lastmod: string) {
+  const alternates = [
+    ...LOCALES.map((locale) => [locale, localeUrl(path, locale)]),
+    ["x-default", localeUrl(path, "en")],
+  ]
+    .map(([lang, href]) => `    <xhtml:link rel="alternate" hreflang="${lang}" href="${href}"/>`)
+    .join("\n");
+  return `  <url>\n    <loc>${localeUrl(path, "en")}</loc>\n    <lastmod>${lastmod}</lastmod>\n${alternates}\n  </url>`;
+}
+
+/** A sitemap of entries. */
+export const sitemap = (entries: string[]) =>
+  `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${entries.join("\n")}\n</urlset>\n`;
+
 interface Image {
   url: string;
   width: number;

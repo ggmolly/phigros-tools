@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://phigros.tools/sitemap.xml
+Sitemap: https://phigros.tools/sitemap-mods.xml
