@@ -1,15 +1,23 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { type CatalogSong, canonicalSongId, catalogSong, catalogSongs } from "../catalog";
+import {
+  type CatalogSong,
+  canonicalSongId,
+  catalogSong,
+  catalogSongs,
+  songLevels,
+} from "../catalog";
 import { type ChartStats, getSongDetails } from "../chartStats";
 import { Arrow } from "../components/arrow";
 import { SiteHeader } from "../components/chrome";
+import { PlayCells, PlayHeadings } from "../components/plays";
 import { Difficulty, Rank, score7 } from "../components/primitives";
 import { useT } from "../i18n";
 import type { Locale } from "../i18n/locales";
 import { MESSAGES, type Messages } from "../i18n/messages";
 import { calculateRanking } from "../metrics";
-import { LEVELS } from "../modules";
+import { LEVELS, type LevelName } from "../modules";
+import { getChartPlays, type Play } from "../plays";
 import { useSave } from "../save-context";
 import { breadcrumbs, headT, jsonLd, localeUrl, pageLinks, pageMeta, SITE } from "../seo";
 
@@ -112,12 +120,25 @@ function describe(
   );
 }
 
+const TOP_PLAYS = 10;
+
 const songPath = (song: CatalogSong) => `/charts/${encodeURIComponent(song.id)}`;
 
 export const Route = createFileRoute("/charts/$id")({
-  loader: ({ params }) => {
-    if (!catalogSong(params.id)) throw notFound(); // a real 404, not a 200 "not found" page
-    return getSongDetails({ data: params.id });
+  loader: async ({ params }) => {
+    const song = catalogSong(params.id);
+    if (!song) throw notFound(); // a real 404, not a 200 "not found" page
+    const [details, ...rankings] = await Promise.all([
+      getSongDetails({ data: params.id }),
+      ...songLevels(song.id).map((level) =>
+        getChartPlays({ data: { song: song.id, level, page: 1, verified: false } }),
+      ),
+    ]);
+    const tops = songLevels(song.id).map((level, index) => ({
+      level,
+      plays: rankings[index]!.plays.slice(0, TOP_PLAYS),
+    }));
+    return { ...details, tops };
   },
   head: ({ params, loaderData, match }) => {
     const { locale, t } = headT(match);
@@ -329,10 +350,41 @@ function SongCharts({ song }: { song: CatalogSong }) {
   );
 }
 
+function TopPlays({ id, tops }: { id: string; tops: { level: LevelName; plays: Play[] }[] }) {
+  const t = useT();
+  if (!tops.some(({ plays }) => plays.length)) return null;
+  return (
+    <section className="panel">
+      <div className="panel-head">
+        <h2 className="panel-title">{t.tabs.leaderboard}</h2>
+      </div>
+      <div className="chart-stats-scroll">
+        <table className="song-diff-table">
+          <PlayHeadings before={[t.song.difficulty]} />
+          <tbody>
+            {tops.flatMap(({ level, plays }) =>
+              plays.map((play) => (
+                <tr key={play.id + level}>
+                  <td>
+                    <Link to="/charts/$id/plays/$level" params={{ id, level }}>
+                      <Difficulty level={level} />
+                    </Link>
+                  </td>
+                  <PlayCells play={play} />
+                </tr>
+              )),
+            )}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
 function SongPage() {
   const { id } = Route.useParams();
   const song = catalogSong(id)!; // the loader 404s unknown IDs
-  const { stats } = Route.useLoaderData();
+  const { stats, tops } = Route.useLoaderData();
   const index = catalogSongs.findIndex((entry) => entry.id === song.id);
   const previous = catalogSongs[(index - 1 + catalogSongs.length) % catalogSongs.length]!;
   const next = catalogSongs[(index + 1) % catalogSongs.length]!;
@@ -413,6 +465,7 @@ function SongPage() {
           <div className="song-side">
             <section className="song-scroll" aria-label={t.song.scrollLabel}>
               <SongCharts song={song} />
+              <TopPlays id={song.id} tops={tops} />
               {stats && (
                 <section className="panel chart-stats">
                   <div className="panel-head">
