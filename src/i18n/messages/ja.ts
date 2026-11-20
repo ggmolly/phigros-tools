@@ -6,6 +6,7 @@ export const ja = {
     records: "記録",
     charts: "譜面",
     leaderboard: "ランキング",
+    mods: "Mod",
     devices: "デバイス",
     phigrospp: "Phigros++",
     profile: "プロフィール",
@@ -523,6 +524,17 @@ export const ja = {
     leaderboardCta:
       "ここにいるプレイヤーは全員 Phigros++ でプレイし、プレイとリプレイを送信しています。",
     leaderboardJoin: "ランキングに参加する",
+  },
+  modsPage: {
+    description:
+      "プレイヤーが作った Phigros++ 用の Mod です。ゲームの設定の Mods タブからインストールするか、ここからゲームで開けます。",
+    by: (author: string) => `作者：${author}`,
+    verified: "認証済みの作者",
+    openNote:
+      "ボタンを押すと、このページを見ている端末の Phigros++ で Mod が開きます。Mod はあなたの phigros.tools キーで動作するため、信頼できるものだけを追加してください。",
+    open: "Phigros++ で開く",
+    empty: "まだ Mod は掲載されていません。",
+    publish: "自分の Mod を公開する",
   },
   pppPage: {
     description:

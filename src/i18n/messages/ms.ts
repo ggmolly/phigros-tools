@@ -6,6 +6,7 @@ export const ms = {
     records: "Rekod",
     charts: "Chart",
     leaderboard: "Papan pendahulu",
+    mods: "Mod",
     devices: "Peranti",
     phigrospp: "Phigros++",
     profile: "Profil",
@@ -522,6 +523,17 @@ export const ms = {
     leaderboardCta:
       "Semua pemain di sini bermain dengan Phigros++, yang menghantar permainan dan main semula mereka.",
     leaderboardJoin: "Masuk papan pendahulu",
+  },
+  modsPage: {
+    description:
+      "Mod yang dibuat oleh pemain untuk Phigros++. Pasang dari tab Mods dalam tetapan permainan, atau buka dalam permainan dari sini.",
+    by: (author: string) => `oleh ${author}`,
+    verified: "Pembangun disahkan",
+    openNote:
+      "Butang ini membuka mod dalam Phigros++ pada peranti tempat halaman ini dibaca. Mod berjalan dengan kunci phigros.tools anda, jadi tambah mod yang anda percayai sahaja.",
+    open: "Buka dalam Phigros++",
+    empty: "Belum ada mod yang disenaraikan.",
+    publish: "Terbitkan mod anda",
   },
   pppPage: {
     description:

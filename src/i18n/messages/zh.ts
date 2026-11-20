@@ -6,6 +6,7 @@ export const zh = {
     records: "成绩",
     charts: "谱面",
     leaderboard: "排行榜",
+    mods: "模组",
     devices: "设备",
     phigrospp: "Phigros++",
     profile: "个人资料",
@@ -496,6 +497,17 @@ export const zh = {
     signingInFromLink: "正在使用 Phigros++ 提供的代码登录…",
     leaderboardCta: "这里的每位玩家都在使用 Phigros++，由它上传成绩和回放。",
     leaderboardJoin: "登上排行榜",
+  },
+  modsPage: {
+    description:
+      "玩家为 Phigros++ 制作的模组。可在游戏设置的 Mods 标签页中安装，也可从这里在游戏中打开。",
+    by: (author: string) => `作者：${author}`,
+    verified: "已验证的作者",
+    openNote:
+      "按钮会在浏览此页面的设备上用 Phigros++ 打开该模组。模组可以使用你的 phigros.tools 密钥，请只添加你信任的模组。",
+    open: "在 Phigros++ 中打开",
+    empty: "暂时还没有模组。",
+    publish: "发布你的模组",
   },
   pppPage: {
     description:

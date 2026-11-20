@@ -6,6 +6,7 @@ export const vi = {
     records: "Kỷ lục",
     charts: "Chart",
     leaderboard: "Bảng xếp hạng",
+    mods: "Mod",
     devices: "Thiết bị",
     phigrospp: "Phigros++",
     profile: "Hồ sơ",
@@ -519,6 +520,17 @@ export const vi = {
     leaderboardCta:
       "Mọi người ở đây đều chơi bằng Phigros++, công cụ gửi lượt chơi và replay của họ.",
     leaderboardJoin: "Lên bảng xếp hạng",
+  },
+  modsPage: {
+    description:
+      "Các mod do người chơi tạo cho Phigros++. Cài đặt từ thẻ Mods trong phần cài đặt của trò chơi, hoặc mở trong trò chơi từ đây.",
+    by: (author: string) => `bởi ${author}`,
+    verified: "Tác giả đã xác minh",
+    openNote:
+      "Nút này mở mod trong Phigros++ trên thiết bị đang xem trang này. Mod chạy với khóa phigros.tools của bạn, vì vậy chỉ thêm những mod bạn tin tưởng.",
+    open: "Mở trong Phigros++",
+    empty: "Chưa có mod nào được liệt kê.",
+    publish: "Đăng mod của bạn",
   },
   pppPage: {
     description:

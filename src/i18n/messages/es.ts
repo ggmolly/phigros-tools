@@ -6,6 +6,7 @@ export const es = {
     records: "Registros",
     charts: "Charts",
     leaderboard: "Clasificación",
+    mods: "Mods",
     devices: "Dispositivos",
     phigrospp: "Phigros++",
     profile: "Perfil",
@@ -522,6 +523,17 @@ export const es = {
     signingInFromLink: "Iniciando sesión con el código de Phigros++…",
     leaderboardCta: "Todos aquí juegan con Phigros++, que envía sus jugadas y repeticiones.",
     leaderboardJoin: "Entra en la clasificación",
+  },
+  modsPage: {
+    description:
+      "Mods creados por jugadores para Phigros++. Instala uno desde la pestaña Mods de los ajustes del juego, o ábrelo en el juego desde aquí.",
+    by: (author: string) => `de ${author}`,
+    verified: "Autor verificado",
+    openNote:
+      "El botón abre el mod en Phigros++ en el dispositivo donde se lee esta página. Los mods se ejecutan con tu clave de phigros.tools, así que añade solo los que te inspiren confianza.",
+    open: "Abrir en Phigros++",
+    empty: "Aún no hay ningún mod en la lista.",
+    publish: "Publica tu mod",
   },
   pppPage: {
     description:

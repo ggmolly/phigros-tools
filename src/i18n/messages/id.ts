@@ -6,6 +6,7 @@ export const id = {
     records: "Rekor",
     charts: "Chart",
     leaderboard: "Papan peringkat",
+    mods: "Mod",
     devices: "Perangkat",
     phigrospp: "Phigros++",
     profile: "Profil",
@@ -521,6 +522,17 @@ export const id = {
     leaderboardCta:
       "Semua pemain di sini bermain dengan Phigros++, yang mengirim permainan dan replay mereka.",
     leaderboardJoin: "Masuk papan peringkat",
+  },
+  modsPage: {
+    description:
+      "Mod buatan pemain untuk Phigros++. Pasang dari tab Mods di pengaturan game, atau buka di game dari sini.",
+    by: (author: string) => `oleh ${author}`,
+    verified: "Pembuat terverifikasi",
+    openNote:
+      "Tombol ini membuka mod di Phigros++ pada perangkat tempat halaman ini dibaca. Mod berjalan dengan kunci phigros.tools Anda, jadi tambahkan hanya mod yang Anda percayai.",
+    open: "Buka di Phigros++",
+    empty: "Belum ada mod yang terdaftar.",
+    publish: "Terbitkan mod Anda",
   },
   pppPage: {
     description:

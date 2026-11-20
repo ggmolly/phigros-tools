@@ -6,6 +6,7 @@ export const ko = {
     records: "기록",
     charts: "채보",
     leaderboard: "리더보드",
+    mods: "모드",
     devices: "기기",
     phigrospp: "Phigros++",
     profile: "프로필",
@@ -516,6 +517,17 @@ export const ko = {
     signingInFromLink: "Phigros++의 코드로 로그인하는 중…",
     leaderboardCta: "이곳의 모든 플레이어는 플레이와 리플레이를 보내는 Phigros++로 플레이합니다.",
     leaderboardJoin: "리더보드에 참여하기",
+  },
+  modsPage: {
+    description:
+      "플레이어가 만든 Phigros++용 모드입니다. 게임 설정의 Mods 탭에서 설치하거나 여기에서 게임으로 열 수 있습니다.",
+    by: (author: string) => `제작: ${author}`,
+    verified: "인증된 제작자",
+    openNote:
+      "버튼을 누르면 이 페이지를 보고 있는 기기의 Phigros++에서 모드가 열립니다. 모드는 phigros.tools 키로 실행되므로 신뢰하는 모드만 추가하세요.",
+    open: "Phigros++에서 열기",
+    empty: "아직 등록된 모드가 없습니다.",
+    publish: "내 모드 공개하기",
   },
   pppPage: {
     description:

@@ -6,6 +6,7 @@ export const zhHant = {
     records: "成績",
     charts: "譜面",
     leaderboard: "排行榜",
+    mods: "模組",
     devices: "裝置",
     phigrospp: "Phigros++",
     profile: "個人資料",
@@ -497,6 +498,17 @@ export const zhHant = {
     signingInFromLink: "正在使用 Phigros++ 提供的代碼登入…",
     leaderboardCta: "這裡的每位玩家都在使用 Phigros++，由它上傳成績和回放。",
     leaderboardJoin: "登上排行榜",
+  },
+  modsPage: {
+    description:
+      "玩家為 Phigros++ 製作的模組。可在遊戲設定的 Mods 分頁中安裝，也可從這裡在遊戲中開啟。",
+    by: (author: string) => `作者：${author}`,
+    verified: "已驗證的作者",
+    openNote:
+      "按鈕會在瀏覽此頁面的裝置上用 Phigros++ 開啟該模組。模組可以使用你的 phigros.tools 金鑰，請只加入你信任的模組。",
+    open: "在 Phigros++ 中開啟",
+    empty: "目前還沒有模組。",
+    publish: "發布你的模組",
   },
   pppPage: {
     description:
