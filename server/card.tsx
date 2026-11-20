@@ -7,6 +7,7 @@ import sharp, { type Sharp } from "sharp";
 import { catalogChartTotals, catalogSong } from "../src/catalog";
 import { avatarUrl, rankOf, score7 } from "../src/components/primitives";
 import { type ChartMetric, calculateRanking, type RankingResult } from "../src/metrics";
+import type { Mod } from "../src/mods";
 import { countLevels, LEVEL_COLORS, LEVELS, type SongRecord } from "../src/modules";
 import { DEFAULT_PALETTE, FOG_LAYOUT } from "../src/palettes";
 import {
@@ -637,6 +638,193 @@ function PlaysCard({ plays, avatars }: { plays: Play[]; avatars: (string | undef
   );
 }
 
+// what the game's Mods tab draws before an author's name and a star count, as lucide draws them
+const VERIFIED =
+  "M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Zm12.15.38-5.5 5.5L8 12";
+
+function Icon({ d, size, colour }: { d: string; size: number; colour: string }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke={colour}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d={d} />
+    </svg>
+  );
+}
+
+/** A picture cut on the game's slant, like a song's cover in its song list. */
+function Slanted({ src, width, height }: { src: string; width: number; height: number }) {
+  const slant = height * TAN;
+  return (
+    <img
+      src={src}
+      alt=""
+      width={width}
+      height={height}
+      style={{
+        objectFit: "cover",
+        clipPath: `polygon(${slant}px 0, ${width}px 0, ${width - slant}px 100%, 0 100%)`,
+      }}
+    />
+  );
+}
+
+function Chip({ children }: { children: React.ReactNode }) {
+  return (
+    <Para fill="rgba(8,4,12,.6)" style={{ height: 44, paddingLeft: 24, paddingRight: 24 }}>
+      <span style={{ fontSize: 24 }}>{children}</span>
+    </Para>
+  );
+}
+
+const bytes = (size: number) =>
+  size < 1e6 ? `${(size / 1e3).toFixed(1)} kB` : `${(size / 1e6).toFixed(1)} MB`;
+
+/** The frame of the mod catalog's cards: the site's header over the fog, or over a picture when there's one. */
+function ModFrame({
+  date,
+  backdrop,
+  children,
+}: {
+  date: Date;
+  backdrop?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      style={{
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        width: RW,
+        height: RH,
+        color: "#fff",
+        fontFamily: FONT_FAMILY,
+        fontWeight: 400,
+        ...(backdrop ? { background: "#14121a" } : fog(DEFAULT_PALETTE)),
+      }}
+    >
+      {backdrop ? (
+        <img src={backdrop} alt="" width={RW} height={RH} style={{ position: "absolute" }} />
+      ) : (
+        bokeh(RW, RH)
+      )}
+      <Header date={date} />
+      {children}
+      <Disclaimer />
+    </div>
+  );
+}
+
+const POSTER_W = 480;
+const POSTER_H = 270;
+
+/** A mod's card: its name, who made it and what it does, beside what its README shows first. */
+function ModCard({ mod, poster, backdrop }: { mod: Mod; poster?: string; backdrop?: string }) {
+  // three lines of it at most
+  const text =
+    mod.description.length > 150 ? `${mod.description.slice(0, 150).trimEnd()}…` : mod.description;
+  return (
+    <ModFrame date={new Date(mod.updated)} backdrop={backdrop}>
+      <div style={{ display: "flex", marginTop: 48, paddingLeft: 64, paddingRight: 48, gap: 36 }}>
+        <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0 }}>
+          <span style={{ ...ellipsis, fontSize: 68, fontWeight: 500, lineHeight: 1.15 }}>
+            {mod.name}
+          </span>
+          <div style={{ ...row, gap: 10, marginTop: 10 }}>
+            <Icon d={VERIFIED} size={30} colour="#8fdcff" />
+            <span style={{ fontSize: 28, color: DIM }}>{mod.author}</span>
+          </div>
+          <span
+            style={{ marginTop: 26, fontSize: 25, lineHeight: 1.4, color: "rgba(255,255,255,.88)" }}
+          >
+            {text}
+          </span>
+          <div style={{ ...row, gap: 18, marginTop: 30, marginLeft: 6 }}>
+            <Chip>{mod.version}</Chip>
+            <Chip>{bytes(mod.size)}</Chip>
+          </div>
+        </div>
+        {poster && (
+          <div style={{ display: "flex", marginTop: 12 }}>
+            <Slanted src={poster} width={POSTER_W} height={POSTER_H} />
+          </div>
+        )}
+      </div>
+    </ModFrame>
+  );
+}
+
+const SHOWN = 3; // mods on the catalog's card
+const THUMB_W = 256;
+const THUMB_H = 144;
+const THUMB_STEP = THUMB_H + 18;
+
+/** The catalog's card: what it is, beside its first mods down the game's slant like the rows of its lists. */
+function ModsCard({ mods, posters }: { mods: Mod[]; posters: (string | undefined)[] }) {
+  const shown = mods.slice(0, SHOWN);
+  return (
+    <ModFrame date={new Date()}>
+      <div style={{ display: "flex", flex: 1, paddingLeft: 64, paddingRight: 48 }}>
+        <div style={{ display: "flex", flexDirection: "column", width: 470, marginTop: 70 }}>
+          <span style={{ fontSize: 112, fontWeight: 300, lineHeight: 1 }}>Mods</span>
+          <span style={{ marginTop: 22, fontSize: 28, lineHeight: 1.35, color: DIM }}>
+            Made by players for Phigros++, installed from the game's settings.
+          </span>
+          <div style={{ ...row, marginTop: 30, marginLeft: 6 }}>
+            <Chip>{mods.length === 1 ? "1 mod" : `${mods.length} mods`}</Chip>
+          </div>
+        </div>
+        <div
+          style={{
+            position: "relative",
+            display: "flex",
+            flex: 1,
+            marginTop: (RH - 96 - 60 - shown.length * THUMB_STEP) / 2,
+          }}
+        >
+          {shown.map((mod, index) => (
+            <div
+              key={mod.repo}
+              style={{
+                ...row,
+                position: "absolute",
+                top: index * THUMB_STEP,
+                left: 150 - index * THUMB_STEP * TAN,
+                gap: 22,
+              }}
+            >
+              {posters[index] ? (
+                <Slanted src={posters[index]} width={THUMB_W} height={THUMB_H} />
+              ) : (
+                <Para
+                  fill="rgba(8,4,12,.6)"
+                  style={{ width: THUMB_W - THUMB_H * TAN, height: THUMB_H }}
+                />
+              )}
+              <div style={{ display: "flex", flexDirection: "column", width: 250 }}>
+                <span style={{ ...ellipsis, fontSize: 32, fontWeight: 500 }}>{mod.name}</span>
+                <div style={{ ...row, gap: 8, marginTop: 4 }}>
+                  <Icon d={VERIFIED} size={22} colour="#8fdcff" />
+                  <span style={{ ...ellipsis, fontSize: 22, color: DIM }}>{mod.author}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </ModFrame>
+  );
+}
+
 const FONT_FILES = [
   ["Saira", 300, "Saira-300.ttf"],
   ["Saira", 400, "Saira-400.ttf"],
@@ -762,4 +950,40 @@ export async function renderPlaysCard(
     </SongCard>
   );
   return render(origin, card, CARDS.replay);
+}
+
+// a mod's poster for its cards: where the catalog serves it
+const posterOf = (origin: string, mod: Mod, edit: (image: Sharp) => Sharp) =>
+  mod.poster ? png(origin, `/catalog/${mod.poster}`, edit) : undefined;
+
+/** A mod's card as a JPEG, behind it what its README shows first, blurred. */
+export async function renderModCard(origin: string, mod: Mod) {
+  const card = (
+    <ModCard
+      mod={mod}
+      poster={
+        await posterOf(origin, mod, (image) =>
+          image.resize(POSTER_W * 2, POSTER_H * 2, { fit: "cover" }),
+        )
+      }
+      backdrop={
+        await posterOf(origin, mod, (image) =>
+          image.resize(RW, RH, { fit: "cover" }).blur(28).modulate({ brightness: 0.4 }),
+        )
+      }
+    />
+  );
+  return render(origin, card, CARDS.replay);
+}
+
+/** The mod catalog's card as a JPEG, from its first mods. */
+export async function renderModsCard(origin: string, mods: Mod[]) {
+  const posters = await Promise.all(
+    mods
+      .slice(0, SHOWN)
+      .map((mod) =>
+        posterOf(origin, mod, (image) => image.resize(THUMB_W * 2, THUMB_H * 2, { fit: "cover" })),
+      ),
+  );
+  return render(origin, <ModsCard mods={mods} posters={posters} />, CARDS.replay);
 }
