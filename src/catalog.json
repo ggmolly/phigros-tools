@@ -1,10 +1,10 @@
 {
   "manifest": {
     "schemaVersion": 1,
-    "gameVersion": 160,
+    "gameVersion": 161,
     "source": "Phigros APK: level0 GameInformation (extract/export_game_info.py)",
-    "sourceRevision": "a2e920127cf2091a2c479590c8bb91590cf076091306ce7164524187f4480b68",
-    "sourceHash": "a2e920127cf2091a2c479590c8bb91590cf076091306ce7164524187f4480b68"
+    "sourceRevision": "1d9484a69f89de1ab72f9bbc92ad0791cc5ffb3b55901418a3409fce1769643d",
+    "sourceHash": "1d9484a69f89de1ab72f9bbc92ad0791cc5ffb3b55901418a3409fce1769643d"
   },
   "aliases": {},
   "chapterAliases": {
@@ -616,7 +616,7 @@
       "illustrator": "汉堡",
       "chapter": "Single",
       "constants": [6, 11.3, 15.6, null],
-      "charters": ["J.R", "晨", "Phigros Charting Team", null]
+      "charters": ["J.R", "晨", "Phigros Chart Team", null]
     },
     {
       "id": "CraveWave.LandRoot",
@@ -758,7 +758,7 @@
       "illustrator": "Photonskyto",
       "chapter": "Single",
       "constants": [4.5, 12.3, 14.4, null],
-      "charters": ["Phigros Charting Team", "Phigros Charting Team", "Phigros Charting Team", null]
+      "charters": ["Phigros Chart Team", "Phigros Chart Team", "Phigros Chart Team", null]
     },
     {
       "id": "Demiurge.Rabpit",
@@ -1118,7 +1118,7 @@
       "title": "Fixations Toward the Stars",
       "artist": "Foodbot",
       "illustrator": "AriaL [edited by Stelli]",
-      "chapter": "Single",
+      "chapter": "Chapter EX-vivid/stasis",
       "constants": [3.5, 10.9, 14.5, null],
       "charters": ["Salt", "OPENING/Level R", "Salt", null]
     },
@@ -1466,8 +1466,8 @@
       "artist": "ARForest",
       "illustrator": "Mechari (青鸟 modified)",
       "chapter": "Chapter EX-Rotaeno",
-      "constants": [5.5, 11.2, 15.5, null],
-      "charters": ["Clutter", "ɹǝʇʇnlƆ", "ƃuɐnɥs∀ .sʌ uoqsnɐ⅁", null]
+      "constants": [5.5, 11.2, 15.5, 16.5],
+      "charters": ["Clutter", "ɹǝʇʇnlƆ", "ƃuɐnɥs∀ .sʌ uoqsnɐ⅁", "ʇǝzɐɓɐW"]
     },
     {
       "id": "JourneywithYou.Iris",
@@ -1837,6 +1837,15 @@
       "chapter": "Chapter 5 NEON LED",
       "constants": [2, 8.6, 13.1, null],
       "charters": ["HCC!!!", "HCC!!!", "HCC!!!", null]
+    },
+    {
+      "id": "OMG.DopamnevszEnsEn",
+      "title": "OMG",
+      "artist": "Dopam!ne vs zEnsEn",
+      "illustrator": "古テ壱",
+      "chapter": "Chapter EX-TAKUMI³",
+      "constants": [3.5, 8.6, 15.2, null],
+      "charters": ["Akko", "Akko", "MAS", null]
     },
     {
       "id": "OnAndOn.ETIAfeatJenga",
@@ -2417,6 +2426,20 @@
       ]
     },
     {
+      "id": "STARGAZERS.proxime",
+      "title": "STARGAZERS",
+      "artist": "proxime()",
+      "illustrator": "57_dayo [edited by Stelli]",
+      "chapter": "Chapter EX-vivid/stasis",
+      "constants": [5.5, 11.4, 16.3, 17.3],
+      "charters": [
+        "Phigros Chart Team",
+        "Phigros Chart Team",
+        "Phigros Chart Team",
+        "Phigros Chart Team"
+      ]
+    },
+    {
       "id": "Stasis.Maozon",
       "title": "Stasis",
       "artist": "Maozon",
@@ -2590,7 +2613,7 @@
       "title": "valor/starcross",
       "artist": "Lundy vs. Wyvren",
       "illustrator": "AriaL & 57_dayo [edited by Stelli]",
-      "chapter": "Single",
+      "chapter": "Chapter EX-vivid/stasis",
       "constants": [6.5, 12.7, 15.8, null],
       "charters": ["vacant/stupiggy", "vacant/stupiggy", "vesper/straycat", null]
     },
