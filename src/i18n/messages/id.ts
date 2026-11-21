@@ -662,6 +662,10 @@ export const id = {
     send: "Kirim ke Phigros++",
     working: "Menyimpan…",
     empty: "Ketik setidaknya satu skor dulu.",
+    locked: (chapter: string, song: string, score: string) =>
+      `${chapter} tetap terkunci di game sampai satu chart ${song} mencapai ${score} atau lebih.`,
+    lockedLegacy: (chapter: string, count: number, have: number, score: string) =>
+      `${chapter} tetap terkunci di game sampai ${count} chart Legacy mencapai ${score} atau lebih: save ini punya ${have}.`,
     done: "Save kamu sudah ada di profilmu",
     sent: "Save kamu sedang dikirim",
     sentText:

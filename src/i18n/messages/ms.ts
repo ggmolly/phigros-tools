@@ -665,6 +665,10 @@ export const ms = {
     send: "Hantar ke Phigros++",
     working: "Menyimpan…",
     empty: "Taip sekurang-kurangnya satu skor dahulu.",
+    locked: (chapter: string, song: string, score: string) =>
+      `${chapter} kekal terkunci dalam permainan sehingga satu chart ${song} mencapai ${score} atau lebih.`,
+    lockedLegacy: (chapter: string, count: number, have: number, score: string) =>
+      `${chapter} kekal terkunci dalam permainan sehingga ${count} chart Legacy mencapai ${score} atau lebih: save ini ada ${have}.`,
     done: "Save anda sudah ada dalam profil anda",
     sent: "Save anda sedang dihantar",
     sentText:

@@ -1252,5 +1252,131 @@
       ["ReadSideStory4Begin"],
       ["ReadSideStory4Begin"]
     ]
-  }
+  },
+  "chapters": [
+    {
+      "songs": [
+        "NYA.FLuoRiTe姜米條",
+        "JunXionBetweenLifeAndDeathVIPMix.1N6Fs",
+        "cryout.JuE",
+        "Reimei.影虎",
+        "尊師TheGuru.rider",
+        "Spasmodic.姜米條颶風元力上人",
+        "LeaveAllBehind.rider"
+      ],
+      "gate": 6,
+      "score": 880000
+    },
+    {
+      "songs": [
+        "ColorfulDays.P4koofeatつゆり花鈴",
+        "microwav.dandeless",
+        "重生.姜米條",
+        "NOONEYESMAN.MYUKKE",
+        "望影の方舟Six.SeURa",
+        "Igallta.SeURa"
+      ],
+      "gate": "LeaveAllBehind.rider",
+      "score": 880000
+    },
+    {
+      "songs": [
+        "ClockParadox.WyvernP",
+        "Chronologika.Hundotte",
+        "NickofTime.P4koo",
+        "Chronomia.Lime",
+        "ChronosCollapseLaCampanella.SunsetRay",
+        "Rrharil.TeamGrimoire"
+      ],
+      "gate": "Igallta.SeURa",
+      "score": 880000
+    },
+    {
+      "songs": [
+        "CraveWave.LandRoot",
+        "TheChariotREVIIVAL.Attoclef",
+        "Luminescence.米虾Fomiki初云CLoudie",
+        "Retribution.nmyKryexe",
+        "DESTRUCTION321.Normal1zervsBrokenNerdz",
+        "DistortedFate.Sakuzyo"
+      ],
+      "gate": "Rrharil.TeamGrimoire",
+      "score": 880000
+    },
+    {
+      "songs": [
+        "AboutTheUniverse.SOTUIMIssionary",
+        "Implexrough.Silentroommommy",
+        "Evanescent.LeaF",
+        "EntrancetotheChaos.打打だいずvssiromaru",
+        "ExoplanetaryMirage.かめりあ",
+        "TrueHomeTrueWorldRework.816ThreeNumbers",
+        "Ametrine.GRYSCLMIssionary",
+        "Petrichor.voidMournfinale",
+        "ハテ.rNFrums",
+        "DesultorySignals.technoplanet",
+        "Message.くるぶっこちゃん",
+        "WhatdoyouwantmorethanaHappyending.Apo11oHALOprogramft安月名莉子大瀬良あい"
+      ],
+      "gate": "DistortedFate.Sakuzyo",
+      "score": 880000
+    },
+    {
+      "songs": [
+        "Demiurge.Rabpit",
+        "Demonkin.ForgedReigns",
+        "Re_NascencePsystyleVer.Rinth_live",
+        "Ark.kanoryo",
+        "AfterDawn.S9ryne",
+        "INFiNiTEENERZYOverdoze.RekuMochizuki"
+      ],
+      "gate": "Rrharil.TeamGrimoire",
+      "score": 880000
+    },
+    {
+      "songs": [
+        "Khalid.Dolphin",
+        "QuantumHyperspace.D_AAN",
+        "FreakyUndulationsNobleKnightsofTune.JehezukielKURORAK",
+        "PANICPARADISE.DJSHIONY",
+        "ReEndofaDream.umavsモリモリあつし"
+      ],
+      "gate": "NOONEYESMAN.MYUKKE",
+      "score": 920000
+    },
+    {
+      "songs": [
+        "心の記憶.A39沙包P",
+        "Spotlight.Ardolf",
+        "NightTheater.わかどり",
+        "Ramification.rareguyReina",
+        "DerRichter.Ωμεγα",
+        "ATHAZA.LeaF"
+      ],
+      "gate": "MOBILYS.Dachs",
+      "score": 880000
+    }
+  ],
+  "legacy": [
+    "Glaciaxion.SunsetRay",
+    "EradicationCatastrophe.NceS",
+    "Credits.Frums",
+    "Dlyrotz.Likey",
+    "EnginexStartmelodymix.CrossingSound",
+    "光.姜米條",
+    "Wintercube.CtymaxfeatNceS",
+    "混乱Confusion.OnlyMyBlackScore",
+    "Cipher20.TetrajectoryfeatCtymax",
+    "FULiAUTOSHOOTER.MYUKKE",
+    "HumaN.SOTUI",
+    "PRAW.Bluewind",
+    "Cereris.SunsetRayNceS",
+    "PixelRebelz.Normal1zer",
+    "NonMelodicRagezMUGEdit.Normal1zer",
+    "SultanRage.MonstDeath",
+    "ClassMemories.AntistarfeatCtymax",
+    "SURREALISM.Itsuki",
+    "BonusTime.MegaloPaleWhite",
+    "ENERGYSYNERGYMATRIX.Tanchiky"
+  ]
 }

@@ -650,6 +650,10 @@ export const en = {
     send: "Send to Phigros++",
     working: "Saving…",
     empty: "Type at least one score first.",
+    locked: (chapter: string, song: string, score: string) =>
+      `${chapter} stays locked in the game until one chart of ${song} has ${score} or more.`,
+    lockedLegacy: (chapter: string, count: number, have: number, score: string) =>
+      `${chapter} stays locked in the game until ${count} Legacy charts have ${score} or more: this save has ${have}.`,
     done: "Your save is on your profile",
     sent: "Your save is on its way",
     sentText:

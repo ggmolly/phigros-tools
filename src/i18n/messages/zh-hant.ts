@@ -629,6 +629,10 @@ export const zhHant = {
     send: "傳送到 Phigros++",
     working: "正在儲存…",
     empty: "請先填寫至少一個成績。",
+    locked: (chapter: string, song: string, score: string) =>
+      `在 ${song} 的某張譜面達到 ${score} 之前，${chapter} 在遊戲中保持鎖定。`,
+    lockedLegacy: (chapter: string, count: number, have: number, score: string) =>
+      `在 ${count} 張 Legacy 譜面達到 ${score} 之前，${chapter} 在遊戲中保持鎖定：此存檔目前有 ${have} 張。`,
     done: "你的存檔已在你的個人資料中",
     sent: "你的存檔已送出",
     sentText: "開啟 Phigros++：它會提示載入這份存檔來取代裝置上的存檔，並說明會取代哪些內容。",

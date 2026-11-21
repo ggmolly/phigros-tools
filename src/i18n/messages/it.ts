@@ -662,6 +662,10 @@ export const it = {
     send: "Invia a Phigros++",
     working: "Salvataggio in corso…",
     empty: "Inserisci prima almeno un punteggio.",
+    locked: (chapter: string, song: string, score: string) =>
+      `${chapter} resta bloccato nel gioco finché un chart di ${song} non raggiunge ${score}.`,
+    lockedLegacy: (chapter: string, count: number, have: number, score: string) =>
+      `${chapter} resta bloccato nel gioco finché ${count} chart di Legacy non raggiungono ${score}: questo salvataggio ne ha ${have}.`,
     done: "Il tuo salvataggio è sul tuo profilo",
     sent: "Il tuo salvataggio è in arrivo",
     sentText:

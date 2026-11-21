@@ -669,6 +669,10 @@ export const fr = {
     send: "Envoyer à Phigros++",
     working: "Enregistrement…",
     empty: "Saisissez d’abord au moins un score.",
+    locked: (chapter: string, song: string, score: string) =>
+      `${chapter} reste verrouillé dans le jeu tant qu’aucun chart de ${song} n’atteint ${score}.`,
+    lockedLegacy: (chapter: string, count: number, have: number, score: string) =>
+      `${chapter} reste verrouillé dans le jeu tant que ${count} charts de Legacy n’atteignent pas ${score} : cette save en a ${have}.`,
     done: "Votre save est sur votre profil",
     sent: "Votre save est en route",
     sentText:

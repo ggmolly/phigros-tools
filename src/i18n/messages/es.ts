@@ -662,6 +662,10 @@ export const es = {
     send: "Enviar a Phigros++",
     working: "Guardando…",
     empty: "Escribe primero al menos una puntuación.",
+    locked: (chapter: string, song: string, score: string) =>
+      `${chapter} sigue bloqueado en el juego hasta que un chart de ${song} llegue a ${score}.`,
+    lockedLegacy: (chapter: string, count: number, have: number, score: string) =>
+      `${chapter} sigue bloqueado en el juego hasta que ${count} charts de Legacy lleguen a ${score}: esta partida tiene ${have}.`,
     done: "Tu partida está en tu perfil",
     sent: "Tu partida está en camino",
     sentText:

@@ -664,6 +664,10 @@ export const ja = {
     send: "Phigros++ に送る",
     working: "保存中…",
     empty: "先にスコアを 1 つ以上入力してください。",
+    locked: (chapter: string, song: string, score: string) =>
+      `${song} のいずれかの譜面が ${score} 以上になるまで、${chapter} はゲーム内でロックされたままです。`,
+    lockedLegacy: (chapter: string, count: number, have: number, score: string) =>
+      `Legacy の譜面 ${count} つが ${score} 以上になるまで、${chapter} はゲーム内でロックされたままです（このセーブでは ${have} つ）。`,
     done: "セーブはプロフィールにあります",
     sent: "セーブを送信しました",
     sentText:

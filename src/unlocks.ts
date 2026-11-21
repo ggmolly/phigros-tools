@@ -1,6 +1,6 @@
 import type { SaveDocumentV1 } from "./document";
 import data from "./keys.json";
-import type { GameKey, GameProgress } from "./modules";
+import type { GameKey, GameProgress, SongRecord } from "./modules";
 
 /**
  * What a save rebuilt on the site unlocks. The game keeps its unlocks as prefs, which a save holds as keys (songs
@@ -10,10 +10,12 @@ import type { GameKey, GameProgress } from "./modules";
 
 /** The kinds of key, in the game's order (Key.kindOfKey). A key's value sits one slot after its kind's index. */
 export const KEY_KINDS = ["song", "collection", "illustration", "avatar"] as const;
-const { keys, songKeys, gates } = data as unknown as {
+const { keys, songKeys, gates, chapters, legacy } = data as unknown as {
   keys: Record<string, number>[];
   songKeys: Record<string, string>;
   gates: Record<string, string[][]>;
+  chapters: { songs: string[]; gate: string | number; score: number }[];
+  legacy: string[];
 };
 /** Every key of each kind, and how many times it's found to be whole. */
 export const KEYS = keys;
@@ -112,9 +114,31 @@ export function setKey(keys: GameKey, kind: number, name: string, on: boolean) {
 }
 
 /**
+ * The chapters a save has records in that the game keeps locked. It opens a chapter on scores alone, each time its
+ * chapter list shows: a chart of the gate song reaching the score, or as many charts of the Legacy chapter as the gate
+ * says. Each comes with one of its songs, and how many charts reach the score so far.
+ */
+export function lockedChapters(songs: SongRecord[]) {
+  const reaching = (ids: string[], score: number) =>
+    songs
+      .filter((song) => ids.includes(song.songId))
+      .flatMap((song) => song.levels)
+      .filter((record) => record && record.score >= score).length;
+  return chapters
+    .filter((chapter) => songs.some((song) => chapter.songs.includes(song.songId)))
+    .map(({ songs: [song], gate, score }) => ({
+      song: song!,
+      gate,
+      score,
+      have: reaching(typeof gate === "number" ? legacy : [gate], score),
+    }))
+    .filter(({ gate, have }) => have < (typeof gate === "number" ? gate : 1));
+}
+
+/**
  * The save with what it needs to be played as it reads: the key of each song that has a record, the gates of each
- * chart that has one, and the avatar of the profile (its background is a song's id, and needs no key). Chapters open
- * by themselves, the game works them out from the scores.
+ * chart that has one, and the avatar of the profile (its background is a song's id, and needs no key). What opens a
+ * chapter isn't in a save: see lockedChapters.
  */
 export function unlock(document: SaveDocumentV1): SaveDocumentV1 {
   const save = structuredClone(document);

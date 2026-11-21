@@ -653,6 +653,10 @@ export const ko = {
     send: "Phigros++로 보내기",
     working: "저장하는 중…",
     empty: "먼저 점수를 하나 이상 입력하세요.",
+    locked: (chapter: string, song: string, score: string) =>
+      `${song}의 채보 하나가 ${score} 이상이 될 때까지 ${chapter}은(는) 게임에서 잠긴 상태로 남습니다.`,
+    lockedLegacy: (chapter: string, count: number, have: number, score: string) =>
+      `Legacy 채보 ${count}개가 ${score} 이상이 될 때까지 ${chapter}은(는) 게임에서 잠긴 상태로 남습니다. 이 세이브에는 ${have}개가 있습니다.`,
     done: "세이브가 프로필에 있습니다",
     sent: "세이브를 보냈습니다",
     sentText:

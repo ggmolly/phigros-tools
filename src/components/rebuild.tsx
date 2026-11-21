@@ -1,12 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { type CatalogSong, catalogSongs, searchFold } from "../catalog";
+import { type CatalogSong, catalogSong, catalogSongs, searchFold } from "../catalog";
 import { blankDocument, parseJsonDocument, type SaveDocumentV1 } from "../document";
-import { Rich, useT } from "../i18n";
+import { Rich, useFormat, useT } from "../i18n";
 import { calculateRanking, chartRks } from "../metrics";
 import { LEVELS, type LevelRecord, type SongRecord } from "../modules";
 import { message, useSave } from "../save-context";
-import { hasKey, KEYS, setKey, unlock } from "../unlocks";
+import { hasKey, KEYS, lockedChapters, setKey, unlock } from "../unlocks";
 import { Arrow } from "./arrow";
 import { avatarUrl, Difficulty, DifficultyFilter, Stat, Switch } from "./primitives";
 
@@ -165,6 +165,7 @@ function Keys({
 export function Rebuild() {
   const { credentials, loaded, storageReady, publish } = useSave();
   const t = useT();
+  const format = useFormat();
   const r = t.rebuild;
   const [draft, setDraft] = useState(blankDocument);
   // the fields of a row only read the draft when they appear: a draft from elsewhere shows them again
@@ -481,6 +482,17 @@ export function Rebuild() {
             </ol>
           </div>
         )}
+        {lockedChapters(draft.songs).map(({ song, gate, score, have }) => (
+          <p key={song} className="warning">
+            {typeof gate === "number"
+              ? r.lockedLegacy(catalogSong(song)!.chapter, gate, have, format.number(score))
+              : r.locked(
+                  catalogSong(song)!.chapter,
+                  catalogSong(gate)!.title,
+                  format.number(score),
+                )}
+          </p>
+        ))}
         <p className="meta">{t.start.declared}</p>
         <p role="status" className="negative" hidden={!error}>
           {error}

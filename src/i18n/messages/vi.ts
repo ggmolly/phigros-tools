@@ -658,6 +658,10 @@ export const vi = {
     send: "Gửi sang Phigros++",
     working: "Đang lưu…",
     empty: "Hãy nhập ít nhất một điểm trước.",
+    locked: (chapter: string, song: string, score: string) =>
+      `${chapter} vẫn bị khóa trong trò chơi cho đến khi một chart của ${song} đạt ${score} trở lên.`,
+    lockedLegacy: (chapter: string, count: number, have: number, score: string) =>
+      `${chapter} vẫn bị khóa trong trò chơi cho đến khi ${count} chart của Legacy đạt ${score} trở lên: save này đang có ${have}.`,
     done: "Save của bạn đã nằm trên hồ sơ",
     sent: "Save của bạn đang được gửi đi",
     sentText:

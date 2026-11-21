@@ -668,6 +668,10 @@ export const de = {
     send: "An Phigros++ senden",
     working: "Wird gespeichert…",
     empty: "Tippe zuerst mindestens einen Score ein.",
+    locked: (chapter: string, song: string, score: string) =>
+      `${chapter} bleibt im Spiel gesperrt, bis ein Chart von ${song} ${score} erreicht.`,
+    lockedLegacy: (chapter: string, count: number, have: number, score: string) =>
+      `${chapter} bleibt im Spiel gesperrt, bis ${count} Legacy-Charts ${score} erreichen: Dieser Spielstand hat ${have}.`,
     done: "Dein Spielstand liegt in deinem Profil",
     sent: "Dein Spielstand ist unterwegs",
     sentText:

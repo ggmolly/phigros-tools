@@ -627,6 +627,10 @@ export const zh = {
     send: "发送到 Phigros++",
     working: "正在保存…",
     empty: "请先填写至少一个成绩。",
+    locked: (chapter: string, song: string, score: string) =>
+      `在 ${song} 的某张谱面达到 ${score} 之前，${chapter} 在游戏中保持锁定。`,
+    lockedLegacy: (chapter: string, count: number, have: number, score: string) =>
+      `在 ${count} 张 Legacy 谱面达到 ${score} 之前，${chapter} 在游戏中保持锁定：此存档目前有 ${have} 张。`,
     done: "你的存档已在你的资料中",
     sent: "你的存档已发出",
     sentText: "打开 Phigros++：它会提示载入这份存档来替换设备上的存档，并说明会替换哪些内容。",

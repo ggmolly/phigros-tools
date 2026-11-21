@@ -36,8 +36,8 @@ const SONG_UPDATES = 4;
 
 /**
  * The save a rebuild starts from: what the game's modules hold for a pref it never wrote, except what anyone who
- * played has behind them. The tutorial and the Legacy chapter are done, and the game's own changes to old saves are
- * applied: it would otherwise drop the records 3.9.0 reset, and move records as its song updates did.
+ * played has behind them. The tutorial is done, and the game's own changes to old saves are applied: it would
+ * otherwise drop the records 3.9.0 reset, and move records as its song updates did.
  */
 export function blankDocument(): SaveDocumentV1 {
   return {
@@ -68,7 +68,7 @@ export function blankDocument(): SaveDocumentV1 {
     },
     gameProgress: {
       isFirstRun: true,
-      legacyChapterFinished: true,
+      legacyChapterFinished: false,
       alreadyShowCollectionTip: false,
       alreadyShowAutoUnlockINTip: false,
       completed: "",
