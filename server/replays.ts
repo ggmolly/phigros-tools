@@ -45,8 +45,7 @@ sqlite.run("CREATE INDEX IF NOT EXISTS idx_replays_key ON replays(key)");
 // each player's best on each chart, so a chart's ranking is read in order from the index: a verified replay (sha256),
 // or a record their game sent (imported, no sha256, no date). a tie goes to the earliest played replay, then to
 // the earliest record (created is when it became the best). the scope is what a leaderboard counts: 0 for all
-// (both), 1 for verified replays only, and 2 for the board of plays with modifiers (verified replays too), where
-// score is the total the modifiers give. nothing else than that board reads scope 2
+// (both), 1 for verified replays only
 sqlite.run(`
   CREATE TABLE IF NOT EXISTS bests (
     key BLOB NOT NULL,
@@ -75,6 +74,27 @@ sqlite.run(`
     PRIMARY KEY (key, song, level)
   )
 `);
+// each player's best with each set of modifiers on each chart (src/modifiers.ts), all verified replays: the board of
+// plays with modifiers, apart from the bests as those are no records of the game's. score is the total the modifiers
+// give it, which the board is ranked by
+sqlite.run(`
+  CREATE TABLE IF NOT EXISTS modded (
+    key BLOB NOT NULL,
+    song TEXT NOT NULL,
+    level TEXT NOT NULL,
+    mods INTEGER NOT NULL,
+    score INTEGER NOT NULL,
+    accuracy REAL NOT NULL,
+    fc INTEGER NOT NULL,
+    played INTEGER NOT NULL,
+    created INTEGER NOT NULL,
+    sha256 TEXT NOT NULL,
+    PRIMARY KEY (key, song, level, mods)
+  )
+`);
+sqlite.run(
+  "CREATE INDEX IF NOT EXISTS idx_modded_order ON modded(song, level, score DESC, played, created)",
+);
 sqlite.run("DROP INDEX IF EXISTS idx_bests_rank");
 sqlite.run(
   "CREATE INDEX IF NOT EXISTS idx_bests_order ON bests(scope, song, level, score DESC, played IS NULL, played, created)",
@@ -98,7 +118,7 @@ const undeclare = sqlite.prepare<unknown, [Uint8Array, string, string, number]>(
 // a higher score replaces the best, and so does a replay of the score an imported record has
 const raise = sqlite.prepare<
   unknown,
-  [Uint8Array, string, string, Board, number, number, number, number | null, number, string | null]
+  [Uint8Array, string, string, Scope, number, number, number, number | null, number, string | null]
 >(
   `INSERT INTO bests (key, song, level, scope, score, accuracy, fc, played, created, sha256)
    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -107,6 +127,18 @@ const raise = sqlite.prepare<
    created = CASE WHEN excluded.score > bests.score THEN excluded.created ELSE bests.created END
    WHERE excluded.score > bests.score
      OR (excluded.score = bests.score AND bests.sha256 IS NULL AND excluded.sha256 IS NOT NULL)`,
+);
+
+// with modifiers, a higher total replaces the best with the same ones
+const raiseModded = sqlite.prepare<
+  unknown,
+  [Uint8Array, string, string, number, number, number, number, number, number, string]
+>(
+  `INSERT INTO modded (key, song, level, mods, score, accuracy, fc, played, created, sha256)
+   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+   ON CONFLICT (key, song, level, mods) DO UPDATE SET score = excluded.score, accuracy = excluded.accuracy,
+   fc = excluded.fc, played = excluded.played, sha256 = excluded.sha256, created = excluded.created
+   WHERE excluded.score > modded.score`,
 );
 
 export interface Best {
@@ -171,8 +203,8 @@ const verified = sqlite.prepare<{ key: Uint8Array; song: string; level: string }
 
 /**
  * A replay the worker verified counts: it can become its player's best on the chart, and their RKS follows. The
- * player and chart, and whether it became their best. One played with modifiers only counts on their board, by its
- * total: it's no record of the game's, so it raises nothing else.
+ * player and chart, and whether it became their best. One played with modifiers only counts on their board, as the
+ * player's best with those: it's no record of the game's, so it raises nothing else.
  */
 export function countReplay(sha256: string, header: ReplayHeader) {
   const { key, song, level } = verified.get(sha256)!;
@@ -182,7 +214,18 @@ export function countReplay(sha256: string, header: ReplayHeader) {
   return sqlite.transaction(() => {
     if (mods) {
       const total = totalOf(score, mods);
-      raise.run(key, song, level, 2, total, accuracy, fc ? 1 : 0, played, Date.now(), sha256);
+      raiseModded.run(
+        key,
+        song,
+        level,
+        mods,
+        total,
+        accuracy,
+        fc ? 1 : 0,
+        played,
+        Date.now(),
+        sha256,
+      );
       return { key, song, level, raised: false };
     }
     const raised = raiseBest(key, song, level, { score, accuracy, fc, played, sha256 });
@@ -234,7 +277,19 @@ export function replayInfo(sha256: string): ReplayInfo | undefined {
   };
 }
 
-const chartPage = sqlite.prepare<
+// a statement over a board's rows for each board: the bests of a scope, or the ones with modifiers. from(joins) is
+// its FROM up to the conditions of its own
+const BOARDS = [
+  ["bests", "b.scope = 0 AND"],
+  ["bests", "b.scope = 1 AND"],
+  ["modded", ""],
+] as const;
+const boards = <T, P extends unknown[]>(sql: (from: (joins: string) => string) => string) =>
+  BOARDS.map(([table, scope]) =>
+    sqlite.prepare<T, P>(sql((joins) => `${table} b ${joins} WHERE ${scope}`)),
+  );
+
+const chartPage = boards<
   PlayerName & {
     sha256: string | null;
     score: number;
@@ -246,31 +301,33 @@ const chartPage = sqlite.prepare<
     status: string | null;
     timing: number | null;
   },
-  [Board, string, string, number, number]
+  [string, string, number, number]
 >(
-  `SELECT b.sha256, COALESCE(r.score, b.score) AS score, b.score AS total, COALESCE(r.mods, 0) AS mods, b.accuracy,
-   b.fc, b.played, r.status, r.timing, p.id, p.name, p.number, p.avatar FROM bests b
-   LEFT JOIN replays r ON r.sha256 = b.sha256 JOIN players p ON p.key = b.key
-   WHERE b.scope = ? AND b.song = ? AND b.level = ? AND p.unlisted = 0
-   ORDER BY b.score DESC, b.played IS NULL, b.played, b.created LIMIT ? OFFSET ?`,
+  (from) =>
+    `SELECT b.sha256, COALESCE(r.score, b.score) AS score, b.score AS total, COALESCE(r.mods, 0) AS mods,
+     b.accuracy, b.fc, b.played, r.status, r.timing, p.id, p.name, p.number, p.avatar
+     FROM ${from("LEFT JOIN replays r ON r.sha256 = b.sha256 JOIN players p ON p.key = b.key")}
+     b.song = ? AND b.level = ? AND p.unlisted = 0
+     ORDER BY b.score DESC, b.played IS NULL, b.played, b.created LIMIT ? OFFSET ?`,
 );
-const chartCount = sqlite.prepare<{ count: number }, [Board, string, string]>(
-  `SELECT COUNT(*) AS count FROM bests b JOIN players p ON p.key = b.key
-   WHERE b.scope = ? AND b.song = ? AND b.level = ? AND p.unlisted = 0`,
+const chartCount = boards<{ count: number }, [string, string]>(
+  (from) =>
+    `SELECT COUNT(*) AS count FROM ${from("JOIN players p ON p.key = b.key")}
+     b.song = ? AND b.level = ? AND p.unlisted = 0`,
 );
 
 /**
- * A chart's players on a board, best score first (with modifiers: best total) and on a tie the earliest verified
- * replay, then the earliest record.
+ * A chart's players on a board, best score first and on a tie the earliest verified replay, then the earliest record.
+ * With modifiers it's each player's best with each set of them, best total first.
  */
 export function chartPlays(
-  scope: Board,
+  board: Board,
   song: string,
   level: string,
   limit: number,
   offset: number,
 ): ChartPlays {
-  const plays = chartPage.all(scope, song, level, limit, offset).map((row, index) => ({
+  const plays = chartPage[board]!.all(song, level, limit, offset).map((row, index) => ({
     id: row.sha256 ?? `imported:${row.id}`,
     replay: row.sha256,
     rank: offset + index + 1,
@@ -284,7 +341,7 @@ export function chartPlays(
     status: (row.status ?? "imported") as PlayStatus,
     date: row.played,
   }));
-  return { count: chartCount.get(scope, song, level)!.count, plays };
+  return { count: chartCount[board]!.get(song, level)!.count, plays };
 }
 
 const place = sqlite.prepare<{ rank: number }, [Uint8Array, string, string]>(
@@ -337,15 +394,16 @@ export function playerRanking(
   return { count: playerCount[scope]!.get(pattern, wanted)!.count, players };
 }
 
-const counts = sqlite.prepare<ChartCount, [Board]>(
-  `SELECT b.song, b.level, COUNT(*) AS count FROM bests b JOIN players p ON p.key = b.key
-   WHERE b.scope = ? AND p.unlisted = 0 GROUP BY b.song, b.level ORDER BY count DESC`,
+const counts = boards<ChartCount, []>(
+  (from) =>
+    `SELECT b.song, b.level, COUNT(*) AS count FROM ${from("JOIN players p ON p.key = b.key")}
+     p.unlisted = 0 GROUP BY b.song, b.level ORDER BY count DESC`,
 );
 const cached: { at: number; charts: ChartCount[] }[] = [];
 
 /** Every chart with a best on the board, most players first. Counted at most once a minute, as it reads every best. */
-export function chartCounts(scope: Board): ChartCount[] {
-  if (!cached[scope] || Date.now() - cached[scope].at > 60_000)
-    cached[scope] = { at: Date.now(), charts: counts.all(scope) };
-  return cached[scope].charts;
+export function chartCounts(board: Board): ChartCount[] {
+  if (!cached[board] || Date.now() - cached[board].at > 60_000)
+    cached[board] = { at: Date.now(), charts: counts[board]!.all() };
+  return cached[board].charts;
 }

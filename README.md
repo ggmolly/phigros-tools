@@ -71,8 +71,8 @@ replaces an imported record of the same score, so a player can prove their recor
 gives another result doesn't count.
 
 A song played with Phigros++'s modifiers (Easy, Hard Rock, Half Time, Nightcore, Hidden, Flashlight, Sudden Death,
-Perfect, Random) is no record of the game's, so its replay only counts on the chart's **Modifiers** ranking, by the
-total its modifiers give the score (up to 1,409,444). `src/modifiers.ts` holds their rules, the same as the game's:
+Perfect, Random) is no record of the game's, so its replay only counts on the chart's **Modifiers** ranking: a row for
+a player's best with each set of modifiers, by the total they give the score (up to 1,409,444). `src/modifiers.ts` holds their rules, the same as the game's:
 the worker judges such a replay with them, and the player shows it at its speed, with its drums, shuffled notes and
 hidden ones.
 

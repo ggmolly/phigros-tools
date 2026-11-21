@@ -20,7 +20,7 @@ export type PlayStatus = "verified" | "imported" | "declared";
 
 /**
  * What a chart's leaderboard counts: 0 for verified replays and imported records, 1 for verified replays only, 2 for
- * the plays with modifiers, which are verified replays ranked by their total.
+ * the plays with modifiers: each player's best verified replay with each set of them, ranked by total.
  */
 export type Board = 0 | 1 | 2;
 
