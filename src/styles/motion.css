@@ -44,6 +44,7 @@
 .menu-entry,
 .ppp-features > *,
 .ppp-case,
+.start-tile,
 .gallery-card:nth-child(-n + 24),
 .song-pager {
   animation: rise 0.7s var(--ease) backwards;
@@ -63,7 +64,8 @@
   .hero,
   .menu-entry,
   .ppp-features > *,
-  .ppp-case {
+  .ppp-case,
+  .start-tile {
     animation-delay: calc(min(sibling-index() - 1, 6) * 70ms);
   }
   .gallery-card:nth-child(-n + 24) {

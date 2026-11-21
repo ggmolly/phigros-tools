@@ -13,7 +13,8 @@
 .hero-rks,
 .challenge-badge,
 .difficulty,
-.status {
+.status,
+.start-tile {
   position: relative;
   isolation: isolate;
 }
@@ -30,7 +31,8 @@
 .hero-rks::before,
 .challenge-badge::before,
 .difficulty::before,
-.status::before {
+.status::before,
+.start-tile::before {
   content: "";
   position: absolute;
   inset: 0;

@@ -162,6 +162,8 @@
 }
 .ppp-page {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
   gap: 1.125rem;
 }
 /* the title glows like the game's logo, its ++ in the pink Phigros++ adds to it */

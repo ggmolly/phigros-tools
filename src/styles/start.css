@@ -1,27 +1,132 @@
 /* ---------- Bringing a save over: the questions, then the save rebuilt by hand ---------- */
+.start-flow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.375rem 1rem;
+  margin-top: 1.375rem;
+}
 .start-question {
-  margin-top: 1.5rem;
-  max-width: 46rem;
+  flex: 1 0 100%;
+  min-width: 0;
 }
 .start-question h2,
 .start-cases h2 {
   margin-bottom: 0.375rem;
-  font-size: 1.1875rem;
+  font-size: 1.375rem;
   font-weight: 400;
 }
 .start-question h2:focus {
   outline: 0;
 }
+.start-question > .meta {
+  max-width: 46rem;
+}
+/* tiles lean like the main menu's entries, so their row keeps the slant's travel free on both sides */
+.start-tiles {
+  --tile-h: clamp(11rem, 34svh, 16rem);
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 1.125rem;
+  margin-top: 0.875rem;
+  padding: 0 calc(var(--tile-h) * var(--tan) / 2);
+}
+.start-tile {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 1.125rem;
+  min-height: var(--tile-h);
+  padding: 1rem 1.5rem;
+  font-size: 1.375rem;
+  line-height: 1.25;
+  text-align: center;
+  transition: color 0.15s ease;
+}
+.start-tile::before {
+  background: var(--glass-strong);
+  box-shadow: 0 0.75rem 1.75rem rgb(0 0 0 / 0.3);
+}
+.start-tile:hover,
+.start-tile:focus-visible {
+  color: var(--ink);
+  outline: 0;
+}
+.start-tile:hover::before,
+.start-tile:focus-visible::before {
+  background: var(--white);
+  box-shadow: 0 0 1.5rem rgb(255 255 255 / 0.45);
+}
+.start-tile svg {
+  height: calc(var(--tile-h) * 0.48);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+}
+.start-tile [data-icon="gone"] {
+  stroke-dasharray: 7 6;
+}
 .start-answer {
+  gap: 1.125rem;
+  padding: 0.375rem 1.375rem;
+  font-weight: 400;
+  text-align: left;
+  white-space: normal;
+}
+.start-answer strong,
+.start-answer small {
+  display: block;
+}
+.start-answer small,
+.start-answer u {
+  font-size: 0.8125rem;
+  opacity: 0.66;
+}
+.start-answer u {
+  text-underline-offset: 3px;
+}
+/* the steps side by side, each under its number */
+.start-steps {
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1.125rem;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+.start-steps li {
+  padding: 0.875rem 1.25rem 1.125rem;
+  background: rgb(0 0 0 / 0.35);
+  counter-increment: step;
+}
+.start-steps li::before {
+  content: counter(step);
+  display: block;
+  font-size: 2.25rem;
+  font-weight: 300;
+  line-height: 1.2;
+}
+.start-next,
+.start-cases .panel {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.25rem 1rem;
-  color: var(--dim);
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 2rem;
 }
-.start-go,
+.start-next .meta,
+.start-cases .panel > div {
+  flex: 1 1 20rem;
+  max-width: 62rem;
+}
+.start-next .btn,
 .start-cases .btn {
-  margin-top: 1rem;
+  margin-inline: 0.375rem;
+}
+.start-go {
+  min-height: 3rem;
+  padding: 0 1.875rem;
+  font-size: 1.125rem;
 }
 .start-cases {
   margin: 0;
@@ -170,6 +275,40 @@
   margin-top: 0.875rem;
 }
 @media (max-width: 45em) {
+  /* tiles become rows, the drawing before its label */
+  .start-tiles {
+    --tile-h: 4.75rem;
+    grid-auto-flow: row;
+    gap: 0.625rem;
+  }
+  .start-tile {
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    justify-items: start;
+    padding: 0.5rem 1.25rem;
+    font-size: 1.125rem;
+    text-align: left;
+  }
+  .start-tile svg {
+    height: 3rem;
+  }
+  .start-steps li {
+    position: relative;
+    padding: 0.75rem 1rem 0.875rem 3.25rem;
+  }
+  .start-steps li::before {
+    position: absolute;
+    top: 0.375rem;
+    left: 1rem;
+    font-size: 1.875rem;
+  }
+  .start-next .btn,
+  .start-cases .btn {
+    flex: 1;
+    padding: 0.375rem 1.25rem;
+    font-size: 1rem;
+    white-space: normal;
+  }
   .rebuild-stats {
     gap: 0.5rem 1.25rem;
   }
