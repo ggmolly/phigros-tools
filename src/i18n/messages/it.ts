@@ -191,6 +191,7 @@ export const it = {
     player: "Giocatore",
     played: "Giocata",
     status: "Stato",
+    modifiers: "Modificatori",
     replayStatus: {
       verified: "Verificata",
       imported: "Importato",

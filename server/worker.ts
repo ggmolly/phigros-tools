@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { catalogManifest } from "../src/catalog";
 import { judge, timingAccuracy } from "../src/judge";
+import { Mod, modChart } from "../src/modifiers";
 import { decodeReplay } from "../src/pigeon";
 import { decodePhc } from "../src/player/phc";
 import { topics } from "../src/topics";
@@ -12,8 +13,9 @@ import { addAchievement, snapshotHistory } from "./profiles";
 import { announce, openQueue, VERIFY_QUEUE } from "./queue";
 import { chartPlace, countReplay, REPLAY_DIR } from "./replays";
 
-// judges uploaded replays like the game did and marks them verified when the game's recorded result is what their
-// touches give, unverified otherwise (with both results). only a verified one counts on the leaderboard. it also keeps
+// judges uploaded replays like the game did, with the modifiers they were played with, and marks them verified when
+// the game's recorded result is what their touches give, unverified otherwise (with both results). only a verified
+// one counts on the leaderboard. it also keeps
 // the players' daily RKS history. a replay of a game version whose charts the site doesn't
 // have stays pending. it also keeps the mod catalog up to date. run beside the server: bun worker.mjs
 const CHARTS = process.env.CHART_DIR ?? "./public/chart-data";
@@ -39,12 +41,20 @@ function verify(sha256: string) {
   );
   const chart = `${CHARTS}/${row.song}/${row.level}.phc`;
   if (header.game !== catalogManifest.gameVersion || !existsSync(chart)) return;
-  const judged = judge(decodePhc(new Uint8Array(readFileSync(chart))), frames, header);
+  const { mods, seed, mirror } = header;
+  const played = modChart(decodePhc(new Uint8Array(readFileSync(chart))), mods, seed, mirror === 1);
+  const judged = judge(played, frames, header);
   const recorded = Object.fromEntries(RESULT.map((field) => [field, header[field]]));
   const replayed = Object.fromEntries(RESULT.map((field) => [field, judged[field]]));
-  const same = RESULT.every((field) => recorded[field] === replayed[field]);
+  // Sudden Death ends a play at its first bad or miss and Perfect restarts it at its first good, so neither records
+  // a replay that has one
+  const broken =
+    (mods & Mod.SD && judged.bad + judged.miss) ||
+    (mods & Mod.PF && judged.good + judged.bad + judged.miss);
+  const same = !broken && RESULT.every((field) => recorded[field] === replayed[field]);
   const result = JSON.stringify({ recorded, replayed });
-  settle.run(same ? "verified" : "unverified", result, timingAccuracy(judged.hits), sha256);
+  const timing = timingAccuracy(judged.hits, mods);
+  settle.run(same ? "verified" : "unverified", result, timing, sha256);
   if (same) {
     const was = chartPlace(row.key, row.song, row.level);
     const { key, song, level, raised } = countReplay(sha256, header);

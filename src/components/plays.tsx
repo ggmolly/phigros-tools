@@ -3,8 +3,9 @@ import type { ReactNode } from "react";
 import * as v from "valibot";
 import { catalogSong } from "../catalog";
 import { useFormat, useT } from "../i18n";
-import type { Play, PlayerName, PlayStatus, ReplayInfo } from "../plays";
+import type { Board, Modded, Play, PlayerName, PlayStatus, ReplayInfo } from "../plays";
 import { Arrow } from "./arrow";
+import { Modifiers } from "./modifiers";
 import { Avatar, Rank, score7 } from "./primitives";
 
 /** The player's avatar and name#0042, linking to their page, the number dimmed so the name reads first. */
@@ -101,6 +102,19 @@ export function Timing({ timing }: { timing: number | null }) {
   );
 }
 
+/**
+ * A score as the game shows it. One played with modifiers shows the total they give with their plates, and the
+ * score itself on hover.
+ */
+export function Score({ play }: { play: Modded }) {
+  return (
+    <span title={play.mods ? score7(play.score) : undefined}>
+      {score7(play.total)}
+      <Modifiers mods={play.mods} />
+    </span>
+  );
+}
+
 /** A play's rank, player, score, accuracy and grade, as cells of a table row. */
 export function PlayCells({ play }: { play: Play }) {
   return (
@@ -109,7 +123,9 @@ export function PlayCells({ play }: { play: Play }) {
       <td>
         <PlayerTag player={play.player} />
       </td>
-      <td className="num record-score">{score7(play.score)}</td>
+      <td className="num record-score">
+        <Score play={play} />
+      </td>
       <td className="num">{play.accuracy.toFixed(2)}%</td>
       <td className="num">
         <Timing timing={play.timing} />
@@ -177,7 +193,10 @@ export function Pager({ page, pages }: { page: number; pages: number }) {
   );
 }
 
-/** A ranking's search: ?page= from 1 (anything else is the first page), and ?verified=true counting verified replays only. */
+/**
+ * A ranking's search: ?page= from 1 (anything else is the first page), ?verified=true counting verified replays only,
+ * and on a chart ?mods=true for its plays with modifiers.
+ */
 export const RankingSearch = v.object({
   page: v.fallback(
     v.optional(
@@ -186,23 +205,33 @@ export const RankingSearch = v.object({
     undefined,
   ),
   verified: v.fallback(v.optional(v.boolean()), undefined),
+  mods: v.fallback(v.optional(v.boolean()), undefined),
 });
 
-/** All counts verified replays and imported records, Verified only verified replays. Switching starts at page 1. */
-export function ScopeSwitch({ verified }: { verified: boolean }) {
+/**
+ * All counts verified replays and imported records, Verified only verified replays, and where a chart offers it
+ * Modifiers its plays with some. Switching starts at page 1.
+ */
+export function ScopeSwitch({ board, modifiers }: { board: Board; modifiers?: boolean }) {
   const t = useT();
+  const labels = [t.common.all, t.song.replayStatus.verified, t.song.modifiers];
   return (
     // biome-ignore lint/a11y/useSemanticElements: like DifficultyFilter, a fieldset would need a style reset
     <div className="seg" role="group" aria-label={t.song.status}>
-      {([false, true] as const).map((option) => (
+      {labels.slice(0, modifiers ? 3 : 2).map((label, option) => (
         <Link
-          key={String(option)}
+          key={label}
           to="."
-          search={(search) => ({ ...search, verified: option || undefined, page: undefined })}
+          search={(search) => ({
+            ...search,
+            verified: option === 1 || undefined,
+            mods: option === 2 || undefined,
+            page: undefined,
+          })}
           className="seg-option"
-          aria-pressed={verified === option}
+          aria-pressed={board === option}
         >
-          {option ? t.song.replayStatus.verified : t.common.all}
+          {label}
         </Link>
       ))}
     </div>

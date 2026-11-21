@@ -1,13 +1,15 @@
 /**
  * A Phigros++ replay (`mod/phigrospp/lua/replayfile.lua`): its header and the range coded frames. Uploaded, it's
- * followed by the player's public key and an ed25519 signature of `REPLAY_DOMAIN` and everything before them.
+ * followed by the player's public key and an ed25519 signature of its version's domain and everything before them.
  */
-export const REPLAY_DOMAIN = "phigros++ replay v5\0";
+export const replayDomain = (version: number) => `phigros++ replay v${version}\0`;
 export const REPLAY_SIGNED = 96;
 const MAGIC = "PIGEON";
-const VERSION = 5;
+// version 6 added the modifiers, the frames are the same
+const VERSIONS = [5, 6];
 
 export interface ReplayHeader {
+  version: number;
   id: string;
   difficulty: string;
   width: number;
@@ -35,6 +37,9 @@ export interface ReplayHeader {
   dpi: number;
   mirror: number;
   challenge: number;
+  /** the modifiers it was played with (src/modifiers.ts), and the seed Random shuffled the chart from */
+  mods: number;
+  seed: number;
 }
 
 // the header's fields after the version byte, with their string.pack formats
@@ -65,12 +70,14 @@ const FIELDS: [keyof ReplayHeader, Format][] = [
   ["dpi", "f"],
   ["mirror", "B"],
   ["challenge", "B"],
+  ["mods", "I4"],
+  ["seed", "I4"],
 ];
 type Format = "B" | "s1" | "s2" | "I2" | "i2" | "I4" | "i4" | "i8" | "f" | "d";
 
 const decoder = new TextDecoder("utf-8", { fatal: true });
 
-/** The header of a replay in the current format and where its frames start, throwing on anything else. */
+/** The header of a replay in a format the site reads and where its frames start, throwing on anything else. */
 function readHeader(bytes: Uint8Array): [ReplayHeader, number] {
   const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
   let at = 0;
@@ -95,14 +102,16 @@ function readHeader(bytes: Uint8Array): [ReplayHeader, number] {
     f: () => view.getFloat32(next(4), true),
     d: () => view.getFloat64(next(8), true),
   };
-  if (text(MAGIC.length) !== MAGIC || read.B() !== VERSION)
-    throw new Error("Not a Phigros++ replay of this version");
-  const header: Record<string, string | number> = {};
-  for (const [name, format] of FIELDS) header[name] = read[format]();
+  const version = text(MAGIC.length) === MAGIC ? read.B() : 0;
+  if (!VERSIONS.includes(version as number))
+    throw new Error("Not a Phigros++ replay of a version the site reads");
+  const header: Record<string, string | number> = { version, mods: 0, seed: 0 };
+  for (const [name, format] of FIELDS.slice(0, version === 5 ? -2 : undefined))
+    header[name] = read[format]();
   return [header as unknown as ReplayHeader, at];
 }
 
-/** The header of a replay in the current format, throwing on anything else. */
+/** The header of a replay in a format the site reads, throwing on anything else. */
 export const replayHeader = (bytes: Uint8Array) => readHeader(bytes)[0];
 
 /** A finger on a frame, in screen pixels from the bottom left like Unity reports them. */

@@ -111,7 +111,7 @@ function LeaderboardPage() {
               </Link>
             </p>
           </div>
-          <ScopeSwitch verified={verified} />
+          <ScopeSwitch board={verified ? 1 : 0} />
         </div>
         <div className="leaderboard-layout">
           <Outlet />

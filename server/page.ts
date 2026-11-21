@@ -7,3 +7,6 @@ export function pageOffset(event: H3Event, size: number): number {
 
 /** The leaderboard's scope from ?verified=1: verified replays only, otherwise all. */
 export const scopeOf = (event: H3Event) => (getQuery(event).verified === "1" ? 1 : 0);
+
+/** A chart's board: the one of plays with modifiers from ?mods=1, otherwise the scope's. */
+export const boardOf = (event: H3Event) => (getQuery(event).mods === "1" ? 2 : scopeOf(event));

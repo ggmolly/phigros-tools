@@ -189,6 +189,7 @@ export const zh = {
     player: "玩家",
     played: "时间",
     status: "状态",
+    modifiers: "修改器",
     replayStatus: {
       verified: "已验证",
       imported: "已导入",

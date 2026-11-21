@@ -189,6 +189,7 @@ export const zhHant = {
     player: "玩家",
     played: "時間",
     status: "狀態",
+    modifiers: "修改器",
     replayStatus: {
       verified: "已驗證",
       imported: "已匯入",

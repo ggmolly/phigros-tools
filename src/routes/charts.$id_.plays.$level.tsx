@@ -14,13 +14,13 @@ import { Difficulty } from "../components/primitives";
 import { useFormat, useT } from "../i18n";
 import { useLiveReload } from "../live";
 import { LEVELS, type LevelName } from "../modules";
-import { CARDS, getChartPlays, PLAYS_PAGE } from "../plays";
+import { boardOf, CARDS, getChartPlays, PLAYS_PAGE } from "../plays";
 import { headT, pageLinks, pageMeta, SITE } from "../seo";
 import { topics } from "../topics";
 
 export const Route = createFileRoute("/charts/$id_/plays/$level")({
   validateSearch: RankingSearch,
-  loaderDeps: ({ search }) => ({ page: search.page ?? 1, verified: search.verified ?? false }),
+  loaderDeps: ({ search }) => ({ page: search.page ?? 1, board: boardOf(search) }),
   loader: ({ params, deps }) => {
     if (!isLevel(params.level) || !songLevels(params.id).includes(params.level)) throw notFound();
     return getChartPlays({
@@ -56,7 +56,9 @@ export const Route = createFileRoute("/charts/$id_/plays/$level")({
 
 function PlaysPage() {
   const params = Route.useParams();
-  const { page, verified } = Route.useLoaderDeps();
+  const { page, board } = Route.useLoaderDeps();
+  // the other levels and the way back keep the board, the leaderboard has none for modifiers
+  const kept = { verified: board === 1 || undefined, mods: board === 2 || undefined };
   const chart = Route.useLoaderData();
   const t = useT();
   const format = useFormat();
@@ -70,11 +72,7 @@ function PlaysPage() {
       <SiteHeader />
       <main className="app-shell">
         <div className="chart-player-bar">
-          <Link
-            to="/leaderboard"
-            search={{ verified: verified || undefined }}
-            className="btn btn-ghost"
-          >
+          <Link to="/leaderboard" search={{ verified: kept.verified }} className="btn btn-ghost">
             <span className="chart-player-back">
               <Arrow />
             </span>
@@ -91,7 +89,7 @@ function PlaysPage() {
                 key={name}
                 to="/charts/$id/plays/$level"
                 params={{ id: song.id, level: name }}
-                search={{ verified: verified || undefined }}
+                search={kept}
                 aria-current={name === level ? "page" : undefined}
               >
                 <Difficulty level={name} />
@@ -102,7 +100,7 @@ function PlaysPage() {
         <section className="panel">
           <div className="panel-head">
             <h2 className="panel-title">{t.song.plays}</h2>
-            <ScopeSwitch verified={verified} />
+            <ScopeSwitch board={board} modifiers />
           </div>
           <div className="chart-stats-scroll">
             <table className="song-diff-table">

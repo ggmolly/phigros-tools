@@ -1,6 +1,7 @@
 import { HTTPError } from "nitro/h3";
 import { canonicalSongId, catalogSong } from "../src/catalog";
 import { chartRks } from "../src/metrics";
+import { totalOf, validMods } from "../src/modifiers";
 import { LEVELS, type LevelName } from "../src/modules";
 import {
   type Activity,
@@ -33,6 +34,14 @@ sqlite.run(`
     PRIMARY KEY (key, played, song, level)
   )
 `);
+// the modifiers it was played with (src/modifiers.ts), added after the table
+if (
+  !sqlite
+    .query<{ name: string }, []>("PRAGMA table_info(plays)")
+    .all()
+    .some((c) => c.name === "mods")
+)
+  sqlite.run("ALTER TABLE plays ADD COLUMN mods INTEGER NOT NULL DEFAULT 0");
 sqlite.run(`
   CREATE TABLE IF NOT EXISTS activity (
     key BLOB NOT NULL,
@@ -70,15 +79,17 @@ const insertPlay = sqlite.prepare<
     number,
     number,
     number,
+    number,
   ]
 >(
-  `INSERT INTO plays (key, song, level, score, accuracy, maxcombo, perfect, good, bad, miss, duration, played)
-   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT DO NOTHING`,
+  `INSERT INTO plays (key, song, level, score, accuracy, maxcombo, perfect, good, bad, miss, duration, played, mods)
+   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT DO NOTHING`,
 );
 
 /**
  * Songs a player finished, one JSON object per line as the game sends them. Sending one again changes nothing. Levels
- * the site doesn't rank (the game's Legacy charts) are skipped.
+ * the site doesn't rank (the game's Legacy charts) are skipped, and so are modifiers it doesn't know: the game drops
+ * a whole batch that's refused.
  */
 export function addPlays(key: Uint8Array, text: string): number {
   const lines = text.split("\n").filter(Boolean);
@@ -92,8 +103,10 @@ export function addPlays(key: Uint8Array, text: string): number {
       return value;
     };
     const level = String(p.level);
-    if (!LEVELS.includes(level as LevelName)) return [];
+    const mods = Number(p.mods ?? 0);
+    if (!LEVELS.includes(level as LevelName) || !validMods(mods, 0)) return [];
     return {
+      mods,
       song: canonicalSongId(String(p.song).replace(/\.0$/, "")),
       level,
       score: n("score"),
@@ -122,6 +135,7 @@ export function addPlays(key: Uint8Array, text: string): number {
         p.miss,
         p.duration,
         p.played,
+        p.mods,
       );
   })();
   return plays.length;
@@ -202,14 +216,15 @@ const recentOf = sqlite.prepare<
     bad: number;
     miss: number;
     played: number;
+    mods: number;
     replay: string | null;
     timing: number | null;
   },
   [Uint8Array, number, number]
 >(
-  `SELECT p.song, p.level, p.score, p.accuracy, p.bad, p.miss, p.played, r.sha256 AS replay, r.timing
+  `SELECT p.song, p.level, p.score, p.accuracy, p.bad, p.miss, p.played, p.mods, r.sha256 AS replay, r.timing
    FROM plays p LEFT JOIN replays r ON r.sha256 = (SELECT sha256 FROM replays WHERE key = p.key AND song = p.song
-    AND level = p.level AND score = p.score AND status = 'verified' LIMIT 1)
+    AND level = p.level AND score = p.score AND mods = p.mods AND status = 'verified' LIMIT 1)
    WHERE p.key = ? ORDER BY p.played DESC LIMIT ? OFFSET ?`,
 );
 const activityOf = sqlite.prepare<
@@ -234,6 +249,8 @@ function recentPlays(key: Uint8Array, offset: number, limit: number): Page<Playe
     song: play.song,
     level: play.level,
     score: play.score,
+    mods: play.mods,
+    total: totalOf(play.score, play.mods),
     accuracy: play.accuracy,
     timing: play.timing,
     fc: play.bad + play.miss === 0,
@@ -274,6 +291,8 @@ export function profilePage(id: string): PlayerProfile | undefined {
         song: best.song,
         level: best.level,
         score: best.score,
+        mods: 0,
+        total: best.score,
         accuracy: best.accuracy,
         timing: best.timing,
         fc: best.fc === 1,

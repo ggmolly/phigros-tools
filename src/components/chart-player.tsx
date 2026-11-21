@@ -1,5 +1,6 @@
 import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import { useT } from "../i18n";
+import { Mod, rateOf } from "../modifiers";
 import { type Chart, countUpTo } from "../player/chart";
 import { HitSounds } from "../player/hit-sounds";
 import { type Art, drawHud, drawScene, loadArt, type Play } from "../player/render";
@@ -55,7 +56,10 @@ export function ChartPlayer({
   const scrub = useRef<HTMLInputElement>(null);
   const scrubBox = useRef<HTMLDivElement>(null);
   const elapsed = useRef<HTMLSpanElement>(null);
-  const clock = useRef({ base: 0, wall: 0, playing: false, rate: 1 });
+  // a replay played with Half Time or Nightcore runs at their speed, under the viewer's own, its pitch following
+  const mods = play?.mods ?? 0;
+  const base = rateOf(mods);
+  const clock = useRef({ base: 0, wall: 0, playing: false, rate: base });
   const audio = useRef<HTMLAudioElement>(null);
   const [volume, setVolume] = useState(savedVolume);
   const [hitSounds] = useState(() => {
@@ -104,7 +108,8 @@ export function ChartPlayer({
   useEffect(() => {
     const song = new Audio(music);
     song.volume = volume;
-    song.defaultPlaybackRate = rate;
+    song.defaultPlaybackRate = rate * base;
+    song.preservesPitch = base === 1;
     song.onloadedmetadata = () => setAudioDuration(song.duration);
     song.onended = () => setPlaying(false);
     audio.current = song;
@@ -166,6 +171,14 @@ export function ChartPlayer({
           i++
         )
           hitSounds.play(hits[i]!.type);
+      // Nightcore's drums, a half beat apart from the chart's start, at the first line's tempo (halved from 300)
+      if (mods & Mod.NC && clock.current.playing && t > prev && t - prev < 0.25) {
+        let bpm = chart.lines[0]!.bpm;
+        while (bpm >= 300) bpm /= 2;
+        const half = 30 / bpm;
+        for (let i = Math.max(0, Math.floor(prev / half) + 1); i * half <= t; i++)
+          hitSounds.drum(i);
+      }
       drawScene(ctx, art, chart, t, W, H, play);
       drawHud(ctx, chart, t, duration, W, H, title, level, play);
       overlay?.(ctx, t, W, H);
@@ -177,7 +190,7 @@ export function ChartPlayer({
     };
     tick();
     return () => cancelAnimationFrame(frame);
-  }, [chart, duration, start, title, level, art, hitSounds, overlay, play]);
+  }, [chart, duration, start, title, level, art, hitSounds, overlay, play, mods]);
 
   const toggle = () => {
     hitSounds.start();
@@ -187,8 +200,8 @@ export function ChartPlayer({
 
   const changeRate = (speed: number) => {
     const next = Math.round(Math.min(2, Math.max(0.1, speed)) * 100) / 100;
-    clock.current = { ...clock.current, base: now(), wall: performance.now(), rate: next };
-    if (audio.current) audio.current.playbackRate = next;
+    clock.current = { ...clock.current, base: now(), wall: performance.now(), rate: next * base };
+    if (audio.current) audio.current.playbackRate = next * base;
     setRate(next);
   };
 
@@ -227,7 +240,8 @@ export function ChartPlayer({
   return (
     <div className="chart-player">
       <div className="chart-player-stage">
-        <img src={background} alt="" />
+        {/* Flashlight plays in the dark */}
+        {!(mods & Mod.FL) && <img src={background} alt="" />}
         <canvas ref={canvas} onClick={toggle} />
       </div>
       <div className="chart-player-transport">

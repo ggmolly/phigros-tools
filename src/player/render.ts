@@ -1,4 +1,6 @@
+import { MOD_COLORS, MOD_PATHS } from "../components/modifiers";
 import { rankOf, score7 } from "../components/primitives";
+import { activeMods, noteAlpha, totalOf } from "../modifiers";
 import { type BlockPose, blockPose, enabled, visible } from "./blocks";
 import {
   type Chart,
@@ -45,6 +47,8 @@ export interface Play {
   timing: { at: number; ms: number; judgement: "perfect" | "good" | "bad"; average: number }[];
   /** the perfect, good and bad windows in ms */
   windows: [number, number, number];
+  /** the modifiers it was played with (src/modifiers.ts) */
+  mods: number;
 }
 
 const NOTE_W = 989;
@@ -65,6 +69,7 @@ const HIT_ALPHA = 0.88;
 const HIT_SCALE = 6;
 
 const HUD_FONT = '"Saira HUD", Saira, sans-serif';
+const MOD = { x: 30, y: 34, size: 54, step: 62 }; // the modifiers' plates in the HUD's 1080 high units
 
 function image(src: string) {
   const img = new Image();
@@ -255,6 +260,10 @@ export function drawScene(
       good,
     });
   };
+  const mods = play?.mods ?? 0;
+  const combo = mods ? play!.state(t).combo : 0;
+  // Hidden and Flashlight show a note by how far it is from its line, in screen heights (unitY is 0.6 of one)
+  const shown = (y: number) => noteAlpha(mods, y * 0.6, combo);
   for (const line of chart.lines) {
     const { x: lx, y: ly, cos, sin } = pose(line, t, W, H);
     const alpha = Math.max(0, Math.min(1, valueAt(segmentAt(line.alpha, t), t)));
@@ -304,6 +313,7 @@ export function drawScene(
         const head = since >= 0 ? 0 : n.fp - floor;
         const tail = (since >= 0 ? -since * n.speed : head) + n.holdSec * n.speed;
         if (head < -0.001 && since < 0) continue; // behind its line: hidden until it comes round
+        ctx.globalAlpha *= shown(head);
         // head just below the hit point, the body stretched up to the release point, the end cap above it.
         const bottom = -head * unitY;
         const top = -tail * unitY;
@@ -322,6 +332,7 @@ export function drawScene(
       }
       const y = (n.fp - floor) * n.speed;
       if (y < -0.001 && !fading) continue;
+      ctx.globalAlpha *= shown(y);
       const name = ({ 1: "tap", 2: "drag", 4: "flick" } as const)[n.type];
       put(art[n.multi ? (`${name}-hl` as const) : name], x, -y * unitY);
     }
@@ -394,8 +405,9 @@ export function drawHud(
   ctx.fillRect(progress - 2 * px, 0, 2 * px, 11 * px); // the progress bar's tip
   ctx.fillRect(30 * px, 1009 * px, 7 * px, 36 * px); // bar before the title
   ctx.textBaseline = "alphabetic";
+  const mods = play?.mods ?? 0;
   text(
-    score7(state ? state.score : (1_000_000 * combo) / chart.noteCount),
+    score7(state ? totalOf(state.score, mods) : (1_000_000 * combo) / chart.noteCount),
     right - 40.5,
     79.2,
     60.6,
@@ -410,6 +422,27 @@ export function drawHud(
     text("combo", right / 2, 117.4, 39, "center", { family: "Saira, sans-serif" });
   }
   if (play && state) drawJudgements(ctx, play, state, t, px, right, text);
+  // the modifiers' plates, top left like the game's
+  activeMods(mods).forEach(([, id, , , kind], i) => {
+    ctx.setTransform(MOD.size * px, 0, 0, MOD.size * px, (MOD.x + i * MOD.step) * px, MOD.y * px);
+    ctx.fillStyle = MOD_COLORS[kind]!;
+    ctx.beginPath();
+    ctx.roundRect(0, 0, 1, 1, 0.15);
+    ctx.fill();
+    ctx.setTransform(
+      (MOD.size * px) / 30,
+      0,
+      0,
+      (MOD.size * px) / 30,
+      (MOD.x + i * MOD.step + MOD.size / 10) * px,
+      (MOD.y + MOD.size / 10) * px,
+    );
+    ctx.strokeStyle = "#06202b";
+    ctx.lineWidth = 2;
+    ctx.lineCap = ctx.lineJoin = "round";
+    ctx.stroke(new Path2D(MOD_PATHS[id]));
+  });
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
 }
 
 const outQuint = (x: number) => 1 - (1 - x) ** 5;

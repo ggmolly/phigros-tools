@@ -4,11 +4,13 @@ import { catalogSong } from "../catalog";
 import { Arrow } from "../components/arrow";
 import { ChartPlayer } from "../components/chart-player";
 import { SiteHeader } from "../components/chrome";
+import { Modifiers, multiplierLabel } from "../components/modifiers";
 import { PlayerTag, PlayStatusLabel, SongHeading, Timing } from "../components/plays";
 import { Difficulty, Rank, score7 } from "../components/primitives";
 import { useFormat, useT } from "../i18n";
-import { CHALLENGE, judge, type Result, WINDOWS } from "../judge";
+import { CHALLENGE, judge, type Result } from "../judge";
 import { useLiveReload } from "../live";
+import { activeMods, modChart, windowsOf } from "../modifiers";
 import { LEVELS, type LevelName } from "../modules";
 import { decodeReplay, type ReplayFrame, type ReplayHeader } from "../pigeon";
 import { type Chart, countUpTo, parseChart, type RawChart } from "../player/chart";
@@ -31,18 +33,24 @@ export const Route = createFileRoute("/replays/$id")({
     if (!info || !song) return {};
     const constant = song.constants[LEVELS.indexOf(info.level as LevelName)] ?? 0;
     const tag = `${info.player.name}#${String(info.player.number).padStart(4, "0")}`;
+    // EZ and HD are also difficulties, so text names the modifiers in full
+    const modifiers = info.mods
+      ? ` · ${activeMods(info.mods)
+          .map(([, , name]) => name)
+          .join(", ")} ${multiplierLabel(info.mods)}`
+      : "";
     return {
       meta: [
         ...pageMeta({
           title: `${tag} · ${song.title} (${info.level})`,
-          description: `${song.artist} · ${info.level} ${constant.toFixed(1)} · ${score7(info.score)} · ${info.accuracy.toFixed(2)}%`,
+          description: `${song.artist} · ${info.level} ${constant.toFixed(1)} · ${score7(info.total)} · ${info.accuracy.toFixed(2)}%${modifiers}`,
           path: `/replays/${params.id}`,
           locale,
           themeColor: info.themeColor,
           image: {
             url: `${SITE}/og/replay/${params.id}.jpg`,
             ...CARDS.replay,
-            alt: `${tag}, ${song.title} (${info.level}), ${score7(info.score)}`,
+            alt: `${tag}, ${song.title} (${info.level}), ${score7(info.total)}`,
           },
         }),
         { name: "robots", content: "noindex" },
@@ -137,7 +145,7 @@ function toPlay(
   raw: RawChart,
   chart: Chart,
   result: Result,
-  challenge: boolean,
+  { challenge, mods }: ReplayHeader,
 ): Play & { hits: Chart["hits"] } {
   const judged: Play["judged"] = new Map();
   const hits: Chart["hits"] = [];
@@ -179,10 +187,10 @@ function toPlay(
     average = average * 0.9 + hit.offset * 1000 * 0.1;
     timing.push({ at: hit.hit ?? hit.t, ms: hit.offset * 1000, judgement: hit.judgement, average });
   }
-  const windows = (challenge ? CHALLENGE : WINDOWS).map(
+  const windows = (challenge ? CHALLENGE : windowsOf(mods)).map(
     (window) => window * 1000,
   ) as Play["windows"];
-  return { judged, state, hits, timing, windows };
+  return { judged, state, hits, timing, windows, mods };
 }
 
 function ReplayPage() {
@@ -208,9 +216,12 @@ function ReplayPage() {
       bytes(`/api/replays/${encodeURIComponent(id)}`),
       bytes(`/chart-data/${encodeURIComponent(info.song)}/${info.level}.phc`),
     ])
-      .then(([replay, data]) => {
-        setReplay(decodeReplay(new Uint8Array(replay), true));
-        const raw = decodePhc(new Uint8Array(data));
+      .then(([file, data]) => {
+        const replay = decodeReplay(new Uint8Array(file), true);
+        const { mods, seed, mirror } = replay.header;
+        // the chart as it was played, for the judge and the picture alike
+        const raw = modChart(decodePhc(new Uint8Array(data)), mods, seed, mirror === 1);
+        setReplay(replay);
         setChart({ raw, parsed: parseChart(raw) });
       })
       .catch((reason: Error) => setError(t.player.loadError(reason.message)));
@@ -229,7 +240,7 @@ function ReplayPage() {
         chart.raw,
         chart.parsed,
         judge(chart.raw, replay.frames, replay.header),
-        replay.header.challenge === 1,
+        replay.header,
       ),
     [replay, chart],
   );
@@ -261,7 +272,13 @@ function ReplayPage() {
               </p>
             </SongHeading>
             <p className="replay-result">
-              <span>{score7(info.score)}</span>
+              <span title={info.mods ? score7(info.score) : undefined}>{score7(info.total)}</span>
+              {info.mods > 0 && (
+                <span className="meta">
+                  {multiplierLabel(info.mods)}
+                  <Modifiers mods={info.mods} />
+                </span>
+              )}
               <span className="meta">{info.accuracy.toFixed(2)}%</span>
               {info.timing !== null && (
                 <span className="meta">

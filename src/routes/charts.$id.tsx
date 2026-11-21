@@ -131,7 +131,7 @@ export const Route = createFileRoute("/charts/$id")({
     const [details, ...rankings] = await Promise.all([
       getSongDetails({ data: params.id }),
       ...songLevels(song.id).map((level) =>
-        getChartPlays({ data: { song: song.id, level, page: 1, verified: false } }),
+        getChartPlays({ data: { song: song.id, level, page: 1, board: 0 } }),
       ),
     ]);
     const tops = songLevels(song.id).map((level, index) => ({

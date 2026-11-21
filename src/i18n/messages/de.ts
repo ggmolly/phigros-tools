@@ -192,6 +192,7 @@ export const de = {
     player: "Spieler",
     played: "Gespielt",
     status: "Status",
+    modifiers: "Modifikatoren",
     replayStatus: {
       verified: "Verifiziert",
       imported: "Importiert",

@@ -193,6 +193,7 @@ export const vi = {
     player: "Người chơi",
     played: "Ngày chơi",
     status: "Trạng thái",
+    modifiers: "Bộ điều chỉnh",
     replayStatus: {
       verified: "Đã xác minh",
       imported: "Đã nhập",

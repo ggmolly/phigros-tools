@@ -100,3 +100,23 @@
 .status-unverified {
   color: var(--negative);
 }
+
+/* The modifiers a score was played with: a plate each in its kind's colour, the glyph cut dark into it. */
+.modifiers {
+  display: inline-flex;
+  gap: 0.1875rem;
+  margin-inline-start: 0.5rem;
+  vertical-align: -0.2em;
+}
+.modifier {
+  width: 1.25em;
+  height: 1.25em;
+  padding: 0.125em;
+  border-radius: 0.1875em;
+  background: var(--tint);
+  fill: none;
+  stroke: #06202b;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

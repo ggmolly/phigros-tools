@@ -18,12 +18,24 @@ export interface PlayerName {
  */
 export type PlayStatus = "verified" | "imported" | "declared";
 
+/**
+ * What a chart's leaderboard counts: 0 for verified replays and imported records, 1 for verified replays only, 2 for
+ * the plays with modifiers, which are verified replays ranked by their total.
+ */
+export type Board = 0 | 1 | 2;
+
+/** A score played with modifiers (src/modifiers.ts): their bits, 0 for none, and the total they give the score. */
+export interface Modded {
+  score: number;
+  mods: number;
+  total: number;
+}
+
 /** A player's best on a chart: an uploaded replay, or an imported record. */
-export interface Play {
+export interface Play extends Modded {
   id: string;
   rank: number;
   player: PlayerName;
-  score: number;
   accuracy: number;
   /** The timing accuracy of its replay (`timingAccuracy` in src/judge.ts), null without one. */
   timing: number | null;
@@ -36,14 +48,13 @@ export interface Play {
 }
 
 /** Who played a replay and what they got, from `GET /api/replays/<id>/info`. */
-export interface ReplayInfo {
+export interface ReplayInfo extends Modded {
   player: PlayerName;
   song: string;
   level: string;
   status: "pending" | "verified" | "unverified";
   /** When it was played, in ms. */
   date: number;
-  score: number;
   accuracy: number;
   /** Its timing accuracy (`timingAccuracy` in src/judge.ts), null until the worker judged it. */
   timing: number | null;
@@ -84,10 +95,9 @@ export interface ChartCount {
 }
 
 /** A chart a player played, as their page lists it. */
-export interface PlayedChart {
+export interface PlayedChart extends Modded {
   song: string;
   level: string;
-  score: number;
   accuracy: number;
   /** The timing accuracy of its replay (`timingAccuracy` in src/judge.ts), null without one. */
   timing: number | null;
@@ -185,10 +195,14 @@ export const getReplayInfo = createServerFn({ method: "GET" })
     return info && { ...info, themeColor: accentOf(info.song) };
   });
 
+/** The board a ranking's search asks for. */
+export const boardOf = (search: { verified?: boolean; mods?: boolean }): Board =>
+  search.mods ? 2 : search.verified ? 1 : 0;
+
 // a ranking always answers, nothing back is the server failing. q searches the players
-async function ranking<T>(path: string, page: number, verified: boolean, q = ""): Promise<T> {
+async function ranking<T>(path: string, page: number, board: Board, q = ""): Promise<T> {
   const query = new URLSearchParams({ page: String(page), q });
-  if (verified) query.set("verified", "1");
+  if (board) query.set(board === 2 ? "mods" : "verified", "1");
   const data = await api<T>(`${path}?${query}`);
   if (!data) throw new Error(`${path} failed`);
   return data;
@@ -197,20 +211,22 @@ async function ranking<T>(path: string, page: number, verified: boolean, q = "")
 /** One page of the players by RKS, searched by name or name#0042. */
 export const getPlayerRanking = createServerFn({ method: "GET" })
   .validator((search: { page: number; q: string; verified: boolean }) => search)
-  .handler(({ data }) => ranking<PlayerRanking>("/api/players", data.page, data.verified, data.q));
+  .handler(({ data }) =>
+    ranking<PlayerRanking>("/api/players", data.page, data.verified ? 1 : 0, data.q),
+  );
 
 /** Every chart with plays, most players first. */
 export const getChartCounts = createServerFn({ method: "GET" })
   .validator((verified: boolean) => verified)
-  .handler(({ data }) => ranking<ChartCount[]>("/api/charts", 1, data));
+  .handler(({ data }) => ranking<ChartCount[]>("/api/charts", 1, data ? 1 : 0));
 
 /** One page of a chart's players. */
 export const getChartPlays = createServerFn({ method: "GET" })
-  .validator((search: { song: string; level: string; page: number; verified: boolean }) => search)
+  .validator((search: { song: string; level: string; page: number; board: Board }) => search)
   .handler(({ data }) =>
     ranking<ChartPlays>(
       `/api/charts/${encodeURIComponent(data.song)}/${encodeURIComponent(data.level)}`,
       data.page,
-      data.verified,
+      data.board,
     ),
   );

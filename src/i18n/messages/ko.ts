@@ -191,6 +191,7 @@ export const ko = {
     player: "플레이어",
     played: "날짜",
     status: "상태",
+    modifiers: "모디파이어",
     replayStatus: {
       verified: "검증됨",
       imported: "가져옴",

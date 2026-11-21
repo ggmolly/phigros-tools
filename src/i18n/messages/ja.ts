@@ -191,6 +191,7 @@ export const ja = {
     player: "プレイヤー",
     played: "日時",
     status: "状態",
+    modifiers: "モディファイア",
     replayStatus: {
       verified: "検証済み",
       imported: "インポート",

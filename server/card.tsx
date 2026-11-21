@@ -5,8 +5,10 @@
 import satori from "satori";
 import sharp, { type Sharp } from "sharp";
 import { catalogChartTotals, catalogSong } from "../src/catalog";
+import { MOD_COLORS, MOD_PATHS, multiplierLabel } from "../src/components/modifiers";
 import { avatarUrl, rankOf, score7 } from "../src/components/primitives";
 import { type ChartMetric, calculateRanking, type RankingResult } from "../src/metrics";
+import { activeMods } from "../src/modifiers";
 import type { Mod } from "../src/mods";
 import { countLevels, LEVEL_COLORS, LEVELS, type SongRecord } from "../src/modules";
 import { DEFAULT_PALETTE, FOG_LAYOUT } from "../src/palettes";
@@ -519,7 +521,7 @@ function ReplayCard({ info, avatar }: { info: ReplayInfo; avatar?: string }) {
         fill="rgba(8,4,12,.6)"
         style={{ ...baseline, width: 630, height: 92, marginLeft: 8, paddingLeft: 36 }}
       >
-        <span style={{ fontSize: 64, fontWeight: 300, marginTop: 8 }}>{score7(info.score)}</span>
+        <span style={{ fontSize: 64, fontWeight: 300, marginTop: 8 }}>{score7(info.total)}</span>
         <span style={{ fontSize: 52, marginLeft: 20 }}>
           <RankGlyph score={info.score} fc={info.fc} />
         </span>
@@ -527,6 +529,26 @@ function ReplayCard({ info, avatar }: { info: ReplayInfo; avatar?: string }) {
       <div style={{ ...baseline, marginLeft: 40, gap: 22 }}>
         <span style={{ fontSize: 30 }}>{info.accuracy.toFixed(2)}%</span>
         <span style={{ fontSize: 20, color: DIM }}>Max Combo {info.maxcombo}</span>
+        {info.mods > 0 && (
+          <div style={{ display: "flex", alignItems: "center", alignSelf: "center", gap: 6 }}>
+            {activeMods(info.mods).map(([, id, , , kind]) => (
+              <div
+                key={id}
+                style={{
+                  display: "flex",
+                  padding: 4,
+                  borderRadius: 5,
+                  background: MOD_COLORS[kind],
+                }}
+              >
+                <Icon d={MOD_PATHS[id]} size={26} colour="#06202b" />
+              </div>
+            ))}
+            <span style={{ fontSize: 20, color: DIM, marginLeft: 6 }}>
+              {multiplierLabel(info.mods)}
+            </span>
+          </div>
+        )}
       </div>
       <Para
         fill="rgba(20,18,26,.8)"

@@ -10,8 +10,8 @@ import {
   type PlayedChart,
   type PlayerProfile,
 } from "../plays";
-import { ChartLink, PlayStatusLabel, Timing } from "./plays";
-import { Avatar, Difficulty, Rank, Stat, score7 } from "./primitives";
+import { ChartLink, PlayStatusLabel, Score, Timing } from "./plays";
+import { Avatar, Difficulty, Rank, Stat } from "./primitives";
 
 // a player's public page in parts: their own Overview shows them around what only their save has
 
@@ -110,7 +110,9 @@ function Watch({ replay }: { replay: string | null }) {
 function Result({ play }: { play: PlayedChart }) {
   return (
     <>
-      <span className="num record-score">{score7(play.score)}</span>
+      <span className="num record-score">
+        <Score play={play} />
+      </span>
       <span className="num">{play.accuracy.toFixed(2)}%</span>
       <span className="num">
         <Timing timing={play.timing} />

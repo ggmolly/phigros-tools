@@ -1,7 +1,8 @@
 import { createHash } from "node:crypto";
 import { defineHandler, HTTPError } from "nitro/h3";
 import { canonicalSongId, isLevel } from "../../../src/catalog";
-import { REPLAY_DOMAIN, REPLAY_SIGNED, replayHeader } from "../../../src/pigeon";
+import { validMods } from "../../../src/modifiers";
+import { REPLAY_SIGNED, replayDomain, replayHeader } from "../../../src/pigeon";
 import { topics } from "../../../src/topics";
 import { signed, verifySignature } from "../../auth";
 import { player } from "../../players";
@@ -16,19 +17,16 @@ export default defineHandler(async (event) => {
   if (!found) throw HTTPError.status(403, "Not registered");
   const data = body.subarray(0, -REPLAY_SIGNED);
   const signer = body.subarray(-REPLAY_SIGNED, -64);
-  const message = Buffer.concat([Buffer.from(REPLAY_DOMAIN), data]);
-  if (
-    body.length <= REPLAY_SIGNED ||
-    !Buffer.from(signer).equals(device) ||
-    !verifySignature(device, message, body.subarray(-64))
-  )
-    throw HTTPError.status(400, "Not signed by this key");
   let header: ReturnType<typeof replayHeader>;
   try {
     header = replayHeader(data);
   } catch (error) {
     throw HTTPError.status(400, (error as Error).message);
   }
+  const message = Buffer.concat([Buffer.from(replayDomain(header.version)), data]);
+  if (!Buffer.from(signer).equals(device) || !verifySignature(device, message, body.subarray(-64)))
+    throw HTTPError.status(400, "Not signed by this key");
+  if (!validMods(header.mods, header.challenge)) throw HTTPError.status(400, "Bad modifiers");
   // the game's song ids end in .0, the catalog's don't
   const song = canonicalSongId(header.id.replace(/\.0$/, ""));
   // the worker opens the chart by both: a ranked level, and a song that names a folder (maybe of a game update the

@@ -1,3 +1,4 @@
+import { WINDOWS, windowsOf } from "./modifiers";
 import type { ReplayFrame, ReplayHeader } from "./pigeon";
 import { blocking, mirrorBlock } from "./player/blocks";
 import type { RawChart } from "./player/chart";
@@ -13,9 +14,8 @@ const f = Math.fround;
 const PI = f(Math.PI);
 const C = f(16 / 9); // the aspect charts are laid out for, compared against
 const C2 = 1.7777780294418335; // and divided by
-// perfect, good and bad windows in seconds, normal play. challenge mode narrows them to these plus half the average
-// of the last 10 delta times
-export const WINDOWS = [0.07999999821186066, 0.18000000715255737, 0.2199999988079071];
+// perfect, good and bad windows in seconds: normal play's are the modifiers' (src/modifiers.ts), challenge mode
+// narrows them to these plus half the average of the last 10 delta times
 export const CHALLENGE = [0.03999999910593033, 0.09000000357627869, 0.14000000059604645];
 const NEAR = 0.009999999776482582; // notes this close in time compete by distance
 const TAP_REACH = 1.899999976158142; // world units along the line
@@ -91,13 +91,15 @@ export interface Hit {
 }
 
 /**
- * How close to the beat the notes were hit, from 100 for all exactly on time to 0 for all at the edge of a bad, in
- * normal play's windows so challenge mode compares. Hits without an offset (drags, flicks, misses) are left out.
+ * How close to the beat the notes were hit, from 100 for all exactly on time to 0 for all at the edge of a bad: normal
+ * play's so challenge mode compares, or the wider one Easy played with. Hits without an offset (drags, flicks,
+ * misses) are left out.
  */
-export function timingAccuracy(hits: Hit[]): number | null {
+export function timingAccuracy(hits: Hit[], mods = 0): number | null {
   const timed = hits.filter((hit) => hit.offset !== undefined);
   if (!timed.length) return null;
-  const sum = timed.reduce((total, hit) => total + 1 - Math.abs(hit.offset!) / WINDOWS[2]!, 0);
+  const bad = Math.max(WINDOWS[2], windowsOf(mods)[2]);
+  const sum = timed.reduce((total, hit) => total + 1 - Math.abs(hit.offset!) / bad, 0);
   return (sum / timed.length) * 100;
 }
 
@@ -219,7 +221,7 @@ function eventIndex(list: Segment[], index: number, now: number) {
 
 /** Judges a replay's frames on the chart, like the game did when it was played. */
 export function judge(raw: RawChart, frames: ReplayFrame[], screen: ReplayHeader): Result {
-  let [P, G, B] = WINDOWS as [number, number, number];
+  let [P, G, B] = windowsOf(screen.mods);
   const lastDeltas: number[] = [];
   const aspect = f(screen.width / screen.height);
   const mirror = screen.mirror === 1;

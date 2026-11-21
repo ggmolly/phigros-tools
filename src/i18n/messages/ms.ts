@@ -193,6 +193,7 @@ export const ms = {
     player: "Pemain",
     played: "Dimainkan",
     status: "Status",
+    modifiers: "Pengubah",
     replayStatus: {
       verified: "Disahkan",
       imported: "Diimport",
