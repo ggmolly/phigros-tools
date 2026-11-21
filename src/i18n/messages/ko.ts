@@ -194,12 +194,15 @@ export const ko = {
     replayStatus: {
       verified: "검증됨",
       imported: "가져옴",
+      declared: "신고됨",
       pending: "대기 중",
       unverified: "검증 실패",
     },
     replayStatusHelp: {
       verified: "이 플레이를 확인했으며 일관성이 있습니다.",
-      imported: "플레이어의 게임이 신고한 기록으로, 증명할 리플레이가 없습니다.",
+      imported: "플레이어의 게임이 보낸 기록으로, 증명할 리플레이가 없습니다.",
+      declared:
+        "세이브를 다시 만들기 위해 플레이어가 직접 입력한 기록으로, 게임에서의 플레이가 이와 같거나 넘어설 때까지 순위에 들지 않습니다.",
       pending:
         "아직 확인되지 않았습니다. 게임 업데이트 후에는 phigros.tools가 새 버전을 지원할 때까지 기다립니다.",
       unverified: "터치를 다시 재생해도 기록된 결과가 나오지 않습니다.",
@@ -448,6 +451,8 @@ export const ko = {
     pppNoCode:
       "이 코드는 사용할 수 없습니다. 이미 사용되었거나 10분이 지났습니다. 새 코드를 요청하세요.",
     pppNoProfile: "이 단어들로 만든 phigros.tools 프로필이 없습니다. 각 단어와 순서를 확인하세요.",
+    pppNoName: "먼저 이름을 정하세요. 프로필은 이름이 없거나 GUEST일 수 없습니다.",
+    pppNameFull: "이미 너무 많은 플레이어가 이 이름을 쓰고 있습니다. 다른 이름을 고르세요.",
     pppServer: (status: string) =>
       `phigros.tools가 응답하지 못했습니다(HTTP ${status}). 다시 시도하세요.`,
     pppWord: (word: string) => `“${word}”은(는) 복구 단어가 아닙니다.`,
@@ -553,17 +558,112 @@ export const ko = {
     installNote: "모드는 내 phigros.tools 키로 실행되므로 믿을 수 있는 모드만 추가하세요.",
     bring: "세이브 옮기기",
     bringText:
-      "Phigros++는 빈 세이브로 시작하며, TapTap 클라우드가 더 이상 응답하지 않아 그곳에서 세이브를 가져올 수 없습니다.",
+      "Phigros++는 빈 세이브로 시작하며, TapTap 클라우드가 더 이상 응답하지 않아 그곳에서 세이브를 가져올 수 없습니다. 그래도 phigros.tools는 세이브가 어느 기기에 있든 Phigros++로 옮길 수 있습니다.",
+    source: "소스 코드",
+  },
+  start: {
+    description:
+      "TapTap 클라우드가 더 이상 응답하지 않아 Phigros 세이브는 게임 안에만 남아 있습니다. 세이브가 어디에 있는지 알려 주면 phigros.tools가 Phigros++로 옮기는 방법을 볼 수 있습니다.",
+    cta: "내 세이브 옮기기",
+    option: "게임 안의 세이브",
+    optionDesc: "Phigros++로 옮기기",
+    device: "플레이하던 Phigros는 어디에 있나요?",
+    android: "Android 휴대폰이나 태블릿",
+    ios: "iPhone이나 iPad",
+    gone: "지금은 가지고 있지 않은 기기",
+    root: "그 기기는 루팅되어 있나요?",
+    rooted: "네, 루트 권한이 있습니다",
+    unrooted: "아니요, 또는 잘 모르겠습니다",
+    change: "변경",
+    rootTitle: "Phigros++가 세이브를 복사합니다",
+    rootText:
+      "루트 권한이 있으면 Phigros++가 같은 기기에 있는 Phigros의 세이브를 읽고, 그다음 프로필이 다른 모든 기기로 옮겨 줍니다.",
+    root1: "그 기기에 Phigros++를 설치하세요.",
+    root2:
+      "첫 챕터 화면에서 **Bring your Phigros save over?**라고 묻습니다. **Copy my save**를 선택하고 루트 권한을 허용하세요. 세이브가 복사되면 Phigros++가 종료되므로 다시 여세요.",
+    root3:
+      "**Settings → Profile**을 열고 **Sync to phigros.tools**를 켠 다음, 표시되는 16개 단어를 보관하세요.",
+    root4:
+      "루팅 여부와 관계없이 다른 어떤 기기에서든 Phigros++를 설치하고 **Sign in to my profile**을 선택한 다음 그 단어들을 입력하세요. 그러면 첫 기기에서 업로드한 세이브를 제안합니다.",
+    rootFallback: "기기에서 복사가 되지 않으면 대신 세이브를 다시 만들 수 있습니다.",
+    rebuildTitle: "여기서 세이브 다시 만들기",
+    androidText:
+      "Android는 Phigros의 세이브를 루트만 읽을 수 있는 곳에 보관하고, Phigros++는 별도의 앱이라 이를 복사할 수 없습니다. 게임에 표시되는 내용을 바탕으로 phigros.tools에서 세이브를 다시 만들면 Phigros++가 불러옵니다.",
+    iosText:
+      "Phigros++는 아직 iPhone과 iPad용으로 나오지 않았습니다. 게임에 표시되는 내용을 바탕으로 phigros.tools에서 세이브를 다시 만들 수 있습니다. 세이브는 프로필에서 기다리며, 지금도 어떤 Android 기기에서든 불러올 수 있습니다.",
+    goneText:
+      "세이브는 기기와 함께 사라졌지만, 점수를 기억하거나 스크린샷을 남겨 두었다면 점수는 사라지지 않았습니다. phigros.tools에서 세이브를 다시 만들면 Phigros++가 불러옵니다.",
+    rebuild1: "점수를 입력한 다음 아바타, 과제 모드 랭크, 해금했던 항목을 고르세요.",
+    rebuild2: "phigros.tools가 주는 16개 단어를 보관하세요. 이 단어들이 프로필의 비밀번호입니다.",
+    rebuild3:
+      "Android 기기에 Phigros++를 설치하고 **Settings → Profile**을 연 다음 **Sign in to my profile**을 선택하고 그 단어들을 입력하세요. 그러면 세이브를 옮겨 올지 제안합니다.",
+    declared:
+      "입력한 점수는 프로필에 “신고됨”으로 표시되며, Phigros++에서 플레이해 달성하면 리더보드에 반영됩니다.",
+    rebuild: "내 세이브 다시 만들기",
+    install: "Phigros++ 받기",
     browser: "전에 phigros.tools에서 세이브를 연 적이 있다면",
     browserText:
       "이 브라우저에 사본이 남아 있습니다. Phigros++에서 로그인하고, 그 세이브를 연 다음 **Phigros++로 보내기**를 선택하세요. 다음에 시작할 때 게임이 불러오기를 제안합니다.",
-    device: "이미 다른 기기에서 Phigros++를 쓰고 있다면",
-    deviceText:
+    other: "이미 다른 기기에서 Phigros++를 쓰고 있다면",
+    otherText:
       "그 기기에서 **Sign in another device**를 선택한 다음, 새 기기에서 **Sign in to my profile**을 선택하고 그 코드나 16개 단어를 입력하세요. 그러면 Phigros++가 다른 기기에서 업로드한 세이브를 제안합니다.",
-    game: "세이브가 게임 안에만 있다면",
-    gameText:
-      "Phigros++는 Phigros 옆에 별도의 앱으로 설치되므로, 세이브는 원래 게임에 그대로 남고 그곳에서 계속 플레이할 수 있습니다. 지금은 Phigros++가 자체 세이브로 시작하지만, 세이브를 옮겨 올 방법을 준비하고 있습니다.",
-    source: "소스 코드",
+  },
+  rebuild: {
+    title: "세이브 다시 만들기",
+    description:
+      "게임에 표시되는 점수를 가장 잘한 채보부터 입력하세요. 상위 27개 채보와 Phi 상위 3개 채보가 RKS를 결정하므로, 이들을 입력하면 게임의 RKS와 같아집니다.",
+    editing:
+      "프로필의 세이브에서 시작합니다. 보내면 게임에서 수락하는 즉시 기기의 세이브를 대체합니다.",
+    charts: "채보",
+    best: "Best 27",
+    phi: "Phi 3",
+    records: "기록",
+    search: "곡 검색",
+    typed: "입력한 것만",
+    score: "점수",
+    accuracy: "정확도",
+    fc: "Full Combo",
+    scoreOf: (chart: string) => `${chart}의 점수`,
+    accuracyOf: (chart: string) => `${chart}의 정확도`,
+    fcOf: (chart: string) => `${chart}의 Full Combo`,
+    more: (count: number) => `${count}개 더 보기`,
+    profile: "프로필",
+    avatar: "아바타",
+    background: "배경",
+    none: "기본값",
+    intro: "자기소개",
+    challenge: "과제 모드",
+    challengeNone: "플레이한 적 없음",
+    level: "레벨",
+    unlocks: "해금",
+    unlocksText:
+      "점수를 입력한 곡은 아바타와 배경처럼 점수와 함께 해금됩니다. 그 밖에 가지고 있던 것을 모두 추가하세요. Data는 설정할 수 없으며, 다시 만든 세이브는 Data 없이 시작합니다.",
+    kinds: ["곡", "컬렉션", "일러스트", "아바타"],
+    picked: (count: number, total: number) => `${total}개 중 ${count}개`,
+    all: "모두 선택",
+    clear: "선택 해제",
+    finish: "프로필에 보관하기",
+    name: "이름",
+    nameHelp: "phigros.tools와 게임에 표시되며, 게임에서 나중에 바꿀 수 있습니다.",
+    words: "phigros.tools 비밀번호",
+    wordsText:
+      "이 16개 단어는 phigros.tools 프로필의 비밀번호입니다. 이 순서대로 적어 두거나 이 화면을 사진으로 찍고, 다른 사람에게 알리지 마세요. 기기에서 로그인할 때 필요하며, 누구도 대신 복구해 줄 수 없습니다.",
+    saved: "저장했습니다",
+    create: "내 프로필 만들기",
+    send: "Phigros++로 보내기",
+    working: "저장하는 중…",
+    empty: "먼저 점수를 하나 이상 입력하세요.",
+    done: "세이브가 프로필에 있습니다",
+    sent: "세이브를 보냈습니다",
+    sentText:
+      "Phigros++를 여세요. 기기에 있는 세이브 대신 이 세이브를 불러올지 묻고, 무엇이 바뀌는지 알려줍니다.",
+    done1: "Android 기기에 Phigros++를 설치하세요.",
+    done2:
+      "**Settings → Profile**을 열고 **Sign in to my profile**을 선택한 다음 16개 단어를 입력하세요.",
+    done3: "**Bring your save over?**를 수락한 다음 Phigros++를 다시 여세요.",
+    open: "내 세이브 열기",
+    reset: "처음부터 다시 시작",
+    resetConfirm: "여기에 입력한 내용을 모두 지우고 빈 세이브에서 다시 시작할까요?",
   },
   history: {
     trend: (count: number, from: string, to: string) =>

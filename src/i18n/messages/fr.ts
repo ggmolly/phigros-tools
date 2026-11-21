@@ -195,12 +195,15 @@ export const fr = {
     replayStatus: {
       verified: "Vérifiée",
       imported: "Importé",
+      declared: "Déclaré",
       pending: "En attente",
       unverified: "Non vérifiée",
     },
     replayStatusHelp: {
       verified: "Nous avons vérifié cette partie et elle est cohérente.",
-      imported: "Déclaré par le jeu du joueur, sans replay pour le prouver.",
+      imported: "Envoyé par le jeu du joueur, sans replay pour le prouver.",
+      declared:
+        "Saisi par le joueur pour reconstituer sa sauvegarde, et non classé tant qu’une partie jouée dans le jeu ne l’égale ou ne le dépasse pas.",
       pending:
         "Pas encore vérifiée. Après une mise à jour du jeu, elle attend que phigros.tools connaisse la nouvelle version.",
       unverified: "Rejouer les touches ne donne pas le résultat enregistré.",
@@ -458,6 +461,9 @@ export const fr = {
       "Ce code ne fonctionne pas, car il a déjà servi ou date de plus de 10 minutes. Demandez-en un nouveau.",
     pppNoProfile:
       "Aucun profil phigros.tools n’a été créé avec ces mots. Vérifiez chaque mot et leur ordre.",
+    pppNoName:
+      "Choisissez d’abord un nom : un profil ne peut pas être sans nom ni s’appeler GUEST.",
+    pppNameFull: "Trop de joueurs portent déjà ce nom. Choisissez-en un autre.",
     pppServer: (status: string) => `phigros.tools n’a pas pu répondre (HTTP ${status}). Réessayez.`,
     pppWord: (word: string) => `« ${word} » ne fait pas partie des mots de récupération.`,
     pppWords: (count: string) =>
@@ -565,17 +571,115 @@ export const fr = {
       "Les mods tournent avec votre clé phigros.tools, n’ajoutez donc que des mods de confiance.",
     bring: "Récupérer votre save",
     bringText:
-      "Phigros++ démarre avec une save vide, et comme le cloud de TapTap ne répond plus, il ne peut pas y récupérer la vôtre.",
+      "Phigros++ démarre avec une save vide, et comme le cloud de TapTap ne répond plus, il ne peut pas y récupérer la vôtre. phigros.tools peut tout de même y amener votre save, quel que soit l’appareil où elle se trouve.",
+    source: "Code source",
+  },
+  start: {
+    description:
+      "Votre save Phigros reste dans le jeu maintenant que le cloud de TapTap ne répond plus. Indiquez où se trouve la vôtre pour voir comment phigros.tools l’amène dans Phigros++.",
+    cta: "Récupérer ma save",
+    option: "Save dans le jeu",
+    optionDesc: "L’amener dans Phigros++",
+    device: "Où se trouve le Phigros sur lequel vous avez joué ?",
+    android: "Sur un téléphone ou une tablette Android",
+    ios: "Sur un iPhone ou un iPad",
+    gone: "Sur un appareil que je n’ai plus",
+    root: "Cet appareil est-il rooté ?",
+    rooted: "Oui, il a l’accès root",
+    unrooted: "Non, ou je ne sais pas",
+    change: "Modifier",
+    rootTitle: "Phigros++ copie votre save",
+    rootText:
+      "Avec l’accès root, Phigros++ lit la save du Phigros installé sur le même appareil, et votre profil la transporte ensuite vers tous les autres appareils.",
+    root1: "Installez Phigros++ sur cet appareil.",
+    root2:
+      "Sur son premier écran des chapitres, il demande **Bring your Phigros save over?** Choisissez **Copy my save** et autorisez l’accès root. Phigros++ se ferme une fois la save copiée, rouvrez-le donc.",
+    root3:
+      "Ouvrez **Settings → Profile**, activez **Sync to phigros.tools** et conservez les 16 mots affichés.",
+    root4:
+      "Sur n’importe quel autre appareil, rooté ou non, installez Phigros++, choisissez **Sign in to my profile** et saisissez les mots. Il propose la save envoyée par votre premier appareil.",
+    rootFallback:
+      "Si la copie ne fonctionne pas sur votre appareil, vous pouvez reconstituer votre save à la place.",
+    rebuildTitle: "Reconstituez votre save ici",
+    androidText:
+      "Android garde la save de Phigros là où seul root peut la lire, et Phigros++ est une app séparée, il ne peut donc pas la copier. Vous pouvez la reconstituer sur phigros.tools à partir de ce que votre jeu affiche, et Phigros++ la charge ensuite.",
+    iosText:
+      "Phigros++ n’est pas encore sorti sur iPhone et iPad. Vous pouvez reconstituer votre save sur phigros.tools à partir de ce que votre jeu affiche : elle attend sur votre profil et se charge dès aujourd’hui sur n’importe quel appareil Android.",
+    goneText:
+      "La save est partie avec l’appareil, mais pas vos scores si vous vous en souvenez ou si vous avez gardé des captures d’écran. Vous pouvez reconstituer la save sur phigros.tools, et Phigros++ la charge ensuite.",
+    rebuild1:
+      "Saisissez vos scores, puis choisissez votre avatar, votre rang en Mode Défi et ce que vous aviez débloqué.",
+    rebuild2:
+      "Conservez les 16 mots que phigros.tools vous donne : ils sont le mot de passe de votre profil.",
+    rebuild3:
+      "Installez Phigros++ sur un appareil Android, ouvrez **Settings → Profile**, choisissez **Sign in to my profile** et saisissez les mots. Il propose de récupérer votre save.",
+    declared:
+      "Les scores que vous saisissez apparaissent comme Déclaré sur votre profil, et comptent aux classements une fois que vous les avez joués dans Phigros++.",
+    rebuild: "Reconstituer ma save",
+    install: "Obtenir Phigros++",
     browser: "Vous avez déjà ouvert votre save sur phigros.tools",
     browserText:
       "Ce navigateur en a gardé une copie. Connectez-vous depuis Phigros++, ouvrez cette save et choisissez **Envoyer à Phigros++** : le jeu propose de la charger à son prochain lancement.",
-    device: "Vous utilisez déjà Phigros++ sur un autre appareil",
-    deviceText:
+    other: "Vous utilisez déjà Phigros++ sur un autre appareil",
+    otherText:
       "Choisissez **Sign in another device** sur celui-ci, puis **Sign in to my profile** sur le nouveau et saisissez son code ou vos 16 mots. Phigros++ propose alors la save envoyée par votre autre appareil.",
-    game: "Votre save n’existe que dans le jeu",
-    gameText:
-      "Phigros++ s’installe comme une app séparée à côté de Phigros : votre save reste dans le jeu d’origine et vous pouvez continuer à y jouer. Pour l’instant, Phigros++ commence avec sa propre save, et nous travaillons à un moyen d’y transférer la vôtre.",
-    source: "Code source",
+  },
+  rebuild: {
+    title: "Reconstituer votre save",
+    description:
+      "Saisissez les scores affichés par votre jeu, en commençant par vos meilleurs charts : les 27 meilleurs et les 3 meilleurs Phi composent votre RKS, qui correspond donc à celui du jeu une fois qu’ils sont saisis.",
+    editing:
+      "Vous partez de la save de votre profil. L’envoyer remplace la save de votre appareil une fois que vous l’acceptez dans le jeu.",
+    charts: "Charts",
+    best: "Best 27",
+    phi: "Phi 3",
+    records: "Scores",
+    search: "Rechercher des morceaux",
+    typed: "Saisis uniquement",
+    score: "Score",
+    accuracy: "Précision",
+    fc: "Full Combo",
+    scoreOf: (chart: string) => `Score de ${chart}`,
+    accuracyOf: (chart: string) => `Précision de ${chart}`,
+    fcOf: (chart: string) => `Full Combo sur ${chart}`,
+    more: (count: number) => `Voir ${count} de plus`,
+    profile: "Profil",
+    avatar: "Avatar",
+    background: "Arrière-plan",
+    none: "Par défaut",
+    intro: "Présentation",
+    challenge: "Mode Défi",
+    challengeNone: "Jamais joué",
+    level: "Niveau",
+    unlocks: "Déblocages",
+    unlocksText:
+      "Un morceau pour lequel vous avez saisi un score est débloqué avec lui, comme votre avatar et votre arrière-plan. Ajoutez tout ce que vous aviez d’autre. Les Data ne peuvent pas être définies : une save reconstituée n’en a aucune au départ.",
+    kinds: ["Morceaux", "Collection", "Illustrations", "Avatars"],
+    picked: (count: number, total: number) => `${count} sur ${total}`,
+    all: "Tout sélectionner",
+    clear: "Tout désélectionner",
+    finish: "La garder sur un profil",
+    name: "Nom",
+    nameHelp: "Affiché sur phigros.tools et dans le jeu, où vous pourrez le changer plus tard.",
+    words: "Votre mot de passe phigros.tools",
+    wordsText:
+      "Ces 16 mots sont le mot de passe de votre profil phigros.tools. Notez-les dans cet ordre ou prenez cet écran en photo, et gardez-les pour vous : vous en avez besoin pour vous connecter sur votre appareil, et personne ne peut les récupérer à votre place.",
+    saved: "Je les ai conservés",
+    create: "Créer mon profil",
+    send: "Envoyer à Phigros++",
+    working: "Enregistrement…",
+    empty: "Saisissez d’abord au moins un score.",
+    done: "Votre save est sur votre profil",
+    sent: "Votre save est en route",
+    sentText:
+      "Ouvrez Phigros++ : il propose de charger cette save à la place de celle de l’appareil, et indique ce qu’elle remplace.",
+    done1: "Installez Phigros++ sur un appareil Android.",
+    done2:
+      "Ouvrez **Settings → Profile**, choisissez **Sign in to my profile** et saisissez vos 16 mots.",
+    done3: "Acceptez **Bring your save over?**, puis rouvrez Phigros++.",
+    open: "Ouvrir ma save",
+    reset: "Recommencer",
+    resetConfirm: "Effacer tout ce qui a été saisi ici et repartir d’une save vide ?",
   },
   history: {
     trend: (count: number, from: string, to: string) =>

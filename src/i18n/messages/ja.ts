@@ -194,12 +194,15 @@ export const ja = {
     replayStatus: {
       verified: "検証済み",
       imported: "インポート",
+      declared: "申告",
       pending: "確認待ち",
       unverified: "未検証",
     },
     replayStatusHelp: {
       verified: "このプレイを確認し、整合性が取れていました。",
-      imported: "プレイヤーのゲームが申告した記録で、裏付けるリプレイはありません。",
+      imported: "プレイヤーのゲームが送信した記録で、裏付けるリプレイはありません。",
+      declared:
+        "セーブデータを作り直すためにプレイヤーが入力した記録で、ゲームでのプレイが同じかそれ以上になるまでランキングには入りません。",
       pending:
         "まだ確認されていません。ゲームのアップデート後は、phigros.tools が新しいバージョンに対応するまで待ちます。",
       unverified: "タッチを再生しても記録された結果になりません。",
@@ -454,6 +457,9 @@ export const ja = {
       "このコードは使えません。すでに使用済みか、発行から 10 分以上経っています。新しいコードを発行してください。",
     pppNoProfile:
       "この単語で作られた phigros.tools のプロフィールはありません。各単語とその順番を確認してください。",
+    pppNoName:
+      "先に名前を決めてください。プロフィールは名前なしや GUEST という名前にはできません。",
+    pppNameFull: "この名前はすでに多くのプレイヤーが使っています。別の名前を選んでください。",
     pppServer: (status: string) =>
       `phigros.tools から応答がありませんでした（HTTP ${status}）。もう一度お試しください。`,
     pppWord: (word: string) => `「${word}」はリカバリーワードではありません。`,
@@ -562,17 +568,112 @@ export const ja = {
       "Mod はあなたの phigros.tools の鍵で動くので、信頼できる Mod だけを追加してください。",
     bring: "セーブを引き継ぐ",
     bringText:
-      "Phigros++ は空のセーブで始まり、TapTap のクラウドはもう応答しないため、そこからセーブを取得することはできません。",
+      "Phigros++ は空のセーブで始まり、TapTap のクラウドはもう応答しないため、そこからセーブを取得することはできません。それでも phigros.tools なら、セーブがどのデバイスにあっても Phigros++ に移せます。",
+    source: "ソースコード",
+  },
+  start: {
+    description:
+      "TapTap のクラウドが応答しなくなったため、Phigros のセーブはゲームの中に残ったままです。セーブがどこにあるかを選ぶと、phigros.tools がそれを Phigros++ に移す方法を確認できます。",
+    cta: "セーブを引き継ぐ",
+    option: "ゲーム内のセーブ",
+    optionDesc: "Phigros++ に移す",
+    device: "プレイしていた Phigros はどこにありますか？",
+    android: "Android のスマートフォンかタブレット",
+    ios: "iPhone か iPad",
+    gone: "もう手元にないデバイス",
+    root: "そのデバイスは root 化されていますか？",
+    rooted: "はい、root 権限があります",
+    unrooted: "いいえ、またはわかりません",
+    change: "変更",
+    rootTitle: "Phigros++ がセーブをコピーします",
+    rootText:
+      "root 権限があれば、Phigros++ は同じデバイスにある Phigros のセーブを読み取り、その後プロフィールがほかのすべてのデバイスへ届けます。",
+    root1: "そのデバイスに Phigros++ をインストールします。",
+    root2:
+      "最初のチャプター画面で **Bring your Phigros save over?** と尋ねられます。**Copy my save** を選び、root 権限を許可してください。セーブのコピーが終わると Phigros++ は終了するので、もう一度開いてください。",
+    root3:
+      "**Settings → Profile** を開き、**Sync to phigros.tools** をオンにして、表示される 16 語を控えておきます。",
+    root4:
+      "ほかのデバイスでは、root 化の有無にかかわらず、Phigros++ をインストールして **Sign in to my profile** を選び、その単語を入力します。すると最初のデバイスがアップロードしたセーブを提案します。",
+    rootFallback: "お使いのデバイスでコピーがうまくいかない場合は、代わりにセーブを作り直せます。",
+    rebuildTitle: "ここでセーブを作り直す",
+    androidText:
+      "Android は Phigros のセーブを root でしか読めない場所に保存していて、Phigros++ は別のアプリなので、コピーできません。ゲームに表示される内容をもとに phigros.tools でセーブを作り直すと、Phigros++ がそれを読み込みます。",
+    iosText:
+      "Phigros++ はまだ iPhone と iPad 向けには出ていません。ゲームに表示される内容をもとに phigros.tools でセーブを作り直せます。セーブはプロフィールで待機し、Android デバイスなら今すぐ読み込めます。",
+    goneText:
+      "セーブはデバイスと一緒に失われましたが、スコアを覚えているかスクリーンショットを残していれば、スコアは失われていません。phigros.tools でセーブを作り直すと、Phigros++ がそれを読み込みます。",
+    rebuild1: "スコアを入力し、アバター、課題モードのランク、解放済みのものを選びます。",
+    rebuild2:
+      "phigros.tools が表示する 16 語を控えておいてください。これがプロフィールのパスワードです。",
+    rebuild3:
+      "Android デバイスに Phigros++ をインストールし、**Settings → Profile** を開いて **Sign in to my profile** を選び、その単語を入力します。するとセーブの引き継ぎを提案します。",
+    declared:
+      "入力したスコアはプロフィールに「申告」と表示され、Phigros++ でプレイして出すとランキングに反映されます。",
+    rebuild: "セーブを作り直す",
+    install: "Phigros++ を入手",
     browser: "以前 phigros.tools でセーブを開いたことがある場合",
     browserText:
       "このブラウザにコピーが残っています。Phigros++ からサインインし、そのセーブを開いて **Phigros++ に送る** を選んでください。次回の起動時にゲームが読み込みを提案します。",
-    device: "すでに別のデバイスで Phigros++ を使っている場合",
-    deviceText:
+    other: "すでに別のデバイスで Phigros++ を使っている場合",
+    otherText:
       "そのデバイスで **Sign in another device** を選び、新しいデバイスで **Sign in to my profile** を選んで、そのコードか 16 語を入力してください。すると Phigros++ が、もう一方のデバイスがアップロードしたセーブを提案します。",
-    game: "セーブがゲームの中にしかない場合",
-    gameText:
-      "Phigros++ は Phigros とは別のアプリとしてインストールされるので、セーブは元のゲームに残り、そちらで引き続き遊べます。今のところ Phigros++ は独自のセーブで始まりますが、あなたのセーブを移す方法を準備中です。",
-    source: "ソースコード",
+  },
+  rebuild: {
+    title: "セーブを作り直す",
+    description:
+      "ゲームに表示されるスコアを、ベストの譜面から順に入力してください。上位 27 譜面と Phi の上位 3 譜面で RKS が決まるので、それらを入力すればゲームの RKS と一致します。",
+    editing:
+      "プロフィールのセーブをもとに始めます。送信すると、ゲームで承認した時点でデバイスのセーブが置き換わります。",
+    charts: "譜面",
+    best: "Best 27",
+    phi: "Phi 3",
+    records: "記録",
+    search: "楽曲を検索",
+    typed: "入力済みのみ",
+    score: "スコア",
+    accuracy: "精度",
+    fc: "Full Combo",
+    scoreOf: (chart: string) => `${chart} のスコア`,
+    accuracyOf: (chart: string) => `${chart} の精度`,
+    fcOf: (chart: string) => `${chart} の Full Combo`,
+    more: (count: number) => `さらに ${count} 件表示`,
+    profile: "プロフィール",
+    avatar: "アバター",
+    background: "背景",
+    none: "デフォルト",
+    intro: "自己紹介",
+    challenge: "課題モード",
+    challengeNone: "未プレイ",
+    level: "レベル",
+    unlocks: "解放",
+    unlocksText:
+      "スコアを入力した楽曲は、アバターや背景と同じく、入力と同時に解放されます。ほかに持っていたものがあれば追加してください。Data は設定できず、作り直したセーブは Data なしで始まります。",
+    kinds: ["楽曲", "コレクション", "イラスト", "アバター"],
+    picked: (count: number, total: number) => `${count} / ${total}`,
+    all: "すべて選択",
+    clear: "選択を解除",
+    finish: "プロフィールに保存する",
+    name: "名前",
+    nameHelp: "phigros.tools とゲームに表示され、ゲームではあとから変更できます。",
+    words: "phigros.tools のパスワード",
+    wordsText:
+      "この 16 語は phigros.tools プロフィールのパスワードです。この順番どおりに書き留めるか、この画面を写真に撮って、他人には見せないでください。デバイスでサインインするときに必要で、誰も代わりに復元することはできません。",
+    saved: "保存しました",
+    create: "プロフィールを作成",
+    send: "Phigros++ に送る",
+    working: "保存中…",
+    empty: "先にスコアを 1 つ以上入力してください。",
+    done: "セーブはプロフィールにあります",
+    sent: "セーブを送信しました",
+    sentText:
+      "Phigros++ を開いてください。デバイスのセーブの代わりにこのセーブを読み込むか確認され、何が置き換わるかも表示されます。",
+    done1: "Android デバイスに Phigros++ をインストールします。",
+    done2: "**Settings → Profile** を開き、**Sign in to my profile** を選んで 16 語を入力します。",
+    done3: "**Bring your save over?** を承認し、Phigros++ をもう一度開きます。",
+    open: "セーブを開く",
+    reset: "最初からやり直す",
+    resetConfirm: "ここに入力した内容をすべて消去して、空のセーブからやり直しますか？",
   },
   history: {
     trend: (count: number, from: string, to: string) =>

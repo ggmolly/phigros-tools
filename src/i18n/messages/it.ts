@@ -194,12 +194,15 @@ export const it = {
     replayStatus: {
       verified: "Verificata",
       imported: "Importato",
+      declared: "Dichiarato",
       pending: "In attesa",
       unverified: "Non verificata",
     },
     replayStatusHelp: {
       verified: "Abbiamo controllato questa partita ed è coerente.",
-      imported: "Dichiarato dal gioco del giocatore, senza replay che lo provi.",
+      imported: "Inviato dal gioco del giocatore, senza replay che lo provi.",
+      declared:
+        "Inserito dal giocatore per ricostruire il salvataggio, e non in classifica finché una partita dal gioco non lo eguaglia o lo supera.",
       pending:
         "Non ancora controllata. Dopo un aggiornamento del gioco, attende che phigros.tools conosca la nuova versione.",
       unverified: "Rigiocando i tocchi non si ottiene il risultato registrato.",
@@ -455,6 +458,8 @@ export const it = {
       "Questo codice non funziona perché è già stato usato o ha più di 10 minuti. Chiedine uno nuovo.",
     pppNoProfile:
       "Nessun profilo phigros.tools è stato creato con queste parole. Controlla ogni parola e il loro ordine.",
+    pppNoName: "Scegli prima un nome: un profilo non può restare senza nome né chiamarsi GUEST.",
+    pppNameFull: "Troppi giocatori hanno già questo nome. Scegline un altro.",
     pppServer: (status: string) =>
       `phigros.tools non è riuscito a rispondere (HTTP ${status}). Riprova.`,
     pppWord: (word: string) => `“${word}” non è una delle parole di recupero.`,
@@ -560,17 +565,115 @@ export const it = {
       "Le mod girano con la tua chiave phigros.tools, quindi aggiungi solo mod di cui ti fidi.",
     bring: "Porta con te il salvataggio",
     bringText:
-      "Phigros++ parte con un salvataggio vuoto e, dato che il cloud di TapTap non risponde più, non può recuperare il tuo da lì.",
+      "Phigros++ parte con un salvataggio vuoto e, dato che il cloud di TapTap non risponde più, non può recuperare il tuo da lì. phigros.tools può comunque portarci il tuo salvataggio, su qualunque dispositivo si trovi.",
+    source: "Codice sorgente",
+  },
+  start: {
+    description:
+      "Il tuo salvataggio di Phigros resta dentro il gioco ora che il cloud di TapTap non risponde più. Indica dove si trova il tuo per vedere come phigros.tools lo porta in Phigros++.",
+    cta: "Trasferisci il mio salvataggio",
+    option: "Salvataggio nel gioco",
+    optionDesc: "Portalo in Phigros++",
+    device: "Dove si trova il Phigros su cui hai giocato?",
+    android: "Su un telefono o un tablet Android",
+    ios: "Su un iPhone o un iPad",
+    gone: "Su un dispositivo che non ho più",
+    root: "Quel dispositivo ha il root?",
+    rooted: "Sì, ha l’accesso root",
+    unrooted: "No, oppure non lo so con certezza",
+    change: "Cambia",
+    rootTitle: "Phigros++ copia il tuo salvataggio",
+    rootText:
+      "Con l’accesso root, Phigros++ legge il salvataggio del Phigros sullo stesso dispositivo, e il tuo profilo lo porta poi su tutti gli altri dispositivi.",
+    root1: "Installa Phigros++ su quel dispositivo.",
+    root2:
+      "Nella sua prima schermata dei capitoli chiede **Bring your Phigros save over?** Scegli **Copy my save** e consenti l’accesso root. Phigros++ si chiude quando il salvataggio è stato copiato, quindi aprilo di nuovo.",
+    root3:
+      "Apri **Settings → Profile**, attiva **Sync to phigros.tools** e conserva le 16 parole che compaiono.",
+    root4:
+      "Su qualsiasi altro dispositivo, con o senza root, installa Phigros++, scegli **Sign in to my profile** e inserisci le parole. Ti propone il salvataggio caricato dal tuo primo dispositivo.",
+    rootFallback:
+      "Se la copia non funziona sul tuo dispositivo, puoi invece ricostruire il tuo salvataggio.",
+    rebuildTitle: "Ricostruisci qui il tuo salvataggio",
+    androidText:
+      "Android tiene il salvataggio di Phigros dove solo root può leggerlo, e Phigros++ è un’app separata, quindi non può copiarlo. Puoi ricostruirlo su phigros.tools a partire da ciò che mostra il tuo gioco, e Phigros++ poi lo carica.",
+    iosText:
+      "Phigros++ non è ancora uscito per iPhone e iPad. Puoi ricostruire il tuo salvataggio su phigros.tools a partire da ciò che mostra il tuo gioco: resta in attesa sul tuo profilo e già oggi si carica su qualsiasi dispositivo Android.",
+    goneText:
+      "Il salvataggio se n’è andato con il dispositivo, ma i tuoi punteggi no, se li ricordi o hai conservato degli screenshot. Puoi ricostruire il salvataggio su phigros.tools, e Phigros++ poi lo carica.",
+    rebuild1:
+      "Inserisci i tuoi punteggi, poi scegli il tuo avatar, il tuo grado nella Modalità Sfida e ciò che avevi sbloccato.",
+    rebuild2: "Conserva le 16 parole che phigros.tools ti dà: sono la password del tuo profilo.",
+    rebuild3:
+      "Installa Phigros++ su un dispositivo Android, apri **Settings → Profile**, scegli **Sign in to my profile** e inserisci le parole. Ti propone di trasferire il tuo salvataggio.",
+    declared:
+      "I punteggi che inserisci compaiono come Dichiarato sul tuo profilo, e contano nelle classifiche una volta che li giochi in Phigros++.",
+    rebuild: "Ricostruisci il mio salvataggio",
+    install: "Ottieni Phigros++",
     browser: "Hai già aperto il tuo salvataggio su phigros.tools",
     browserText:
       "Questo browser ne ha tenuto una copia. Accedi da Phigros++, apri quel salvataggio e scegli **Invia a Phigros++**: al prossimo avvio il gioco propone di caricarlo.",
-    device: "Usi già Phigros++ su un altro dispositivo",
-    deviceText:
+    other: "Usi già Phigros++ su un altro dispositivo",
+    otherText:
       "Scegli **Sign in another device** su quello, quindi **Sign in to my profile** su quello nuovo e inserisci il suo codice o le tue 16 parole. Phigros++ ti propone poi il salvataggio caricato dall’altro dispositivo.",
-    game: "Il tuo salvataggio esiste solo nel gioco",
-    gameText:
-      "Phigros++ si installa come un’app separata accanto a Phigros, quindi il tuo salvataggio resta nel gioco originale e puoi continuare a giocarci lì. Per ora Phigros++ parte con un salvataggio tutto suo, e stiamo lavorando a un modo per trasferire il tuo.",
-    source: "Codice sorgente",
+  },
+  rebuild: {
+    title: "Ricostruisci il tuo salvataggio",
+    description:
+      "Inserisci i punteggi che mostra il tuo gioco, partendo dai tuoi chart migliori: i 27 migliori e i 3 migliori Phi formano il tuo RKS, che quindi coincide con quello del gioco una volta inseriti.",
+    editing:
+      "Si parte dal salvataggio del tuo profilo. Inviandolo, sostituisce il salvataggio sul tuo dispositivo quando lo accetti nel gioco.",
+    charts: "Chart",
+    best: "Best 27",
+    phi: "Phi 3",
+    records: "Record",
+    search: "Cerca brani",
+    typed: "Solo inseriti",
+    score: "Punteggio",
+    accuracy: "Precisione",
+    fc: "Full Combo",
+    scoreOf: (chart: string) => `Punteggio di ${chart}`,
+    accuracyOf: (chart: string) => `Precisione di ${chart}`,
+    fcOf: (chart: string) => `Full Combo su ${chart}`,
+    more: (count: number) => `Mostra altri ${count}`,
+    profile: "Profilo",
+    avatar: "Avatar",
+    background: "Sfondo",
+    none: "Predefinito",
+    intro: "Presentazione",
+    challenge: "Modalità Sfida",
+    challengeNone: "Mai giocata",
+    level: "Livello",
+    unlocks: "Sblocchi",
+    unlocksText:
+      "Un brano per cui hai inserito un punteggio viene sbloccato insieme a esso, come il tuo avatar e il tuo sfondo. Aggiungi tutto il resto che avevi. I Data non si possono impostare: un salvataggio ricostruito parte senza.",
+    kinds: ["Brani", "Collezione", "Illustrazioni", "Avatar"],
+    picked: (count: number, total: number) => `${count} di ${total}`,
+    all: "Seleziona tutto",
+    clear: "Deseleziona tutto",
+    finish: "Conservalo su un profilo",
+    name: "Nome",
+    nameHelp: "Mostrato su phigros.tools e nel gioco, dove potrai cambiarlo in seguito.",
+    words: "La tua password di phigros.tools",
+    wordsText:
+      "Queste 16 parole sono la password del tuo profilo phigros.tools. Scrivile in quest’ordine o fotografa questa schermata, e tienile per te: ti servono per accedere sul tuo dispositivo, e nessuno può recuperarle al posto tuo.",
+    saved: "Le ho salvate",
+    create: "Crea il mio profilo",
+    send: "Invia a Phigros++",
+    working: "Salvataggio in corso…",
+    empty: "Inserisci prima almeno un punteggio.",
+    done: "Il tuo salvataggio è sul tuo profilo",
+    sent: "Il tuo salvataggio è in arrivo",
+    sentText:
+      "Apri Phigros++: propone di caricare questo salvataggio al posto di quello sul dispositivo, e indica cosa sostituisce.",
+    done1: "Installa Phigros++ su un dispositivo Android.",
+    done2:
+      "Apri **Settings → Profile**, scegli **Sign in to my profile** e inserisci le tue 16 parole.",
+    done3: "Accetta **Bring your save over?**, poi apri di nuovo Phigros++.",
+    open: "Apri il mio salvataggio",
+    reset: "Ricomincia",
+    resetConfirm:
+      "Cancellare tutto ciò che è stato inserito qui e ripartire da un salvataggio vuoto?",
   },
   history: {
     trend: (count: number, from: string, to: string) =>

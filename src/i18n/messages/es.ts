@@ -196,12 +196,15 @@ export const es = {
     replayStatus: {
       verified: "Verificada",
       imported: "Importado",
+      declared: "Declarado",
       pending: "Pendiente",
       unverified: "No verificada",
     },
     replayStatusHelp: {
       verified: "Comprobamos esta partida y es coherente.",
-      imported: "Declarado por el juego del jugador, sin repetición que lo demuestre.",
+      imported: "Enviado por el juego del jugador, sin repetición que lo demuestre.",
+      declared:
+        "Escrito por el jugador para reconstruir su partida guardada, y sin clasificar hasta que una partida del juego lo iguale o lo supere.",
       pending:
         "Aún no se ha comprobado. Tras una actualización del juego, espera a que phigros.tools conozca la nueva versión.",
       unverified: "Volver a reproducir los toques no da el resultado registrado.",
@@ -454,6 +457,8 @@ export const es = {
     pppNoCode: "Este código no funciona: ya se usó o tiene más de 10 minutos. Pide uno nuevo.",
     pppNoProfile:
       "Ningún perfil de phigros.tools se creó con estas palabras. Revisa cada palabra y su orden.",
+    pppNoName: "Elige primero un nombre: un perfil no puede quedarse sin nombre ni llamarse GUEST.",
+    pppNameFull: "Demasiados jugadores tienen ya este nombre. Elige otro.",
     pppServer: (status: string) =>
       `phigros.tools no pudo responder (HTTP ${status}). Inténtalo de nuevo.`,
     pppWord: (word: string) => `“${word}” no es una de las palabras de recuperación.`,
@@ -560,17 +565,113 @@ export const es = {
       "Los mods se ejecutan con tu clave de phigros.tools, así que añade solo mods de confianza.",
     bring: "Trae tu partida",
     bringText:
-      "Phigros++ empieza con una partida vacía, y la nube de TapTap ya no responde, así que no puede traer la tuya desde allí.",
+      "Phigros++ empieza con una partida vacía, y la nube de TapTap ya no responde, así que no puede traer la tuya desde allí. phigros.tools todavía puede llevar tu partida hasta él, esté en el dispositivo que esté.",
+    source: "Código fuente",
+  },
+  start: {
+    description:
+      "Tu partida de Phigros se queda dentro del juego ahora que la nube de TapTap ya no responde. Indica dónde está la tuya para ver cómo phigros.tools la lleva a Phigros++.",
+    cta: "Traer mi partida",
+    option: "Partida en el juego",
+    optionDesc: "Llévala a Phigros++",
+    device: "¿Dónde está el Phigros en el que jugabas?",
+    android: "En un móvil o una tableta Android",
+    ios: "En un iPhone o un iPad",
+    gone: "En un dispositivo que ya no tengo",
+    root: "¿Ese dispositivo está rooteado?",
+    rooted: "Sí, tiene acceso root",
+    unrooted: "No, o no lo sé con seguridad",
+    change: "Cambiar",
+    rootTitle: "Phigros++ copia tu partida",
+    rootText:
+      "Con acceso root, Phigros++ lee la partida del Phigros del mismo dispositivo, y después tu perfil la lleva a todos los demás dispositivos.",
+    root1: "Instala Phigros++ en ese dispositivo.",
+    root2:
+      "En su primera pantalla de capítulos pregunta **Bring your Phigros save over?** Elige **Copy my save** y permite el acceso root. Phigros++ se cierra cuando la partida está copiada, así que vuelve a abrirlo.",
+    root3:
+      "Abre **Ajustes → Perfil**, activa **Sync to phigros.tools** y guarda las 16 palabras que muestra.",
+    root4:
+      "En cualquier otro dispositivo, rooteado o no, instala Phigros++, elige **Sign in to my profile** y escribe las palabras. Te ofrece la partida que subió tu primer dispositivo.",
+    rootFallback:
+      "Si la copia no funciona en tu dispositivo, puedes reconstruir tu partida en su lugar.",
+    rebuildTitle: "Reconstruye tu partida aquí",
+    androidText:
+      "Android guarda la partida de Phigros donde solo root puede leerla, y Phigros++ es una app aparte, así que no puede copiarla. Puedes reconstruirla en phigros.tools a partir de lo que muestra tu juego, y después Phigros++ la carga.",
+    iosText:
+      "Phigros++ aún no ha salido para iPhone y iPad. Puedes reconstruir tu partida en phigros.tools a partir de lo que muestra tu juego: espera en tu perfil y ya se carga hoy en cualquier dispositivo Android.",
+    goneText:
+      "La partida se fue con el dispositivo, pero tus puntuaciones no si las recuerdas o guardaste capturas de pantalla. Puedes reconstruir la partida en phigros.tools, y después Phigros++ la carga.",
+    rebuild1:
+      "Escribe tus puntuaciones y luego elige tu avatar, tu rango del Modo Desafío y lo que tenías desbloqueado.",
+    rebuild2: "Guarda las 16 palabras que te da phigros.tools: son la contraseña de tu perfil.",
+    rebuild3:
+      "Instala Phigros++ en un dispositivo Android, abre **Ajustes → Perfil**, elige **Sign in to my profile** y escribe las palabras. Te ofrece traer tu partida.",
+    declared:
+      "Las puntuaciones que escribes aparecen como Declarado en tu perfil, y cuentan en las clasificaciones en cuanto las juegas en Phigros++.",
+    rebuild: "Reconstruir mi partida",
+    install: "Consigue Phigros++",
     browser: "Ya abriste tu partida en phigros.tools",
     browserText:
       "Este navegador guardó una copia. Inicia sesión desde Phigros++, abre esa partida y elige **Enviar a Phigros++**: el juego ofrecerá cargarla la próxima vez que se abra.",
-    device: "Ya usas Phigros++ en otro dispositivo",
-    deviceText:
+    other: "Ya usas Phigros++ en otro dispositivo",
+    otherText:
       "Elige **Sign in another device** allí, luego **Sign in to my profile** en el nuevo y escribe su código o tus 16 palabras. Después, Phigros++ te ofrece la partida que subió tu otro dispositivo.",
-    game: "Tu partida solo existe en el juego",
-    gameText:
-      "Phigros++ se instala como una app aparte junto a Phigros, así que tu partida se queda en el juego original y puedes seguir jugándola allí. Por ahora Phigros++ empieza con su propia partida, y estamos trabajando en una forma de traer la tuya.",
-    source: "Código fuente",
+  },
+  rebuild: {
+    title: "Reconstruye tu partida",
+    description:
+      "Escribe las puntuaciones que muestra tu juego, empezando por tus mejores charts: los 27 mejores y los 3 mejores Phi forman tu RKS, así que coincide con el del juego en cuanto están escritos.",
+    editing:
+      "Esto parte de la partida de tu perfil. Al enviarla, reemplaza la partida de tu dispositivo cuando la aceptes en el juego.",
+    charts: "Charts",
+    best: "Best 27",
+    phi: "Phi 3",
+    records: "Registros",
+    search: "Buscar canciones",
+    typed: "Solo los escritos",
+    score: "Puntuación",
+    accuracy: "Precisión",
+    fc: "Full Combo",
+    scoreOf: (chart: string) => `Puntuación de ${chart}`,
+    accuracyOf: (chart: string) => `Precisión de ${chart}`,
+    fcOf: (chart: string) => `Full Combo en ${chart}`,
+    more: (count: number) => `Ver ${count} más`,
+    profile: "Perfil",
+    avatar: "Avatar",
+    background: "Fondo",
+    none: "Predeterminado",
+    intro: "Presentación",
+    challenge: "Modo Desafío",
+    challengeNone: "Nunca jugado",
+    level: "Nivel",
+    unlocks: "Desbloqueos",
+    unlocksText:
+      "Una canción para la que escribiste una puntuación se desbloquea con ella, igual que tu avatar y tu fondo. Añade todo lo demás que tenías. Los Data no se pueden establecer: una partida reconstruida empieza sin ninguno.",
+    kinds: ["Canciones", "Colección", "Ilustraciones", "Avatares"],
+    picked: (count: number, total: number) => `${count} de ${total}`,
+    all: "Seleccionar todo",
+    clear: "Quitar todo",
+    finish: "Guárdala en un perfil",
+    name: "Nombre",
+    nameHelp: "Se muestra en phigros.tools y en el juego, donde puedes cambiarlo más adelante.",
+    words: "Tu contraseña de phigros.tools",
+    wordsText:
+      "Estas 16 palabras son la contraseña de tu perfil de phigros.tools. Anótalas en este orden o haz una foto de esta pantalla, y mantenlas en privado: las necesitas para iniciar sesión en tu dispositivo, y nadie puede recuperarlas por ti.",
+    saved: "Ya las guardé",
+    create: "Crear mi perfil",
+    send: "Enviar a Phigros++",
+    working: "Guardando…",
+    empty: "Escribe primero al menos una puntuación.",
+    done: "Tu partida está en tu perfil",
+    sent: "Tu partida está en camino",
+    sentText:
+      "Abre Phigros++: ofrece cargar esta partida en lugar de la del dispositivo, y dice qué reemplaza.",
+    done1: "Instala Phigros++ en un dispositivo Android.",
+    done2: "Abre **Ajustes → Perfil**, elige **Sign in to my profile** y escribe tus 16 palabras.",
+    done3: "Acepta **Bring your save over?** y después vuelve a abrir Phigros++.",
+    open: "Abrir mi partida",
+    reset: "Empezar de nuevo",
+    resetConfirm: "¿Borrar todo lo escrito aquí y empezar con una partida vacía?",
   },
   history: {
     trend: (count: number, from: string, to: string) =>

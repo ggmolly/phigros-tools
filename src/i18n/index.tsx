@@ -39,12 +39,15 @@ export function setLocale(locale: Locale) {
   location.assign(`${withLocale(path, locale)}${location.search}${location.hash}`);
 }
 
-/** A message with **bold** spans, rendered as <strong>; messages stay plain strings so every language can place them. */
-export function Rich({ text }: { text: string }) {
+/**
+ * A message with **bold** spans, rendered as <strong>; messages stay plain strings so every language can place them.
+ * With an `href`, the bold spans link to it.
+ */
+export function Rich({ text, href }: { text: string; href?: string }) {
   return text.split("**").map((part, index) =>
     index % 2 ? (
       // biome-ignore lint/suspicious/noArrayIndexKey: the parts never reorder.
-      <strong key={index}>{part}</strong>
+      <strong key={index}>{href ? <a href={href}>{part}</a> : part}</strong>
     ) : (
       part
     ),

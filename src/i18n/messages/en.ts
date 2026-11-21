@@ -192,12 +192,15 @@ export const en = {
     replayStatus: {
       verified: "Verified",
       imported: "Imported",
+      declared: "Declared",
       pending: "Pending",
       unverified: "Unverified",
     },
     replayStatusHelp: {
       verified: "We checked this play and it holds up.",
-      imported: "Declared by the player's game, with no replay to prove it.",
+      imported: "Sent by the player's game, with no replay to prove it.",
+      declared:
+        "Typed in by the player to rebuild their save, and not ranked until a play from the game matches or beats it.",
       pending:
         "Not checked yet. After a game update, it waits until phigros.tools knows the new version.",
       unverified: "Replaying the touches doesn't give the recorded result.",
@@ -446,6 +449,8 @@ export const en = {
       "This code doesn't work: it was already used or is older than 10 minutes. Ask for a new one.",
     pppNoProfile:
       "No phigros.tools profile was made with these words. Check each word and their order.",
+    pppNoName: "Choose a name first: a profile can't be nameless or called GUEST.",
+    pppNameFull: "Too many players already have this name. Choose another one.",
     pppServer: (status: string) => `phigros.tools couldn't answer (HTTP ${status}). Try again.`,
     pppWord: (word: string) => `“${word}” isn't one of the recovery words.`,
     pppWords: (count: string) => `That's ${count} words, the recovery phrase has 16.`,
@@ -549,17 +554,112 @@ export const en = {
     installNote: "Mods run with your phigros.tools key, so only add mods you trust.",
     bring: "Bring Your Save Over",
     bringText:
-      "Phigros++ starts with an empty save, and TapTap’s cloud no longer answers, so it can’t fetch yours from there.",
+      "Phigros++ starts with an empty save, and TapTap’s cloud no longer answers, so it can’t fetch yours from there. phigros.tools can still get your save into it, whichever device it is on.",
+    source: "Source code",
+  },
+  start: {
+    description:
+      "Your Phigros save stays inside the game now that TapTap’s cloud no longer answers. Say where yours is to see how phigros.tools brings it into Phigros++.",
+    cta: "Bring my save over",
+    option: "Save in the game",
+    optionDesc: "Bring it into Phigros++",
+    device: "Where is the Phigros you played on?",
+    android: "On an Android phone or tablet",
+    ios: "On an iPhone or iPad",
+    gone: "On a device I no longer have",
+    root: "Is that device rooted?",
+    rooted: "Yes, it has root access",
+    unrooted: "No, or I’m not sure",
+    change: "Change",
+    rootTitle: "Phigros++ copies your save",
+    rootText:
+      "With root access, Phigros++ reads the save of Phigros on the same device, and your profile then carries it to every other device.",
+    root1: "Install Phigros++ on that device.",
+    root2:
+      "On its first chapter screen it asks **Bring your Phigros save over?** Choose **Copy my save** and allow root access. Phigros++ closes once the save is copied, so open it again.",
+    root3:
+      "Open **Settings → Profile**, turn on **Sync to phigros.tools** and keep the 16 words it shows.",
+    root4:
+      "On any other device, rooted or not, install Phigros++, choose **Sign in to my profile** and type the words. It offers the save your first device uploaded.",
+    rootFallback: "If the copy doesn’t work on your device, you can rebuild your save instead.",
+    rebuildTitle: "Rebuild your save here",
+    androidText:
+      "Android keeps the save of Phigros where only root can read it, and Phigros++ is a separate app, so it can’t copy it. You can rebuild it on phigros.tools from what your game shows, and Phigros++ then loads it.",
+    iosText:
+      "Phigros++ isn’t out for iPhone and iPad yet. You can rebuild your save on phigros.tools from what your game shows: it waits on your profile, and loads today on any Android device.",
+    goneText:
+      "The save went with the device, but your scores didn’t if you remember them or kept screenshots. You can rebuild the save on phigros.tools, and Phigros++ then loads it.",
+    rebuild1:
+      "Type your scores, then pick your avatar, your Challenge Mode rank and what you had unlocked.",
+    rebuild2: "Keep the 16 words phigros.tools gives you: they are the password of your profile.",
+    rebuild3:
+      "Install Phigros++ on an Android device, open **Settings → Profile**, choose **Sign in to my profile** and type the words. It offers to bring your save over.",
+    declared:
+      "Scores you type show as Declared on your profile, and count on the leaderboards once you play them in Phigros++.",
+    rebuild: "Rebuild my save",
+    install: "Get Phigros++",
     browser: "You opened your save on phigros.tools before",
     browserText:
       "This browser kept a copy. Sign in from Phigros++, open that save and choose **Send to Phigros++**: the game offers to load it next time it starts.",
-    device: "You already use Phigros++ on another device",
-    deviceText:
+    other: "You already use Phigros++ on another device",
+    otherText:
       "Choose **Sign in another device** there, then **Sign in to my profile** on the new one and type its code or your 16 words. Phigros++ then offers the save your other device uploaded.",
-    game: "Your save only lives in the game",
-    gameText:
-      "Phigros++ installs as a separate app next to Phigros, so your save stays in the original game and you can keep playing it there. Phigros++ starts with its own save for now, and we’re working on a way to bring yours over.",
-    source: "Source code",
+  },
+  rebuild: {
+    title: "Rebuild Your Save",
+    description:
+      "Type the scores your game shows, starting with your best charts: the 27 best and the 3 best Phi make your RKS, so it matches the game’s once they are in.",
+    editing:
+      "This starts from the save of your profile. Sending it replaces the save on your device once you accept it in the game.",
+    charts: "Charts",
+    best: "Best 27",
+    phi: "Phi 3",
+    records: "Records",
+    search: "Search songs",
+    typed: "Typed only",
+    score: "Score",
+    accuracy: "Accuracy",
+    fc: "Full combo",
+    scoreOf: (chart: string) => `Score of ${chart}`,
+    accuracyOf: (chart: string) => `Accuracy of ${chart}`,
+    fcOf: (chart: string) => `Full combo on ${chart}`,
+    more: (count: number) => `Show ${count} more`,
+    profile: "Profile",
+    avatar: "Avatar",
+    background: "Background",
+    none: "Default",
+    intro: "Introduction",
+    challenge: "Challenge Mode",
+    challengeNone: "Never played",
+    level: "Level",
+    unlocks: "Unlocks",
+    unlocksText:
+      "A song you typed a score for is unlocked with it, like your avatar and background. Add whatever else you had. Data can’t be set: a rebuilt save starts with none.",
+    kinds: ["Songs", "Collection", "Illustrations", "Avatars"],
+    picked: (count: number, total: number) => `${count} of ${total}`,
+    all: "Select all",
+    clear: "Clear",
+    finish: "Keep It on a Profile",
+    name: "Name",
+    nameHelp: "Shown on phigros.tools and in the game, where you can change it later.",
+    words: "Your phigros.tools password",
+    wordsText:
+      "These 16 words are the password to your phigros.tools profile. Write them down in this order or take a photo of this screen, and keep them private: you need them to sign in on your device, and nobody can recover them for you.",
+    saved: "I saved them",
+    create: "Create my profile",
+    send: "Send to Phigros++",
+    working: "Saving…",
+    empty: "Type at least one score first.",
+    done: "Your save is on your profile",
+    sent: "Your save is on its way",
+    sentText:
+      "Open Phigros++: it offers to load this save in place of the one on the device, and says what it replaces.",
+    done1: "Install Phigros++ on an Android device.",
+    done2: "Open **Settings → Profile**, choose **Sign in to my profile** and type your 16 words.",
+    done3: "Accept **Bring your save over?**, then open Phigros++ again.",
+    open: "Open my save",
+    reset: "Start over",
+    resetConfirm: "Erase everything typed here and start from an empty save?",
   },
   history: {
     trend: (count: number, from: string, to: string) =>

@@ -195,12 +195,15 @@ export const de = {
     replayStatus: {
       verified: "Verifiziert",
       imported: "Importiert",
+      declared: "Angegeben",
       pending: "Ausstehend",
       unverified: "Nicht verifiziert",
     },
     replayStatusHelp: {
       verified: "Wir haben dieses Spiel geprüft und es ist stimmig.",
-      imported: "Vom Spiel des Spielers gemeldet, ohne Wiederholung als Beleg.",
+      imported: "Vom Spiel des Spielers gesendet, ohne Wiederholung als Beleg.",
+      declared:
+        "Vom Spieler eingetippt, um seinen Spielstand wiederherzustellen, und erst gewertet, wenn ein Durchgang im Spiel ihn erreicht oder übertrifft.",
       pending:
         "Noch nicht geprüft. Nach einem Spielupdate wartet es, bis phigros.tools die neue Version kennt.",
       unverified: "Die Berührungen erneut abgespielt ergeben nicht das gespeicherte Ergebnis.",
@@ -457,6 +460,8 @@ export const de = {
       "Dieser Code funktioniert nicht, weil er schon benutzt wurde oder älter als 10 Minuten ist. Lass dir einen neuen geben.",
     pppNoProfile:
       "Mit diesen Wörtern wurde kein phigros.tools-Profil erstellt. Prüfe jedes Wort und ihre Reihenfolge.",
+    pppNoName: "Wähle zuerst einen Namen: Ein Profil kann nicht namenlos sein oder GUEST heißen.",
+    pppNameFull: "Zu viele Spieler haben diesen Namen bereits. Wähle einen anderen.",
     pppServer: (status: string) =>
       `phigros.tools konnte nicht antworten (HTTP ${status}). Versuch es noch einmal.`,
     pppWord: (word: string) => `„${word}“ ist keines der Wiederherstellungswörter.`,
@@ -565,17 +570,115 @@ export const de = {
       "Mods laufen mit deinem phigros.tools-Schlüssel, installiere also nur Mods, denen du vertraust.",
     bring: "Spielstand mitnehmen",
     bringText:
-      "Phigros++ startet mit einem leeren Spielstand, und da die TapTap-Cloud nicht mehr antwortet, kann es deinen nicht von dort holen.",
+      "Phigros++ startet mit einem leeren Spielstand, und da die TapTap-Cloud nicht mehr antwortet, kann es deinen nicht von dort holen. phigros.tools kann deinen Spielstand trotzdem hineinbringen, egal auf welchem Gerät er liegt.",
+    source: "Quellcode",
+  },
+  start: {
+    description:
+      "Dein Phigros-Spielstand bleibt im Spiel, seit die TapTap-Cloud nicht mehr antwortet. Gib an, wo deiner liegt, um zu sehen, wie phigros.tools ihn in Phigros++ bringt.",
+    cta: "Meinen Spielstand mitnehmen",
+    option: "Spielstand im Spiel",
+    optionDesc: "In Phigros++ übernehmen",
+    device: "Wo ist das Phigros, auf dem du gespielt hast?",
+    android: "Auf einem Android-Handy oder -Tablet",
+    ios: "Auf einem iPhone oder iPad",
+    gone: "Auf einem Gerät, das ich nicht mehr habe",
+    root: "Ist dieses Gerät gerootet?",
+    rooted: "Ja, es hat Root-Zugriff",
+    unrooted: "Nein, oder ich bin mir nicht sicher",
+    change: "Ändern",
+    rootTitle: "Phigros++ kopiert deinen Spielstand",
+    rootText:
+      "Mit Root-Zugriff liest Phigros++ den Spielstand von Phigros auf demselben Gerät, und dein Profil bringt ihn dann auf jedes andere Gerät.",
+    root1: "Installiere Phigros++ auf diesem Gerät.",
+    root2:
+      "Auf seinem ersten Kapitelbildschirm fragt es **Bring your Phigros save over?** Wähle **Copy my save** und erlaube den Root-Zugriff. Phigros++ schließt sich, sobald der Spielstand kopiert ist, öffne es also erneut.",
+    root3:
+      "Öffne **Settings → Profile**, aktiviere **Sync to phigros.tools** und bewahre die 16 angezeigten Wörter auf.",
+    root4:
+      "Installiere Phigros++ auf einem beliebigen anderen Gerät, ob gerootet oder nicht, wähle **Sign in to my profile** und gib die Wörter ein. Es bietet dir den Spielstand an, den dein erstes Gerät hochgeladen hat.",
+    rootFallback:
+      "Falls das Kopieren auf deinem Gerät nicht klappt, kannst du deinen Spielstand stattdessen nachbauen.",
+    rebuildTitle: "Bau deinen Spielstand hier nach",
+    androidText:
+      "Android bewahrt den Spielstand von Phigros dort auf, wo nur Root ihn lesen kann, und Phigros++ ist eine eigene App, kann ihn also nicht kopieren. Du kannst ihn auf phigros.tools aus dem nachbauen, was dein Spiel anzeigt, und Phigros++ lädt ihn dann.",
+    iosText:
+      "Phigros++ gibt es für iPhone und iPad noch nicht. Du kannst deinen Spielstand auf phigros.tools aus dem nachbauen, was dein Spiel anzeigt: Er wartet in deinem Profil und lässt sich schon heute auf jedem Android-Gerät laden.",
+    goneText:
+      "Der Spielstand ist mit dem Gerät verschwunden, deine Scores aber nicht, wenn du sie noch weißt oder Screenshots aufbewahrt hast. Du kannst den Spielstand auf phigros.tools nachbauen, und Phigros++ lädt ihn dann.",
+    rebuild1:
+      "Tippe deine Scores ein und wähle dann deinen Avatar, deinen Rang im Challenge-Modus und was du freigeschaltet hattest.",
+    rebuild2:
+      "Bewahre die 16 Wörter auf, die phigros.tools dir gibt: Sie sind das Passwort deines Profils.",
+    rebuild3:
+      "Installiere Phigros++ auf einem Android-Gerät, öffne **Settings → Profile**, wähle **Sign in to my profile** und gib die Wörter ein. Es bietet dir an, deinen Spielstand zu übernehmen.",
+    declared:
+      "Scores, die du eintippst, erscheinen in deinem Profil als Angegeben und zählen in den Ranglisten, sobald du sie in Phigros++ spielst.",
+    rebuild: "Meinen Spielstand nachbauen",
+    install: "Phigros++ holen",
     browser: "Du hast deinen Spielstand schon einmal auf phigros.tools geöffnet",
     browserText:
       "Dieser Browser hat eine Kopie behalten. Melde dich über Phigros++ an, öffne diesen Spielstand und wähle **An Phigros++ senden**: Beim nächsten Start bietet das Spiel an, ihn zu laden.",
-    device: "Du nutzt Phigros++ schon auf einem anderen Gerät",
-    deviceText:
+    other: "Du nutzt Phigros++ schon auf einem anderen Gerät",
+    otherText:
       "Wähle dort **Sign in another device**, danach auf dem neuen Gerät **Sign in to my profile** und gib dessen Code oder deine 16 Wörter ein. Phigros++ bietet dir dann den Spielstand an, den dein anderes Gerät hochgeladen hat.",
-    game: "Dein Spielstand existiert nur im Spiel",
-    gameText:
-      "Phigros++ wird als eigene App neben Phigros installiert, dein Spielstand bleibt also im Originalspiel und du kannst ihn dort weiterspielen. Vorerst beginnt Phigros++ mit einem eigenen Spielstand, und wir arbeiten an einem Weg, deinen zu übernehmen.",
-    source: "Quellcode",
+  },
+  rebuild: {
+    title: "Spielstand nachbauen",
+    description:
+      "Tippe die Scores ein, die dein Spiel anzeigt, und beginne mit deinen besten Charts: Die 27 besten und die 3 besten Phi ergeben deinen RKS, er stimmt also mit dem des Spiels überein, sobald sie eingetragen sind.",
+    editing:
+      "Ausgangspunkt ist der Spielstand deines Profils. Wenn du ihn sendest, ersetzt er den Spielstand auf deinem Gerät, sobald du ihn im Spiel annimmst.",
+    charts: "Charts",
+    best: "Best 27",
+    phi: "Phi 3",
+    records: "Rekorde",
+    search: "Songs durchsuchen",
+    typed: "Nur eingetippte",
+    score: "Score",
+    accuracy: "Genauigkeit",
+    fc: "Full Combo",
+    scoreOf: (chart: string) => `Score von ${chart}`,
+    accuracyOf: (chart: string) => `Genauigkeit von ${chart}`,
+    fcOf: (chart: string) => `Full Combo bei ${chart}`,
+    more: (count: number) => `${count} weitere anzeigen`,
+    profile: "Profil",
+    avatar: "Avatar",
+    background: "Hintergrund",
+    none: "Standard",
+    intro: "Vorstellung",
+    challenge: "Challenge-Modus",
+    challengeNone: "Nie gespielt",
+    level: "Level",
+    unlocks: "Freischaltungen",
+    unlocksText:
+      "Ein Song, für den du einen Score eingetippt hast, wird damit freigeschaltet, ebenso dein Avatar und dein Hintergrund. Füge alles hinzu, was du sonst noch hattest. Data lässt sich nicht festlegen: Ein nachgebauter Spielstand beginnt ohne.",
+    kinds: ["Songs", "Sammlung", "Illustrationen", "Avatare"],
+    picked: (count: number, total: number) => `${count} von ${total}`,
+    all: "Alle auswählen",
+    clear: "Auswahl aufheben",
+    finish: "In einem Profil aufbewahren",
+    name: "Name",
+    nameHelp: "Wird auf phigros.tools und im Spiel angezeigt, wo du ihn später ändern kannst.",
+    words: "Dein phigros.tools-Passwort",
+    wordsText:
+      "Diese 16 Wörter sind das Passwort für dein phigros.tools-Profil. Schreib sie in dieser Reihenfolge auf oder fotografiere diesen Bildschirm, und behalte sie für dich: Du brauchst sie, um dich auf deinem Gerät anzumelden, und niemand kann sie für dich wiederherstellen.",
+    saved: "Ich habe sie gesichert",
+    create: "Mein Profil erstellen",
+    send: "An Phigros++ senden",
+    working: "Wird gespeichert…",
+    empty: "Tippe zuerst mindestens einen Score ein.",
+    done: "Dein Spielstand liegt in deinem Profil",
+    sent: "Dein Spielstand ist unterwegs",
+    sentText:
+      "Öffne Phigros++: Es bietet an, diesen Spielstand anstelle des Spielstands auf dem Gerät zu laden, und sagt, was er ersetzt.",
+    done1: "Installiere Phigros++ auf einem Android-Gerät.",
+    done2:
+      "Öffne **Settings → Profile**, wähle **Sign in to my profile** und gib deine 16 Wörter ein.",
+    done3: "Bestätige **Bring your save over?** und öffne Phigros++ dann erneut.",
+    open: "Meinen Spielstand öffnen",
+    reset: "Neu anfangen",
+    resetConfirm: "Alles hier Eingetippte löschen und mit einem leeren Spielstand neu anfangen?",
   },
   history: {
     trend: (count: number, from: string, to: string) =>

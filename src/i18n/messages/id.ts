@@ -196,12 +196,15 @@ export const id = {
     replayStatus: {
       verified: "Terverifikasi",
       imported: "Diimpor",
+      declared: "Dideklarasikan",
       pending: "Menunggu",
       unverified: "Tidak terverifikasi",
     },
     replayStatusHelp: {
       verified: "Kami sudah memeriksa permainan ini dan hasilnya konsisten.",
-      imported: "Dilaporkan oleh game pemain, tanpa replay sebagai bukti.",
+      imported: "Dikirim oleh game pemain, tanpa replay sebagai bukti.",
+      declared:
+        "Diketik oleh pemain untuk membangun ulang save-nya, dan tidak diperingkat sampai permainan dari game menyamai atau melampauinya.",
       pending:
         "Belum diperiksa. Setelah pembaruan game, ini menunggu sampai phigros.tools mengenal versi baru.",
       unverified: "Memutar ulang sentuhannya tidak memberi hasil yang tercatat.",
@@ -453,6 +456,8 @@ export const id = {
       "Kode ini tidak berlaku karena sudah dipakai atau lebih dari 10 menit. Minta kode baru.",
     pppNoProfile:
       "Tidak ada profil phigros.tools yang dibuat dengan kata-kata ini. Periksa setiap kata dan urutannya.",
+    pppNoName: "Pilih nama dulu: profil tidak boleh tanpa nama atau bernama GUEST.",
+    pppNameFull: "Sudah terlalu banyak pemain yang memakai nama ini. Pilih nama lain.",
     pppServer: (status: string) => `phigros.tools tidak bisa menjawab (HTTP ${status}). Coba lagi.`,
     pppWord: (word: string) => `“${word}” bukan salah satu kata pemulihan.`,
     pppWords: (count: string) => `Itu ${count} kata, sedangkan frasa pemulihan berisi 16 kata.`,
@@ -559,17 +564,115 @@ export const id = {
       "Mod berjalan dengan kunci phigros.tools kamu, jadi pasang hanya mod yang kamu percaya.",
     bring: "Pindahkan Save Kamu",
     bringText:
-      "Phigros++ dimulai dengan save kosong, dan cloud TapTap sudah tidak merespons, jadi save kamu tidak bisa diambil dari sana.",
+      "Phigros++ dimulai dengan save kosong, dan cloud TapTap sudah tidak merespons, jadi save kamu tidak bisa diambil dari sana. phigros.tools tetap bisa memasukkan save kamu ke sana, di perangkat mana pun save itu berada.",
+    source: "Kode sumber",
+  },
+  start: {
+    description:
+      "Save Phigros kamu tetap berada di dalam game karena cloud TapTap sudah tidak merespons. Beri tahu di mana save kamu berada untuk melihat cara phigros.tools memindahkannya ke Phigros++.",
+    cta: "Pindahkan save saya",
+    option: "Save di dalam game",
+    optionDesc: "Pindahkan ke Phigros++",
+    device: "Di mana Phigros yang kamu mainkan?",
+    android: "Di ponsel atau tablet Android",
+    ios: "Di iPhone atau iPad",
+    gone: "Di perangkat yang sudah tidak saya miliki",
+    root: "Apakah perangkat itu sudah di-root?",
+    rooted: "Ya, perangkat itu punya akses root",
+    unrooted: "Tidak, atau saya tidak yakin",
+    change: "Ubah",
+    rootTitle: "Phigros++ menyalin save kamu",
+    rootText:
+      "Dengan akses root, Phigros++ membaca save Phigros di perangkat yang sama, lalu profilmu membawanya ke semua perangkat lain.",
+    root1: "Pasang Phigros++ di perangkat itu.",
+    root2:
+      "Di layar chapter pertamanya, Phigros++ bertanya **Bring your Phigros save over?** Pilih **Copy my save** dan izinkan akses root. Phigros++ akan tertutup setelah save selesai disalin, jadi buka lagi.",
+    root3:
+      "Buka **Pengaturan → Profil**, aktifkan **Sync to phigros.tools**, lalu simpan 16 kata yang ditampilkan.",
+    root4:
+      "Di perangkat lain mana pun, di-root atau tidak, pasang Phigros++, pilih **Sign in to my profile**, lalu ketik kata-kata itu. Phigros++ akan menawarkan save yang diunggah perangkat pertamamu.",
+    rootFallback:
+      "Kalau penyalinan tidak berhasil di perangkatmu, kamu bisa membangun ulang save kamu sebagai gantinya.",
+    rebuildTitle: "Bangun ulang save kamu di sini",
+    androidText:
+      "Android menyimpan save Phigros di tempat yang hanya bisa dibaca root, dan Phigros++ adalah aplikasi terpisah, jadi tidak bisa menyalinnya. Kamu bisa membangunnya ulang di phigros.tools dari apa yang ditampilkan game-mu, lalu Phigros++ memuatnya.",
+    iosText:
+      "Phigros++ belum tersedia untuk iPhone dan iPad. Kamu bisa membangun ulang save kamu di phigros.tools dari apa yang ditampilkan game-mu: save itu menunggu di profilmu, dan sudah bisa dimuat hari ini di perangkat Android mana pun.",
+    goneText:
+      "Save-nya hilang bersama perangkat itu, tapi skormu tidak kalau kamu masih mengingatnya atau menyimpan tangkapan layar. Kamu bisa membangun ulang save itu di phigros.tools, lalu Phigros++ memuatnya.",
+    rebuild1:
+      "Ketik skormu, lalu pilih avatar, peringkat Mode Tantangan, dan apa saja yang sudah kamu buka.",
+    rebuild2:
+      "Simpan 16 kata yang diberikan phigros.tools: kata-kata itu adalah kata sandi profilmu.",
+    rebuild3:
+      "Pasang Phigros++ di perangkat Android, buka **Pengaturan → Profil**, pilih **Sign in to my profile**, lalu ketik kata-kata itu. Phigros++ akan menawarkan untuk memindahkan save kamu.",
+    declared:
+      "Skor yang kamu ketik tampil sebagai Dideklarasikan di profilmu, dan dihitung di papan peringkat setelah kamu memainkannya di Phigros++.",
+    rebuild: "Bangun ulang save saya",
+    install: "Dapatkan Phigros++",
     browser: "Kamu pernah membuka save di phigros.tools",
     browserText:
       "Browser ini menyimpan salinannya. Login dari Phigros++, buka save itu, lalu pilih **Kirim ke Phigros++**: game akan menawarkan untuk memuatnya saat dibuka berikutnya.",
-    device: "Kamu sudah memakai Phigros++ di perangkat lain",
-    deviceText:
+    other: "Kamu sudah memakai Phigros++ di perangkat lain",
+    otherText:
       "Pilih **Sign in another device** di sana, lalu **Sign in to my profile** di perangkat baru dan ketik kodenya atau 16 kata milikmu. Setelah itu Phigros++ menawarkan save yang diunggah perangkat lainmu.",
-    game: "Save kamu hanya ada di dalam game",
-    gameText:
-      "Phigros++ dipasang sebagai aplikasi terpisah di samping Phigros, jadi save-mu tetap ada di game aslinya dan kamu bisa terus memainkannya di sana. Untuk sekarang Phigros++ dimulai dengan save-nya sendiri, dan kami sedang menyiapkan cara untuk memindahkan save-mu.",
-    source: "Kode sumber",
+  },
+  rebuild: {
+    title: "Bangun Ulang Save Kamu",
+    description:
+      "Ketik skor yang ditampilkan game-mu, mulai dari chart terbaikmu: 27 chart terbaik dan 3 chart Phi terbaik menentukan RKS-mu, jadi RKS itu sama dengan yang di game setelah semuanya diisi.",
+    editing:
+      "Ini berawal dari save di profilmu. Kalau dikirim, save ini menggantikan save di perangkatmu setelah kamu menerimanya di game.",
+    charts: "Chart",
+    best: "Best 27",
+    phi: "Phi 3",
+    records: "Rekor",
+    search: "Cari lagu",
+    typed: "Hanya yang diketik",
+    score: "Skor",
+    accuracy: "Akurasi",
+    fc: "Full Combo",
+    scoreOf: (chart: string) => `Skor ${chart}`,
+    accuracyOf: (chart: string) => `Akurasi ${chart}`,
+    fcOf: (chart: string) => `Full Combo di ${chart}`,
+    more: (count: number) => `Tampilkan ${count} lagi`,
+    profile: "Profil",
+    avatar: "Avatar",
+    background: "Latar belakang",
+    none: "Bawaan",
+    intro: "Perkenalan",
+    challenge: "Mode Tantangan",
+    challengeNone: "Belum pernah dimainkan",
+    level: "Level",
+    unlocks: "Item terbuka",
+    unlocksText:
+      "Lagu yang skornya kamu ketik ikut terbuka bersama skor itu, seperti avatar dan latar belakangmu. Tambahkan apa pun lainnya yang dulu kamu punya. Data tidak bisa diatur: save yang dibangun ulang dimulai tanpa Data.",
+    kinds: ["Lagu", "Koleksi", "Ilustrasi", "Avatar"],
+    picked: (count: number, total: number) => `${count} dari ${total}`,
+    all: "Pilih semua",
+    clear: "Kosongkan",
+    finish: "Simpan di Profil",
+    name: "Nama",
+    nameHelp: "Ditampilkan di phigros.tools dan di game, tempat kamu bisa mengubahnya nanti.",
+    words: "Kata sandi phigros.tools kamu",
+    wordsText:
+      "16 kata ini adalah kata sandi profil phigros.tools kamu. Catat sesuai urutan ini atau foto layar ini, dan rahasiakan: kamu membutuhkannya untuk login di perangkatmu, dan tidak ada yang bisa memulihkannya untukmu.",
+    saved: "Sudah saya simpan",
+    create: "Buat profil saya",
+    send: "Kirim ke Phigros++",
+    working: "Menyimpan…",
+    empty: "Ketik setidaknya satu skor dulu.",
+    done: "Save kamu sudah ada di profilmu",
+    sent: "Save kamu sedang dikirim",
+    sentText:
+      "Buka Phigros++: game akan menawarkan untuk memuat save ini sebagai pengganti save di perangkat, dan memberi tahu apa yang akan diganti.",
+    done1: "Pasang Phigros++ di perangkat Android.",
+    done2:
+      "Buka **Pengaturan → Profil**, pilih **Sign in to my profile**, lalu ketik 16 kata milikmu.",
+    done3: "Terima **Bring your save over?**, lalu buka Phigros++ lagi.",
+    open: "Buka save saya",
+    reset: "Mulai dari awal",
+    resetConfirm: "Hapus semua yang diketik di sini dan mulai dari save kosong?",
   },
   history: {
     trend: (count: number, from: string, to: string) =>

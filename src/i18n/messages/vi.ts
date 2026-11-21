@@ -196,12 +196,15 @@ export const vi = {
     replayStatus: {
       verified: "Đã xác minh",
       imported: "Đã nhập",
+      declared: "Tự khai",
       pending: "Đang chờ",
       unverified: "Chưa xác minh được",
     },
     replayStatusHelp: {
       verified: "Chúng tôi đã kiểm tra lượt chơi này và nó hợp lệ.",
-      imported: "Do trò chơi của người chơi khai báo, không có bản phát lại để chứng minh.",
+      imported: "Do trò chơi của người chơi gửi lên, không có bản phát lại để chứng minh.",
+      declared:
+        "Do người chơi tự nhập để dựng lại bản lưu, và không được xếp hạng cho đến khi một lượt chơi trong trò chơi đạt bằng hoặc vượt qua.",
       pending:
         "Chưa được kiểm tra. Sau khi trò chơi cập nhật, nó chờ đến khi phigros.tools hỗ trợ phiên bản mới.",
       unverified: "Phát lại các lần chạm không cho ra kết quả đã ghi.",
@@ -451,6 +454,8 @@ export const vi = {
     pppNoCode: "Mã này không dùng được vì đã được dùng hoặc đã quá 10 phút. Hãy xin một mã mới.",
     pppNoProfile:
       "Không có hồ sơ phigros.tools nào được tạo bằng các từ này. Hãy kiểm tra từng từ và thứ tự của chúng.",
+    pppNoName: "Hãy chọn tên trước: hồ sơ không thể không có tên hoặc mang tên GUEST.",
+    pppNameFull: "Đã có quá nhiều người chơi dùng tên này. Hãy chọn tên khác.",
     pppServer: (status: string) =>
       `phigros.tools không phản hồi được (HTTP ${status}). Hãy thử lại.`,
     pppWord: (word: string) => `“${word}” không phải là một từ khôi phục.`,
@@ -557,17 +562,112 @@ export const vi = {
     installNote: "Mod chạy bằng khóa phigros.tools của bạn, nên chỉ thêm những mod bạn tin tưởng.",
     bring: "Chuyển save của bạn sang",
     bringText:
-      "Phigros++ bắt đầu với save trống, và đám mây TapTap không còn phản hồi, nên nó không thể lấy save của bạn từ đó.",
+      "Phigros++ bắt đầu với save trống, và đám mây TapTap không còn phản hồi, nên nó không thể lấy save của bạn từ đó. phigros.tools vẫn có thể đưa save của bạn vào đó, dù nó nằm trên thiết bị nào.",
+    source: "Mã nguồn",
+  },
+  start: {
+    description:
+      "Save Phigros của bạn nằm lại trong game vì đám mây của TapTap không còn phản hồi. Hãy cho biết save của bạn ở đâu để xem phigros.tools đưa nó vào Phigros++ như thế nào.",
+    cta: "Chuyển save của tôi sang",
+    option: "Save trong game",
+    optionDesc: "Đưa nó vào Phigros++",
+    device: "Phigros mà bạn đã chơi nằm ở đâu?",
+    android: "Trên điện thoại hoặc máy tính bảng Android",
+    ios: "Trên iPhone hoặc iPad",
+    gone: "Trên thiết bị tôi không còn giữ",
+    root: "Thiết bị đó đã root chưa?",
+    rooted: "Rồi, nó có quyền root",
+    unrooted: "Chưa, hoặc tôi không chắc",
+    change: "Đổi",
+    rootTitle: "Phigros++ sao chép save của bạn",
+    rootText:
+      "Với quyền root, Phigros++ đọc save của Phigros trên cùng thiết bị, rồi hồ sơ của bạn mang nó sang mọi thiết bị khác.",
+    root1: "Cài Phigros++ trên thiết bị đó.",
+    root2:
+      "Ở màn hình chương đầu tiên, nó hỏi **Bring your Phigros save over?** Hãy chọn **Copy my save** và cho phép quyền root. Phigros++ sẽ đóng sau khi sao chép xong save, nên hãy mở lại.",
+    root3: "Mở **Settings → Profile**, bật **Sync to phigros.tools** và giữ lại 16 từ hiện ra.",
+    root4:
+      "Trên bất kỳ thiết bị nào khác, đã root hay chưa, hãy cài Phigros++, chọn **Sign in to my profile** và nhập các từ đó. Nó sẽ đề nghị save mà thiết bị đầu tiên của bạn đã tải lên.",
+    rootFallback:
+      "Nếu việc sao chép không hoạt động trên thiết bị của bạn, bạn có thể dựng lại save thay vào đó.",
+    rebuildTitle: "Dựng lại save của bạn tại đây",
+    androidText:
+      "Android giữ save của Phigros ở nơi chỉ root mới đọc được, còn Phigros++ là một ứng dụng riêng nên không thể sao chép nó. Bạn có thể dựng lại save trên phigros.tools từ những gì game hiển thị, rồi Phigros++ sẽ tải nó.",
+    iosText:
+      "Phigros++ chưa có cho iPhone và iPad. Bạn có thể dựng lại save trên phigros.tools từ những gì game hiển thị: save sẽ chờ trong hồ sơ của bạn và tải được ngay hôm nay trên bất kỳ thiết bị Android nào.",
+    goneText:
+      "Save đã mất theo thiết bị, nhưng điểm của bạn thì không nếu bạn còn nhớ hoặc đã giữ ảnh chụp màn hình. Bạn có thể dựng lại save trên phigros.tools, rồi Phigros++ sẽ tải nó.",
+    rebuild1:
+      "Nhập điểm của bạn, rồi chọn ảnh đại diện, hạng Chế độ Thử thách và những gì bạn đã mở khóa.",
+    rebuild2: "Giữ lại 16 từ mà phigros.tools đưa cho bạn: chúng là mật khẩu của hồ sơ.",
+    rebuild3:
+      "Cài Phigros++ trên một thiết bị Android, mở **Settings → Profile**, chọn **Sign in to my profile** và nhập các từ đó. Nó sẽ đề nghị chuyển save của bạn sang.",
+    declared:
+      "Điểm bạn nhập hiện là Tự khai trên hồ sơ của bạn, và được tính trên bảng xếp hạng khi bạn chơi đạt chúng trong Phigros++.",
+    rebuild: "Dựng lại save của tôi",
+    install: "Tải Phigros++",
     browser: "Bạn đã từng mở save trên phigros.tools",
     browserText:
       "Trình duyệt này đã giữ một bản sao. Hãy đăng nhập từ Phigros++, mở save đó và chọn **Gửi sang Phigros++**: game sẽ đề nghị tải nó ở lần khởi động tới.",
-    device: "Bạn đã dùng Phigros++ trên thiết bị khác",
-    deviceText:
+    other: "Bạn đã dùng Phigros++ trên thiết bị khác",
+    otherText:
       "Chọn **Sign in another device** trên thiết bị đó, rồi chọn **Sign in to my profile** trên thiết bị mới và nhập mã của nó hoặc 16 từ của bạn. Sau đó Phigros++ sẽ đề nghị save mà thiết bị kia đã tải lên.",
-    game: "Save của bạn chỉ có trong game",
-    gameText:
-      "Phigros++ được cài thành một ứng dụng riêng bên cạnh Phigros, nên save của bạn vẫn nằm trong game gốc và bạn có thể tiếp tục chơi ở đó. Hiện tại Phigros++ bắt đầu với save riêng, và chúng tôi đang làm cách để chuyển save của bạn sang.",
-    source: "Mã nguồn",
+  },
+  rebuild: {
+    title: "Dựng lại save của bạn",
+    description:
+      "Nhập các điểm mà game hiển thị, bắt đầu từ những chart tốt nhất của bạn: 27 chart tốt nhất và 3 chart Phi tốt nhất tạo nên RKS của bạn, nên RKS sẽ khớp với trong game khi bạn nhập xong chúng.",
+    editing:
+      "Bản này bắt đầu từ save trong hồ sơ của bạn. Khi gửi đi, nó sẽ thay thế save trên thiết bị của bạn sau khi bạn chấp nhận trong game.",
+    charts: "Chart",
+    best: "Best 27",
+    phi: "Phi 3",
+    records: "Kỷ lục",
+    search: "Tìm bài hát",
+    typed: "Chỉ chart đã nhập",
+    score: "Điểm",
+    accuracy: "Độ chính xác",
+    fc: "Full Combo",
+    scoreOf: (chart: string) => `Điểm của ${chart}`,
+    accuracyOf: (chart: string) => `Độ chính xác của ${chart}`,
+    fcOf: (chart: string) => `Full Combo trên ${chart}`,
+    more: (count: number) => `Xem thêm ${count}`,
+    profile: "Hồ sơ",
+    avatar: "Ảnh đại diện",
+    background: "Hình nền",
+    none: "Mặc định",
+    intro: "Giới thiệu",
+    challenge: "Chế độ Thử thách",
+    challengeNone: "Chưa từng chơi",
+    level: "Cấp độ",
+    unlocks: "Mở khóa",
+    unlocksText:
+      "Bài hát mà bạn đã nhập điểm sẽ được mở khóa cùng với điểm đó, giống như ảnh đại diện và hình nền của bạn. Hãy thêm bất cứ thứ gì khác bạn từng có. Không thể đặt Data: save dựng lại bắt đầu mà không có Data.",
+    kinds: ["Bài hát", "Bộ sưu tập", "Hình minh họa", "Ảnh đại diện"],
+    picked: (count: number, total: number) => `${count} trên ${total}`,
+    all: "Chọn tất cả",
+    clear: "Bỏ chọn",
+    finish: "Giữ save trên một hồ sơ",
+    name: "Tên",
+    nameHelp: "Hiển thị trên phigros.tools và trong game, nơi bạn có thể đổi tên sau.",
+    words: "Mật khẩu phigros.tools của bạn",
+    wordsText:
+      "16 từ này là mật khẩu của hồ sơ phigros.tools của bạn. Hãy ghi lại theo đúng thứ tự này hoặc chụp ảnh màn hình này, và giữ kín chúng: bạn cần chúng để đăng nhập trên thiết bị của mình, và không ai có thể khôi phục chúng giúp bạn.",
+    saved: "Tôi đã lưu lại",
+    create: "Tạo hồ sơ của tôi",
+    send: "Gửi sang Phigros++",
+    working: "Đang lưu…",
+    empty: "Hãy nhập ít nhất một điểm trước.",
+    done: "Save của bạn đã nằm trên hồ sơ",
+    sent: "Save của bạn đang được gửi đi",
+    sentText:
+      "Hãy mở Phigros++: nó sẽ đề nghị tải save này thay cho save trên thiết bị, và cho biết nó thay thế những gì.",
+    done1: "Cài Phigros++ trên một thiết bị Android.",
+    done2: "Mở **Settings → Profile**, chọn **Sign in to my profile** và nhập 16 từ của bạn.",
+    done3: "Chấp nhận **Bring your save over?**, rồi mở lại Phigros++.",
+    open: "Mở save của tôi",
+    reset: "Làm lại từ đầu",
+    resetConfirm: "Xóa mọi thứ đã nhập ở đây và bắt đầu lại từ save trống?",
   },
   history: {
     trend: (count: number, from: string, to: string) =>
