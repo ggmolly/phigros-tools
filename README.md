@@ -17,6 +17,12 @@ remembers every player you've opened before, laid out as a carousel like the gam
 
 A save that only lives in this browser can be sent to Phigros++, which offers to load it at its next start.
 
+A save that only lives in the game has no way out without root, so **Bring Your Save Over** (`/start`) asks where it
+is and says what works there. Without root the save is rebuilt by hand (`/rebuild`): the scores as the game shows them
+with the RKS they make, the profile, and what was unlocked, never Data. The browser then makes the profile and its 16
+words, and Phigros++ loads the save once signed in to it. Typed scores are **Declared**: listed on the player's page
+and counted nowhere until a play from the game matches or beats them.
+
 ![Main menu carousel with the import options open](docs/screenshots/01-start.png)
 
 ### Overview

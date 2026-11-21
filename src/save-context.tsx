@@ -8,7 +8,9 @@ import { useFormat, useT } from "./i18n";
 import { AppError, errorText } from "./i18n/errors";
 import { useLive } from "./live";
 import { calculateRanking } from "./metrics";
+import { recordLines } from "./modules";
 import { applyPalette } from "./palettes";
+import type { Me, Signer } from "./phigrospp";
 import type { Region, SaveArchive } from "./save";
 import {
   type Credential,
@@ -70,6 +72,11 @@ interface SaveContextValue {
   signOut: (credential: Credential) => Promise<void>;
   /** Sends a snapshot's original save to a Phigros++ profile, for its game to offer. */
   sendToPhigrospp: (rawZip: Uint8Array, credential: Credential) => Promise<void>;
+  /**
+   * Puts a save rebuilt on the site on a Phigros++ profile, its records declared: the signed-in one, whose game offers
+   * it, or a new one made from a recovery phrase's seed, whose save it becomes.
+   */
+  publish: (document: SaveDocumentV1, create?: { name: string; seed: Uint8Array }) => Promise<void>;
   closeUsb: () => void;
   resetUsbDialog: () => void;
   connectAndroid: () => Promise<void>;
@@ -282,15 +289,19 @@ export function SaveProvider({ children, home }: { children: React.ReactNode; ho
     const ppp = await import("./phigrospp");
     await ppp.answer(await ppp.call(credential.signer!, "POST", "/api/session"));
   }
-  async function signIn(how: { code: string } | { phrase: string }) {
-    const ppp = await import("./phigrospp");
-    const { signer, me } =
-      "code" in how ? await ppp.redeem(how.code) : await ppp.signInWithPhrase(how.phrase);
+  /** This browser's new key on a profile is remembered, and the profile's save opens. */
+  async function joined({ signer, me }: { signer: Signer; me: Me }) {
     const credential = { playerId: me.id, nickname: me.name, signer };
     await saveCredential(credential);
     await refresh();
     await startSession(credential);
     await phigrosppImport(credential);
+  }
+  async function signIn(how: { code: string } | { phrase: string }) {
+    const ppp = await import("./phigrospp");
+    await joined(
+      "code" in how ? await ppp.redeem(how.code) : await ppp.signInWithPhrase(how.phrase),
+    );
   }
   async function signOut(credential: Credential) {
     const ppp = await import("./phigrospp");
@@ -309,6 +320,28 @@ export function SaveProvider({ children, home }: { children: React.ReactNode; ho
     await ppp.answer(
       await ppp.call(credential.signer!, "PUT", "/api/offer", ppp.pack(unzipSync(rawZip))),
     );
+  }
+  async function publish(document: SaveDocumentV1, create?: { name: string; seed: Uint8Array }) {
+    const ppp = await import("./phigrospp");
+    const { buildSave } = await import("./save");
+    const save = ppp.pack(await buildSave(document));
+    const signer = create
+      ? await ppp.seedSigner(create.seed)
+      : credentials.find((c) => c.signer)!.signer!;
+    const put = async (path: string, body: Uint8Array | string) =>
+      ppp.answer(await ppp.call(signer, "PUT", path, body));
+    if (create) {
+      const { intro, avatar, background } = document.profile!;
+      await put("/api/profile", JSON.stringify({ name: create.name, intro, avatar, background }));
+    }
+    // declared first: a save loaded without it would send its records as the game's own
+    await put("/api/declared", recordLines(document.songs));
+    await put(create ? "/api/save" : "/api/offer", save);
+    if (!create) return;
+    inPlace.current = true;
+    await joined(await ppp.joinBrowser(signer)).finally(() => {
+      inPlace.current = false;
+    });
   }
   async function cloudImport(
     getSession: () => Promise<{ token: string; account?: Account; region?: Region }>,
@@ -458,6 +491,7 @@ export function SaveProvider({ children, home }: { children: React.ReactNode; ho
     signIn,
     signOut,
     sendToPhigrospp,
+    publish,
     closeUsb,
     resetUsbDialog,
     connectAndroid,

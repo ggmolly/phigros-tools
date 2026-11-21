@@ -5,7 +5,8 @@ import WORDS from "./words.txt?raw";
 /**
  * The site as a Phigros++ device: a browser signs in to a player's phigros.tools profile with its own Ed25519 key
  * (WebCrypto, kept in IndexedDB and never extractable), added to the profile with a code a signed-in device shows. The
- * recovery phrase is the profile's own key: it's only used to make such a code, then dropped.
+ * recovery phrase is the profile's own key: it's only used to make such a code, then dropped. A profile can start here
+ * too, with a phrase drawn in the browser and registered like the game registers its own.
  */
 
 /** A key signed in to a profile, as `POST /api/devices` lists them. */
@@ -74,7 +75,10 @@ export async function call(
       body: concat([signer.public, signature, message]),
     });
     if (response.status !== 409 || again) return response;
-    stamp = Math.max(stamp, (await response.json()).last);
+    // a 409 without the last stamp is the server's answer, not a stamp to catch up with
+    const { last } = await response.clone().json();
+    if (!last) return response;
+    stamp = Math.max(stamp, last);
   }
 }
 
@@ -84,6 +88,8 @@ export async function answer<T>(response: Response): Promise<T> {
   const { code } = await response.json().catch(() => ({}));
   if (code === "removed") throw new AppError("pppRemoved");
   if (code === "no-code") throw new AppError("pppNoCode");
+  if (code === "no-name") throw new AppError("pppNoName");
+  if (code === "name-full") throw new AppError("pppNameFull");
   if (response.status === 403 || response.status === 404) throw new AppError("pppNoProfile");
   throw new AppError("pppServer", String(response.status));
 }
@@ -100,8 +106,14 @@ export async function newSigner(): Promise<Signer> {
   };
 }
 
-/** The profile's own key from its 16 words, read by their first 4 letters like the game reads them. */
-export async function phraseSigner(phrase: string): Promise<Signer> {
+/** A new recovery phrase: its 16 bytes, and the word of each. */
+export function newPhrase() {
+  const seed = crypto.getRandomValues(new Uint8Array(PHRASE));
+  return { seed, words: Array.from(seed, (byte) => words[byte]!) };
+}
+
+/** The bytes of a typed phrase, its 16 words read by their first 4 letters like the game reads them. */
+function phraseSeed(phrase: string): Uint8Array {
   const typed = phrase.toLowerCase().match(/[a-z]+/g) ?? [];
   const bytes = typed.map((word) => {
     const byte = words.findIndex((w) => w.slice(0, 4) === word.slice(0, 4));
@@ -109,9 +121,14 @@ export async function phraseSigner(phrase: string): Promise<Signer> {
     return byte;
   });
   if (bytes.length !== PHRASE) throw new AppError("pppWords", String(bytes.length));
+  return new Uint8Array(bytes);
+}
+
+/** The profile's own key from the bytes of its recovery phrase. */
+export async function seedSigner(seed: Uint8Array): Promise<Signer> {
   const hashed = await crypto.subtle.digest(
     "SHA-512",
-    concat([new TextEncoder().encode("phigros++ identity"), new Uint8Array(bytes)]),
+    concat([new TextEncoder().encode("phigros++ identity"), seed]),
   );
   // pkcs8 of a raw ed25519 seed
   const pkcs8 = concat([
@@ -138,12 +155,14 @@ export async function redeem(code: string): Promise<{ signer: Signer; me: Me }> 
   return { signer, me: await answer<Me>(await call(signer, "POST", "/api/me")) };
 }
 
-/** Signs this browser in with the recovery phrase: the phrase's key makes a code, which a new key redeems. */
-export async function signInWithPhrase(phrase: string) {
-  const owner = await phraseSigner(phrase);
+/** Signs this browser in with the profile's own key: it makes a code, which a new key redeems. */
+export async function joinBrowser(owner: Signer) {
   const { code } = await answer<{ code: string }>(await call(owner, "POST", "/api/invite"));
   return redeem(code);
 }
+
+export const signInWithPhrase = async (phrase: string) =>
+  joinBrowser(await seedSigner(phraseSeed(phrase)));
 
 /** Files one after the other, each a 1 byte name length, the name, a 4 byte LE length and the file. */
 export function unpack(body: Uint8Array): Record<string, Uint8Array> {

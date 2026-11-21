@@ -140,7 +140,9 @@ export function SiteHeader({ children }: { children?: React.ReactNode }) {
         ? "/charts"
         : pathname.startsWith("/mods")
           ? "/mods"
-          : (tabIds.find((id) => id === pathname) ?? "/");
+          : pathname === "/start" || pathname === "/rebuild"
+            ? "/phigrospp"
+            : (tabIds.find((id) => id === pathname) ?? "/");
   return (
     <header className="topbar">
       <Link className="corner brand" to="/" aria-label={t.header.home}>

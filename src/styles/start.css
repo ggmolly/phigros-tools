@@ -1,0 +1,189 @@
+/* ---------- Bringing a save over: the questions, then the save rebuilt by hand ---------- */
+.start-question {
+  margin-top: 1.5rem;
+  max-width: 46rem;
+}
+.start-question h2,
+.start-cases h2 {
+  margin-bottom: 0.375rem;
+  font-size: 1.1875rem;
+  font-weight: 400;
+}
+.start-question h2:focus {
+  outline: 0;
+}
+.start-answer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 1rem;
+  color: var(--dim);
+}
+.start-go,
+.start-cases .btn {
+  margin-top: 1rem;
+}
+.start-cases {
+  margin: 0;
+}
+.rebuild-lead {
+  max-width: 46rem;
+}
+.rebuild-lead + .warning {
+  margin: 1rem 0 0;
+}
+/* the RKS stays in sight while scores are typed, to compare with the game's */
+.rebuild-records {
+  overflow: visible;
+}
+.rebuild-stats {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 2.25rem;
+  margin: -1.375rem -1.875rem 1.125rem;
+  padding: 0.875rem 1.875rem;
+  background: #150f17;
+}
+.rebuild-records .filters {
+  margin-top: 1rem;
+  align-items: center;
+}
+.rebuild-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+.rebuild-rows {
+  display: grid;
+  gap: 0.375rem;
+  margin-bottom: 1rem;
+  padding: 0;
+  list-style: none;
+}
+.rebuild-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 6.5rem 7rem 6rem auto 3rem;
+  align-items: center;
+  gap: 0.375rem 0.75rem;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid var(--hairline);
+}
+.rebuild-song {
+  display: grid;
+  min-width: 0;
+}
+.rebuild-song,
+.rebuild-song .meta {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rebuild-level {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.rebuild-row .field {
+  width: 100%;
+  font-size: max(1rem, 1em);
+}
+.rebuild-row .field:user-invalid,
+.rebuild-finish .field:user-invalid {
+  border-color: var(--negative);
+  box-shadow: 0 0 0 1px var(--negative);
+}
+.rebuild-row > .num:last-child {
+  text-align: right;
+}
+.rebuild-profile {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1rem 1.375rem;
+  margin-top: 1rem;
+}
+.rebuild-level-field {
+  width: 4.5rem;
+}
+.rebuild-intro {
+  flex: 1 1 18rem;
+}
+.rebuild-keys {
+  margin-top: 0.75rem;
+  padding: 0.75rem 1.25rem;
+  background: rgb(0 0 0 / 0.35);
+}
+.rebuild-keys summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 1.125rem;
+  cursor: pointer;
+}
+.rebuild-key-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 0.125rem 1rem;
+  margin-top: 0.875rem;
+  padding: 0;
+  list-style: none;
+}
+.rebuild-key-list label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+}
+.rebuild-key-list input {
+  flex: none;
+  width: 1.125rem;
+  height: 1.125rem;
+  accent-color: var(--glow);
+}
+.rebuild-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.375rem;
+  margin-top: 1rem;
+}
+.rebuild-finish {
+  display: grid;
+  justify-items: start;
+  gap: 0.875rem;
+}
+.rebuild-finish .field {
+  width: min(22rem, 100%);
+}
+.rebuild-phrase {
+  max-width: 46rem;
+}
+.rebuild-phrase h3 {
+  font-size: 1.1875rem;
+  font-weight: 400;
+}
+.rebuild-phrase .ppp-words {
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: 0.875rem;
+}
+@media (max-width: 45em) {
+  .rebuild-stats {
+    gap: 0.5rem 1.25rem;
+  }
+  .rebuild-row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto 3rem;
+  }
+  .rebuild-song {
+    grid-column: 1 / 4;
+  }
+  .rebuild-level {
+    grid-column: 4;
+    justify-content: flex-end;
+  }
+  .rebuild-phrase .ppp-words {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

@@ -18,6 +18,23 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://phigros.tools/"/>
   </url>
   <url>
+    <loc>https://phigros.tools/start</loc>
+    <lastmod>2026-11-21</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://phigros.tools/start"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://phigros.tools/fr/start"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://phigros.tools/es/start"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://phigros.tools/it/start"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://phigros.tools/de/start"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://phigros.tools/zh/start"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://phigros.tools/zh-Hant/start"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://phigros.tools/ja/start"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://phigros.tools/ko/start"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://phigros.tools/vi/start"/>
+    <xhtml:link rel="alternate" hreflang="id" href="https://phigros.tools/id/start"/>
+    <xhtml:link rel="alternate" hreflang="ms" href="https://phigros.tools/ms/start"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://phigros.tools/start"/>
+  </url>
+  <url>
     <loc>https://phigros.tools/charts</loc>
     <lastmod>2026-11-21</lastmod>
     <xhtml:link rel="alternate" hreflang="en" href="https://phigros.tools/charts"/>

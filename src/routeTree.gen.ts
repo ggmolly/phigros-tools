@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ToolRouteImport } from './routes/_tool'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as PhigrosppRouteImport } from './routes/phigrospp'
+import { Route as RebuildRouteImport } from './routes/rebuild'
+import { Route as StartRouteImport } from './routes/start'
 import { Route as ToolIndexRouteImport } from './routes/_tool.index'
 import { Route as ToolDevicesRouteImport } from './routes/_tool.devices'
 import { Route as ToolInRouteImport } from './routes/_tool.in'
@@ -38,6 +40,16 @@ const LeaderboardRoute = LeaderboardRouteImport.update({
 const PhigrosppRoute = PhigrosppRouteImport.update({
   id: '/phigrospp',
   path: '/phigrospp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RebuildRoute = RebuildRouteImport.update({
+  id: '/rebuild',
+  path: '/rebuild',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StartRoute = StartRouteImport.update({
+  id: '/start',
+  path: '/start',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolIndexRoute = ToolIndexRouteImport.update({
@@ -110,6 +122,8 @@ export interface FileRoutesByFullPath {
   '/': typeof ToolIndexRoute
   '/leaderboard': typeof LeaderboardRouteWithChildren
   '/phigrospp': typeof PhigrosppRoute
+  '/rebuild': typeof RebuildRoute
+  '/start': typeof StartRoute
   '/devices': typeof ToolDevicesRoute
   '/in': typeof ToolInRoute
   '/records': typeof ToolRecordsRoute
@@ -125,6 +139,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/phigrospp': typeof PhigrosppRoute
+  '/rebuild': typeof RebuildRoute
+  '/start': typeof StartRoute
   '/devices': typeof ToolDevicesRoute
   '/in': typeof ToolInRoute
   '/records': typeof ToolRecordsRoute
@@ -144,6 +160,8 @@ export interface FileRoutesById {
   '/_tool': typeof ToolRouteWithChildren
   '/leaderboard': typeof LeaderboardRouteWithChildren
   '/phigrospp': typeof PhigrosppRoute
+  '/rebuild': typeof RebuildRoute
+  '/start': typeof StartRoute
   '/_tool/devices': typeof ToolDevicesRoute
   '/_tool/in': typeof ToolInRoute
   '/_tool/records': typeof ToolRecordsRoute
@@ -164,6 +182,8 @@ export interface FileRouteTypes {
     | '/'
     | '/leaderboard'
     | '/phigrospp'
+    | '/rebuild'
+    | '/start'
     | '/devices'
     | '/in'
     | '/records'
@@ -179,6 +199,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/phigrospp'
+    | '/rebuild'
+    | '/start'
     | '/devices'
     | '/in'
     | '/records'
@@ -197,6 +219,8 @@ export interface FileRouteTypes {
     | '/_tool'
     | '/leaderboard'
     | '/phigrospp'
+    | '/rebuild'
+    | '/start'
     | '/_tool/devices'
     | '/_tool/in'
     | '/_tool/records'
@@ -216,6 +240,8 @@ export interface RootRouteChildren {
   ToolRoute: typeof ToolRouteWithChildren
   LeaderboardRoute: typeof LeaderboardRouteWithChildren
   PhigrosppRoute: typeof PhigrosppRoute
+  RebuildRoute: typeof RebuildRoute
+  StartRoute: typeof StartRoute
   ChartsIdRoute: typeof ChartsIdRoute
   PlayersIdRoute: typeof PlayersIdRoute
   ReplaysIdRoute: typeof ReplaysIdRoute
@@ -247,6 +273,20 @@ declare module '@tanstack/react-router' {
       path: '/phigrospp'
       fullPath: '/phigrospp'
       preLoaderRoute: typeof PhigrosppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rebuild': {
+      id: '/rebuild'
+      path: '/rebuild'
+      fullPath: '/rebuild'
+      preLoaderRoute: typeof RebuildRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/start': {
+      id: '/start'
+      path: '/start'
+      fullPath: '/start'
+      preLoaderRoute: typeof StartRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_tool/': {
@@ -375,6 +415,8 @@ const rootRouteChildren: RootRouteChildren = {
   ToolRoute: ToolRouteWithChildren,
   LeaderboardRoute: LeaderboardRouteWithChildren,
   PhigrosppRoute: PhigrosppRoute,
+  RebuildRoute: RebuildRoute,
+  StartRoute: StartRoute,
   ChartsIdRoute: ChartsIdRoute,
   PlayersIdRoute: PlayersIdRoute,
   ReplaysIdRoute: ReplaysIdRoute,

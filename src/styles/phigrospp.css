@@ -340,6 +340,9 @@
 .ppp-features .panel-title {
   margin-bottom: 0.5rem;
 }
+.ppp-bring {
+  margin-top: 1.125rem;
+}
 .ppp-cases {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
@@ -354,4 +357,11 @@
   margin-bottom: 0.375rem;
   font-size: 1.125rem;
   font-weight: 400;
+}
+.guide-steps a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.guide-steps a:hover {
+  color: var(--glow);
 }

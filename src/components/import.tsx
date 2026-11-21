@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { encode } from "uqr";
 import { Rich, useT } from "../i18n";
@@ -26,6 +27,15 @@ export function ImportOptions() {
     <>
       {option(t.ppp.profile, t.ppp.profileDesc, () => openSignIn.current?.(), busy)}
       {option(t.import.file, t.import.fileDesc, () => fileInput.current?.click())}
+      <Link to="/start" className="arrow-row import-option">
+        <span>
+          <strong>{t.start.option}</strong>
+          <span className="import-description">{t.start.optionDesc}</span>
+        </span>
+        <span className="arrow-chip">
+          <Arrow />
+        </span>
+      </Link>
       {option(t.ppp.otherWays, t.ppp.otherWaysDesc, () => openOtherWays.current?.showModal())}
     </>
   );

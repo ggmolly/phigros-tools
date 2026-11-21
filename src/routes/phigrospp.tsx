@@ -103,7 +103,14 @@ function PhigrosppPage() {
           <ol className="guide-steps">
             {[p.install1, p.install2, p.install3, p.install4].map((step) => (
               <li key={step}>
-                <Rich text={step} />
+                <Rich
+                  text={step}
+                  href={
+                    step === p.install2
+                      ? `${INSTALLER}/download/phigrospp-installer.apk`
+                      : undefined
+                  }
+                />
               </li>
             ))}
           </ol>
@@ -112,24 +119,8 @@ function PhigrosppPage() {
         <section className="panel">
           <h2 className="panel-title">{p.bring}</h2>
           <p className="meta">{p.bringText}</p>
-          <div className="ppp-cases">
-            {(
-              [
-                [p.browser, p.browserText],
-                [p.device, p.deviceText],
-                [p.game, p.gameText],
-              ] as const
-            ).map(([title, text]) => (
-              <div key={title} className="ppp-case">
-                <h3>{title}</h3>
-                <p className="meta">
-                  <Rich text={text} />
-                </p>
-              </div>
-            ))}
-          </div>
-          <Link to="/" className="btn btn-ghost">
-            {t.notFound.openSave} <Arrow />
+          <Link to="/start" className="btn ppp-bring">
+            {t.start.cta} <Arrow />
           </Link>
         </section>
       </main>
