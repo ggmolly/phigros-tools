@@ -488,5 +488,6 @@ export function decodePhc(data: Uint8Array): RawChart {
     offset,
     ...(numOfNotes === undefined ? {} : { numOfNotes }),
     judgeLineList,
+    ...(topShape === 2 ? { blockAreaList: [] } : {}),
   } as RawChart;
 }
