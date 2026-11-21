@@ -190,7 +190,8 @@ const bestsOf = sqlite.prepare<
   [Uint8Array]
 >(
   `SELECT b.song, b.level, b.score, b.accuracy, b.fc, b.played, r.status, b.sha256, r.timing FROM bests b
-   LEFT JOIN replays r ON r.sha256 = b.sha256 WHERE b.key = ? AND b.scope = 0`,
+   LEFT JOIN replays r ON r.sha256 = b.sha256 WHERE b.key = ?1 AND b.scope = 0
+   UNION ALL SELECT song, level, score, accuracy, fc, NULL, 'declared', NULL, NULL FROM declared WHERE key = ?1`,
 );
 const recentOf = sqlite.prepare<
   {
@@ -284,9 +285,11 @@ export function profilePage(id: string): PlayerProfile | undefined {
       };
     })
     .sort((a, b) => b.rks - a.rks);
+  // declared records are listed with the bests and count for nothing
+  const ranked = top.filter((best) => best.status !== "declared");
   // counted like the game's RKS: the 27 best charts, and the 3 best of those with 100% accuracy
-  for (const best of top.slice(0, BEST)) best.counted = true;
-  for (const best of top.filter((b) => b.accuracy >= 100).slice(0, PHI)) best.counted = true;
+  for (const best of ranked.slice(0, BEST)) best.counted = true;
+  for (const best of ranked.filter((b) => b.accuracy >= 100).slice(0, PHI)) best.counted = true;
   const rank = row.unlisted ? null : (rankOf.get(row.key)?.rank ?? null);
   // the worker keeps a day hourly (snapshotHistory), today's point follows the RKS shown above it
   const history = historyOf.all(row.key).reverse();
@@ -305,9 +308,9 @@ export function profilePage(id: string): PlayerProfile | undefined {
     seen: Math.max(row.seen, row.created),
     stats: {
       ...totals.get(row.key)!,
-      cleared: top.length,
-      fc: top.filter((best) => best.fc).length,
-      phi: top.filter((best) => best.score >= 1_000_000).length,
+      cleared: ranked.length,
+      fc: ranked.filter((best) => best.fc).length,
+      phi: ranked.filter((best) => best.score >= 1_000_000).length,
     },
     top,
     recent: recentPlays(row.key, 0, LIST_FIRST),

@@ -41,7 +41,7 @@ if (
   sqlite.run("ALTER TABLE replays ADD COLUMN timing REAL");
 sqlite.run("CREATE INDEX IF NOT EXISTS idx_replays_key ON replays(key)");
 // each player's best on each chart, so a chart's ranking is read in order from the index: a verified replay (sha256),
-// or a record their game declared (imported, no sha256, no date). a tie goes to the earliest played replay, then to
+// or a record their game sent (imported, no sha256, no date). a tie goes to the earliest played replay, then to
 // the earliest record (created is when it became the best). the scope is what a leaderboard counts: 0 for all
 // (both), 1 for verified replays only
 sqlite.run(`
@@ -59,6 +59,19 @@ sqlite.run(`
     PRIMARY KEY (key, song, level, scope)
   )
 `);
+// the records a player typed on the site to rebuild their save (see declareRecords): each sits above their best on
+// its chart and counts nowhere, until a play from the game reaches it. kept here as the worker raises bests too
+sqlite.run(`
+  CREATE TABLE IF NOT EXISTS declared (
+    key BLOB NOT NULL,
+    song TEXT NOT NULL,
+    level TEXT NOT NULL,
+    score INTEGER NOT NULL,
+    accuracy REAL NOT NULL,
+    fc INTEGER NOT NULL,
+    PRIMARY KEY (key, song, level)
+  )
+`);
 sqlite.run("DROP INDEX IF EXISTS idx_bests_rank");
 sqlite.run(
   "CREATE INDEX IF NOT EXISTS idx_bests_order ON bests(scope, song, level, score DESC, played IS NULL, played, created)",
@@ -73,7 +86,13 @@ const insert = sqlite.prepare<
   `INSERT INTO replays (sha256, key, song, level, score, game, header, created) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
    ON CONFLICT (sha256) DO NOTHING`,
 );
-// a higher score replaces the best, and so does a replay of the score an imported record declared
+const declaredScore = sqlite.prepare<{ score: number }, [Uint8Array, string, string]>(
+  "SELECT score FROM declared WHERE key = ? AND song = ? AND level = ?",
+);
+const undeclare = sqlite.prepare<unknown, [Uint8Array, string, string, number]>(
+  "DELETE FROM declared WHERE key = ? AND song = ? AND level = ? AND score <= ?",
+);
+// a higher score replaces the best, and so does a replay of the score an imported record has
 const raise = sqlite.prepare<
   unknown,
   [Uint8Array, string, string, Scope, number, number, number, number | null, number, string | null]
@@ -97,9 +116,15 @@ export interface Best {
   sha256: string | null;
 }
 
-/** A record counts for all, a verified replay for both scopes. Whether it became the player's best counting all. */
+/**
+ * A record counts for all, a verified replay for both scopes. Whether it became the player's best counting all. A
+ * record no higher than the one the player declared is their rebuilt save sent back by the game, and counts for
+ * nothing; anything reaching the declared score takes its place.
+ */
 export function raiseBest(key: Uint8Array, song: string, level: string, best: Best) {
   const { score, accuracy, fc, played, sha256 } = best;
+  if (!sha256 && (declaredScore.get(key, song, level)?.score ?? -1) >= score) return false;
+  undeclare.run(key, song, level, score);
   const now = Date.now();
   const raised =
     raise.run(key, song, level, 0, score, accuracy, fc ? 1 : 0, played, now, sha256).changes > 0;

@@ -189,7 +189,7 @@ export function TopPlays({ profile }: { profile: PlayerProfile }) {
       className="profile-top"
       row={(play) => (
         <li
-          key={`${play.song}:${play.level}`}
+          key={`${play.song}:${play.level}:${play.status}`}
           className={play.counted ? undefined : "profile-uncounted"}
         >
           <ChartName chart={play} />

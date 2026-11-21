@@ -75,7 +75,7 @@ export function Place({ rank }: { rank: number }) {
   return <td className={rank <= 3 ? `num place place-${rank}` : "num meta"}>{rank}</td>;
 }
 
-/** Verified, Imported, Pending or Unverified, with what it means on hover. */
+/** Verified, Imported, Declared, Pending or Unverified, with what it means on hover. */
 export function PlayStatusLabel({ status }: { status: PlayStatus | ReplayInfo["status"] }) {
   const t = useT();
   return (

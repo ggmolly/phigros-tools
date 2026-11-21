@@ -12,8 +12,11 @@ export interface PlayerName {
   avatar: string;
 }
 
-/** What counts on the leaderboard: a verified replay, or a record the player's game declared, with no replay. */
-export type PlayStatus = "verified" | "imported";
+/**
+ * What counts on the leaderboard: a verified replay, or a record the player's game sent, with no replay. A declared
+ * record was typed by the player on the site: only their own page lists it, and it counts for nothing.
+ */
+export type PlayStatus = "verified" | "imported" | "declared";
 
 /** A player's best on a chart: an uploaded replay, or an imported record. */
 export interface Play {
@@ -137,7 +140,8 @@ export interface PlayerProfile {
     fc: number;
     phi: number;
   };
-  /** Every best by its chart RKS, saying which count towards their RKS (best 27, then the 3 best Phi). */
+  /** Every best and declared record by its chart RKS, saying which count towards their RKS (best 27, then the 3 best
+   * Phi). */
   top: (PlayedChart & { status: PlayStatus; rks: number; counted: boolean })[];
   recent: Page<PlayedChart>;
   activity: Page<Activity>;

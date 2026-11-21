@@ -871,6 +871,7 @@ async function render(
 export async function renderPlayerCard(origin: string, profile: PlayerProfile) {
   const songs = new Map<string, CardData["songs"][number] & { songId: string }>();
   for (const play of profile.top) {
+    if (play.status === "declared") continue;
     const song = songs.get(play.song) ?? {
       songId: play.song,
       fc: 0,
