@@ -1,8 +1,8 @@
 import { existsSync, readFileSync } from "node:fs";
 import { catalogManifest } from "../src/catalog";
 import { judge, timingAccuracy } from "../src/judge";
-import { Mod, modChart } from "../src/modifiers";
-import { decodeReplay } from "../src/pigeon";
+import { Mod, modChart, rateOf } from "../src/modifiers";
+import { decodeReplay, type ReplayFrame } from "../src/pigeon";
 import { decodePhc } from "../src/player/phc";
 import { topics } from "../src/topics";
 import { sqlite } from "./db";
@@ -32,6 +32,14 @@ const settle = sqlite.prepare<unknown, [string, string, number | null, string]>(
   "UPDATE replays SET status = ?, result = ?, timing = ? WHERE sha256 = ?",
 );
 
+// how fast the song ran against real time: the median of what a frame's song time moved over its delta time, which
+// stays within 0.2% of the speed played at on every device seen
+function pace(frames: ReplayFrame[]) {
+  const steps = frames.slice(1).map((frame, i) => (frame.t - frames[i]!.t) / frame.dt);
+  return steps.sort((a, b) => a - b)[steps.length >> 1] ?? 1;
+}
+const PACE = 0.02; // how far from its modifiers' speed a replay may run
+
 function verify(sha256: string) {
   const row = replay.get(sha256);
   if (row?.status !== "pending") return;
@@ -47,10 +55,11 @@ function verify(sha256: string) {
   const recorded = Object.fromEntries(RESULT.map((field) => [field, header[field]]));
   const replayed = Object.fromEntries(RESULT.map((field) => [field, judged[field]]));
   // Sudden Death ends a play at its first bad or miss and Perfect restarts it at its first good, so neither records
-  // a replay that has one
+  // a replay that has one. and one with modifiers ran at their speed: Nightcore's score isn't for a song played slower
   const broken =
     (mods & Mod.SD && judged.bad + judged.miss) ||
-    (mods & Mod.PF && judged.good + judged.bad + judged.miss);
+    (mods & Mod.PF && judged.good + judged.bad + judged.miss) ||
+    (mods && Math.abs(pace(frames) / rateOf(mods) - 1) > PACE);
   const same = !broken && RESULT.every((field) => recorded[field] === replayed[field]);
   const result = JSON.stringify({ recorded, replayed });
   const timing = timingAccuracy(judged.hits, mods);
