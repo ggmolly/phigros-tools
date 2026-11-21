@@ -37,6 +37,7 @@ export type Chart = {
   judged: number[];
   /** every note's hit (a hold's at its start), sorted (for hit sounds) */
   hits: { sec: number; type: NoteType }[];
+  blocks: RawBlockArea[];
 };
 
 type RawSegment = {
@@ -64,7 +65,26 @@ type RawLine = {
   judgeLineRotateEvents: RawSegment[];
   judgeLineDisappearEvents: RawSegment[];
 };
-export type RawChart = { formatVersion: number; offset: number; judgeLineList: RawLine[] };
+type Vec = { x: number; y: number };
+// a rectangle of the screen that blocks touches while enabled (GameInformation.BlockArea)
+export type RawBlockArea = {
+  topRightPercentage: Vec;
+  bottomLeftPercentage: Vec;
+  appearTime: number;
+  enableTime: number;
+  disableTime: number;
+  disappearTime: number;
+  isSubtract: boolean;
+  rotateEvents: { anchor: Vec; time: number; easeType: number; rotation: number }[];
+  moveEvents: { endPosition: Vec; time: number; easeTypeX: number; easeTypeY: number }[];
+  scaleEvents: { anchor: Vec; time: number; easeTypeX: number; easeTypeY: number; scale: Vec }[];
+};
+export type RawChart = {
+  formatVersion: number;
+  offset: number;
+  judgeLineList: RawLine[];
+  blockAreaList?: RawBlockArea[];
+};
 
 export function parseChart(raw: RawChart): Chart {
   const { formatVersion } = raw;
@@ -136,6 +156,7 @@ export function parseChart(raw: RawChart): Chart {
     offset: raw.offset,
     judged,
     hits: all.map(({ sec, type }) => ({ sec, type })).sort((a, b) => a.sec - b.sec),
+    blocks: raw.blockAreaList ?? [],
   };
 }
 

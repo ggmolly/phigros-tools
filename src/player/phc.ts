@@ -1,3 +1,4 @@
+import { inflateSync, strFromU8 } from "fflate";
 import type { NoteType, RawChart } from "./chart";
 
 // Decoder for .phc charts, the lossless chart codec in ../chart-codec (codec.py, whose README describes the format).
@@ -427,6 +428,17 @@ const EVENT_KEYS = [
  */
 export function decodePhc(data: Uint8Array): RawChart {
   const mode = data[0];
+  // the chart without its block areas, then the raw text of its ',"blockAreaList":[...]}' deflated
+  if (mode === 5) {
+    const [length, at] = readVarint(data, 1);
+    const [, tail] = readVarint(data, at + length);
+    const text = strFromU8(inflateSync(data.subarray(tail)));
+    // as f32, like every other value of the chart
+    const blocks = JSON.parse(`{${text.slice(1)}`, (_, v) =>
+      typeof v === "number" ? Math.fround(v) : v,
+    );
+    return { ...decodePhc(data.subarray(at, at + length)), ...blocks };
+  }
   let payload: Uint8Array;
   if (mode === 1 || mode === 3) payload = data.subarray(1);
   else if (mode === 2 || mode === 4) {

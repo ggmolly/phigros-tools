@@ -1,4 +1,5 @@
 import type { ReplayFrame, ReplayHeader } from "./pigeon";
+import { blocking, mirrorBlock } from "./player/blocks";
 import type { RawChart } from "./player/chart";
 
 /**
@@ -22,6 +23,8 @@ const REACH = 2.0999999046325684; // for drags and flicks
 const HOLD_REACH = 1.899999976158142;
 const DRAG_WINDOW = 0.10000000149011612;
 const LAND = 0.004999999888241291; // drags and flicks are scored this close to the line
+// how far a touch must be inside a block area to lose its finger: the level sets 0.05 of the play height (10)
+const INSET = 0.5;
 const BEGAN = 0;
 
 export type Judgement = "perfect" | "good" | "bad" | "miss";
@@ -318,6 +321,10 @@ export function judge(raw: RawChart, frames: ReplayFrame[], screen: ReplayHeader
     f(f(f(f(py / screen.height) * 2) - 1) * 5),
   ];
   let fingers: Finger[] = [];
+  // the play area of block areas, width capped at 16:9, and the touches they took: blocked until lifted
+  const areas = (raw.blockAreaList ?? []).map((b) => (mirror ? mirrorBlock(b) : b));
+  const areaW = 10 * Math.min(aspect, 16 / 9);
+  const blocked = new Set<number>();
   const length = (v: [number, number]) => f(Math.sqrt(f(f(v[0] * v[0]) + f(v[1] * v[1]))));
 
   const result: Result = {
@@ -388,8 +395,9 @@ export function judge(raw: RawChart, frames: ReplayFrame[], screen: ReplayHeader
 
     // FingerManagement: follow the touches, then tell new flicks
     const ids = new Set(frame.touches.map((touch) => touch.id));
+    for (const id of blocked) if (!ids.has(id)) blocked.delete(id);
     for (const touch of frame.touches)
-      if (!fingers.some((finger) => finger.id === touch.id)) {
+      if (!blocked.has(touch.id) && !fingers.some((finger) => finger.id === touch.id)) {
         const p = toWorld(touch.x, touch.y);
         fingers.push({
           id: touch.id,
@@ -429,6 +437,15 @@ export function judge(raw: RawChart, frames: ReplayFrame[], screen: ReplayHeader
 
     // JudgeControl: fingers measured against the lines as they were last frame, then taps and flicks
     if (now >= 0) {
+      // JudgeControl.CheckBlocks: a live touch in an enabled area loses its finger
+      if (areas.length) {
+        for (const touch of frame.touches) {
+          if (touch.phase === 3 || touch.phase === 4 || blocked.has(touch.id)) continue;
+          const [x, y] = toWorld(touch.x, touch.y);
+          if (blocking(areas, now, x, y, areaW, 10, INSET)) blocked.add(touch.id);
+        }
+        fingers = fingers.filter((finger) => !blocked.has(finger.id));
+      }
       for (const line of lines) {
         const a1 = f(f(line.theta / -180) * PI);
         const a2 = f(f(line.theta / 180) * PI);

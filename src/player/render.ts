@@ -1,4 +1,5 @@
 import { rankOf, score7 } from "../components/primitives";
+import { type BlockPose, blockPose, enabled, visible } from "./blocks";
 import {
   type Chart,
   countUpTo,
@@ -6,6 +7,7 @@ import {
   lineFloor,
   linePose,
   type Note,
+  type RawBlockArea,
   segmentAt,
   valueAt,
 } from "./chart";
@@ -83,6 +85,56 @@ export function loadArt() {
 function pose(line: Line, t: number, W: number, H: number) {
   const at = linePose(line, t);
   return { ...at, x: at.x * W, y: at.y * H };
+}
+
+// the game draws them with shaders over the scene: here enabled areas are a veil, normal ones xor subtract ones as
+// their touches go, and the others an outline that fades in as they appear and brightens just before they enable
+const BLOCK_VEIL = "rgba(255, 255, 255, 0.22)";
+const BLOCK_EDGE = "255 255 255";
+const BLOCK_READY = 0.5;
+let veil: HTMLCanvasElement | undefined;
+
+function drawBlocks(
+  ctx: CanvasRenderingContext2D,
+  blocks: RawBlockArea[],
+  t: number,
+  W: number,
+  H: number,
+) {
+  const shown = blocks.filter((b) => visible(b, t));
+  if (!shown.length) return;
+  veil ??= document.createElement("canvas");
+  [veil.width, veil.height] = [W, H];
+  const mask = veil.getContext("2d")!;
+  const place = (c: CanvasRenderingContext2D, p: BlockPose) => {
+    const r = (p.rot * Math.PI) / 180;
+    c.setTransform(Math.cos(r), -Math.sin(r), Math.sin(r), Math.cos(r), W / 2 + p.x, H / 2 - p.y);
+  };
+  ctx.lineWidth = Math.max(1, H / 360);
+  for (const subtract of [false, true])
+    for (const b of shown) {
+      if (b.isSubtract !== subtract) continue;
+      const p = blockPose(b, t, W, H);
+      if (enabled(b, t)) {
+        mask.globalCompositeOperation = subtract ? "xor" : "source-over";
+        place(mask, p);
+        mask.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      }
+      const ready = !enabled(b, t) && t >= b.enableTime - BLOCK_READY && t < b.enableTime;
+      const shownFor = enabled(b, b.appearTime) ? 1 : Math.min(1, (t - b.appearTime) / BLOCK_READY);
+      const alpha = (enabled(b, t) ? 0.9 : ready ? 0.6 : 0.3) * shownFor;
+      ctx.strokeStyle = `rgb(${BLOCK_EDGE} / ${alpha})`;
+      ctx.setLineDash(subtract ? [ctx.lineWidth * 4, ctx.lineWidth * 3] : []);
+      place(ctx, p);
+      ctx.strokeRect(-p.w / 2, -p.h / 2, p.w, p.h);
+    }
+  ctx.setLineDash([]);
+  mask.setTransform(1, 0, 0, 1, 0, 0);
+  mask.globalCompositeOperation = "source-in";
+  mask.fillStyle = BLOCK_VEIL;
+  mask.fillRect(0, 0, W, H);
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.drawImage(veil, 0, 0);
 }
 
 // classic noise function for the particules
@@ -275,6 +327,7 @@ export function drawScene(
     }
   }
   ctx.globalAlpha = 1;
+  drawBlocks(ctx, chart.blocks, t, W, H);
   for (const hit of hits)
     drawHit(ctx, hit.x, hit.y, hit.p, HIT_SCALE * k, hit.seed, hit.good ? GOOD_TINT : HIT_TINT);
   ctx.globalAlpha = 1;
