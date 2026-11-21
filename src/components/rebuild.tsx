@@ -368,9 +368,16 @@ export function Rebuild() {
               onChange={(e) => setProfile({ background: e.currentTarget.value })}
             >
               <option value="">{r.none}</option>
-              {Object.keys(KEYS[2]!).map((name) => (
-                <option key={name}>{name}</option>
+              {/* a save names its background by the song's id */}
+              {catalogSongs.map((song) => (
+                <option key={song.id} value={`${song.id}.0`}>
+                  {song.title}
+                </option>
               ))}
+              {userProfile.background &&
+                !catalogSongs.some((song) => `${song.id}.0` === userProfile.background) && (
+                  <option>{userProfile.background}</option>
+                )}
             </select>
           </label>
           <label className="select">

@@ -113,8 +113,8 @@ export function setKey(keys: GameKey, kind: number, name: string, on: boolean) {
 
 /**
  * The save with what it needs to be played as it reads: the key of each song that has a record, the gates of each
- * chart that has one, and the avatar and background of the profile. Chapters open by themselves, the game works them
- * out from the scores.
+ * chart that has one, and the avatar of the profile (its background is a song's id, and needs no key). Chapters open
+ * by themselves, the game works them out from the scores.
  */
 export function unlock(document: SaveDocumentV1): SaveDocumentV1 {
   const save = structuredClone(document);
@@ -129,7 +129,6 @@ export function unlock(document: SaveDocumentV1): SaveDocumentV1 {
     if (grade in PREFS && (song.levels[2]?.score ?? 0) >= S_GRADE) open(save, grade);
   }
   if (profile?.avatar) setKey(gameKey, 3, profile.avatar, true);
-  if (profile?.background) setKey(gameKey, 2, profile.background, true);
   // a song of chapters 8 and 9 is unlocked along their story, which has begun for a save that has one
   const chapter8 = progress.chapter8SongUnlocked ?? 0;
   const chapter9 = progress.chapter9SongUnlocked ?? 0;
