@@ -1,4 +1,4 @@
-import { ParseError, Reader } from "./binary";
+import { ParseError, Reader, Writer } from "./binary";
 
 /** The newest module version this build parses. The game only ever appends fields on a version bump, so a
  * newer module is parsed leniently (strict tail check skipped); a version below the minimum can't be read. */
@@ -153,6 +153,21 @@ export function decodeSummary(encoded: string): Summary {
   return summary;
 }
 
+export function encodeSummary(summary: Summary): string {
+  const w = new Writer();
+  w.u8(summary.saveVersion);
+  w.i16(summary.challengeModeRank);
+  w.f32(summary.rankingScore);
+  w.varshort(summary.gameVersion);
+  w.string(summary.avatar);
+  for (const count of summary.counts) {
+    w.i16(count.cleared);
+    w.i16(count.fc);
+    w.i16(count.phi);
+  }
+  return w.finish().toBase64();
+}
+
 export function parseGameRecord(bytes: Uint8Array, version: number, lenient = false): SongRecord[] {
   supported("gameRecord", version, 1, PARSEABLE_VERSIONS.gameRecord, lenient);
   const r = new Reader(bytes, "gameRecord");
@@ -202,6 +217,26 @@ export function parseGameRecord(bytes: Uint8Array, version: number, lenient = fa
   return songs;
 }
 
+export function writeGameRecord(songs: SongRecord[]): Uint8Array {
+  const w = new Writer();
+  w.varshort(songs.length);
+  for (const song of songs) {
+    w.string(song.rawSongId);
+    const body = new Writer();
+    body.u8(song.levels.reduce((flags, record, level) => flags | (record ? 1 << level : 0), 0));
+    body.u8(song.fc);
+    for (const record of song.levels) {
+      if (!record) continue;
+      body.i32(record.score);
+      body.f32(record.accuracy);
+    }
+    const bytes = body.finish();
+    w.u8(bytes.length);
+    w.bytes(bytes);
+  }
+  return w.finish();
+}
+
 export function parseProfile(bytes: Uint8Array, version: number, lenient = false): Profile {
   supported("user", version, 1, PARSEABLE_VERSIONS.user, lenient);
   const r = new Reader(bytes, "user");
@@ -213,6 +248,15 @@ export function parseProfile(bytes: Uint8Array, version: number, lenient = false
   };
   if (!lenient) r.finish();
   return profile;
+}
+
+export function writeProfile(profile: Profile): Uint8Array {
+  const w = new Writer();
+  w.bool(profile.idShown);
+  w.string(profile.intro);
+  w.string(profile.avatar);
+  w.string(profile.background);
+  return w.finish();
 }
 
 export function parseSettings(bytes: Uint8Array, version: number, lenient = false): Settings {
@@ -233,6 +277,22 @@ export function parseSettings(bytes: Uint8Array, version: number, lenient = fals
   };
   if (!lenient) r.finish();
   return settings;
+}
+
+export function writeSettings(settings: Settings): Uint8Array {
+  const w = new Writer();
+  w.bool(settings.chordSupport);
+  w.bool(settings.fcAPIndicator);
+  w.bool(settings.enableHitSound);
+  w.bool(settings.lowResolutionMode);
+  w.string(settings.device);
+  w.f32(settings.brightness);
+  w.f32(settings.musicVolume);
+  w.f32(settings.effectVolume);
+  w.f32(settings.hitSoundVolume);
+  w.f32(settings.offset);
+  w.f32(settings.noteScale);
+  return w.finish();
 }
 
 export function parseGameKey(bytes: Uint8Array, version: number, lenient = false): GameKey {
@@ -262,6 +322,25 @@ export function parseGameKey(bytes: Uint8Array, version: number, lenient = false
   return result;
 }
 
+export function writeGameKey(gameKey: GameKey, version = PARSEABLE_VERSIONS.gameKey): Uint8Array {
+  const w = new Writer();
+  w.varshort(gameKey.entries.length);
+  for (const entry of gameKey.entries) {
+    w.string(entry.key);
+    const values = entry.values.filter((value) => value !== null);
+    w.u8(1 + values.length);
+    w.u8(entry.valueFlags);
+    for (const value of values) w.u8(value);
+  }
+  w.u8(gameKey.lanotaReadKeys);
+  if (version >= 2) w.bool(gameKey.camelliaReadKey ?? false);
+  if (version >= 3) {
+    w.u8(gameKey.sideStory4BeginReadKey ?? 0);
+    w.u8(gameKey.oldScoreClearedV390 ?? 0);
+  }
+  return w.finish();
+}
+
 export function parseGameProgress(
   bytes: Uint8Array,
   version: number,
@@ -275,7 +354,7 @@ export function parseGameProgress(
     alreadyShowCollectionTip: r.bool("alreadyShowCollectionTip"),
     alreadyShowAutoUnlockINTip: r.bool("alreadyShowAutoUnlockINTip"),
     completed: r.string("completed"),
-    songUpdateInfo: r.u8("songUpdateInfo"),
+    songUpdateInfo: r.varshort("songUpdateInfo"),
     challengeModeRank: r.i16("challengeModeRank"),
     money: Array.from({ length: 5 }, (_, index) => r.varshort(`money[${index}]`)),
     unlockFlagOfSpasmodic: r.u8("unlockFlagOfSpasmodic"),
@@ -311,6 +390,66 @@ export function parseGameProgress(
   }
   if (!lenient) r.finish();
   return result;
+}
+
+export function writeGameProgress(
+  progress: GameProgress,
+  version = PARSEABLE_VERSIONS.gameProgress,
+): Uint8Array {
+  const w = new Writer();
+  w.bool(progress.isFirstRun);
+  w.bool(progress.legacyChapterFinished);
+  w.bool(progress.alreadyShowCollectionTip);
+  w.bool(progress.alreadyShowAutoUnlockINTip);
+  w.string(progress.completed);
+  w.varshort(progress.songUpdateInfo);
+  w.i16(progress.challengeModeRank);
+  for (const amount of progress.money) w.varshort(amount);
+  w.u8(progress.unlockFlagOfSpasmodic);
+  w.u8(progress.unlockFlagOfIgallta);
+  w.u8(progress.unlockFlagOfRrharil);
+  w.u8(progress.flagOfSongRecordKey);
+  if (version >= 2) w.u8(progress.randomVersionUnlocked ?? 0);
+  if (version >= 3) {
+    w.bool(progress.chapter8UnlockBegin ?? false);
+    w.bool(progress.chapter8UnlockSecondPhase ?? false);
+    w.bool(progress.chapter8Passed ?? false);
+    w.u8(progress.chapter8SongUnlocked ?? 0);
+  }
+  if (version >= 4) w.u8(progress.flagOfSongRecordKeyTakumi ?? 0);
+  if (version >= 5) {
+    w.bool(progress.chapter9UnlockBegin ?? false);
+    w.bool(progress.chapter9SecretChallengePendingLifeUnlock ?? false);
+    w.u8(progress.chapter9SongUnlocked ?? 0);
+    // the life tiers start at 1 in the game
+    w.u8(
+      (progress.chapter9SecretChallengeLifeTier ?? 1) |
+        ((progress.chapter9SecretChallengeSelectedLifeTier ?? 1) << 4),
+    );
+    w.string(progress.chapter9SecretPassword ?? "0");
+  }
+  if (version >= 6) {
+    w.u8(progress.chapter9Phase2SongUnlocked ?? 0);
+    w.bool(progress.chapter9Phase2Begin ?? false);
+    w.bool(progress.chapter9Phase2Passed ?? false);
+    w.bool(progress.c9BaselineChallengeReached ?? false);
+    w.u8(progress.chapter9Phase2Step ?? 0);
+  }
+  return w.finish();
+}
+
+/** A save's records as Phigros++ sends them, one per line (see server/records.ts). */
+export function recordLines(songs: SongRecord[]): string {
+  return songs
+    .flatMap((song) =>
+      song.levels.map(
+        (record, level) =>
+          record &&
+          `${song.rawSongId}\t${LEVELS[level]}\t${record.score}\t${record.accuracy.toFixed(4)}\t${(song.fc >> level) & 1}`,
+      ),
+    )
+    .filter(Boolean)
+    .join("\n");
 }
 
 export function countLevels(songs: Pick<SongRecord, "fc" | "levels">[]) {

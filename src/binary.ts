@@ -133,3 +133,63 @@ export class Reader {
     }
   }
 }
+
+const encoder = new TextEncoder();
+
+/** Writes what Reader reads: the same calls in the same order give the bytes back. */
+export class Writer {
+  private readonly out: number[] = [];
+  private readonly scratch = new DataView(new ArrayBuffer(4));
+  // 8 when no byte of bools is open
+  private bit = 8;
+
+  bool(value: boolean) {
+    if (this.bit === 8) {
+      this.out.push(0);
+      this.bit = 0;
+    }
+    if (value) this.out[this.out.length - 1]! |= 1 << this.bit;
+    this.bit += 1;
+  }
+
+  bytes(bytes: Uint8Array) {
+    this.bit = 8;
+    for (const byte of bytes) this.out.push(byte);
+  }
+
+  u8(value: number) {
+    this.bit = 8;
+    this.out.push(value & 0xff);
+  }
+
+  i16(value: number) {
+    this.scratch.setInt16(0, value, true);
+    this.bytes(new Uint8Array(this.scratch.buffer, 0, 2));
+  }
+
+  i32(value: number) {
+    this.scratch.setInt32(0, value, true);
+    this.bytes(new Uint8Array(this.scratch.buffer));
+  }
+
+  f32(value: number) {
+    this.scratch.setFloat32(0, value, true);
+    this.bytes(new Uint8Array(this.scratch.buffer));
+  }
+
+  varshort(value: number) {
+    if (value < 0x80) return this.u8(value);
+    this.u8((value & 0x7f) | 0x80);
+    this.u8(value >> 7);
+  }
+
+  string(value: string) {
+    const bytes = encoder.encode(value);
+    this.varshort(bytes.length);
+    this.bytes(bytes);
+  }
+
+  finish(): Uint8Array {
+    return Uint8Array.from(this.out);
+  }
+}

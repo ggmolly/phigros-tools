@@ -1,10 +1,14 @@
 import { unzipSync } from "fflate";
 import * as v from "valibot";
 import { ParseError } from "./binary";
-import type { SaveDocumentV1 } from "./document";
+import { catalogManifest } from "./catalog";
+import { blankDocument, type SaveDocumentV1 } from "./document";
 import { AppError } from "./i18n/errors";
+import { calculateRanking } from "./metrics";
 import {
+  countLevels,
   decodeSummary,
+  encodeSummary,
   type GameKey,
   type GameProgress,
   MODULE_NAMES,
@@ -15,6 +19,11 @@ import {
   parseGameRecord,
   parseProfile,
   parseSettings,
+  writeGameKey,
+  writeGameProgress,
+  writeGameRecord,
+  writeProfile,
+  writeSettings,
 } from "./modules";
 
 /** The game's LeanCloud apps: the global release and the China (TapTap CN) release keep separate accounts and saves. */
@@ -38,6 +47,8 @@ const lcHeaders = (region: Region, token: string) => ({
 });
 const SAVE_KEY = "6Jaa0qVAJZuXkZCLiOa/Ax5tIZVu+taKUN1V1nqwkks=";
 const SAVE_IV = "Kk/wisgNYwcAV8WVGMgyUw==";
+/** The save version of this key and layout, which a summary names for the game to pick them (CloudSaveSummary). */
+const SAVE_VERSION = 7;
 const MB = 1_000_000;
 const MAX_ZIP_SIZE = 10 * MB;
 const MAX_ENTRY_SIZE = 10 * MB;
@@ -89,6 +100,7 @@ let keyPromise: Promise<CryptoKey> | undefined;
 function cryptoKey() {
   keyPromise ??= crypto.subtle.importKey("raw", Uint8Array.fromBase64(SAVE_KEY), "AES-CBC", false, [
     "decrypt",
+    "encrypt",
   ]);
   return keyPromise;
 }
@@ -163,6 +175,40 @@ export async function openArchive(zip: Uint8Array): Promise<SaveArchive> {
     fingerprint: await sha256(rawZip),
     entries: Object.fromEntries(pairs) as Record<ModuleName, SaveArchiveEntry>,
   };
+}
+
+/**
+ * A document as the files its game would upload (see pack in src/phigrospp.ts): its modules, each a version byte then
+ * AES-CBC like the game writes them, and the summary the game reads before loading them.
+ */
+export async function buildSave(document: SaveDocumentV1): Promise<Record<string, Uint8Array>> {
+  const blank = blankDocument();
+  const profile = document.profile ?? blank.profile!;
+  const plain: Record<ModuleName, Uint8Array> = {
+    gameKey: writeGameKey(document.gameKey),
+    gameProgress: writeGameProgress(document.gameProgress),
+    gameRecord: writeGameRecord(document.songs),
+    settings: writeSettings(document.settings ?? blank.settings!),
+    user: writeProfile(profile),
+  };
+  const summary = encodeSummary({
+    saveVersion: SAVE_VERSION,
+    gameVersion: catalogManifest.gameVersion,
+    challengeModeRank: document.gameProgress.challengeModeRank,
+    rankingScore: calculateRanking({ songs: document.songs }).rankingScore,
+    avatar: profile.avatar,
+    counts: countLevels(document.songs),
+  });
+  const files: Record<string, Uint8Array> = { summary: new TextEncoder().encode(summary) };
+  for (const name of MODULE_NAMES) {
+    const encrypted = await crypto.subtle.encrypt(
+      { name: "AES-CBC", iv: Uint8Array.fromBase64(SAVE_IV) },
+      await cryptoKey(),
+      new Uint8Array(plain[name]),
+    );
+    files[name] = new Uint8Array([PARSEABLE_VERSIONS[name], ...new Uint8Array(encrypted)]);
+  }
+  return files;
 }
 
 /** Stands in for a gameProgress module this build cannot parse, so the rest of the save still loads. */

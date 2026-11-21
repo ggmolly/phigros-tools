@@ -1,13 +1,14 @@
 import * as v from "valibot";
 import { AppError } from "./i18n/errors";
-import type {
-  GameKey,
-  GameProgress,
-  ModuleName,
-  Profile,
-  Settings,
-  SongRecord,
-  Summary,
+import {
+  type GameKey,
+  type GameProgress,
+  type ModuleName,
+  PARSEABLE_VERSIONS,
+  type Profile,
+  type Settings,
+  type SongRecord,
+  type Summary,
 } from "./modules";
 
 export interface SaveDocumentV1 {
@@ -28,6 +29,59 @@ export interface SaveDocumentV1 {
   gameKey: GameKey;
   gameProgress: GameProgress;
   songs: SongRecord[];
+}
+
+/** The last of the game's song updates a save of 4.0 has applied. The game applies the later ones by itself. */
+const SONG_UPDATES = 4;
+
+/**
+ * The save a rebuild starts from: what the game's modules hold for a pref it never wrote, except what anyone who
+ * played has behind them. The tutorial and the Legacy chapter are done, and the game's own changes to old saves are
+ * applied: it would otherwise drop the records 3.9.0 reset, and move records as its song updates did.
+ */
+export function blankDocument(): SaveDocumentV1 {
+  return {
+    schema: "phigros-web-save",
+    schemaVersion: 1,
+    source: { kind: "json", importedAt: new Date().toISOString() },
+    moduleVersions: { ...PARSEABLE_VERSIONS },
+    profile: { idShown: false, intro: "", avatar: "", background: "" },
+    settings: {
+      chordSupport: true,
+      fcAPIndicator: false,
+      enableHitSound: true,
+      lowResolutionMode: false,
+      device: "",
+      brightness: 0.75,
+      musicVolume: 1,
+      effectVolume: 1,
+      hitSoundVolume: 1,
+      offset: 0,
+      noteScale: 1,
+    },
+    gameKey: {
+      entries: [],
+      lanotaReadKeys: 0,
+      camelliaReadKey: false,
+      sideStory4BeginReadKey: 0,
+      oldScoreClearedV390: 1,
+    },
+    gameProgress: {
+      isFirstRun: true,
+      legacyChapterFinished: true,
+      alreadyShowCollectionTip: false,
+      alreadyShowAutoUnlockINTip: false,
+      completed: "",
+      songUpdateInfo: SONG_UPDATES,
+      challengeModeRank: 0,
+      money: [0, 0, 0, 0, 0],
+      unlockFlagOfSpasmodic: 0,
+      unlockFlagOfIgallta: 0,
+      unlockFlagOfRrharil: 0,
+      flagOfSongRecordKey: 0,
+    },
+    songs: [],
+  };
 }
 
 export const MAX_JSON_SIZE = 20_000_000;
@@ -102,7 +156,7 @@ const gameProgress = v.object({
   alreadyShowCollectionTip: v.boolean(),
   alreadyShowAutoUnlockINTip: v.boolean(),
   completed: shortString,
-  songUpdateInfo: byte,
+  songUpdateInfo: nonNegativeInt,
   challengeModeRank: v.pipe(v.number(), v.integer()),
   money: v.pipe(v.array(nonNegativeInt), v.length(5)),
   unlockFlagOfSpasmodic: byte,
