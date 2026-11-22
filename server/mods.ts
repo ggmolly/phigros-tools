@@ -68,7 +68,7 @@ async function github(path: string, accept = "application/vnd.github+json"): Pro
   return body;
 }
 
-async function download(url: string, cap: number) {
+export async function download(url: string, cap: number) {
   const response = await fetch(url, { headers: { "User-Agent": "phigros.tools" } });
   if (!response.ok) throw new Error(`${url} answered ${response.status}`);
   if (Number(response.headers.get("content-length") ?? 0) > cap)

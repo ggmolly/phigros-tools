@@ -7,6 +7,7 @@ import { decodePhc } from "../src/player/phc";
 import { topics } from "../src/topics";
 import { sqlite } from "./db";
 import { announceRank } from "./discord";
+import { refreshIos } from "./ios";
 import { refreshMods } from "./mods";
 import { playerId } from "./players";
 import { addAchievement, snapshotHistory } from "./profiles";
@@ -17,7 +18,8 @@ import { chartPlace, countReplay, REPLAY_DIR } from "./replays";
 // the game's recorded result is what their touches give, unverified otherwise (with both results). only a verified
 // one counts on the leaderboard. it also keeps
 // the players' daily RKS history. a replay of a game version whose charts the site doesn't
-// have stays pending. it also keeps the mod catalog up to date. run beside the server: bun worker.mjs
+// have stays pending. it also keeps the mod catalog and what patches the ios game up to date. run beside the server:
+// bun worker.mjs
 const CHARTS = process.env.CHART_DIR ?? "./public/chart-data";
 const RESULT = ["score", "maxcombo", "perfect", "good", "bad", "miss", "early", "late"] as const;
 
@@ -92,11 +94,16 @@ function attempt(sha256: string) {
 snapshotHistory();
 setInterval(snapshotHistory, 3_600_000);
 
-// the mod catalog follows its mods' releases and READMEs on GitHub
-const followMods = () =>
-  refreshMods().catch((error) => console.error("mods not refreshed:", error));
-void followMods();
-setInterval(followMods, 900_000);
+// the mod catalog follows its mods' releases and READMEs on GitHub, and what patches the ios game the releases of
+// Phigros++
+for (const [name, refresh] of [
+  ["mods", refreshMods],
+  ["phigrospp.ios", refreshIos],
+] as const) {
+  const follow = () => refresh().catch((error) => console.error(`${name} not refreshed:`, error));
+  void follow();
+  setInterval(follow, 900_000);
+}
 
 const channel = await openQueue();
 // the broker went away: exit so the container restarts and reconnects, the queue keeps what came meanwhile
