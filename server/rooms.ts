@@ -494,9 +494,10 @@ function start(room: Room, host: Seat) {
     finish(room);
     push(room);
   }, MATCH_LIMIT);
-  push(room);
+  // players hear of the match before the room: a game told it plays without having started knows it was restarted
   const started = JSON.stringify({ t: "start", seed: randomInt(1, 2 ** 32) });
   for (const seat of room.seats) if (seat.playing) seat.peer!.send(started);
+  push(room);
 }
 
 // what a player in a room asks for
