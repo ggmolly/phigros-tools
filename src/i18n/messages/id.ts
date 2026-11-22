@@ -580,8 +580,10 @@ export const id = {
     install3:
       "Izinkan browser atau app File menginstal aplikasi tak dikenal saat Android bertanya. Installer meminta hal yang sama untuk dirinya saat kamu mengetuk Install.",
     ios1: "Siapkan Phigros yang sudah didekripsi, karena salinan App Store terenkripsi dan tidak bisa ditambal. Hanya perangkat yang dapat membaca app yang sedang berjalan yang bisa mendekripsinya: iPhone atau iPad yang di-jailbreak, perangkat dengan TrollStore (TrollDecrypt bisa melakukannya), atau Mac Apple Silicon dengan SIP dimatikan.",
-    ios2: "Di komputer Linux, simpan sebagai `Phigros.ipa` di folder tersendiri, seperti `~/Phigros`.",
-    ios3: "Pasang Nix, yang membawa semua alat yang dibutuhkan build:",
+    ios2: "Di komputermu, simpan sebagai `Phigros.ipa` di folder tersendiri, seperti `~/Phigros`.",
+    ios3: "Di Linux, pasang Nix, yang membawa semua alat yang dibutuhkan build:",
+    ios3b:
+      "Atau, di Linux, Windows, atau macOS, buka shell dengan Nix di **Docker** dari folder tempat kamu bekerja, lalu jalankan langkah berikutnya di sana:",
     ios4: "Ambil kode sumber Phigros++ beserta submodulnya:",
     ios5: "Build. Build pertama mengunduh beberapa GB alat dan butuh waktu, lalu menulis `build/Phigros++.ipa`:",
     ios6: "Pasang **SideStore** di iPhone atau iPad kamu dengan panduannya (AltStore juga bisa), dan nyalakan Mode Pengembang di Pengaturan → Privasi & Keamanan saat iOS memintanya.",
@@ -595,7 +597,7 @@ export const id = {
       "Mod berjalan dengan kunci phigros.tools kamu, jadi pasang hanya mod yang kamu percaya.",
     iosTitle: "Build untuk iPhone dan iPad",
     iosIntro:
-      "Di iOS tidak ada installer: kamu membuat Phigros++ di komputer Linux dari salinan game milikmu sendiri, lalu SideStore atau AltStore menandatanganinya dengan Apple ID kamu.",
+      "Di iOS tidak ada installer: kamu membuat Phigros++ di komputer dari salinan game milikmu sendiri, lalu SideStore atau AltStore menandatanganinya dengan Apple ID kamu.",
     iosNote:
       "Mod dan chart masuk ke **Phigros++ → phigros++** di app File. Mod yang meng-hook bagian game yang tidak disentuh mod bawaan butuh JIT, atau build baru dengan mod itu di `mods/`.",
     bring: "Pindahkan Save Kamu",

@@ -586,8 +586,10 @@ export const de = {
     install3:
       "Erlaube deinem Browser oder der Dateien-App, unbekannte Apps zu installieren, wenn Android fragt. Der Installer fragt dasselbe für sich, wenn du auf Install tippst.",
     ios1: "Besorge dir Phigros entschlüsselt, denn die Kopie aus dem App Store ist verschlüsselt und lässt sich nicht patchen. Nur ein Gerät, das eine laufende App lesen kann, entschlüsselt sie: ein iPhone oder iPad mit Jailbreak, eines mit TrollStore (dort macht es TrollDecrypt) oder ein Mac mit Apple Silicon und deaktiviertem SIP.",
-    ios2: "Speichere es auf einem Linux-Computer als `Phigros.ipa` in einem eigenen Ordner, etwa `~/Phigros`.",
-    ios3: "Installiere Nix, das alle Werkzeuge mitbringt, die der Build braucht:",
+    ios2: "Speichere es auf deinem Computer als `Phigros.ipa` in einem eigenen Ordner, etwa `~/Phigros`.",
+    ios3: "Installiere unter Linux Nix, das alle Werkzeuge mitbringt, die der Build braucht:",
+    ios3b:
+      "Oder starte unter Linux, Windows oder macOS eine Shell mit Nix in **Docker** aus dem Ordner, in dem du arbeitest, und führe die nächsten Schritte darin aus:",
     ios4: "Hole dir den Quellcode von Phigros++ mit seinen Submodulen:",
     ios5: "Baue es. Der erste Build lädt ein paar GB an Werkzeugen herunter und dauert eine Weile, dann schreibt er `build/Phigros++.ipa`:",
     ios6: "Installiere **SideStore** mit seiner Anleitung auf deinem iPhone oder iPad (AltStore geht auch) und aktiviere den Entwicklermodus unter Einstellungen → Datenschutz & Sicherheit, wenn iOS danach fragt.",
@@ -601,7 +603,7 @@ export const de = {
       "Mods laufen mit deinem phigros.tools-Schlüssel, installiere also nur Mods, denen du vertraust.",
     iosTitle: "Für iPhone und iPad bauen",
     iosIntro:
-      "Auf iOS gibt es keinen Installer: Du baust Phigros++ auf einem Linux-Computer aus deiner eigenen Kopie des Spiels, und SideStore oder AltStore signiert sie mit deiner Apple-ID.",
+      "Auf iOS gibt es keinen Installer: Du baust Phigros++ auf einem Computer aus deiner eigenen Kopie des Spiels, und SideStore oder AltStore signiert sie mit deiner Apple-ID.",
     iosNote:
       "Mods und Charts kommen in **Phigros++ → phigros++** der Dateien-App. Ein Mod, der Teile des Spiels hookt, die die eingebauten Mods nicht anfassen, braucht JIT oder einen neuen Build mit ihm in `mods/`.",
     bring: "Spielstand mitnehmen",

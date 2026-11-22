@@ -570,8 +570,10 @@ export const en = {
     install3:
       "Allow your browser or Files app to install unknown apps when Android asks. The installer asks the same for itself when you tap Install.",
     ios1: "Get Phigros decrypted, as the App Store’s copy is encrypted and can’t be patched. Only a device that can read a running app decrypts it: a jailbroken iPhone or iPad, one with TrollStore (TrollDecrypt does it there), or an Apple Silicon Mac with SIP turned off.",
-    ios2: "On a Linux computer, save it as `Phigros.ipa` in a folder of its own, like `~/Phigros`.",
-    ios3: "Install Nix, which brings every tool the build needs:",
+    ios2: "On your computer, save it as `Phigros.ipa` in a folder of its own, like `~/Phigros`.",
+    ios3: "On Linux, install Nix, which brings every tool the build needs:",
+    ios3b:
+      "Or, on Linux, Windows or macOS, start a shell with Nix in **Docker** from the folder you work in, and run the next steps in it:",
     ios4: "Get the source of Phigros++ with its submodules:",
     ios5: "Build it. The first build downloads a few GB of tools and takes a while, then it writes `build/Phigros++.ipa`:",
     ios6: "Install **SideStore** on your iPhone or iPad with its guide (AltStore works too), and turn on Developer Mode in Settings → Privacy & Security when iOS asks for it.",
@@ -584,7 +586,7 @@ export const en = {
     installNote: "Mods run with your phigros.tools key, so only add mods you trust.",
     iosTitle: "Build It for iPhone and iPad",
     iosIntro:
-      "There’s no installer on iOS: you build Phigros++ on a Linux computer from your own copy of the game, then SideStore or AltStore signs it with your Apple ID.",
+      "There’s no installer on iOS: you build Phigros++ on a computer from your own copy of the game, then SideStore or AltStore signs it with your Apple ID.",
     iosNote:
       "Mods and charts go in **Phigros++ → phigros++** of the Files app. A mod hooking parts of the game the built-in mods leave alone needs JIT, or a new build with it in `mods/`.",
     bring: "Bring Your Save Over",

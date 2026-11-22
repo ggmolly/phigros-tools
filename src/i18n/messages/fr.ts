@@ -588,8 +588,10 @@ export const fr = {
     install3:
       "Autorisez votre navigateur ou l’app Fichiers à installer des apps inconnues quand Android le demande. L’installateur demande la même chose pour lui-même quand vous touchez Install.",
     ios1: "Procurez-vous Phigros déchiffré, car la copie de l’App Store est chiffrée et ne peut pas être modifiée. Seul un appareil capable de lire une app en cours d’exécution la déchiffre : un iPhone ou iPad jailbreaké, un avec TrollStore (TrollDecrypt s’en charge), ou un Mac Apple Silicon avec SIP désactivé.",
-    ios2: "Sur un ordinateur Linux, enregistrez-le sous `Phigros.ipa` dans un dossier à part, comme `~/Phigros`.",
-    ios3: "Installez Nix, qui apporte tous les outils dont la compilation a besoin :",
+    ios2: "Sur votre ordinateur, enregistrez-le sous `Phigros.ipa` dans un dossier à part, comme `~/Phigros`.",
+    ios3: "Sous Linux, installez Nix, qui apporte tous les outils dont la compilation a besoin :",
+    ios3b:
+      "Ou, sous Linux, Windows ou macOS, ouvrez un shell avec Nix dans **Docker** depuis le dossier où vous travaillez, et lancez-y les étapes suivantes :",
     ios4: "Récupérez le code source de Phigros++ avec ses sous-modules :",
     ios5: "Compilez-le. La première compilation télécharge quelques Go d’outils et prend un moment, puis elle écrit `build/Phigros++.ipa` :",
     ios6: "Installez **SideStore** sur votre iPhone ou iPad en suivant son guide (AltStore fonctionne aussi), et activez le mode développeur dans Réglages → Confidentialité et sécurité quand iOS le demande.",
@@ -603,7 +605,7 @@ export const fr = {
       "Les mods tournent avec votre clé phigros.tools, n’ajoutez donc que des mods de confiance.",
     iosTitle: "Le compiler pour iPhone et iPad",
     iosIntro:
-      "Il n’y a pas d’installateur sur iOS : vous compilez Phigros++ sur un ordinateur Linux à partir de votre propre copie du jeu, puis SideStore ou AltStore la signe avec votre identifiant Apple.",
+      "Il n’y a pas d’installateur sur iOS : vous compilez Phigros++ sur un ordinateur à partir de votre propre copie du jeu, puis SideStore ou AltStore la signe avec votre identifiant Apple.",
     iosNote:
       "Les mods et les charts vont dans **Phigros++ → phigros++** de l’app Fichiers. Un mod qui modifie des parties du jeu que les mods intégrés ne touchent pas a besoin du JIT, ou d’une nouvelle compilation avec lui dans `mods/`.",
     bring: "Récupérer votre save",

@@ -583,8 +583,10 @@ export const ja = {
     install3:
       "Android に聞かれたら、ブラウザか「ファイル」アプリに不明なアプリのインストールを許可します。Install をタップすると、インストーラーも自身について同じことを求めます。",
     ios1: "復号済みの Phigros を用意します。App Store のコピーは暗号化されていてパッチを当てられません。復号できるのは実行中のアプリを読み取れるデバイスだけです。脱獄した iPhone や iPad、TrollStore の入ったデバイス（TrollDecrypt で行えます）、または SIP をオフにした Apple シリコンの Mac です。",
-    ios2: "Linux パソコンで、`~/Phigros` のような専用フォルダに `Phigros.ipa` という名前で保存します。",
-    ios3: "ビルドに必要なツールをすべて揃える Nix をインストールします。",
+    ios2: "パソコンで、`~/Phigros` のような専用フォルダに `Phigros.ipa` という名前で保存します。",
+    ios3: "Linux では、ビルドに必要なツールをすべて揃える Nix をインストールします。",
+    ios3b:
+      "または Linux、Windows、macOS で、作業するフォルダから **Docker** で Nix の入ったシェルを開き、以降の手順をその中で実行します。",
     ios4: "Phigros++ のソースをサブモジュールごと取得します。",
     ios5: "ビルドします。最初のビルドは数 GB のツールをダウンロードするため時間がかかり、その後 `build/Phigros++.ipa` を書き出します。",
     ios6: "ガイドに従って iPhone か iPad に **SideStore** をインストールし（AltStore でも可）、iOS に求められたら「設定 → プライバシーとセキュリティ」でデベロッパモードをオンにします。",
@@ -598,7 +600,7 @@ export const ja = {
       "Mod はあなたの phigros.tools の鍵で動くので、信頼できる Mod だけを追加してください。",
     iosTitle: "iPhone と iPad 向けにビルドする",
     iosIntro:
-      "iOS にはインストーラーがありません。自分のゲームのコピーから Linux パソコンで Phigros++ をビルドし、SideStore か AltStore があなたの Apple ID で署名します。",
+      "iOS にはインストーラーがありません。自分のゲームのコピーからパソコンで Phigros++ をビルドし、SideStore か AltStore があなたの Apple ID で署名します。",
     iosNote:
       "Mod と譜面は「ファイル」アプリの **Phigros++ → phigros++** に入れます。内蔵 Mod が触れないゲームの部分をフックする Mod には JIT が必要です。または `mods/` に入れてビルドし直します。",
     bring: "セーブを引き継ぐ",

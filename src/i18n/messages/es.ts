@@ -581,8 +581,10 @@ export const es = {
     install3:
       "Permite que tu navegador o la app Archivos instale apps desconocidas cuando Android lo pida. El instalador pide lo mismo para sí cuando tocas Install.",
     ios1: "Consigue Phigros descifrado, ya que la copia de la App Store está cifrada y no se puede parchear. Solo la descifra un dispositivo capaz de leer una app en ejecución: un iPhone o iPad con jailbreak, uno con TrollStore (TrollDecrypt lo hace ahí) o un Mac con Apple Silicon y SIP desactivado.",
-    ios2: "En un ordenador con Linux, guárdalo como `Phigros.ipa` en una carpeta propia, como `~/Phigros`.",
-    ios3: "Instala Nix, que trae todas las herramientas que necesita la compilación:",
+    ios2: "En tu ordenador, guárdalo como `Phigros.ipa` en una carpeta propia, como `~/Phigros`.",
+    ios3: "En Linux, instala Nix, que trae todas las herramientas que necesita la compilación:",
+    ios3b:
+      "O, en Linux, Windows o macOS, abre una shell con Nix en **Docker** desde la carpeta en la que trabajas y ejecuta en ella los pasos siguientes:",
     ios4: "Descarga el código fuente de Phigros++ con sus submódulos:",
     ios5: "Compílalo. La primera compilación descarga unos GB de herramientas y tarda un rato, luego escribe `build/Phigros++.ipa`:",
     ios6: "Instala **SideStore** en tu iPhone o iPad siguiendo su guía (AltStore también sirve) y activa el modo de desarrollador en Ajustes → Privacidad y seguridad cuando iOS lo pida.",
@@ -596,7 +598,7 @@ export const es = {
       "Los mods se ejecutan con tu clave de phigros.tools, así que añade solo mods de confianza.",
     iosTitle: "Compílalo para iPhone y iPad",
     iosIntro:
-      "En iOS no hay instalador: compilas Phigros++ en un ordenador con Linux a partir de tu propia copia del juego, y luego SideStore o AltStore la firma con tu Apple ID.",
+      "En iOS no hay instalador: compilas Phigros++ en un ordenador a partir de tu propia copia del juego, y luego SideStore o AltStore la firma con tu Apple ID.",
     iosNote:
       "Los mods y charts van en **Phigros++ → phigros++** de la app Archivos. Un mod que engancha partes del juego que los mods incluidos no tocan necesita JIT, o una nueva compilación con él en `mods/`.",
     bring: "Trae tu partida",

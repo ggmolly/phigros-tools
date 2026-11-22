@@ -582,8 +582,10 @@ export const ms = {
     install3:
       "Benarkan pelayar atau app Fail anda memasang app tidak diketahui apabila Android bertanya. Pemasang meminta perkara yang sama untuk dirinya apabila anda mengetik Install.",
     ios1: "Dapatkan Phigros yang telah dinyahsulit, kerana salinan App Store disulitkan dan tidak boleh ditampal. Hanya peranti yang dapat membaca app yang sedang berjalan boleh menyahsulitnya: iPhone atau iPad yang di-jailbreak, peranti dengan TrollStore (TrollDecrypt boleh melakukannya), atau Mac Apple Silicon dengan SIP dimatikan.",
-    ios2: "Pada komputer Linux, simpan sebagai `Phigros.ipa` dalam folder tersendiri, seperti `~/Phigros`.",
-    ios3: "Pasang Nix, yang membawa semua alat yang diperlukan oleh binaan:",
+    ios2: "Pada komputer anda, simpan sebagai `Phigros.ipa` dalam folder tersendiri, seperti `~/Phigros`.",
+    ios3: "Di Linux, pasang Nix, yang membawa semua alat yang diperlukan oleh binaan:",
+    ios3b:
+      "Atau, di Linux, Windows atau macOS, buka shell dengan Nix dalam **Docker** dari folder tempat anda bekerja, dan jalankan langkah seterusnya di dalamnya:",
     ios4: "Dapatkan kod sumber Phigros++ bersama submodulnya:",
     ios5: "Binanya. Binaan pertama memuat turun beberapa GB alat dan mengambil sedikit masa, kemudian menulis `build/Phigros++.ipa`:",
     ios6: "Pasang **SideStore** pada iPhone atau iPad anda dengan panduannya (AltStore juga boleh), dan hidupkan Mod Pembangun dalam Tetapan → Privasi & Keselamatan apabila iOS memintanya.",
@@ -597,7 +599,7 @@ export const ms = {
       "Mod berjalan dengan kunci phigros.tools anda, jadi tambah hanya mod yang anda percayai.",
     iosTitle: "Bina untuk iPhone dan iPad",
     iosIntro:
-      "Tiada pemasang di iOS: anda membina Phigros++ pada komputer Linux daripada salinan permainan anda sendiri, kemudian SideStore atau AltStore menandatanganinya dengan Apple ID anda.",
+      "Tiada pemasang di iOS: anda membina Phigros++ pada komputer daripada salinan permainan anda sendiri, kemudian SideStore atau AltStore menandatanganinya dengan Apple ID anda.",
     iosNote:
       "Mod dan carta diletakkan dalam **Phigros++ → phigros++** pada app Fail. Mod yang mengait bahagian permainan yang tidak disentuh oleh mod terbina dalam memerlukan JIT, atau binaan baharu dengan mod itu dalam `mods/`.",
     bring: "Bawa Save Anda",

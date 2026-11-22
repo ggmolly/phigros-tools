@@ -273,6 +273,17 @@
 .ppp-steps p + .ppp-command {
   margin-top: 0.625rem;
 }
+/* two ways to do a step, side by side, their commands lined up at the bottom */
+.ppp-ways {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: 1rem 1.5rem;
+}
+.ppp-ways > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 .ppp-command {
   display: flex;
   flex-wrap: wrap;

@@ -581,8 +581,10 @@ export const it = {
     install3:
       "Consenti al browser o all’app File di installare app sconosciute quando Android lo chiede. L’installer chiede lo stesso per sé quando tocchi Install.",
     ios1: "Procurati Phigros decriptato, perché la copia dell’App Store è criptata e non si può modificare. Solo un dispositivo in grado di leggere un’app in esecuzione la decripta: un iPhone o iPad con jailbreak, uno con TrollStore (lì ci pensa TrollDecrypt) o un Mac Apple Silicon con SIP disattivato.",
-    ios2: "Su un computer Linux, salvalo come `Phigros.ipa` in una cartella a parte, come `~/Phigros`.",
-    ios3: "Installa Nix, che porta tutti gli strumenti di cui la compilazione ha bisogno:",
+    ios2: "Sul tuo computer, salvalo come `Phigros.ipa` in una cartella a parte, come `~/Phigros`.",
+    ios3: "Su Linux, installa Nix, che porta tutti gli strumenti di cui la compilazione ha bisogno:",
+    ios3b:
+      "Oppure, su Linux, Windows o macOS, apri una shell con Nix in **Docker** dalla cartella in cui lavori ed esegui lì i passaggi successivi:",
     ios4: "Scarica il codice sorgente di Phigros++ con i suoi sottomoduli:",
     ios5: "Compilalo. La prima compilazione scarica qualche GB di strumenti e richiede un po’ di tempo, poi scrive `build/Phigros++.ipa`:",
     ios6: "Installa **SideStore** sul tuo iPhone o iPad seguendo la sua guida (va bene anche AltStore) e attiva la modalità sviluppatore in Impostazioni → Privacy e sicurezza quando iOS lo chiede.",
@@ -596,7 +598,7 @@ export const it = {
       "Le mod girano con la tua chiave phigros.tools, quindi aggiungi solo mod di cui ti fidi.",
     iosTitle: "Compilalo per iPhone e iPad",
     iosIntro:
-      "Su iOS non c’è un installer: compili Phigros++ su un computer Linux dalla tua copia del gioco, poi SideStore o AltStore la firma con il tuo ID Apple.",
+      "Su iOS non c’è un installer: compili Phigros++ su un computer dalla tua copia del gioco, poi SideStore o AltStore la firma con il tuo ID Apple.",
     iosNote:
       "Mod e chart vanno in **Phigros++ → phigros++** dell’app File. Una mod che aggancia parti del gioco che le mod incluse non toccano ha bisogno del JIT, o di una nuova compilazione con lei in `mods/`.",
     bring: "Porta con te il salvataggio",

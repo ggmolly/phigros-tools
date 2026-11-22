@@ -553,8 +553,10 @@ export const zhHant = {
     install3:
       "當 Android 詢問時，允許你的瀏覽器或「檔案」App 安裝未知的 App。點選 Install 時，安裝程式也會為自己請求同樣的權限。",
     ios1: "取得解密後的 Phigros，因為 App Store 的副本是加密的，無法修補。只有能讀取執行中 App 的裝置才能解密：越獄的 iPhone 或 iPad、裝有 TrollStore 的裝置（用 TrollDecrypt 即可），或關閉了 SIP 的 Apple 晶片 Mac。",
-    ios2: "在 Linux 電腦上，把它儲存為 `Phigros.ipa`，放在單獨的資料夾裡，例如 `~/Phigros`。",
-    ios3: "安裝 Nix，它會帶來建置所需的所有工具：",
+    ios2: "在你的電腦上，把它儲存為 `Phigros.ipa`，放在單獨的資料夾裡，例如 `~/Phigros`。",
+    ios3: "在 Linux 上安裝 Nix，它會帶來建置所需的所有工具：",
+    ios3b:
+      "或者在 Linux、Windows 或 macOS 上，從你工作的資料夾在 **Docker** 中開啟一個帶 Nix 的 shell，並在其中執行後續步驟：",
     ios4: "取得 Phigros++ 的原始碼及其子模組：",
     ios5: "建置它。第一次建置會下載幾 GB 的工具，需要一些時間，然後產生 `build/Phigros++.ipa`：",
     ios6: "依照 **SideStore** 的指南把它安裝到你的 iPhone 或 iPad 上（AltStore 也可以），並在 iOS 提示時，在「設定 → 隱私權與安全性」中開啟開發者模式。",
@@ -567,7 +569,7 @@ export const zhHant = {
     installNote: "模組會以你的 phigros.tools 金鑰執行，所以只加入你信任的模組。",
     iosTitle: "為 iPhone 和 iPad 建置",
     iosIntro:
-      "iOS 上沒有安裝器：你需要在 Linux 電腦上用你自己的遊戲副本建置 Phigros++，再由 SideStore 或 AltStore 用你的 Apple ID 簽署。",
+      "iOS 上沒有安裝器：你需要在電腦上用你自己的遊戲副本建置 Phigros++，再由 SideStore 或 AltStore 用你的 Apple ID 簽署。",
     iosNote:
       "模組和譜面放在「檔案」App 的 **Phigros++ → phigros++** 中。如果模組要掛鉤內建模組沒有用到的遊戲部分，就需要 JIT，或者把它放進 `mods/` 後重新建置。",
     bring: "轉移你的存檔",

@@ -9,13 +9,17 @@ import { headT, pageLinks, pageMeta } from "../seo";
 const INSTALLER = "https://github.com/ggmolly/PhigrosPlusPlus-Installer/releases/latest";
 const SOURCE = "https://github.com/ggmolly/PhigrosPlusPlus";
 const SIDESTORE = "https://docs.sidestore.io/docs/installation/prerequisites";
+const GET_DOCKER = "https://docs.docker.com/get-docker/";
 const DEVICES = ["android", "ios"] as const;
 // what the ios steps run, the same in every language
 const NIX = "sh <(curl -L https://nixos.org/nix/install) --daemon";
 const CLONE = `git clone --recursive ${SOURCE}`;
+const DOCKER = `docker run -it --rm --platform linux/amd64 -v "$PWD":/work -w /work -v "$HOME/Phigros":/root/Phigros nixos/nix`;
 const BUILD = "cd PhigrosPlusPlus\nnix-shell --run 'make ipa IPA=~/Phigros'";
 
-type Step = { text: string; href?: string; command?: string };
+type Part = { text: string; href?: string; command?: string };
+// a step, or two ways to do it side by side
+type Step = Part | [Part, Part];
 
 export const Route = createFileRoute("/phigrospp")({
   // the answer is the address, so each platform's steps can be linked
@@ -77,7 +81,10 @@ function PhigrosppPage() {
     : [
         { text: p.ios1 },
         { text: p.ios2 },
-        { text: p.ios3, command: NIX },
+        [
+          { text: p.ios3, command: NIX },
+          { text: p.ios3b, href: GET_DOCKER, command: DOCKER },
+        ],
         { text: p.ios4, command: CLONE },
         { text: p.ios5, command: BUILD },
         { text: p.ios6, href: SIDESTORE },
@@ -118,16 +125,23 @@ function PhigrosppPage() {
                 <h2 tabIndex={-1}>{android ? p.install : p.iosTitle}</h2>
                 <p className="meta">{android ? p.downloadNote : p.iosIntro}</p>
                 <ol className="ppp-steps">
-                  {steps.map(({ text, href, command }) => (
-                    <li key={text}>
-                      <div>
-                        <p>
-                          <Rich text={text} href={href} />
-                        </p>
-                        {command && <Command text={command} />}
-                      </div>
-                    </li>
-                  ))}
+                  {steps.map((step) => {
+                    const parts = Array.isArray(step) ? step : [step];
+                    return (
+                      <li key={parts[0].text}>
+                        <div className={parts.length > 1 ? "ppp-ways" : undefined}>
+                          {parts.map(({ text, href, command }) => (
+                            <div key={text}>
+                              <p>
+                                <Rich text={text} href={href} />
+                              </p>
+                              {command && <Command text={command} />}
+                            </div>
+                          ))}
+                        </div>
+                      </li>
+                    );
+                  })}
                 </ol>
                 <div className="start-next">
                   <p className="meta">

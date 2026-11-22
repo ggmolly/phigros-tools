@@ -578,8 +578,10 @@ export const vi = {
     install3:
       "Cho phép trình duyệt hoặc ứng dụng Tệp cài ứng dụng không rõ nguồn gốc khi Android hỏi. Trình cài đặt cũng sẽ hỏi như vậy cho chính nó khi bạn chạm Install.",
     ios1: "Lấy bản Phigros đã giải mã, vì bản trên App Store được mã hóa nên không thể vá. Chỉ thiết bị đọc được một ứng dụng đang chạy mới giải mã được: iPhone hoặc iPad đã jailbreak, thiết bị có TrollStore (TrollDecrypt làm việc này), hoặc máy Mac Apple Silicon đã tắt SIP.",
-    ios2: "Trên một máy tính Linux, lưu nó thành `Phigros.ipa` trong một thư mục riêng, như `~/Phigros`.",
-    ios3: "Cài Nix, thứ mang theo mọi công cụ mà bản build cần:",
+    ios2: "Trên máy tính của bạn, lưu nó thành `Phigros.ipa` trong một thư mục riêng, như `~/Phigros`.",
+    ios3: "Trên Linux, cài Nix, thứ mang theo mọi công cụ mà bản build cần:",
+    ios3b:
+      "Hoặc, trên Linux, Windows hay macOS, mở một shell có Nix trong **Docker** từ thư mục bạn làm việc, rồi chạy các bước tiếp theo trong đó:",
     ios4: "Tải mã nguồn của Phigros++ cùng các submodule của nó:",
     ios5: "Build nó. Lần build đầu tải vài GB công cụ và mất một lúc, rồi ghi ra `build/Phigros++.ipa`:",
     ios6: "Cài **SideStore** lên iPhone hoặc iPad theo hướng dẫn của nó (AltStore cũng được), và bật Chế độ nhà phát triển trong Cài đặt → Quyền riêng tư & Bảo mật khi iOS yêu cầu.",
@@ -592,7 +594,7 @@ export const vi = {
     installNote: "Mod chạy bằng khóa phigros.tools của bạn, nên chỉ thêm những mod bạn tin tưởng.",
     iosTitle: "Build cho iPhone và iPad",
     iosIntro:
-      "Trên iOS không có trình cài đặt: bạn build Phigros++ trên một máy tính Linux từ bản game của chính mình, rồi SideStore hoặc AltStore ký nó bằng Apple ID của bạn.",
+      "Trên iOS không có trình cài đặt: bạn build Phigros++ trên một máy tính từ bản game của chính mình, rồi SideStore hoặc AltStore ký nó bằng Apple ID của bạn.",
     iosNote:
       "Mod và chart nằm trong **Phigros++ → phigros++** của ứng dụng Tệp. Một mod hook vào những phần của game mà các mod có sẵn không dùng tới cần JIT, hoặc một bản build mới có nó trong `mods/`.",
     bring: "Chuyển save của bạn sang",
