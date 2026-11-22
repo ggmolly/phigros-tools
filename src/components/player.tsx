@@ -10,8 +10,9 @@ import {
   type PlayedChart,
   type PlayerProfile,
 } from "../plays";
-import { ChartLink, PlayStatusLabel, Score, Timing } from "./plays";
-import { Avatar, Difficulty, Rank, Stat } from "./primitives";
+import { Modifiers } from "./modifiers";
+import { ChartLink, PlayStatusLabel, Timing } from "./plays";
+import { Avatar, Difficulty, Rank, Stat, score7 } from "./primitives";
 
 // a player's public page in parts: their own Overview shows them around what only their save has
 
@@ -86,12 +87,16 @@ export function Card({ profile }: { profile: PlayerProfile }) {
   );
 }
 
-/** A song's title and difficulty, linking to the chart's ranking. */
-function ChartName({ chart }: { chart: { song: string; level: string } }) {
+/**
+ * A song's title and difficulty, linking to the chart's ranking, then the modifiers it was played with: the score's
+ * column is only as wide as a score.
+ */
+function ChartName({ chart }: { chart: { song: string; level: string; mods?: number } }) {
   return (
     <span className="profile-chart">
       <Difficulty level={chart.level} />
       <ChartLink song={chart.song} level={chart.level} />
+      <Modifiers mods={chart.mods ?? 0} />
     </span>
   );
 }
@@ -110,8 +115,8 @@ function Watch({ replay }: { replay: string | null }) {
 function Result({ play }: { play: PlayedChart }) {
   return (
     <>
-      <span className="num record-score">
-        <Score play={play} />
+      <span className="num record-score" title={play.mods ? score7(play.score) : undefined}>
+        {score7(play.total)}
       </span>
       <span className="num">{play.accuracy.toFixed(2)}%</span>
       <span className="num">

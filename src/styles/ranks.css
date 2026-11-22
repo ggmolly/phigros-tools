@@ -108,6 +108,15 @@
   margin-inline-start: 0.5rem;
   vertical-align: -0.2em;
 }
+/* a score keeps its plates on its line */
+.score {
+  white-space: nowrap;
+}
+/* after a chart's name in a list, spaced by the list */
+.profile-chart .modifiers {
+  flex: none;
+  margin-inline-start: 0;
+}
 .modifier {
   width: 1.25em;
   height: 1.25em;

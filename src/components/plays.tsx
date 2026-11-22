@@ -108,7 +108,7 @@ export function Timing({ timing }: { timing: number | null }) {
  */
 export function Score({ play }: { play: Modded }) {
   return (
-    <span title={play.mods ? score7(play.score) : undefined}>
+    <span className="score" title={play.mods ? score7(play.score) : undefined}>
       {score7(play.total)}
       <Modifiers mods={play.mods} />
     </span>
