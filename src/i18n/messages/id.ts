@@ -578,18 +578,24 @@ export const id = {
     install1: "Pasang Phigros dari Play Store.",
     install2: "Unduh **phigrospp-installer.apk** dari rilis terbaru installer, lalu buka.",
     install3:
-      "Ketuk **Install**: installer akan mengubah Phigros kamu menjadi Phigros++, aplikasi tersendiri di samping game, dan memperbaruinya nanti.",
+      "Izinkan browser atau app File menginstal aplikasi tak dikenal saat Android bertanya. Installer meminta hal yang sama untuk dirinya saat kamu mengetuk Install.",
+    ios1: "Siapkan Phigros yang sudah didekripsi, karena salinan App Store terenkripsi dan tidak bisa ditambal. Hanya perangkat yang dapat membaca app yang sedang berjalan yang bisa mendekripsinya: iPhone atau iPad yang di-jailbreak, perangkat dengan TrollStore (TrollDecrypt bisa melakukannya), atau Mac Apple Silicon dengan SIP dimatikan.",
+    ios2: "Di komputer Linux, simpan sebagai `Phigros.ipa` di folder tersendiri, seperti `~/Phigros`.",
+    ios3: "Pasang Nix, yang membawa semua alat yang dibutuhkan build:",
+    ios4: "Ambil kode sumber Phigros++ beserta submodulnya:",
+    ios5: "Build. Build pertama mengunduh beberapa GB alat dan butuh waktu, lalu menulis `build/Phigros++.ipa`:",
+    ios6: "Pasang **SideStore** di iPhone atau iPad kamu dengan panduannya (AltStore juga bisa), dan nyalakan Mode Pengembang di Pengaturan → Privasi & Keamanan saat iOS memintanya.",
+    ios7: "Kirim `build/Phigros++.ipa` ke perangkat, buka SideStore dan tambahkan dari My Apps dengan tombol +. Apple ID gratis menandatanganinya untuk 7 hari, dan SideStore memperbaruinya di latar belakang.",
+    copy: "Salin",
+    copied: "Tersalin",
     install4:
-      "Di Phigros++, buka **Pengaturan → Profil**, aktifkan **Sync to phigros.tools**, lalu simpan 16 kata yang ditampilkan.",
+      "Ketuk **Install**: installer akan mengubah Phigros kamu menjadi Phigros++, aplikasi tersendiri di samping game, dan memperbaruinya nanti.",
+    sync: "Di Phigros++, buka **Pengaturan → Profil**, aktifkan **Sync to phigros.tools**, lalu simpan 16 kata yang ditampilkan.",
     installNote:
       "Mod berjalan dengan kunci phigros.tools kamu, jadi pasang hanya mod yang kamu percaya.",
     iosTitle: "Build untuk iPhone dan iPad",
     iosIntro:
       "Di iOS tidak ada installer: kamu membuat Phigros++ di komputer Linux dari salinan game milikmu sendiri, lalu SideStore atau AltStore menandatanganinya dengan Apple ID kamu.",
-    ios1: "Dekripsi Phigros dari App Store, yang hanya bisa dilakukan perangkat yang dapat membaca app yang sedang berjalan: iPhone atau iPad yang di-jailbreak, perangkat dengan TrollStore (TrollDecrypt bisa melakukannya), atau Mac Apple Silicon dengan SIP dimatikan. Simpan sebagai `Phigros.ipa` di folder tersendiri, seperti `~/Phigros`.",
-    ios2: "Pasang Nix, lalu ambil kode sumbernya dengan `git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus`.",
-    ios3: "Di folder kode sumber, jalankan `nix-shell --run 'make ipa IPA=~/Phigros'`. Build pertama mengunduh alat yang diperlukan, lalu menulis `build/Phigros++.ipa`.",
-    ios4: "Pasang `build/Phigros++.ipa` dengan SideStore atau AltStore. Apple ID gratis menandatanganinya untuk 7 hari, dan mereka memperbaruinya untukmu.",
     iosNote:
       "Mod dan chart masuk ke **Phigros++ → phigros++** di app File. Mod yang meng-hook bagian game yang tidak disentuh mod bawaan butuh JIT, atau build baru dengan mod itu di `mods/`.",
     bring: "Pindahkan Save Kamu",

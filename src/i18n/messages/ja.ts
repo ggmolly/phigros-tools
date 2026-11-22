@@ -581,18 +581,24 @@ export const ja = {
     install2:
       "インストーラーの最新リリースから **phigrospp-installer.apk** をダウンロードして開きます。",
     install3:
-      "**Install** をタップすると、Phigros にパッチを当てて、ゲームとは別のアプリである Phigros++ を作成し、以後の更新も行います。",
+      "Android に聞かれたら、ブラウザか「ファイル」アプリに不明なアプリのインストールを許可します。Install をタップすると、インストーラーも自身について同じことを求めます。",
+    ios1: "復号済みの Phigros を用意します。App Store のコピーは暗号化されていてパッチを当てられません。復号できるのは実行中のアプリを読み取れるデバイスだけです。脱獄した iPhone や iPad、TrollStore の入ったデバイス（TrollDecrypt で行えます）、または SIP をオフにした Apple シリコンの Mac です。",
+    ios2: "Linux パソコンで、`~/Phigros` のような専用フォルダに `Phigros.ipa` という名前で保存します。",
+    ios3: "ビルドに必要なツールをすべて揃える Nix をインストールします。",
+    ios4: "Phigros++ のソースをサブモジュールごと取得します。",
+    ios5: "ビルドします。最初のビルドは数 GB のツールをダウンロードするため時間がかかり、その後 `build/Phigros++.ipa` を書き出します。",
+    ios6: "ガイドに従って iPhone か iPad に **SideStore** をインストールし（AltStore でも可）、iOS に求められたら「設定 → プライバシーとセキュリティ」でデベロッパモードをオンにします。",
+    ios7: "`build/Phigros++.ipa` をデバイスに送り、SideStore を開いて My Apps の + ボタンから追加します。無料の Apple ID の署名は 7 日間有効で、SideStore がバックグラウンドで更新します。",
+    copy: "コピー",
+    copied: "コピーしました",
     install4:
-      "Phigros++ で **Settings → Profile** を開き、**Sync to phigros.tools** をオンにして、表示される 16 語を控えておきます。",
+      "**Install** をタップすると、Phigros にパッチを当てて、ゲームとは別のアプリである Phigros++ を作成し、以後の更新も行います。",
+    sync: "Phigros++ で **Settings → Profile** を開き、**Sync to phigros.tools** をオンにして、表示される 16 語を控えておきます。",
     installNote:
       "Mod はあなたの phigros.tools の鍵で動くので、信頼できる Mod だけを追加してください。",
     iosTitle: "iPhone と iPad 向けにビルドする",
     iosIntro:
       "iOS にはインストーラーがありません。自分のゲームのコピーから Linux パソコンで Phigros++ をビルドし、SideStore か AltStore があなたの Apple ID で署名します。",
-    ios1: "App Store の Phigros を復号します。これは実行中のアプリを読み取れるデバイスにしかできません。脱獄した iPhone や iPad、TrollStore の入ったデバイス（TrollDecrypt で行えます）、または SIP をオフにした Apple シリコンの Mac です。`Phigros.ipa` という名前で、`~/Phigros` のような専用フォルダに保存します。",
-    ios2: "Nix をインストールし、`git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus` でソースを取得します。",
-    ios3: "ソースのフォルダで `nix-shell --run 'make ipa IPA=~/Phigros'` を実行します。最初のビルドは必要なツールをダウンロードしてから `build/Phigros++.ipa` を書き出します。",
-    ios4: "SideStore か AltStore で `build/Phigros++.ipa` をインストールします。無料の Apple ID の署名は 7 日間有効で、更新はアプリが代わりに行います。",
     iosNote:
       "Mod と譜面は「ファイル」アプリの **Phigros++ → phigros++** に入れます。内蔵 Mod が触れないゲームの部分をフックする Mod には JIT が必要です。または `mods/` に入れてビルドし直します。",
     bring: "セーブを引き継ぐ",

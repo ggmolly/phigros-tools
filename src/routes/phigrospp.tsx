@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Arrow } from "../components/arrow";
 import { SiteHeader } from "../components/chrome";
 import { Question } from "../components/question";
@@ -8,7 +8,14 @@ import { headT, pageLinks, pageMeta } from "../seo";
 
 const INSTALLER = "https://github.com/ggmolly/PhigrosPlusPlus-Installer/releases/latest";
 const SOURCE = "https://github.com/ggmolly/PhigrosPlusPlus";
+const SIDESTORE = "https://docs.sidestore.io/docs/installation/prerequisites";
 const DEVICES = ["android", "ios"] as const;
+// what the ios steps run, the same in every language
+const NIX = "sh <(curl -L https://nixos.org/nix/install) --daemon";
+const CLONE = `git clone --recursive ${SOURCE}`;
+const BUILD = "cd PhigrosPlusPlus\nnix-shell --run 'make ipa IPA=~/Phigros'";
+
+type Step = { text: string; href?: string; command?: string };
 
 export const Route = createFileRoute("/phigrospp")({
   // the answer is the address, so each platform's steps can be linked
@@ -30,12 +37,53 @@ export const Route = createFileRoute("/phigrospp")({
   component: PhigrosppPage,
 });
 
+/** A command to type, with a button putting it in the clipboard. */
+function Command({ text }: { text: string }) {
+  const p = useT().pppPage;
+  const [copied, setCopied] = useState(false);
+  return (
+    <div className="ppp-command">
+      <code>{text}</code>
+      <button
+        type="button"
+        className="btn btn-ghost"
+        onClick={() =>
+          void navigator.clipboard.writeText(text).then(() => {
+            setCopied(true);
+            setTimeout(() => setCopied(false), 1500);
+          })
+        }
+      >
+        {copied ? p.copied : p.copy}
+      </button>
+    </div>
+  );
+}
+
 /** Getting Phigros++ on the player's platform, then their save into it. */
 function PhigrosppPage() {
   const t = useT();
   const p = t.pppPage;
   const { device } = Route.useSearch();
   const android = device === "android";
+  const steps: Step[] = android
+    ? [
+        { text: p.install1 },
+        { text: p.install2, href: `${INSTALLER}/download/phigrospp-installer.apk` },
+        { text: p.install3 },
+        { text: p.install4 },
+        { text: p.sync },
+      ]
+    : [
+        { text: p.ios1 },
+        { text: p.ios2 },
+        { text: p.ios3, command: NIX },
+        { text: p.ios4, command: CLONE },
+        { text: p.ios5, command: BUILD },
+        { text: p.ios6, href: SIDESTORE },
+        { text: p.ios7 },
+        { text: p.sync },
+      ];
   // the steps take the focus the answered tile had
   const flow = useRef<HTMLElement>(null);
   const loaded = useRef(false);
@@ -69,20 +117,15 @@ function PhigrosppPage() {
               <div className="start-question">
                 <h2 tabIndex={-1}>{android ? p.install : p.iosTitle}</h2>
                 <p className="meta">{android ? p.downloadNote : p.iosIntro}</p>
-                <ol className="guide-steps start-steps">
-                  {(android
-                    ? [p.install1, p.install2, p.install3, p.install4]
-                    : [p.ios1, p.ios2, p.ios3, p.ios4, p.install4]
-                  ).map((step) => (
-                    <li key={step}>
-                      <Rich
-                        text={step}
-                        href={
-                          step === p.install2
-                            ? `${INSTALLER}/download/phigrospp-installer.apk`
-                            : undefined
-                        }
-                      />
+                <ol className="ppp-steps">
+                  {steps.map(({ text, href, command }) => (
+                    <li key={text}>
+                      <div>
+                        <p>
+                          <Rich text={text} href={href} />
+                        </p>
+                        {command && <Command text={command} />}
+                      </div>
                     </li>
                   ))}
                 </ol>

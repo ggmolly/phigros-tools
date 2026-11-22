@@ -576,17 +576,23 @@ export const vi = {
     install2:
       "Tải **phigrospp-installer.apk** từ bản phát hành mới nhất của trình cài đặt rồi mở nó.",
     install3:
-      "Nhấn **Install**: nó vá Phigros của bạn thành Phigros++, một ứng dụng riêng bên cạnh game, và cập nhật nó về sau.",
+      "Cho phép trình duyệt hoặc ứng dụng Tệp cài ứng dụng không rõ nguồn gốc khi Android hỏi. Trình cài đặt cũng sẽ hỏi như vậy cho chính nó khi bạn chạm Install.",
+    ios1: "Lấy bản Phigros đã giải mã, vì bản trên App Store được mã hóa nên không thể vá. Chỉ thiết bị đọc được một ứng dụng đang chạy mới giải mã được: iPhone hoặc iPad đã jailbreak, thiết bị có TrollStore (TrollDecrypt làm việc này), hoặc máy Mac Apple Silicon đã tắt SIP.",
+    ios2: "Trên một máy tính Linux, lưu nó thành `Phigros.ipa` trong một thư mục riêng, như `~/Phigros`.",
+    ios3: "Cài Nix, thứ mang theo mọi công cụ mà bản build cần:",
+    ios4: "Tải mã nguồn của Phigros++ cùng các submodule của nó:",
+    ios5: "Build nó. Lần build đầu tải vài GB công cụ và mất một lúc, rồi ghi ra `build/Phigros++.ipa`:",
+    ios6: "Cài **SideStore** lên iPhone hoặc iPad theo hướng dẫn của nó (AltStore cũng được), và bật Chế độ nhà phát triển trong Cài đặt → Quyền riêng tư & Bảo mật khi iOS yêu cầu.",
+    ios7: "Gửi `build/Phigros++.ipa` sang thiết bị, mở SideStore và thêm nó từ My Apps bằng nút +. Apple ID miễn phí ký nó trong 7 ngày, và SideStore gia hạn ở chế độ nền.",
+    copy: "Sao chép",
+    copied: "Đã sao chép",
     install4:
-      "Trong Phigros++, mở **Settings → Profile**, bật **Sync to phigros.tools** và giữ lại 16 từ hiện ra.",
+      "Nhấn **Install**: nó vá Phigros của bạn thành Phigros++, một ứng dụng riêng bên cạnh game, và cập nhật nó về sau.",
+    sync: "Trong Phigros++, mở **Settings → Profile**, bật **Sync to phigros.tools** và giữ lại 16 từ hiện ra.",
     installNote: "Mod chạy bằng khóa phigros.tools của bạn, nên chỉ thêm những mod bạn tin tưởng.",
     iosTitle: "Build cho iPhone và iPad",
     iosIntro:
       "Trên iOS không có trình cài đặt: bạn build Phigros++ trên một máy tính Linux từ bản game của chính mình, rồi SideStore hoặc AltStore ký nó bằng Apple ID của bạn.",
-    ios1: "Giải mã Phigros từ App Store, việc mà chỉ thiết bị đọc được một ứng dụng đang chạy mới làm được: iPhone hoặc iPad đã jailbreak, thiết bị có TrollStore (TrollDecrypt làm việc này), hoặc máy Mac Apple Silicon đã tắt SIP. Lưu nó thành `Phigros.ipa` trong một thư mục riêng, như `~/Phigros`.",
-    ios2: "Cài Nix, rồi tải mã nguồn bằng `git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus`.",
-    ios3: "Trong thư mục mã nguồn, chạy `nix-shell --run 'make ipa IPA=~/Phigros'`. Lần build đầu tiên tải các công cụ cần thiết, rồi ghi ra `build/Phigros++.ipa`.",
-    ios4: "Cài `build/Phigros++.ipa` bằng SideStore hoặc AltStore. Apple ID miễn phí ký nó trong 7 ngày, và chúng sẽ gia hạn giúp bạn.",
     iosNote:
       "Mod và chart nằm trong **Phigros++ → phigros++** của ứng dụng Tệp. Một mod hook vào những phần của game mà các mod có sẵn không dùng tới cần JIT, hoặc một bản build mới có nó trong `mods/`.",
     bring: "Chuyển save của bạn sang",

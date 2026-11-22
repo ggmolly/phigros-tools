@@ -226,11 +226,13 @@
   gap: 1.125rem;
   margin: 1.125rem 0 1.375rem;
 }
-.guide-steps a {
+.guide-steps a,
+.ppp-steps a {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
-.guide-steps a:hover {
+.guide-steps a:hover,
+.ppp-steps a:hover {
   color: var(--glow);
 }
 /* commands and paths, which break anywhere so a long one stays in its step */
@@ -241,4 +243,47 @@
   font-family: ui-monospace, "Cascadia Mono", Menlo, monospace;
   font-size: 0.875em;
   overflow-wrap: anywhere;
+}
+/* one step a row under its number, its command below its text */
+.ppp-steps {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0.875rem 0 1.125rem;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+.ppp-steps > li {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.875rem 1.25rem;
+  background: rgb(0 0 0 / 0.35);
+  counter-increment: step;
+}
+.ppp-steps > li::before {
+  content: counter(step);
+  font-size: 1.75rem;
+  font-weight: 300;
+  line-height: 1;
+}
+.ppp-steps p {
+  max-width: 52rem;
+}
+.ppp-steps p + .ppp-command {
+  margin-top: 0.625rem;
+}
+.ppp-command {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0.5rem 0.5rem 1rem;
+  background: var(--glass-strong);
+}
+.ppp-command code {
+  flex: 1 1 14rem;
+  padding: 0;
+  background: none;
+  white-space: pre-wrap;
 }

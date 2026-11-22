@@ -579,18 +579,24 @@ export const es = {
     install1: "Instala Phigros desde la Play Store.",
     install2: "Descarga **phigrospp-installer.apk** de la última versión del instalador y ábrelo.",
     install3:
-      "Toca **Install**: convierte tu Phigros en Phigros++, una app propia junto al juego, y lo actualiza más adelante.",
+      "Permite que tu navegador o la app Archivos instale apps desconocidas cuando Android lo pida. El instalador pide lo mismo para sí cuando tocas Install.",
+    ios1: "Consigue Phigros descifrado, ya que la copia de la App Store está cifrada y no se puede parchear. Solo la descifra un dispositivo capaz de leer una app en ejecución: un iPhone o iPad con jailbreak, uno con TrollStore (TrollDecrypt lo hace ahí) o un Mac con Apple Silicon y SIP desactivado.",
+    ios2: "En un ordenador con Linux, guárdalo como `Phigros.ipa` en una carpeta propia, como `~/Phigros`.",
+    ios3: "Instala Nix, que trae todas las herramientas que necesita la compilación:",
+    ios4: "Descarga el código fuente de Phigros++ con sus submódulos:",
+    ios5: "Compílalo. La primera compilación descarga unos GB de herramientas y tarda un rato, luego escribe `build/Phigros++.ipa`:",
+    ios6: "Instala **SideStore** en tu iPhone o iPad siguiendo su guía (AltStore también sirve) y activa el modo de desarrollador en Ajustes → Privacidad y seguridad cuando iOS lo pida.",
+    ios7: "Envía `build/Phigros++.ipa` al dispositivo, abre SideStore y añádelo desde My Apps con el botón +. Un Apple ID gratuito lo firma durante 7 días, y SideStore lo renueva en segundo plano.",
+    copy: "Copiar",
+    copied: "Copiado",
     install4:
-      "En Phigros++, abre **Ajustes → Perfil**, activa **Sync to phigros.tools** y guarda las 16 palabras que muestra.",
+      "Toca **Install**: convierte tu Phigros en Phigros++, una app propia junto al juego, y lo actualiza más adelante.",
+    sync: "En Phigros++, abre **Ajustes → Perfil**, activa **Sync to phigros.tools** y guarda las 16 palabras que muestra.",
     installNote:
       "Los mods se ejecutan con tu clave de phigros.tools, así que añade solo mods de confianza.",
     iosTitle: "Compílalo para iPhone y iPad",
     iosIntro:
       "En iOS no hay instalador: compilas Phigros++ en un ordenador con Linux a partir de tu propia copia del juego, y luego SideStore o AltStore la firma con tu Apple ID.",
-    ios1: "Descifra el Phigros de la App Store, algo que solo puede hacer un dispositivo capaz de leer una app en ejecución: un iPhone o iPad con jailbreak, uno con TrollStore (TrollDecrypt lo hace ahí) o un Mac con Apple Silicon y SIP desactivado. Guárdalo como `Phigros.ipa` en una carpeta propia, como `~/Phigros`.",
-    ios2: "Instala Nix y descarga el código fuente con `git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus`.",
-    ios3: "En la carpeta del código fuente, ejecuta `nix-shell --run 'make ipa IPA=~/Phigros'`. La primera compilación descarga sus herramientas y luego escribe `build/Phigros++.ipa`.",
-    ios4: "Instala `build/Phigros++.ipa` con SideStore o AltStore. Un Apple ID gratuito la firma durante 7 días, y ellos la renuevan por ti.",
     iosNote:
       "Los mods y charts van en **Phigros++ → phigros++** de la app Archivos. Un mod que engancha partes del juego que los mods incluidos no tocan necesita JIT, o una nueva compilación con él en `mods/`.",
     bring: "Trae tu partida",
