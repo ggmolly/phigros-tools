@@ -6,6 +6,7 @@ export const ms = {
     records: "Rekod",
     charts: "Chart",
     leaderboard: "Papan pendahulu",
+    rooms: "Bilik",
     mods: "Mod",
     devices: "Peranti",
     phigrospp: "Phigros++",
@@ -172,6 +173,33 @@ export const ms = {
       "Belum ada carta yang dimainkan. Mainkan satu dengan Phigros++ untuk menjadi yang pertama.",
     description:
       "Pemain Phigros disusun mengikut RKS dan permainan terbaik bagi setiap carta, daripada pemain yang menyegerak dengan Phigros++.",
+  },
+  rooms: {
+    description:
+      "Bilik berbilang pemain Phigros++ secara langsung: chart yang dimainkan setiap bilik, para pemainnya, dan perlawanan yang telah dimainkan berserta kedudukan setiap pemain.",
+    intro:
+      "Dalam sebuah bilik, semua orang memainkan chart pilihan hos pada masa yang sama, dengan Phigros++.",
+    make: "Cipta bilik dari dalam permainan",
+    empty: "Tiada bilik yang dibuka sekarang. Bilik dicipta dalam permainan, dengan Phigros++.",
+    players: (n: number, max: number) => `${n}/${max} pemain`,
+    playing: "Sedang bermain",
+    picking: "Memilih chart",
+    password: "Perlu kata laluan",
+    join: "Sertai dalam Phigros++",
+    share: "Kongsi",
+    closed: "Bilik ini telah ditutup",
+    private:
+      "Bilik ini memerlukan kata laluan, jadi chart yang dimainkan dan perlawanannya hanya dapat dilihat oleh para pemainnya.",
+    host: "Hos",
+    ready: "Sedia",
+    notReady: "Belum sedia",
+    missing: "Tiada chart ini",
+    waiting: "Menunggu perlawanan seterusnya",
+    standings: "Kedudukan",
+    wins: "Menang",
+    matches: "Perlawanan",
+    total: "Jumlah",
+    latest: (chart: string, ranking: string) => `Perlawanan terkini, ${chart}: ${ranking}`,
   },
   song: {
     notFoundBody: "Tiada lagu dengan ID ini dalam katalog.",

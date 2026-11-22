@@ -6,6 +6,7 @@ export const es = {
     records: "Registros",
     charts: "Charts",
     leaderboard: "Clasificación",
+    rooms: "Salas",
     mods: "Mods",
     devices: "Dispositivos",
     phigrospp: "Phigros++",
@@ -172,6 +173,33 @@ export const es = {
     noCharts: "Aún no hay charts con partidas. Juega uno con Phigros++ para ser el primero.",
     description:
       "Jugadores de Phigros ordenados por RKS y las mejores partidas de cada chart, enviadas por quienes sincronizan con Phigros++.",
+  },
+  rooms: {
+    description:
+      "Las salas multijugador de Phigros++ en directo: el chart que juega cada sala, sus jugadores y las partidas que ha jugado con la clasificación de cada uno.",
+    intro: "En una sala, todos juegan a la vez el chart que elige su anfitrión, con Phigros++.",
+    make: "Crea una sala desde el juego",
+    empty:
+      "No hay ninguna sala abierta ahora mismo. Las salas se crean en el juego, con Phigros++.",
+    players: (n: number, max: number) => `${n}/${max} jugadores`,
+    playing: "Jugando",
+    picking: "Eligiendo un chart",
+    password: "Requiere contraseña",
+    join: "Unirse en Phigros++",
+    share: "Compartir",
+    closed: "Esta sala está cerrada",
+    private:
+      "Esta sala requiere contraseña, así que lo que juega y sus partidas quedan entre sus jugadores.",
+    host: "Anfitrión",
+    ready: "Listo",
+    notReady: "No está listo",
+    missing: "No tiene este chart",
+    waiting: "Espera la próxima partida",
+    standings: "Clasificación",
+    wins: "Victorias",
+    matches: "Partidas",
+    total: "Total",
+    latest: (chart: string, ranking: string) => `Última partida, ${chart}: ${ranking}`,
   },
   song: {
     notFoundBody: "No hay ninguna canción con este ID en el catálogo.",
