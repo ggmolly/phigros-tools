@@ -20,6 +20,7 @@ import {
   type PlayerProfile,
   type ReplayInfo,
 } from "../src/plays";
+import type { RoomPage } from "../src/rooms";
 import { songPalette } from "../src/song-palettes";
 
 const { width: W, height: H } = CARDS.player;
@@ -571,6 +572,46 @@ const PODIUM = [
 ] as const;
 const OTHERS = 5; // places listed under the podium
 
+type Ranked = Pick<Play, "rank" | "player" | "accuracy" | "score" | "total" | "fc">;
+// a list on the left side of a `SongCard`
+const list: Style = {
+  flexDirection: "column",
+  alignItems: "stretch",
+  width: 618,
+  marginLeft: 4,
+  padding: "8px 30px",
+};
+
+/** Places of a ranking as rows `height` high: the place (the first three in the podium's colours), who, and what they got. */
+function PlayRows({ plays, height }: { plays: Ranked[]; height: number }) {
+  return (
+    <Para fill="rgba(20,18,26,.8)" style={list}>
+      {plays.map((play) => (
+        <div key={play.rank} style={{ ...row, height, fontSize: 22 }}>
+          <span
+            style={{
+              width: 44,
+              fontSize: 17,
+              color: PODIUM.find(([place]) => place === play.rank - 1)?.[2] ?? FAINT,
+            }}
+          >
+            {String(play.rank).padStart(2, "0")}
+          </span>
+          <div style={{ ...baseline, flex: 1 }}>
+            <span style={{ ...ellipsis, maxWidth: 250 }}>{play.player.name}</span>
+            <span style={{ fontSize: 15, color: FAINT }}>{tag(play.player)}</span>
+          </div>
+          <span style={{ width: 84, fontSize: 18, color: DIM }}>{play.accuracy.toFixed(2)}%</span>
+          <span style={{ width: 112, fontWeight: 300 }}>{score7(play.total)}</span>
+          <div style={{ ...row, width: 24, justifyContent: "center" }}>
+            <RankGlyph score={play.score} fc={play.fc} />
+          </div>
+        </div>
+      ))}
+    </Para>
+  );
+}
+
 /** A chart ranking's card: the three best on a podium with their avatars, then the next places as rows. */
 function PlaysCard({ plays, avatars }: { plays: Play[]; avatars: (string | undefined)[] }) {
   return (
@@ -620,41 +661,46 @@ function PlaysCard({ plays, avatars }: { plays: Play[]; avatars: (string | undef
           );
         })}
       </div>
-      {plays.length > PODIUM.length && (
-        <Para
-          fill="rgba(20,18,26,.8)"
-          style={{
-            flexDirection: "column",
-            alignItems: "stretch",
-            width: 618,
-            marginLeft: 4,
-            padding: "8px 30px",
-          }}
-        >
-          {plays.slice(PODIUM.length).map((play) => (
-            <div key={play.id} style={{ ...row, height: 32, fontSize: 22 }}>
-              <span style={{ width: 44, fontSize: 17, color: FAINT }}>
-                {String(play.rank).padStart(2, "0")}
-              </span>
-              <div style={{ ...baseline, flex: 1 }}>
-                <span style={{ ...ellipsis, maxWidth: 250 }}>{play.player.name}</span>
-                <span style={{ fontSize: 15, color: FAINT }}>{tag(play.player)}</span>
-              </div>
-              <span style={{ width: 84, fontSize: 18, color: DIM }}>
-                {play.accuracy.toFixed(2)}%
-              </span>
-              <span style={{ width: 112, fontWeight: 300 }}>{score7(play.score)}</span>
-              <div style={{ ...row, width: 24, justifyContent: "center" }}>
-                <RankGlyph score={play.score} fc={play.fc} />
-              </div>
-            </div>
-          ))}
-        </Para>
-      )}
+      {plays.length > PODIUM.length && <PlayRows plays={plays.slice(PODIUM.length)} height={32} />}
       {!plays.length && (
         <span style={{ marginLeft: 44, marginTop: 24, fontSize: 30, color: DIM }}>
           No plays yet
         </span>
+      )}
+    </div>
+  );
+}
+
+/**
+ * A room's card: its name over the ranking of its latest match, or before any over who's in it. A room with a
+ * password only says how many are.
+ */
+function RoomCard({ page }: { page: RoomPage }) {
+  const match = page.matches[0];
+  const players = page.open?.players ?? 0;
+  return (
+    <div style={column}>
+      <span style={{ ...ellipsis, marginLeft: 34, fontSize: 46, fontWeight: 500, lineHeight: 1.2 }}>
+        {page.name}
+      </span>
+      {match ? (
+        <PlayRows
+          plays={match.plays.map((play) => ({ ...play, fc: play.bad + play.miss === 0 }))}
+          height={40}
+        />
+      ) : page.room ? (
+        <Para fill="rgba(20,18,26,.8)" style={list}>
+          {page.room.players.map(({ player }) => (
+            <div key={player.id} style={{ ...baseline, height: 40, fontSize: 24 }}>
+              <span style={{ ...ellipsis, maxWidth: 420 }}>{player.name}</span>
+              <span style={{ fontSize: 16, color: FAINT }}>{tag(player)}</span>
+            </div>
+          ))}
+        </Para>
+      ) : (
+        <div style={{ ...row, marginLeft: 28 }}>
+          <Chip>{players === 1 ? "1 player" : `${players} players`}</Chip>
+        </div>
       )}
     </div>
   );
@@ -972,6 +1018,36 @@ export async function renderPlaysCard(
       <PlaysCard plays={shown} avatars={avatars} />
     </SongCard>
   );
+  return render(origin, card, CARDS.replay);
+}
+
+/** A room's card as a JPEG: on the chart of its latest match, or the one it's on, over the fog without one. */
+export async function renderRoomCard(origin: string, page: RoomPage) {
+  const match = page.matches[0];
+  const chart = match ?? page.room?.chart;
+  const inside = <RoomCard page={page} />;
+  const card =
+    chart && catalogSong(chart.song) ? (
+      <SongCard
+        song={chart.song}
+        level={chart.level}
+        date={new Date(match?.date ?? Date.now())}
+        note={
+          chart.mods
+            ? `${activeMods(chart.mods)
+                .map(([, id]) => id)
+                .join(" ")} ${multiplierLabel(chart.mods)}`
+            : undefined
+        }
+        {...(await coverImages(origin, chart.song))}
+      >
+        {inside}
+      </SongCard>
+    ) : (
+      <ModFrame date={new Date()}>
+        <div style={{ display: "flex", marginTop: 32, paddingLeft: 40 }}>{inside}</div>
+      </ModFrame>
+    );
   return render(origin, card, CARDS.replay);
 }
 
