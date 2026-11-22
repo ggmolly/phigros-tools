@@ -45,9 +45,9 @@ export const playerId = (key: Uint8Array) => Buffer.from(key.subarray(0, 6)).toS
 
 // spaces (line breaks too) collapse to one, then the other unicode "other" characters (controls, bidi overrides,
 // zero widths) are dropped
-function clean(name: string): string {
+export function clean(name: string, length = NAME_LENGTH): string {
   const cleaned = name.normalize("NFC").replace(/\s+/gu, " ").replace(/\p{C}/gu, "").trim();
-  return [...cleaned].slice(0, NAME_LENGTH).join("");
+  return [...cleaned].slice(0, length).join("");
 }
 export const fold = (name: string) => name.normalize("NFKC").toLowerCase();
 
