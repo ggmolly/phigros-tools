@@ -664,21 +664,22 @@ export async function patch(ipa: Blob, packed: Bytes, icon: Icon, tell: Tell): P
   for (const [key, icons] of Object.entries(artwork ? ICON_FILES : {}))
     info[key] = { CFBundlePrimaryIcon: { CFBundleIconFiles: icons } };
 
-  const kept = entries
-    .filter((entry) => !dropped.includes(entry))
-    .map(async (entry): Promise<[Entry, BlobPart]> => {
-      if (entry.name === PLIST) return added(PLIST, writePlist(info), 0o100644);
-      if (entry.name === UNITY) return added(UNITY, unity, 0o100755);
-      return [entry, await stored(ipa, entry)];
-    });
-  kept.push(added(APP + LIB, files.get(game)!, 0o100755));
+  // one read at a time: thousands at once are more files than a browser lets a page open
+  const kept: [Entry, BlobPart][] = [];
+  for (const entry of entries) {
+    if (dropped.includes(entry)) continue;
+    if (entry.name === PLIST) kept.push(await added(PLIST, writePlist(info), 0o100644));
+    else if (entry.name === UNITY) kept.push(await added(UNITY, unity, 0o100755));
+    else kept.push([entry, await stored(ipa, entry)]);
+  }
+  kept.push(await added(APP + LIB, files.get(game)!, 0o100755));
   for (const [name, size] of Object.entries(artwork ? ICONS : {}))
-    kept.push(icon(artwork!, size).then((png) => added(APP + name, png, 0o100644)));
+    kept.push(await added(APP + name, await icon(artwork!, size), 0o100644));
 
   const out: BlobPart[] = [];
   const central: Bytes[] = [];
   let offset = 0;
-  for (const [{ raw, made, fields, mode }, data] of await Promise.all(kept)) {
+  for (const [{ raw, made, fields, mode }, data] of kept) {
     const header = [fields[0], fields[1] & ~8, ...fields.slice(2), raw.length];
     out.push(pack("IHHHHHIIIHH", 0x04034b50, ...header, 0), raw, data);
     central.push(

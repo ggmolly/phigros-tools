@@ -573,7 +573,7 @@ export const ko = {
     install3:
       "Android가 물으면 브라우저나 파일 앱이 출처를 알 수 없는 앱을 설치하도록 허용하세요. Install을 탭하면 설치 프로그램도 자신에 대해 같은 허용을 요청합니다.",
     ios1: "복호화된 Phigros를 준비하세요. App Store의 사본은 암호화되어 있어 패치할 수 없습니다. 실행 중인 앱을 읽을 수 있는 기기만 복호화할 수 있습니다: 탈옥한 iPhone이나 iPad, TrollStore가 있는 기기(TrollDecrypt로 가능), 또는 SIP를 끈 Apple Silicon Mac입니다.",
-    ios2: "그 IPA를 여기에서 선택하세요. 브라우저가 이 기기에서 패치해 `Phigros++.ipa`로 만들며, 게임의 어떤 부분도 업로드되지 않습니다.",
+    ios2: "그 IPA를 여기에서 선택하세요. 브라우저가 이 기기에서 패치해 `Phigros++.ipa`로 만듭니다.",
     ios3: "가이드를 따라 iPhone이나 iPad에 **SideStore**를 설치하고(AltStore도 됩니다), iOS가 요청하면 설정 → 개인정보 보호 및 보안에서 개발자 모드를 켜세요.",
     ios4: "`Phigros++.ipa`를 기기로 보내고, SideStore를 열어 My Apps의 + 버튼으로 추가하세요. 무료 Apple ID는 7일 동안 서명하며, SideStore가 백그라운드에서 갱신합니다.",
     patchDrop: "복호화된 IPA를 여기에 놓거나 선택하세요.",
@@ -595,8 +595,6 @@ export const ko = {
     sync: "Phigros++에서 **Settings → Profile**을 열고 **Sync to phigros.tools**를 켠 다음, 표시되는 16개 단어를 보관하세요.",
     installNote: "모드는 내 phigros.tools 키로 실행되므로 믿을 수 있는 모드만 추가하세요.",
     iosTitle: "iPhone과 iPad용으로 패치하기",
-    iosIntro:
-      "iOS에는 설치 프로그램이 없습니다. 이 페이지가 직접 가진 게임 사본을 Phigros++로 패치하고, SideStore나 AltStore가 당신의 Apple ID로 서명합니다.",
     iosNote:
       "모드와 채보는 파일 앱의 **Phigros++ → phigros++**에 넣습니다. 내장 모드가 건드리지 않는 게임 부분을 후킹하는 모드는 JIT가 필요하거나, `mods/`에 넣고 직접 빌드해야 합니다.",
     iosBuild: "Phigros++를 직접 빌드하는 방법은 위키의 **Development** 페이지에 있습니다.",

@@ -583,7 +583,7 @@ export const ja = {
     install3:
       "Android に聞かれたら、ブラウザか「ファイル」アプリに不明なアプリのインストールを許可します。Install をタップすると、インストーラーも自身について同じことを求めます。",
     ios1: "復号済みの Phigros を用意します。App Store のコピーは暗号化されていてパッチを当てられません。復号できるのは実行中のアプリを読み取れるデバイスだけです。脱獄した iPhone や iPad、TrollStore の入ったデバイス（TrollDecrypt で行えます）、または SIP をオフにした Apple シリコンの Mac です。",
-    ios2: "その IPA をここで選びます。ブラウザがこのデバイス上でパッチを当てて `Phigros++.ipa` にし、ゲームのデータは一切アップロードされません。",
+    ios2: "その IPA をここで選びます。ブラウザがこのデバイス上でパッチを当てて `Phigros++.ipa` にします。",
     ios3: "ガイドに従って iPhone か iPad に **SideStore** をインストールし（AltStore でも可）、iOS に求められたら「設定 → プライバシーとセキュリティ」でデベロッパモードをオンにします。",
     ios4: "`Phigros++.ipa` をデバイスに送り、SideStore を開いて My Apps の + ボタンから追加します。無料の Apple ID の署名は 7 日間有効で、SideStore がバックグラウンドで更新します。",
     patchDrop: "復号済みの IPA をここにドロップするか、選択してください。",
@@ -606,8 +606,6 @@ export const ja = {
     installNote:
       "Mod はあなたの phigros.tools の鍵で動くので、信頼できる Mod だけを追加してください。",
     iosTitle: "iPhone と iPad 向けにパッチを当てる",
-    iosIntro:
-      "iOS にはインストーラーがありません。このページが自分のゲームのコピーにパッチを当てて Phigros++ にし、SideStore か AltStore があなたの Apple ID で署名します。",
     iosNote:
       "Mod と譜面は「ファイル」アプリの **Phigros++ → phigros++** に入れます。内蔵 Mod が触れないゲームの部分をフックする Mod には JIT が必要です。または `mods/` に入れて自分でビルドします。",
     iosBuild: "Phigros++ を自分でビルドする方法は、wiki の **Development** ページにあります。",

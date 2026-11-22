@@ -588,7 +588,7 @@ export const fr = {
     install3:
       "Autorisez votre navigateur ou l’app Fichiers à installer des apps inconnues quand Android le demande. L’installateur demande la même chose pour lui-même quand vous touchez Install.",
     ios1: "Procurez-vous Phigros déchiffré, car la copie de l’App Store est chiffrée et ne peut pas être modifiée. Seul un appareil capable de lire une app en cours d’exécution la déchiffre : un iPhone ou iPad jailbreaké, un avec TrollStore (TrollDecrypt s’en charge), ou un Mac Apple Silicon avec SIP désactivé.",
-    ios2: "Choisissez cet IPA ici. Votre navigateur le transforme en `Phigros++.ipa` sur cet appareil, et rien du jeu n’est envoyé.",
+    ios2: "Choisissez cet IPA ici. Votre navigateur le transforme en `Phigros++.ipa` sur cet appareil.",
     ios3: "Installez **SideStore** sur votre iPhone ou iPad en suivant son guide (AltStore fonctionne aussi), et activez le mode développeur dans Réglages → Confidentialité et sécurité quand iOS le demande.",
     ios4: "Envoyez `Phigros++.ipa` sur l’appareil, ouvrez SideStore et ajoutez-le depuis My Apps avec le bouton +. Un identifiant Apple gratuit le signe pour 7 jours, et SideStore le renouvelle en arrière-plan.",
     patchDrop: "Déposez ici l’IPA déchiffré, ou choisissez-le.",
@@ -611,8 +611,6 @@ export const fr = {
     installNote:
       "Les mods tournent avec votre clé phigros.tools, n’ajoutez donc que des mods de confiance.",
     iosTitle: "Le préparer pour iPhone et iPad",
-    iosIntro:
-      "Il n’y a pas d’installateur sur iOS : cette page transforme votre propre copie du jeu en Phigros++, puis SideStore ou AltStore la signe avec votre identifiant Apple.",
     iosNote:
       "Les mods et les charts vont dans **Phigros++ → phigros++** de l’app Fichiers. Un mod qui modifie des parties du jeu que les mods intégrés ne touchent pas a besoin du JIT, ou de votre propre compilation avec lui dans `mods/`.",
     iosBuild: "La page **Development** du wiki explique comment compiler Phigros++ vous-même.",

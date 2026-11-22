@@ -582,7 +582,7 @@ export const ms = {
     install3:
       "Benarkan pelayar atau app Fail anda memasang app tidak diketahui apabila Android bertanya. Pemasang meminta perkara yang sama untuk dirinya apabila anda mengetik Install.",
     ios1: "Dapatkan Phigros yang telah dinyahsulit, kerana salinan App Store disulitkan dan tidak boleh ditampal. Hanya peranti yang dapat membaca app yang sedang berjalan boleh menyahsulitnya: iPhone atau iPad yang di-jailbreak, peranti dengan TrollStore (TrollDecrypt boleh melakukannya), atau Mac Apple Silicon dengan SIP dimatikan.",
-    ios2: "Pilih IPA itu di sini. Pelayar anda menampalnya menjadi `Phigros++.ipa` pada peranti ini, dan tiada bahagian permainan dimuat naik.",
+    ios2: "Pilih IPA itu di sini. Pelayar anda menampalnya menjadi `Phigros++.ipa` pada peranti ini.",
     ios3: "Pasang **SideStore** pada iPhone atau iPad anda dengan panduannya (AltStore juga boleh), dan hidupkan Mod Pembangun dalam Tetapan → Privasi & Keselamatan apabila iOS memintanya.",
     ios4: "Hantar `Phigros++.ipa` ke peranti, buka SideStore dan tambahkannya dari My Apps dengan butang +. Apple ID percuma menandatanganinya selama 7 hari, dan SideStore memperbaharuinya di latar belakang.",
     patchDrop: "Lepaskan IPA yang telah dinyahsulit di sini, atau pilih failnya.",
@@ -605,8 +605,6 @@ export const ms = {
     installNote:
       "Mod berjalan dengan kunci phigros.tools anda, jadi tambah hanya mod yang anda percayai.",
     iosTitle: "Tampal untuk iPhone dan iPad",
-    iosIntro:
-      "Tiada pemasang di iOS: halaman ini menampal salinan permainan anda sendiri menjadi Phigros++, kemudian SideStore atau AltStore menandatanganinya dengan Apple ID anda.",
     iosNote:
       "Mod dan carta diletakkan dalam **Phigros++ → phigros++** pada app Fail. Mod yang mengait bahagian permainan yang tidak disentuh oleh mod terbina dalam memerlukan JIT, atau binaan anda sendiri dengan mod itu dalam `mods/`.",
     iosBuild: "Halaman **Development** dalam wiki menerangkan cara membina Phigros++ sendiri.",

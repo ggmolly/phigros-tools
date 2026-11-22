@@ -88,7 +88,7 @@ function PhigrosppPage() {
             {device && (
               <div className="start-question">
                 <h2 tabIndex={-1}>{android ? p.install : p.iosTitle}</h2>
-                <p className="meta">{android ? p.downloadNote : p.iosIntro}</p>
+                {android && <p className="meta">{p.downloadNote}</p>}
                 <ol className="ppp-steps">
                   {steps.map(({ text, href, patcher }) => (
                     <li key={text}>

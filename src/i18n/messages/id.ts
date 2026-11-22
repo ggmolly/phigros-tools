@@ -580,7 +580,7 @@ export const id = {
     install3:
       "Izinkan browser atau app File menginstal aplikasi tak dikenal saat Android bertanya. Installer meminta hal yang sama untuk dirinya saat kamu mengetuk Install.",
     ios1: "Siapkan Phigros yang sudah didekripsi, karena salinan App Store terenkripsi dan tidak bisa ditambal. Hanya perangkat yang dapat membaca app yang sedang berjalan yang bisa mendekripsinya: iPhone atau iPad yang di-jailbreak, perangkat dengan TrollStore (TrollDecrypt bisa melakukannya), atau Mac Apple Silicon dengan SIP dimatikan.",
-    ios2: "Pilih IPA itu di sini. Browsermu menambalnya menjadi `Phigros++.ipa` di perangkat ini, dan tidak ada bagian game yang diunggah.",
+    ios2: "Pilih IPA itu di sini. Browsermu menambalnya menjadi `Phigros++.ipa` di perangkat ini.",
     ios3: "Pasang **SideStore** di iPhone atau iPad kamu dengan panduannya (AltStore juga bisa), dan nyalakan Mode Pengembang di Pengaturan → Privasi & Keamanan saat iOS memintanya.",
     ios4: "Kirim `Phigros++.ipa` ke perangkat, buka SideStore dan tambahkan dari My Apps dengan tombol +. Apple ID gratis menandatanganinya untuk 7 hari, dan SideStore memperbaruinya di latar belakang.",
     patchDrop: "Letakkan IPA yang sudah didekripsi di sini, atau pilih filenya.",
@@ -603,8 +603,6 @@ export const id = {
     installNote:
       "Mod berjalan dengan kunci phigros.tools kamu, jadi pasang hanya mod yang kamu percaya.",
     iosTitle: "Tambal untuk iPhone dan iPad",
-    iosIntro:
-      "Di iOS tidak ada installer: halaman ini menambal salinan game milikmu sendiri menjadi Phigros++, lalu SideStore atau AltStore menandatanganinya dengan Apple ID kamu.",
     iosNote:
       "Mod dan chart masuk ke **Phigros++ → phigros++** di app File. Mod yang meng-hook bagian game yang tidak disentuh mod bawaan butuh JIT, atau build buatanmu sendiri dengan mod itu di `mods/`.",
     iosBuild: "Halaman **Development** di wiki menjelaskan cara mem-build Phigros++ sendiri.",

@@ -578,7 +578,7 @@ export const vi = {
     install3:
       "Cho phép trình duyệt hoặc ứng dụng Tệp cài ứng dụng không rõ nguồn gốc khi Android hỏi. Trình cài đặt cũng sẽ hỏi như vậy cho chính nó khi bạn chạm Install.",
     ios1: "Lấy bản Phigros đã giải mã, vì bản trên App Store được mã hóa nên không thể vá. Chỉ thiết bị đọc được một ứng dụng đang chạy mới giải mã được: iPhone hoặc iPad đã jailbreak, thiết bị có TrollStore (TrollDecrypt làm việc này), hoặc máy Mac Apple Silicon đã tắt SIP.",
-    ios2: "Chọn tệp IPA đó tại đây. Trình duyệt của bạn vá nó thành `Phigros++.ipa` ngay trên thiết bị này, và không phần nào của game bị tải lên.",
+    ios2: "Chọn tệp IPA đó tại đây. Trình duyệt của bạn vá nó thành `Phigros++.ipa` ngay trên thiết bị này.",
     ios3: "Cài **SideStore** lên iPhone hoặc iPad theo hướng dẫn của nó (AltStore cũng được), và bật Chế độ nhà phát triển trong Cài đặt → Quyền riêng tư & Bảo mật khi iOS yêu cầu.",
     ios4: "Gửi `Phigros++.ipa` sang thiết bị, mở SideStore và thêm nó từ My Apps bằng nút +. Apple ID miễn phí ký nó trong 7 ngày, và SideStore gia hạn ở chế độ nền.",
     patchDrop: "Thả tệp IPA đã giải mã vào đây, hoặc chọn tệp.",
@@ -600,8 +600,6 @@ export const vi = {
     sync: "Trong Phigros++, mở **Settings → Profile**, bật **Sync to phigros.tools** và giữ lại 16 từ hiện ra.",
     installNote: "Mod chạy bằng khóa phigros.tools của bạn, nên chỉ thêm những mod bạn tin tưởng.",
     iosTitle: "Vá cho iPhone và iPad",
-    iosIntro:
-      "Trên iOS không có trình cài đặt: trang này vá bản game của chính bạn thành Phigros++, rồi SideStore hoặc AltStore ký nó bằng Apple ID của bạn.",
     iosNote:
       "Mod và chart nằm trong **Phigros++ → phigros++** của ứng dụng Tệp. Một mod hook vào những phần của game mà các mod có sẵn không dùng tới cần JIT, hoặc một bản build của riêng bạn có nó trong `mods/`.",
     iosBuild: "Trang **Development** của wiki hướng dẫn cách tự build Phigros++.",
