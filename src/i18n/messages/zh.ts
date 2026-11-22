@@ -560,6 +560,15 @@ export const zh = {
     install4:
       "在 Phigros++ 中打开**设置 → 个人资料**，开启 **Sync to phigros.tools**，并保管好它显示的 16 个单词。",
     installNote: "模组会以你的 phigros.tools 密钥运行，所以只添加你信任的模组。",
+    iosTitle: "为 iPhone 和 iPad 构建",
+    iosIntro:
+      "iOS 上没有安装器：你需要在 Linux 电脑上用你自己的游戏副本构建 Phigros++，再由 SideStore 或 AltStore 用你的 Apple ID 签名。",
+    ios1: "在越狱或装有 TrollStore 的设备上解密 Phigros 4.0.4，例如用 TrollDecrypt：App Store 的副本是加密的，无法修补。把它保存为 **Phigros.ipa**，放在单独的文件夹里，比如 **~/Phigros**。",
+    ios2: "安装 Nix，然后用 **git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus** 获取源码。",
+    ios3: "在源码文件夹中运行 **nix-shell --run 'make ipa IPA=~/Phigros'**。第一次构建会先下载所需工具，然后生成 **build/Phigros++.ipa**。",
+    ios4: "用 SideStore 或 AltStore 安装 **build/Phigros++.ipa**。免费 Apple ID 的签名有效期为 7 天，它们会替你续签。",
+    iosNote:
+      "模组和谱面放在“文件”App 的 **Phigros++ → phigros++** 中。如果模组要挂钩内置模组没有用到的游戏部分，就需要 JIT，或者把它放进 **mods/** 后重新构建。",
     bring: "迁移你的存档",
     bringText:
       "Phigros++ 从空存档开始，而 TapTap 云已不再响应，所以无法从那里获取你的存档。无论你的存档在哪台设备上，phigros.tools 仍然可以把它转入 Phigros++。",
@@ -593,13 +602,13 @@ export const zh = {
     androidText:
       "Android 把 Phigros 的存档放在只有 root 才能读取的位置，而 Phigros++ 是独立的应用，所以无法复制它。你可以根据游戏中显示的内容在 phigros.tools 上重建存档，之后 Phigros++ 会载入它。",
     iosText:
-      "Phigros++ 尚未在 iPhone 和 iPad 上推出。你可以根据游戏中显示的内容在 phigros.tools 上重建存档：它会留在你的资料中等待，现在就能在任何 Android 设备上载入。",
+      "iOS 把 Phigros 的存档放在只有游戏本身能读取的地方，而 Phigros++ 是独立的应用，所以无法复制它。你可以根据游戏中显示的内容在 phigros.tools 上重建存档，**为你的 iPhone 或 iPad 构建** Phigros++ 后即可载入。",
     goneText:
       "存档随设备一起没了，但只要你还记得成绩或留有截图，成绩就还在。你可以在 phigros.tools 上重建存档，之后 Phigros++ 会载入它。",
     rebuild1: "填写你的成绩，然后选择你的头像、课题模式段位和已解锁的内容。",
     rebuild2: "保管好 phigros.tools 给你的 16 个单词：它们就是你资料的密码。",
     rebuild3:
-      "在 Android 设备上安装 Phigros++，打开**设置 → 个人资料**，选择 **Sign in to my profile** 并输入这些单词。它会提示迁移你的存档。",
+      "安装 Phigros++，打开**设置 → 个人资料**，选择 **Sign in to my profile** 并输入这些单词。它会提示迁移你的存档。",
     declared: "你填写的成绩会在你的资料上显示为“已申报”，在 Phigros++ 中打出后即计入排行榜。",
     rebuild: "重建我的存档",
     install: "获取 Phigros++",

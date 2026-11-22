@@ -597,6 +597,15 @@ export const de = {
       "Öffne in Phigros++ **Settings → Profile**, aktiviere **Sync to phigros.tools** und bewahre die 16 angezeigten Wörter auf.",
     installNote:
       "Mods laufen mit deinem phigros.tools-Schlüssel, installiere also nur Mods, denen du vertraust.",
+    iosTitle: "Für iPhone und iPad bauen",
+    iosIntro:
+      "Auf iOS gibt es keinen Installer: Du baust Phigros++ auf einem Linux-Computer aus deiner eigenen Kopie des Spiels, und SideStore oder AltStore signiert sie mit deiner Apple-ID.",
+    ios1: "Entschlüssle Phigros 4.0.4 auf einem Gerät mit Jailbreak oder TrollStore, zum Beispiel mit TrollDecrypt: Die Kopie aus dem App Store ist verschlüsselt und lässt sich nicht patchen. Speichere sie als **Phigros.ipa** in einem eigenen Ordner, etwa **~/Phigros**.",
+    ios2: "Installiere Nix und hole dir den Quellcode mit **git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus**.",
+    ios3: "Führe im Ordner des Quellcodes **nix-shell --run 'make ipa IPA=~/Phigros'** aus. Der erste Build lädt seine Werkzeuge herunter und schreibt dann **build/Phigros++.ipa**.",
+    ios4: "Installiere **build/Phigros++.ipa** mit SideStore oder AltStore. Eine kostenlose Apple-ID signiert sie für 7 Tage, und sie erneuern das für dich.",
+    iosNote:
+      "Mods und Charts kommen in **Phigros++ → phigros++** der Dateien-App. Ein Mod, der Teile des Spiels hookt, die die eingebauten Mods nicht anfassen, braucht JIT oder einen neuen Build mit ihm in **mods/**.",
     bring: "Spielstand mitnehmen",
     bringText:
       "Phigros++ startet mit einem leeren Spielstand, und da die TapTap-Cloud nicht mehr antwortet, kann es deinen nicht von dort holen. phigros.tools kann deinen Spielstand trotzdem hineinbringen, egal auf welchem Gerät er liegt.",
@@ -632,7 +641,7 @@ export const de = {
     androidText:
       "Android bewahrt den Spielstand von Phigros dort auf, wo nur Root ihn lesen kann, und Phigros++ ist eine eigene App, kann ihn also nicht kopieren. Du kannst ihn auf phigros.tools aus dem nachbauen, was dein Spiel anzeigt, und Phigros++ lädt ihn dann.",
     iosText:
-      "Phigros++ gibt es für iPhone und iPad noch nicht. Du kannst deinen Spielstand auf phigros.tools aus dem nachbauen, was dein Spiel anzeigt: Er wartet in deinem Profil und lässt sich schon heute auf jedem Android-Gerät laden.",
+      "iOS bewahrt den Spielstand von Phigros dort auf, wo nur das Spiel ihn lesen kann, und Phigros++ ist eine eigene App, also kann es ihn nicht kopieren. Du kannst ihn auf phigros.tools aus dem nachbauen, was dein Spiel anzeigt, und Phigros++ lädt ihn dann, sobald du es **für dein iPhone oder iPad gebaut** hast.",
     goneText:
       "Der Spielstand ist mit dem Gerät verschwunden, deine Scores aber nicht, wenn du sie noch weißt oder Screenshots aufbewahrt hast. Du kannst den Spielstand auf phigros.tools nachbauen, und Phigros++ lädt ihn dann.",
     rebuild1:
@@ -640,7 +649,7 @@ export const de = {
     rebuild2:
       "Bewahre die 16 Wörter auf, die phigros.tools dir gibt: Sie sind das Passwort deines Profils.",
     rebuild3:
-      "Installiere Phigros++ auf einem Android-Gerät, öffne **Settings → Profile**, wähle **Sign in to my profile** und gib die Wörter ein. Es bietet dir an, deinen Spielstand zu übernehmen.",
+      "Installiere Phigros++, öffne **Settings → Profile**, wähle **Sign in to my profile** und gib die Wörter ein. Es bietet dir an, deinen Spielstand zu übernehmen.",
     declared:
       "Scores, die du eintippst, erscheinen in deinem Profil als Angegeben und zählen in den Ranglisten, sobald du sie in Phigros++ spielst.",
     rebuild: "Meinen Spielstand nachbauen",

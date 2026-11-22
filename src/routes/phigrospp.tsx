@@ -116,6 +116,20 @@ function PhigrosppPage() {
           </ol>
           <p className="meta">{p.installNote}</p>
         </section>
+        <section className="panel" id="ios">
+          <h2 className="panel-title">{p.iosTitle}</h2>
+          <p className="meta">{p.iosIntro}</p>
+          <ol className="guide-steps">
+            {[p.ios1, p.ios2, p.ios3, p.ios4, p.install4].map((step) => (
+              <li key={step}>
+                <Rich text={step} />
+              </li>
+            ))}
+          </ol>
+          <p className="meta">
+            <Rich text={p.iosNote} />
+          </p>
+        </section>
         <section className="panel">
           <h2 className="panel-title">{p.bring}</h2>
           <p className="meta">{p.bringText}</p>

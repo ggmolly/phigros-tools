@@ -561,6 +561,15 @@ export const zhHant = {
     install4:
       "在 Phigros++ 中開啟**設定 → 個人資料**，開啟 **Sync to phigros.tools**，並保管好它顯示的 16 個單字。",
     installNote: "模組會以你的 phigros.tools 金鑰執行，所以只加入你信任的模組。",
+    iosTitle: "為 iPhone 和 iPad 建置",
+    iosIntro:
+      "iOS 上沒有安裝器：你需要在 Linux 電腦上用你自己的遊戲副本建置 Phigros++，再由 SideStore 或 AltStore 用你的 Apple ID 簽署。",
+    ios1: "在越獄或裝有 TrollStore 的裝置上解密 Phigros 4.0.4，例如用 TrollDecrypt：App Store 的副本是加密的，無法修補。把它儲存為 **Phigros.ipa**，放在單獨的資料夾裡，例如 **~/Phigros**。",
+    ios2: "安裝 Nix，然後用 **git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus** 取得原始碼。",
+    ios3: "在原始碼資料夾中執行 **nix-shell --run 'make ipa IPA=~/Phigros'**。第一次建置會先下載所需工具，然後產生 **build/Phigros++.ipa**。",
+    ios4: "用 SideStore 或 AltStore 安裝 **build/Phigros++.ipa**。免費 Apple ID 的簽署有效期為 7 天，它們會替你續簽。",
+    iosNote:
+      "模組和譜面放在「檔案」App 的 **Phigros++ → phigros++** 中。如果模組要掛鉤內建模組沒有用到的遊戲部分，就需要 JIT，或者把它放進 **mods/** 後重新建置。",
     bring: "轉移你的存檔",
     bringText:
       "Phigros++ 從空存檔開始，而 TapTap 雲端已不再回應，所以無法從那裡取得你的存檔。無論你的存檔在哪台裝置上，phigros.tools 仍然可以把它轉入 Phigros++。",
@@ -594,13 +603,13 @@ export const zhHant = {
     androidText:
       "Android 把 Phigros 的存檔放在只有 root 才能讀取的位置，而 Phigros++ 是獨立的應用程式，所以無法複製它。你可以根據遊戲中顯示的內容在 phigros.tools 上重建存檔，之後 Phigros++ 會載入它。",
     iosText:
-      "Phigros++ 尚未在 iPhone 和 iPad 上推出。你可以根據遊戲中顯示的內容在 phigros.tools 上重建存檔：它會留在你的個人資料中等待，現在就能在任何 Android 裝置上載入。",
+      "iOS 把 Phigros 的存檔放在只有遊戲本身能讀取的地方，而 Phigros++ 是獨立的 App，所以無法複製它。你可以根據遊戲中顯示的內容在 phigros.tools 上重建存檔，**為你的 iPhone 或 iPad 建置** Phigros++ 後即可載入。",
     goneText:
       "存檔隨裝置一起沒了，但只要你還記得成績或留有螢幕截圖，成績就還在。你可以在 phigros.tools 上重建存檔，之後 Phigros++ 會載入它。",
     rebuild1: "填寫你的成績，然後選擇你的頭像、課題模式段位和已解鎖的內容。",
     rebuild2: "保管好 phigros.tools 給你的 16 個單字：它們就是你個人資料的密碼。",
     rebuild3:
-      "在 Android 裝置上安裝 Phigros++，開啟**設定 → 個人資料**，選擇 **Sign in to my profile** 並輸入這些單字。它會提示轉移你的存檔。",
+      "安裝 Phigros++，開啟**設定 → 個人資料**，選擇 **Sign in to my profile** 並輸入這些單字。它會提示轉移你的存檔。",
     declared: "你填寫的成績會在你的個人資料上顯示為「已申報」，在 Phigros++ 中打出後即計入排行榜。",
     rebuild: "重建我的存檔",
     install: "取得 Phigros++",

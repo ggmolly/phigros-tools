@@ -594,6 +594,15 @@ export const ja = {
       "Phigros++ で **Settings → Profile** を開き、**Sync to phigros.tools** をオンにして、表示される 16 語を控えておきます。",
     installNote:
       "Mod はあなたの phigros.tools の鍵で動くので、信頼できる Mod だけを追加してください。",
+    iosTitle: "iPhone と iPad 向けにビルドする",
+    iosIntro:
+      "iOS にはインストーラーがありません。自分のゲームのコピーから Linux パソコンで Phigros++ をビルドし、SideStore か AltStore があなたの Apple ID で署名します。",
+    ios1: "脱獄済みか TrollStore の入ったデバイスで、TrollDecrypt などを使って Phigros 4.0.4 を復号します。App Store のコピーは暗号化されていてパッチを当てられません。**Phigros.ipa** という名前で、**~/Phigros** のような専用フォルダに保存します。",
+    ios2: "Nix をインストールし、**git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus** でソースを取得します。",
+    ios3: "ソースのフォルダで **nix-shell --run 'make ipa IPA=~/Phigros'** を実行します。最初のビルドは必要なツールをダウンロードしてから **build/Phigros++.ipa** を書き出します。",
+    ios4: "SideStore か AltStore で **build/Phigros++.ipa** をインストールします。無料の Apple ID の署名は 7 日間有効で、更新はアプリが代わりに行います。",
+    iosNote:
+      "Mod と譜面は「ファイル」アプリの **Phigros++ → phigros++** に入れます。内蔵 Mod が触れないゲームの部分をフックする Mod には JIT が必要です。または **mods/** に入れてビルドし直します。",
     bring: "セーブを引き継ぐ",
     bringText:
       "Phigros++ は空のセーブで始まり、TapTap のクラウドはもう応答しないため、そこからセーブを取得することはできません。それでも phigros.tools なら、セーブがどのデバイスにあっても Phigros++ に移せます。",
@@ -628,14 +637,14 @@ export const ja = {
     androidText:
       "Android は Phigros のセーブを root でしか読めない場所に保存していて、Phigros++ は別のアプリなので、コピーできません。ゲームに表示される内容をもとに phigros.tools でセーブを作り直すと、Phigros++ がそれを読み込みます。",
     iosText:
-      "Phigros++ はまだ iPhone と iPad 向けには出ていません。ゲームに表示される内容をもとに phigros.tools でセーブを作り直せます。セーブはプロフィールで待機し、Android デバイスなら今すぐ読み込めます。",
+      "iOS は Phigros のセーブをゲーム自身しか読めない場所に置いていて、Phigros++ は別のアプリなのでコピーできません。ゲームに表示される内容をもとに phigros.tools でセーブを作り直せば、**iPhone や iPad 向けにビルドした** Phigros++ で読み込めます。",
     goneText:
       "セーブはデバイスと一緒に失われましたが、スコアを覚えているかスクリーンショットを残していれば、スコアは失われていません。phigros.tools でセーブを作り直すと、Phigros++ がそれを読み込みます。",
     rebuild1: "スコアを入力し、アバター、課題モードのランク、解放済みのものを選びます。",
     rebuild2:
       "phigros.tools が表示する 16 語を控えておいてください。これがプロフィールのパスワードです。",
     rebuild3:
-      "Android デバイスに Phigros++ をインストールし、**Settings → Profile** を開いて **Sign in to my profile** を選び、その単語を入力します。するとセーブの引き継ぎを提案します。",
+      "Phigros++ をインストールし、**Settings → Profile** を開いて **Sign in to my profile** を選び、その単語を入力します。するとセーブの引き継ぎを提案します。",
     declared:
       "入力したスコアはプロフィールに「申告」と表示され、Phigros++ でプレイして出すとランキングに反映されます。",
     rebuild: "セーブを作り直す",

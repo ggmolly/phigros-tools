@@ -592,6 +592,15 @@ export const it = {
       "In Phigros++ apri **Settings → Profile**, attiva **Sync to phigros.tools** e conserva le 16 parole che compaiono.",
     installNote:
       "Le mod girano con la tua chiave phigros.tools, quindi aggiungi solo mod di cui ti fidi.",
+    iosTitle: "Compilalo per iPhone e iPad",
+    iosIntro:
+      "Su iOS non c’è un installer: compili Phigros++ su un computer Linux dalla tua copia del gioco, poi SideStore o AltStore la firma con il tuo ID Apple.",
+    ios1: "Decripta Phigros 4.0.4 su un dispositivo con jailbreak o TrollStore, per esempio con TrollDecrypt: la copia dell’App Store è criptata e non si può modificare. Salvala come **Phigros.ipa** in una cartella a parte, come **~/Phigros**.",
+    ios2: "Installa Nix, poi scarica il codice sorgente con **git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus**.",
+    ios3: "Nella cartella del codice sorgente, esegui **nix-shell --run 'make ipa IPA=~/Phigros'**. La prima compilazione scarica i suoi strumenti, poi scrive **build/Phigros++.ipa**.",
+    ios4: "Installa **build/Phigros++.ipa** con SideStore o AltStore. Un ID Apple gratuito la firma per 7 giorni, e loro la rinnovano per te.",
+    iosNote:
+      "Mod e chart vanno in **Phigros++ → phigros++** dell’app File. Una mod che aggancia parti del gioco che le mod incluse non toccano ha bisogno del JIT, o di una nuova compilazione con lei in **mods/**.",
     bring: "Porta con te il salvataggio",
     bringText:
       "Phigros++ parte con un salvataggio vuoto e, dato che il cloud di TapTap non risponde più, non può recuperare il tuo da lì. phigros.tools può comunque portarci il tuo salvataggio, su qualunque dispositivo si trovi.",
@@ -627,14 +636,14 @@ export const it = {
     androidText:
       "Android tiene il salvataggio di Phigros dove solo root può leggerlo, e Phigros++ è un’app separata, quindi non può copiarlo. Puoi ricostruirlo su phigros.tools a partire da ciò che mostra il tuo gioco, e Phigros++ poi lo carica.",
     iosText:
-      "Phigros++ non è ancora uscito per iPhone e iPad. Puoi ricostruire il tuo salvataggio su phigros.tools a partire da ciò che mostra il tuo gioco: resta in attesa sul tuo profilo e già oggi si carica su qualsiasi dispositivo Android.",
+      "iOS tiene il salvataggio di Phigros dove solo il gioco può leggerlo, e Phigros++ è un’app a parte, quindi non può copiarlo. Puoi ricostruirlo su phigros.tools da ciò che mostra il gioco, e Phigros++ lo carica poi, una volta che lo hai **compilato per il tuo iPhone o iPad**.",
     goneText:
       "Il salvataggio se n’è andato con il dispositivo, ma i tuoi punteggi no, se li ricordi o hai conservato degli screenshot. Puoi ricostruire il salvataggio su phigros.tools, e Phigros++ poi lo carica.",
     rebuild1:
       "Inserisci i tuoi punteggi, poi scegli il tuo avatar, il tuo grado nella Modalità Sfida e ciò che avevi sbloccato.",
     rebuild2: "Conserva le 16 parole che phigros.tools ti dà: sono la password del tuo profilo.",
     rebuild3:
-      "Installa Phigros++ su un dispositivo Android, apri **Settings → Profile**, scegli **Sign in to my profile** e inserisci le parole. Ti propone di trasferire il tuo salvataggio.",
+      "Installa Phigros++, apri **Settings → Profile**, scegli **Sign in to my profile** e inserisci le parole. Ti propone di trasferire il tuo salvataggio.",
     declared:
       "I punteggi che inserisci compaiono come Dichiarato sul tuo profilo, e contano nelle classifiche una volta che li giochi in Phigros++.",
     rebuild: "Ricostruisci il mio salvataggio",

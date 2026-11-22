@@ -136,7 +136,12 @@ function StartPage() {
             {answered && (
               <div className="start-question">
                 <h2 tabIndex={-1}>{rooted ? s.rootTitle : s.rebuildTitle}</h2>
-                <p className="meta">{rooted ? s.rootText : s[`${device}Text`]}</p>
+                <p className="meta">
+                  <Rich
+                    text={rooted ? s.rootText : s[`${device}Text`]}
+                    href={device === "ios" ? "/phigrospp#ios" : undefined}
+                  />
+                </p>
                 <ol className="guide-steps start-steps">
                   {(rooted
                     ? [s.root1, s.root2, s.root3, s.root4]

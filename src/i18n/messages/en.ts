@@ -580,6 +580,15 @@ export const en = {
     install4:
       "In Phigros++, open **Settings → Profile**, turn on **Sync to phigros.tools** and keep the 16 words it shows.",
     installNote: "Mods run with your phigros.tools key, so only add mods you trust.",
+    iosTitle: "Build It for iPhone and iPad",
+    iosIntro:
+      "There’s no installer on iOS: you build Phigros++ on a Linux computer from your own copy of the game, then SideStore or AltStore signs it with your Apple ID.",
+    ios1: "Decrypt Phigros 4.0.4 on a jailbroken or TrollStore device, with TrollDecrypt for instance: the App Store’s copy is encrypted and can’t be patched. Save it as **Phigros.ipa** in a folder of its own, like **~/Phigros**.",
+    ios2: "Install Nix, then get the source with **git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus**.",
+    ios3: "In the source folder, run **nix-shell --run 'make ipa IPA=~/Phigros'**. The first build downloads its tools, then it writes **build/Phigros++.ipa**.",
+    ios4: "Install **build/Phigros++.ipa** with SideStore or AltStore. A free Apple ID signs it for 7 days, which they renew for you.",
+    iosNote:
+      "Mods and charts go in **Phigros++ → phigros++** of the Files app. A mod hooking parts of the game the built-in mods leave alone needs JIT, or a new build with it in **mods/**.",
     bring: "Bring Your Save Over",
     bringText:
       "Phigros++ starts with an empty save, and TapTap’s cloud no longer answers, so it can’t fetch yours from there. phigros.tools can still get your save into it, whichever device it is on.",
@@ -614,14 +623,14 @@ export const en = {
     androidText:
       "Android keeps the save of Phigros where only root can read it, and Phigros++ is a separate app, so it can’t copy it. You can rebuild it on phigros.tools from what your game shows, and Phigros++ then loads it.",
     iosText:
-      "Phigros++ isn’t out for iPhone and iPad yet. You can rebuild your save on phigros.tools from what your game shows: it waits on your profile, and loads today on any Android device.",
+      "iOS keeps the save of Phigros where only the game can read it, and Phigros++ is a separate app, so it can’t copy it. You can rebuild it on phigros.tools from what your game shows, and Phigros++ then loads it once you **build it for your iPhone or iPad**.",
     goneText:
       "The save went with the device, but your scores didn’t if you remember them or kept screenshots. You can rebuild the save on phigros.tools, and Phigros++ then loads it.",
     rebuild1:
       "Type your scores, then pick your avatar, your Challenge Mode rank and what you had unlocked.",
     rebuild2: "Keep the 16 words phigros.tools gives you: they are the password of your profile.",
     rebuild3:
-      "Install Phigros++ on an Android device, open **Settings → Profile**, choose **Sign in to my profile** and type the words. It offers to bring your save over.",
+      "Install Phigros++, open **Settings → Profile**, choose **Sign in to my profile** and type the words. It offers to bring your save over.",
     declared:
       "Scores you type show as Declared on your profile, and count on the leaderboards once you play them in Phigros++.",
     rebuild: "Rebuild my save",

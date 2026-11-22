@@ -588,6 +588,15 @@ export const vi = {
     install4:
       "Trong Phigros++, mở **Settings → Profile**, bật **Sync to phigros.tools** và giữ lại 16 từ hiện ra.",
     installNote: "Mod chạy bằng khóa phigros.tools của bạn, nên chỉ thêm những mod bạn tin tưởng.",
+    iosTitle: "Build cho iPhone và iPad",
+    iosIntro:
+      "Trên iOS không có trình cài đặt: bạn build Phigros++ trên một máy tính Linux từ bản game của chính mình, rồi SideStore hoặc AltStore ký nó bằng Apple ID của bạn.",
+    ios1: "Giải mã Phigros 4.0.4 trên một thiết bị đã jailbreak hoặc có TrollStore, ví dụ bằng TrollDecrypt: bản trên App Store được mã hóa nên không thể vá. Lưu nó thành **Phigros.ipa** trong một thư mục riêng, như **~/Phigros**.",
+    ios2: "Cài Nix, rồi tải mã nguồn bằng **git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus**.",
+    ios3: "Trong thư mục mã nguồn, chạy **nix-shell --run 'make ipa IPA=~/Phigros'**. Lần build đầu tiên tải các công cụ cần thiết, rồi ghi ra **build/Phigros++.ipa**.",
+    ios4: "Cài **build/Phigros++.ipa** bằng SideStore hoặc AltStore. Apple ID miễn phí ký nó trong 7 ngày, và chúng sẽ gia hạn giúp bạn.",
+    iosNote:
+      "Mod và chart nằm trong **Phigros++ → phigros++** của ứng dụng Tệp. Một mod hook vào những phần của game mà các mod có sẵn không dùng tới cần JIT, hoặc một bản build mới có nó trong **mods/**.",
     bring: "Chuyển save của bạn sang",
     bringText:
       "Phigros++ bắt đầu với save trống, và đám mây TapTap không còn phản hồi, nên nó không thể lấy save của bạn từ đó. phigros.tools vẫn có thể đưa save của bạn vào đó, dù nó nằm trên thiết bị nào.",
@@ -622,14 +631,14 @@ export const vi = {
     androidText:
       "Android giữ save của Phigros ở nơi chỉ root mới đọc được, còn Phigros++ là một ứng dụng riêng nên không thể sao chép nó. Bạn có thể dựng lại save trên phigros.tools từ những gì game hiển thị, rồi Phigros++ sẽ tải nó.",
     iosText:
-      "Phigros++ chưa có cho iPhone và iPad. Bạn có thể dựng lại save trên phigros.tools từ những gì game hiển thị: save sẽ chờ trong hồ sơ của bạn và tải được ngay hôm nay trên bất kỳ thiết bị Android nào.",
+      "iOS giữ save của Phigros ở nơi chỉ game đọc được, còn Phigros++ là một ứng dụng riêng nên không thể sao chép nó. Bạn có thể dựng lại save trên phigros.tools từ những gì game hiển thị, và Phigros++ sẽ tải nó khi bạn đã **build cho iPhone hoặc iPad của mình**.",
     goneText:
       "Save đã mất theo thiết bị, nhưng điểm của bạn thì không nếu bạn còn nhớ hoặc đã giữ ảnh chụp màn hình. Bạn có thể dựng lại save trên phigros.tools, rồi Phigros++ sẽ tải nó.",
     rebuild1:
       "Nhập điểm của bạn, rồi chọn ảnh đại diện, hạng Chế độ Thử thách và những gì bạn đã mở khóa.",
     rebuild2: "Giữ lại 16 từ mà phigros.tools đưa cho bạn: chúng là mật khẩu của hồ sơ.",
     rebuild3:
-      "Cài Phigros++ trên một thiết bị Android, mở **Settings → Profile**, chọn **Sign in to my profile** và nhập các từ đó. Nó sẽ đề nghị chuyển save của bạn sang.",
+      "Cài Phigros++, mở **Settings → Profile**, chọn **Sign in to my profile** và nhập các từ đó. Nó sẽ đề nghị chuyển save của bạn sang.",
     declared:
       "Điểm bạn nhập hiện là Tự khai trên hồ sơ của bạn, và được tính trên bảng xếp hạng khi bạn chơi đạt chúng trong Phigros++.",
     rebuild: "Dựng lại save của tôi",

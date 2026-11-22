@@ -599,6 +599,15 @@ export const fr = {
       "Dans Phigros++, ouvrez **Settings → Profile**, activez **Sync to phigros.tools** et conservez les 16 mots affichés.",
     installNote:
       "Les mods tournent avec votre clé phigros.tools, n’ajoutez donc que des mods de confiance.",
+    iosTitle: "Le compiler pour iPhone et iPad",
+    iosIntro:
+      "Il n’y a pas d’installateur sur iOS : vous compilez Phigros++ sur un ordinateur Linux à partir de votre propre copie du jeu, puis SideStore ou AltStore la signe avec votre identifiant Apple.",
+    ios1: "Déchiffrez Phigros 4.0.4 sur un appareil jailbreaké ou avec TrollStore, avec TrollDecrypt par exemple : la copie de l’App Store est chiffrée et ne peut pas être modifiée. Enregistrez-la sous **Phigros.ipa** dans un dossier à part, comme **~/Phigros**.",
+    ios2: "Installez Nix, puis récupérez le code source avec **git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus**.",
+    ios3: "Dans le dossier du code source, lancez **nix-shell --run 'make ipa IPA=~/Phigros'**. La première compilation télécharge ses outils, puis elle écrit **build/Phigros++.ipa**.",
+    ios4: "Installez **build/Phigros++.ipa** avec SideStore ou AltStore. Un identifiant Apple gratuit la signe pour 7 jours, et ils la renouvellent pour vous.",
+    iosNote:
+      "Les mods et les charts vont dans **Phigros++ → phigros++** de l’app Fichiers. Un mod qui modifie des parties du jeu que les mods intégrés ne touchent pas a besoin du JIT, ou d’une nouvelle compilation avec lui dans **mods/**.",
     bring: "Récupérer votre save",
     bringText:
       "Phigros++ démarre avec une save vide, et comme le cloud de TapTap ne répond plus, il ne peut pas y récupérer la vôtre. phigros.tools peut tout de même y amener votre save, quel que soit l’appareil où elle se trouve.",
@@ -634,7 +643,7 @@ export const fr = {
     androidText:
       "Android garde la save de Phigros là où seul root peut la lire, et Phigros++ est une app séparée, il ne peut donc pas la copier. Vous pouvez la reconstituer sur phigros.tools à partir de ce que votre jeu affiche, et Phigros++ la charge ensuite.",
     iosText:
-      "Phigros++ n’est pas encore sorti sur iPhone et iPad. Vous pouvez reconstituer votre save sur phigros.tools à partir de ce que votre jeu affiche : elle attend sur votre profil et se charge dès aujourd’hui sur n’importe quel appareil Android.",
+      "iOS garde la save de Phigros là où seul le jeu peut la lire, et Phigros++ est une app à part, il ne peut donc pas la copier. Vous pouvez la reconstituer sur phigros.tools à partir de ce que votre jeu affiche, et Phigros++ la charge ensuite une fois que vous l’avez **compilé pour votre iPhone ou iPad**.",
     goneText:
       "La save est partie avec l’appareil, mais pas vos scores si vous vous en souvenez ou si vous avez gardé des captures d’écran. Vous pouvez reconstituer la save sur phigros.tools, et Phigros++ la charge ensuite.",
     rebuild1:
@@ -642,7 +651,7 @@ export const fr = {
     rebuild2:
       "Conservez les 16 mots que phigros.tools vous donne : ils sont le mot de passe de votre profil.",
     rebuild3:
-      "Installez Phigros++ sur un appareil Android, ouvrez **Settings → Profile**, choisissez **Sign in to my profile** et saisissez les mots. Il propose de récupérer votre save.",
+      "Installez Phigros++, ouvrez **Settings → Profile**, choisissez **Sign in to my profile** et saisissez les mots. Il propose de récupérer votre save.",
     declared:
       "Les scores que vous saisissez apparaissent comme Déclaré sur votre profil, et comptent aux classements une fois que vous les avez joués dans Phigros++.",
     rebuild: "Reconstituer ma save",

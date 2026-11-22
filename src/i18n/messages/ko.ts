@@ -583,6 +583,15 @@ export const ko = {
     install4:
       "Phigros++에서 **Settings → Profile**을 열고 **Sync to phigros.tools**를 켠 다음, 표시되는 16개 단어를 보관하세요.",
     installNote: "모드는 내 phigros.tools 키로 실행되므로 믿을 수 있는 모드만 추가하세요.",
+    iosTitle: "iPhone과 iPad용으로 빌드하기",
+    iosIntro:
+      "iOS에는 설치 프로그램이 없습니다. 직접 가진 게임 사본으로 Linux 컴퓨터에서 Phigros++를 빌드하고, SideStore나 AltStore가 당신의 Apple ID로 서명합니다.",
+    ios1: "탈옥했거나 TrollStore가 있는 기기에서 TrollDecrypt 등으로 Phigros 4.0.4를 복호화하세요. App Store의 사본은 암호화되어 있어 패치할 수 없습니다. **~/Phigros** 같은 전용 폴더에 **Phigros.ipa**로 저장하세요.",
+    ios2: "Nix를 설치한 다음 **git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus**로 소스를 받으세요.",
+    ios3: "소스 폴더에서 **nix-shell --run 'make ipa IPA=~/Phigros'**를 실행하세요. 첫 빌드는 필요한 도구를 내려받은 뒤 **build/Phigros++.ipa**를 만듭니다.",
+    ios4: "SideStore나 AltStore로 **build/Phigros++.ipa**를 설치하세요. 무료 Apple ID는 7일 동안 서명하며, 갱신은 앱이 대신 해 줍니다.",
+    iosNote:
+      "모드와 채보는 파일 앱의 **Phigros++ → phigros++**에 넣습니다. 내장 모드가 건드리지 않는 게임 부분을 후킹하는 모드는 JIT가 필요하거나, **mods/**에 넣고 다시 빌드해야 합니다.",
     bring: "세이브 옮기기",
     bringText:
       "Phigros++는 빈 세이브로 시작하며, TapTap 클라우드가 더 이상 응답하지 않아 그곳에서 세이브를 가져올 수 없습니다. 그래도 phigros.tools는 세이브가 어느 기기에 있든 Phigros++로 옮길 수 있습니다.",
@@ -617,13 +626,13 @@ export const ko = {
     androidText:
       "Android는 Phigros의 세이브를 루트만 읽을 수 있는 곳에 보관하고, Phigros++는 별도의 앱이라 이를 복사할 수 없습니다. 게임에 표시되는 내용을 바탕으로 phigros.tools에서 세이브를 다시 만들면 Phigros++가 불러옵니다.",
     iosText:
-      "Phigros++는 아직 iPhone과 iPad용으로 나오지 않았습니다. 게임에 표시되는 내용을 바탕으로 phigros.tools에서 세이브를 다시 만들 수 있습니다. 세이브는 프로필에서 기다리며, 지금도 어떤 Android 기기에서든 불러올 수 있습니다.",
+      "iOS는 Phigros의 세이브를 게임만 읽을 수 있는 곳에 두고, Phigros++는 별도의 앱이라 이를 복사할 수 없습니다. 게임에 표시되는 내용으로 phigros.tools에서 세이브를 다시 만들면, **iPhone이나 iPad용으로 빌드한** Phigros++가 불러옵니다.",
     goneText:
       "세이브는 기기와 함께 사라졌지만, 점수를 기억하거나 스크린샷을 남겨 두었다면 점수는 사라지지 않았습니다. phigros.tools에서 세이브를 다시 만들면 Phigros++가 불러옵니다.",
     rebuild1: "점수를 입력한 다음 아바타, 과제 모드 랭크, 해금했던 항목을 고르세요.",
     rebuild2: "phigros.tools가 주는 16개 단어를 보관하세요. 이 단어들이 프로필의 비밀번호입니다.",
     rebuild3:
-      "Android 기기에 Phigros++를 설치하고 **Settings → Profile**을 연 다음 **Sign in to my profile**을 선택하고 그 단어들을 입력하세요. 그러면 세이브를 옮겨 올지 제안합니다.",
+      "Phigros++를 설치하고 **Settings → Profile**을 연 다음 **Sign in to my profile**을 선택하고 그 단어들을 입력하세요. 그러면 세이브를 옮겨 올지 제안합니다.",
     declared:
       "입력한 점수는 프로필에 “신고됨”으로 표시되며, Phigros++에서 플레이해 달성하면 리더보드에 반영됩니다.",
     rebuild: "내 세이브 다시 만들기",

@@ -593,6 +593,15 @@ export const ms = {
       "Dalam Phigros++, buka **Tetapan → Profil**, hidupkan **Sync to phigros.tools** dan simpan 16 perkataan yang dipaparkan.",
     installNote:
       "Mod berjalan dengan kunci phigros.tools anda, jadi tambah hanya mod yang anda percayai.",
+    iosTitle: "Bina untuk iPhone dan iPad",
+    iosIntro:
+      "Tiada pemasang di iOS: anda membina Phigros++ pada komputer Linux daripada salinan permainan anda sendiri, kemudian SideStore atau AltStore menandatanganinya dengan Apple ID anda.",
+    ios1: "Nyahsulit Phigros 4.0.4 pada peranti yang di-jailbreak atau ada TrollStore, contohnya dengan TrollDecrypt: salinan App Store disulitkan dan tidak boleh ditampal. Simpan sebagai **Phigros.ipa** dalam folder tersendiri, seperti **~/Phigros**.",
+    ios2: "Pasang Nix, kemudian dapatkan kod sumber dengan **git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus**.",
+    ios3: "Dalam folder kod sumber, jalankan **nix-shell --run 'make ipa IPA=~/Phigros'**. Binaan pertama memuat turun alatnya, kemudian menulis **build/Phigros++.ipa**.",
+    ios4: "Pasang **build/Phigros++.ipa** dengan SideStore atau AltStore. Apple ID percuma menandatanganinya selama 7 hari, dan mereka memperbaharuinya untuk anda.",
+    iosNote:
+      "Mod dan carta diletakkan dalam **Phigros++ → phigros++** pada app Fail. Mod yang mengait bahagian permainan yang tidak disentuh oleh mod terbina dalam memerlukan JIT, atau binaan baharu dengan mod itu dalam **mods/**.",
     bring: "Bawa Save Anda",
     bringText:
       "Phigros++ bermula dengan save kosong, dan awan TapTap tidak lagi menjawab, jadi ia tidak dapat mengambil save anda dari sana. phigros.tools masih boleh memasukkan save anda ke dalamnya, tidak kira pada peranti mana save itu berada.",
@@ -628,7 +637,7 @@ export const ms = {
     androidText:
       "Android menyimpan save Phigros di tempat yang hanya boleh dibaca oleh root, dan Phigros++ ialah aplikasi berasingan, jadi ia tidak dapat menyalinnya. Anda boleh membinanya semula di phigros.tools daripada apa yang dipaparkan oleh permainan anda, dan Phigros++ kemudian memuatkannya.",
     iosText:
-      "Phigros++ belum dikeluarkan untuk iPhone dan iPad. Anda boleh membina semula save anda di phigros.tools daripada apa yang dipaparkan oleh permainan anda: save itu menunggu dalam profil anda, dan sudah boleh dimuatkan hari ini pada mana-mana peranti Android.",
+      "iOS menyimpan save Phigros di tempat yang hanya boleh dibaca oleh permainan itu, dan Phigros++ ialah app berasingan, jadi ia tidak boleh menyalinnya. Anda boleh membina semula save di phigros.tools daripada apa yang dipaparkan permainan, dan Phigros++ memuatkannya sebaik sahaja anda **membinanya untuk iPhone atau iPad anda**.",
     goneText:
       "Save itu hilang bersama peranti, tetapi skor anda tidak jika anda mengingatinya atau menyimpan tangkapan skrin. Anda boleh membina semula save itu di phigros.tools, dan Phigros++ kemudian memuatkannya.",
     rebuild1:
@@ -636,7 +645,7 @@ export const ms = {
     rebuild2:
       "Simpan 16 perkataan yang diberikan oleh phigros.tools: ia ialah kata laluan profil anda.",
     rebuild3:
-      "Pasang Phigros++ pada peranti Android, buka **Tetapan → Profil**, pilih **Sign in to my profile** dan taip perkataan itu. Ia menawarkan untuk membawa save anda.",
+      "Pasang Phigros++, buka **Tetapan → Profil**, pilih **Sign in to my profile** dan taip perkataan itu. Ia menawarkan untuk membawa save anda.",
     declared:
       "Skor yang anda taip dipaparkan sebagai Diisytiharkan pada profil anda, dan dikira di papan pendahulu sebaik sahaja anda memainkannya dalam Phigros++.",
     rebuild: "Bina semula save saya",
