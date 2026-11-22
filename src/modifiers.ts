@@ -60,7 +60,7 @@ const HARD = seconds(0.057, 0.129, 0.157);
 export const windowsOf = (mods: number) => (mods & Mod.EZ ? EASY : mods & Mod.HR ? HARD : WINDOWS);
 
 /** How fast the song and the game's clock run. */
-export const rateOf = (mods: number) => (mods & Mod.HT ? 0.75 : mods & Mod.NC ? 1.5 : 1);
+export const rateOf = (mods: number) => (mods & Mod.HT ? 0.75 : mods & Mod.NC ? 1.25 : 1);
 
 /** mulberry32: what gives the next 32 bits from a seed, like the game's. */
 export function random(seed: number) {
