@@ -64,6 +64,8 @@ export const Route = createFileRoute("/rooms/$id")({
   component: RoomPage,
 });
 
+const MATCH_SHOWN = 3000; // ms a followed play stays once its match is over
+
 /** Shares the page's link, saying so once it's copied. */
 function Share() {
   const t = useT();
@@ -126,8 +128,15 @@ function RoomPage() {
   }
   const { follow: hear } = watching;
   useEffect(() => {
-    if (followed) hear(followed.player.id);
+    hear(followed?.player.id ?? "");
   }, [followed, hear]);
+  // a match over, its play closes once the last of it showed (the live view runs a moment behind)
+  const over = live?.playing === false && followed !== undefined;
+  useEffect(() => {
+    if (!over) return;
+    const timer = setTimeout(() => setFollowed(undefined), MATCH_SHOWN);
+    return () => clearTimeout(timer);
+  }, [over]);
   // biome-ignore lint/correctness/useExhaustiveDependencies: reload is made anew each render, the room closing is what counts
   useEffect(() => {
     if (live === null || watching.error === "gone") reload();
