@@ -578,25 +578,33 @@ export const vi = {
     install3:
       "Cho phép trình duyệt hoặc ứng dụng Tệp cài ứng dụng không rõ nguồn gốc khi Android hỏi. Trình cài đặt cũng sẽ hỏi như vậy cho chính nó khi bạn chạm Install.",
     ios1: "Lấy bản Phigros đã giải mã, vì bản trên App Store được mã hóa nên không thể vá. Chỉ thiết bị đọc được một ứng dụng đang chạy mới giải mã được: iPhone hoặc iPad đã jailbreak, thiết bị có TrollStore (TrollDecrypt làm việc này), hoặc máy Mac Apple Silicon đã tắt SIP.",
-    ios2: "Trên máy tính của bạn, lưu nó thành `Phigros.ipa` trong một thư mục riêng, như `~/Phigros`.",
-    ios3: "Trên Linux, cài Nix, thứ mang theo mọi công cụ mà bản build cần:",
-    ios3b:
-      "Hoặc, trên Linux, Windows hay macOS, mở một shell có Nix trong **Docker** từ thư mục bạn làm việc, rồi chạy các bước tiếp theo trong đó:",
-    ios4: "Tải mã nguồn của Phigros++ cùng các submodule của nó:",
-    ios5: "Build nó. Lần build đầu tải vài GB công cụ và mất một lúc, rồi ghi ra `build/Phigros++.ipa`:",
-    ios6: "Cài **SideStore** lên iPhone hoặc iPad theo hướng dẫn của nó (AltStore cũng được), và bật Chế độ nhà phát triển trong Cài đặt → Quyền riêng tư & Bảo mật khi iOS yêu cầu.",
-    ios7: "Gửi `build/Phigros++.ipa` sang thiết bị, mở SideStore và thêm nó từ My Apps bằng nút +. Apple ID miễn phí ký nó trong 7 ngày, và SideStore gia hạn ở chế độ nền.",
-    copy: "Sao chép",
-    copied: "Đã sao chép",
+    ios2: "Chọn tệp IPA đó tại đây. Trình duyệt của bạn vá nó thành `Phigros++.ipa` ngay trên thiết bị này, và không phần nào của game bị tải lên.",
+    ios3: "Cài **SideStore** lên iPhone hoặc iPad theo hướng dẫn của nó (AltStore cũng được), và bật Chế độ nhà phát triển trong Cài đặt → Quyền riêng tư & Bảo mật khi iOS yêu cầu.",
+    ios4: "Gửi `Phigros++.ipa` sang thiết bị, mở SideStore và thêm nó từ My Apps bằng nút +. Apple ID miễn phí ký nó trong 7 ngày, và SideStore gia hạn ở chế độ nền.",
+    patchDrop: "Thả tệp IPA đã giải mã vào đây, hoặc chọn tệp.",
+    patchChoose: "Chọn tệp IPA",
+    patchPack: (version: string, games: string) =>
+      `Phigros++ ${version} chạy trên Phigros ${games}.`,
+    patchWorking: "Đang vá tệp IPA…",
+    patchReady: (seconds: string) => `Phigros++.ipa đã sẵn sàng, vá xong trong ${seconds} giây.`,
+    patchDownload: "Tải Phigros++.ipa về",
+    patchNoPack:
+      "Hiện phigros.tools chưa có bản Phigros++ nào được ký bằng khóa phát hành để vá. Hãy thử lại sau.",
+    patchEncrypted:
+      "Tệp IPA này vẫn còn mã hóa, giống mọi bản từ App Store. Chỉ bản đã giải mã mới vá được.",
+    patchUnsupported: (game: string, games: string) =>
+      `Phigros++ chưa chạy trên Phigros ${game}, chỉ chạy trên ${games}.`,
+    patchFailed: "Không vá được tệp IPA này, và nhật ký bên dưới cho biết lý do.",
     install4:
       "Nhấn **Install**: nó vá Phigros của bạn thành Phigros++, một ứng dụng riêng bên cạnh game, và cập nhật nó về sau.",
     sync: "Trong Phigros++, mở **Settings → Profile**, bật **Sync to phigros.tools** và giữ lại 16 từ hiện ra.",
     installNote: "Mod chạy bằng khóa phigros.tools của bạn, nên chỉ thêm những mod bạn tin tưởng.",
-    iosTitle: "Build cho iPhone và iPad",
+    iosTitle: "Vá cho iPhone và iPad",
     iosIntro:
-      "Trên iOS không có trình cài đặt: bạn build Phigros++ trên một máy tính từ bản game của chính mình, rồi SideStore hoặc AltStore ký nó bằng Apple ID của bạn.",
+      "Trên iOS không có trình cài đặt: trang này vá bản game của chính bạn thành Phigros++, rồi SideStore hoặc AltStore ký nó bằng Apple ID của bạn.",
     iosNote:
-      "Mod và chart nằm trong **Phigros++ → phigros++** của ứng dụng Tệp. Một mod hook vào những phần của game mà các mod có sẵn không dùng tới cần JIT, hoặc một bản build mới có nó trong `mods/`.",
+      "Mod và chart nằm trong **Phigros++ → phigros++** của ứng dụng Tệp. Một mod hook vào những phần của game mà các mod có sẵn không dùng tới cần JIT, hoặc một bản build của riêng bạn có nó trong `mods/`.",
+    iosBuild: "Trang **Development** của wiki hướng dẫn cách tự build Phigros++.",
     bring: "Chuyển save của bạn sang",
     source: "Mã nguồn",
   },
@@ -629,7 +637,7 @@ export const vi = {
     androidText:
       "Android giữ save của Phigros ở nơi chỉ root mới đọc được, còn Phigros++ là một ứng dụng riêng nên không thể sao chép nó. Bạn có thể dựng lại save trên phigros.tools từ những gì game hiển thị, rồi Phigros++ sẽ tải nó.",
     iosText:
-      "iOS giữ save của Phigros ở nơi chỉ game đọc được, còn Phigros++ là một ứng dụng riêng nên không thể sao chép nó. Bạn có thể dựng lại save trên phigros.tools từ những gì game hiển thị, và Phigros++ sẽ tải nó khi bạn đã **build cho iPhone hoặc iPad của mình**.",
+      "iOS giữ save của Phigros ở nơi chỉ game đọc được, còn Phigros++ là một ứng dụng riêng nên không thể sao chép nó. Bạn có thể dựng lại save trên phigros.tools từ những gì game hiển thị, và Phigros++ sẽ tải nó khi bạn đã **cài nó lên iPhone hoặc iPad của mình**.",
     goneText:
       "Save đã mất theo thiết bị, nhưng điểm của bạn thì không nếu bạn còn nhớ hoặc đã giữ ảnh chụp màn hình. Bạn có thể dựng lại save trên phigros.tools, rồi Phigros++ sẽ tải nó.",
     rebuild1:

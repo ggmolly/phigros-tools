@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Arrow } from "../components/arrow";
 import { SiteHeader } from "../components/chrome";
+import { Patcher } from "../components/patcher";
 import { Question } from "../components/question";
 import { Rich, useT } from "../i18n";
 import { headT, pageLinks, pageMeta } from "../seo";
@@ -9,17 +10,10 @@ import { headT, pageLinks, pageMeta } from "../seo";
 const INSTALLER = "https://github.com/ggmolly/PhigrosPlusPlus-Installer/releases/latest";
 const SOURCE = "https://github.com/ggmolly/PhigrosPlusPlus";
 const SIDESTORE = "https://docs.sidestore.io/docs/installation/prerequisites";
-const GET_DOCKER = "https://docs.docker.com/get-docker/";
 const DEVICES = ["android", "ios"] as const;
-// what the ios steps run, the same in every language
-const NIX = "sh <(curl -L https://nixos.org/nix/install) --daemon";
-const CLONE = `git clone --recursive ${SOURCE}`;
-const DOCKER = `docker run -it --rm --platform linux/amd64 -v "$PWD":/work -w /work -v "$HOME/Phigros":/root/Phigros nixos/nix`;
-const BUILD = "cd PhigrosPlusPlus\nnix-shell --run 'make ipa IPA=~/Phigros'";
 
-type Part = { text: string; href?: string; command?: string };
-// a step, or two ways to do it side by side
-type Step = Part | [Part, Part];
+// a step's bold words link to its href, and the game's IPA is patched under the one with the patcher
+type Step = { text: string; href?: string; patcher?: boolean };
 
 export const Route = createFileRoute("/phigrospp")({
   // the answer is the address, so each platform's steps can be linked
@@ -41,29 +35,6 @@ export const Route = createFileRoute("/phigrospp")({
   component: PhigrosppPage,
 });
 
-/** A command to type, with a button putting it in the clipboard. */
-function Command({ text }: { text: string }) {
-  const p = useT().pppPage;
-  const [copied, setCopied] = useState(false);
-  return (
-    <div className="ppp-command">
-      <code>{text}</code>
-      <button
-        type="button"
-        className="btn btn-ghost"
-        onClick={() =>
-          void navigator.clipboard.writeText(text).then(() => {
-            setCopied(true);
-            setTimeout(() => setCopied(false), 1500);
-          })
-        }
-      >
-        {copied ? p.copied : p.copy}
-      </button>
-    </div>
-  );
-}
-
 /** Getting Phigros++ on the player's platform, then on to bringing their save into it. */
 function PhigrosppPage() {
   const t = useT();
@@ -80,15 +51,9 @@ function PhigrosppPage() {
       ]
     : [
         { text: p.ios1 },
-        { text: p.ios2 },
-        [
-          { text: p.ios3, command: NIX },
-          { text: p.ios3b, href: GET_DOCKER, command: DOCKER },
-        ],
-        { text: p.ios4, command: CLONE },
-        { text: p.ios5, command: BUILD },
-        { text: p.ios6, href: SIDESTORE },
-        { text: p.ios7 },
+        { text: p.ios2, patcher: true },
+        { text: p.ios3, href: SIDESTORE },
+        { text: p.ios4 },
         { text: p.sync },
       ];
   // the steps take the focus the answered tile had
@@ -125,27 +90,20 @@ function PhigrosppPage() {
                 <h2 tabIndex={-1}>{android ? p.install : p.iosTitle}</h2>
                 <p className="meta">{android ? p.downloadNote : p.iosIntro}</p>
                 <ol className="ppp-steps">
-                  {steps.map((step) => {
-                    const parts = Array.isArray(step) ? step : [step];
-                    return (
-                      <li key={parts[0].text}>
-                        <div className={parts.length > 1 ? "ppp-ways" : undefined}>
-                          {parts.map(({ text, href, command }) => (
-                            <div key={text}>
-                              <p>
-                                <Rich text={text} href={href} />
-                              </p>
-                              {command && <Command text={command} />}
-                            </div>
-                          ))}
-                        </div>
-                      </li>
-                    );
-                  })}
+                  {steps.map(({ text, href, patcher }) => (
+                    <li key={text}>
+                      <p>
+                        <Rich text={text} href={href} />
+                      </p>
+                      {patcher && <Patcher />}
+                    </li>
+                  ))}
                 </ol>
                 <div className="start-next">
                   <p className="meta">
                     <Rich text={android ? p.installNote : p.iosNote} />
+                    {!android && " "}
+                    {!android && <Rich text={p.iosBuild} href={`${SOURCE}/wiki/Development`} />}
                   </p>
                   <div className="ppp-bar-actions">
                     <a

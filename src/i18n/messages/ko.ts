@@ -573,25 +573,33 @@ export const ko = {
     install3:
       "Android가 물으면 브라우저나 파일 앱이 출처를 알 수 없는 앱을 설치하도록 허용하세요. Install을 탭하면 설치 프로그램도 자신에 대해 같은 허용을 요청합니다.",
     ios1: "복호화된 Phigros를 준비하세요. App Store의 사본은 암호화되어 있어 패치할 수 없습니다. 실행 중인 앱을 읽을 수 있는 기기만 복호화할 수 있습니다: 탈옥한 iPhone이나 iPad, TrollStore가 있는 기기(TrollDecrypt로 가능), 또는 SIP를 끈 Apple Silicon Mac입니다.",
-    ios2: "컴퓨터에서 `~/Phigros` 같은 전용 폴더에 `Phigros.ipa`로 저장하세요.",
-    ios3: "Linux에서는 빌드에 필요한 모든 도구를 가져오는 Nix를 설치하세요:",
-    ios3b:
-      "또는 Linux, Windows, macOS에서 작업할 폴더에서 **Docker**로 Nix가 있는 셸을 열고, 다음 단계를 그 안에서 실행하세요:",
-    ios4: "Phigros++의 소스를 서브모듈과 함께 받으세요:",
-    ios5: "빌드하세요. 첫 빌드는 몇 GB의 도구를 내려받아 시간이 걸리고, 그다음 `build/Phigros++.ipa`를 만듭니다:",
-    ios6: "가이드를 따라 iPhone이나 iPad에 **SideStore**를 설치하고(AltStore도 됩니다), iOS가 요청하면 설정 → 개인정보 보호 및 보안에서 개발자 모드를 켜세요.",
-    ios7: "`build/Phigros++.ipa`를 기기로 보내고, SideStore를 열어 My Apps의 + 버튼으로 추가하세요. 무료 Apple ID는 7일 동안 서명하며, SideStore가 백그라운드에서 갱신합니다.",
-    copy: "복사",
-    copied: "복사됨",
+    ios2: "그 IPA를 여기에서 선택하세요. 브라우저가 이 기기에서 패치해 `Phigros++.ipa`로 만들며, 게임의 어떤 부분도 업로드되지 않습니다.",
+    ios3: "가이드를 따라 iPhone이나 iPad에 **SideStore**를 설치하고(AltStore도 됩니다), iOS가 요청하면 설정 → 개인정보 보호 및 보안에서 개발자 모드를 켜세요.",
+    ios4: "`Phigros++.ipa`를 기기로 보내고, SideStore를 열어 My Apps의 + 버튼으로 추가하세요. 무료 Apple ID는 7일 동안 서명하며, SideStore가 백그라운드에서 갱신합니다.",
+    patchDrop: "복호화된 IPA를 여기에 놓거나 선택하세요.",
+    patchChoose: "IPA 선택",
+    patchPack: (version: string, games: string) =>
+      `Phigros ${games}에서 실행되는 Phigros++ ${version}입니다.`,
+    patchWorking: "IPA를 패치하는 중…",
+    patchReady: (seconds: string) => `${seconds}초 만에 패치된 Phigros++.ipa가 준비되었습니다.`,
+    patchDownload: "Phigros++.ipa 다운로드",
+    patchNoPack:
+      "지금 phigros.tools에는 릴리스 키로 서명된 패치용 Phigros++가 없습니다. 나중에 다시 시도하세요.",
+    patchEncrypted:
+      "이 IPA는 App Store의 모든 사본처럼 아직 암호화되어 있습니다. 복호화된 IPA만 패치할 수 있습니다.",
+    patchUnsupported: (game: string, games: string) =>
+      `Phigros++는 아직 Phigros ${game}에서 실행되지 않으며, ${games}에서만 실행됩니다.`,
+    patchFailed: "이 IPA를 패치하지 못했습니다. 이유는 아래 로그에 나와 있습니다.",
     install4:
       "**Install**을 누르면 Phigros를 패치해 게임 옆에 별도의 앱인 Phigros++를 만들고, 이후 업데이트도 해 줍니다.",
     sync: "Phigros++에서 **Settings → Profile**을 열고 **Sync to phigros.tools**를 켠 다음, 표시되는 16개 단어를 보관하세요.",
     installNote: "모드는 내 phigros.tools 키로 실행되므로 믿을 수 있는 모드만 추가하세요.",
-    iosTitle: "iPhone과 iPad용으로 빌드하기",
+    iosTitle: "iPhone과 iPad용으로 패치하기",
     iosIntro:
-      "iOS에는 설치 프로그램이 없습니다. 직접 가진 게임 사본으로 컴퓨터에서 Phigros++를 빌드하고, SideStore나 AltStore가 당신의 Apple ID로 서명합니다.",
+      "iOS에는 설치 프로그램이 없습니다. 이 페이지가 직접 가진 게임 사본을 Phigros++로 패치하고, SideStore나 AltStore가 당신의 Apple ID로 서명합니다.",
     iosNote:
-      "모드와 채보는 파일 앱의 **Phigros++ → phigros++**에 넣습니다. 내장 모드가 건드리지 않는 게임 부분을 후킹하는 모드는 JIT가 필요하거나, `mods/`에 넣고 다시 빌드해야 합니다.",
+      "모드와 채보는 파일 앱의 **Phigros++ → phigros++**에 넣습니다. 내장 모드가 건드리지 않는 게임 부분을 후킹하는 모드는 JIT가 필요하거나, `mods/`에 넣고 직접 빌드해야 합니다.",
+    iosBuild: "Phigros++를 직접 빌드하는 방법은 위키의 **Development** 페이지에 있습니다.",
     bring: "세이브 옮기기",
     source: "소스 코드",
   },
@@ -624,7 +632,7 @@ export const ko = {
     androidText:
       "Android는 Phigros의 세이브를 루트만 읽을 수 있는 곳에 보관하고, Phigros++는 별도의 앱이라 이를 복사할 수 없습니다. 게임에 표시되는 내용을 바탕으로 phigros.tools에서 세이브를 다시 만들면 Phigros++가 불러옵니다.",
     iosText:
-      "iOS는 Phigros의 세이브를 게임만 읽을 수 있는 곳에 두고, Phigros++는 별도의 앱이라 이를 복사할 수 없습니다. 게임에 표시되는 내용으로 phigros.tools에서 세이브를 다시 만들면, **iPhone이나 iPad용으로 빌드한** Phigros++가 불러옵니다.",
+      "iOS는 Phigros의 세이브를 게임만 읽을 수 있는 곳에 두고, Phigros++는 별도의 앱이라 이를 복사할 수 없습니다. 게임에 표시되는 내용으로 phigros.tools에서 세이브를 다시 만들면, **iPhone이나 iPad에 설치한** Phigros++가 불러옵니다.",
     goneText:
       "세이브는 기기와 함께 사라졌지만, 점수를 기억하거나 스크린샷을 남겨 두었다면 점수는 사라지지 않았습니다. phigros.tools에서 세이브를 다시 만들면 Phigros++가 불러옵니다.",
     rebuild1: "점수를 입력한 다음 아바타, 과제 모드 랭크, 해금했던 항목을 고르세요.",

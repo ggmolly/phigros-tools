@@ -583,26 +583,34 @@ export const ja = {
     install3:
       "Android に聞かれたら、ブラウザか「ファイル」アプリに不明なアプリのインストールを許可します。Install をタップすると、インストーラーも自身について同じことを求めます。",
     ios1: "復号済みの Phigros を用意します。App Store のコピーは暗号化されていてパッチを当てられません。復号できるのは実行中のアプリを読み取れるデバイスだけです。脱獄した iPhone や iPad、TrollStore の入ったデバイス（TrollDecrypt で行えます）、または SIP をオフにした Apple シリコンの Mac です。",
-    ios2: "パソコンで、`~/Phigros` のような専用フォルダに `Phigros.ipa` という名前で保存します。",
-    ios3: "Linux では、ビルドに必要なツールをすべて揃える Nix をインストールします。",
-    ios3b:
-      "または Linux、Windows、macOS で、作業するフォルダから **Docker** で Nix の入ったシェルを開き、以降の手順をその中で実行します。",
-    ios4: "Phigros++ のソースをサブモジュールごと取得します。",
-    ios5: "ビルドします。最初のビルドは数 GB のツールをダウンロードするため時間がかかり、その後 `build/Phigros++.ipa` を書き出します。",
-    ios6: "ガイドに従って iPhone か iPad に **SideStore** をインストールし（AltStore でも可）、iOS に求められたら「設定 → プライバシーとセキュリティ」でデベロッパモードをオンにします。",
-    ios7: "`build/Phigros++.ipa` をデバイスに送り、SideStore を開いて My Apps の + ボタンから追加します。無料の Apple ID の署名は 7 日間有効で、SideStore がバックグラウンドで更新します。",
-    copy: "コピー",
-    copied: "コピーしました",
+    ios2: "その IPA をここで選びます。ブラウザがこのデバイス上でパッチを当てて `Phigros++.ipa` にし、ゲームのデータは一切アップロードされません。",
+    ios3: "ガイドに従って iPhone か iPad に **SideStore** をインストールし（AltStore でも可）、iOS に求められたら「設定 → プライバシーとセキュリティ」でデベロッパモードをオンにします。",
+    ios4: "`Phigros++.ipa` をデバイスに送り、SideStore を開いて My Apps の + ボタンから追加します。無料の Apple ID の署名は 7 日間有効で、SideStore がバックグラウンドで更新します。",
+    patchDrop: "復号済みの IPA をここにドロップするか、選択してください。",
+    patchChoose: "IPA を選択",
+    patchPack: (version: string, games: string) =>
+      `Phigros++ ${version} は Phigros ${games} で動作します。`,
+    patchWorking: "IPA にパッチを当てています…",
+    patchReady: (seconds: string) => `Phigros++.ipa ができました（${seconds} 秒）。`,
+    patchDownload: "Phigros++.ipa をダウンロード",
+    patchNoPack:
+      "現在 phigros.tools には、リリース鍵で署名されたパッチ用の Phigros++ がありません。しばらくしてからもう一度お試しください。",
+    patchEncrypted:
+      "この IPA は App Store のコピーと同じく、まだ暗号化されています。パッチを当てられるのは復号済みの IPA だけです。",
+    patchUnsupported: (game: string, games: string) =>
+      `Phigros++ はまだ Phigros ${game} に対応しておらず、${games} でのみ動作します。`,
+    patchFailed: "この IPA にはパッチを当てられませんでした。理由は下のログに表示されています。",
     install4:
       "**Install** をタップすると、Phigros にパッチを当てて、ゲームとは別のアプリである Phigros++ を作成し、以後の更新も行います。",
     sync: "Phigros++ で **Settings → Profile** を開き、**Sync to phigros.tools** をオンにして、表示される 16 語を控えておきます。",
     installNote:
       "Mod はあなたの phigros.tools の鍵で動くので、信頼できる Mod だけを追加してください。",
-    iosTitle: "iPhone と iPad 向けにビルドする",
+    iosTitle: "iPhone と iPad 向けにパッチを当てる",
     iosIntro:
-      "iOS にはインストーラーがありません。自分のゲームのコピーからパソコンで Phigros++ をビルドし、SideStore か AltStore があなたの Apple ID で署名します。",
+      "iOS にはインストーラーがありません。このページが自分のゲームのコピーにパッチを当てて Phigros++ にし、SideStore か AltStore があなたの Apple ID で署名します。",
     iosNote:
-      "Mod と譜面は「ファイル」アプリの **Phigros++ → phigros++** に入れます。内蔵 Mod が触れないゲームの部分をフックする Mod には JIT が必要です。または `mods/` に入れてビルドし直します。",
+      "Mod と譜面は「ファイル」アプリの **Phigros++ → phigros++** に入れます。内蔵 Mod が触れないゲームの部分をフックする Mod には JIT が必要です。または `mods/` に入れて自分でビルドします。",
+    iosBuild: "Phigros++ を自分でビルドする方法は、wiki の **Development** ページにあります。",
     bring: "セーブを引き継ぐ",
     source: "ソースコード",
   },
@@ -635,7 +643,7 @@ export const ja = {
     androidText:
       "Android は Phigros のセーブを root でしか読めない場所に保存していて、Phigros++ は別のアプリなので、コピーできません。ゲームに表示される内容をもとに phigros.tools でセーブを作り直すと、Phigros++ がそれを読み込みます。",
     iosText:
-      "iOS は Phigros のセーブをゲーム自身しか読めない場所に置いていて、Phigros++ は別のアプリなのでコピーできません。ゲームに表示される内容をもとに phigros.tools でセーブを作り直せば、**iPhone や iPad 向けにビルドした** Phigros++ で読み込めます。",
+      "iOS は Phigros のセーブをゲーム自身しか読めない場所に置いていて、Phigros++ は別のアプリなのでコピーできません。ゲームに表示される内容をもとに phigros.tools でセーブを作り直せば、**iPhone や iPad に入れた** Phigros++ で読み込めます。",
     goneText:
       "セーブはデバイスと一緒に失われましたが、スコアを覚えているかスクリーンショットを残していれば、スコアは失われていません。phigros.tools でセーブを作り直すと、Phigros++ がそれを読み込みます。",
     rebuild1: "スコアを入力し、アバター、課題モードのランク、解放済みのものを選びます。",

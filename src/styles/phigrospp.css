@@ -227,12 +227,14 @@
   margin: 1.125rem 0 1.375rem;
 }
 .guide-steps a,
-.ppp-steps a {
+.ppp-steps a:not(.btn),
+.ppp-page .meta a {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 .guide-steps a:hover,
-.ppp-steps a:hover {
+.ppp-steps a:not(.btn):hover,
+.ppp-page .meta a:hover {
   color: var(--glow);
 }
 /* commands and paths, which break anywhere so a long one stays in its step */
@@ -244,7 +246,7 @@
   font-size: 0.875em;
   overflow-wrap: anywhere;
 }
-/* one step a row under its number, its command below its text */
+/* one step a row under its number */
 .ppp-steps {
   display: grid;
   gap: 0.5rem;
@@ -270,31 +272,192 @@
 .ppp-steps p {
   max-width: 52rem;
 }
-.ppp-steps p + .ppp-command {
-  margin-top: 0.625rem;
+/* the ios steps patch the game's ipa in the page: a box to drop it on, then what the patcher finds in it as it goes */
+.patcher {
+  --added: #ff4fa8;
+  grid-column: 2;
+  container-type: inline-size;
+  background: var(--glass-strong);
+  outline: 1px dashed var(--faint);
+  outline-offset: -1px;
 }
-/* two ways to do a step, side by side, their commands lined up at the bottom */
-.ppp-ways {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
-  gap: 1rem 1.5rem;
+.patcher[data-over] {
+  background: rgb(143 220 255 / 0.14);
+  outline: 2px solid var(--glow);
 }
-.ppp-ways > div {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.ppp-command {
+.patcher-bar {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 1rem;
-  padding: 0.5rem 0.5rem 0.5rem 1rem;
-  background: var(--glass-strong);
+  justify-content: space-between;
+  gap: 0.875rem 1.5rem;
+  padding: 1rem 1.25rem;
 }
-.ppp-command code {
-  flex: 1 1 14rem;
+.patcher-bar > :first-child {
+  flex: 1 1 18rem;
+  font-size: 1.0625rem;
+}
+.patcher-bar .warning {
+  margin: 0 0 0.375rem;
+}
+.patcher-bar .meta {
+  font-size: 0.9375rem;
+}
+.patcher label:has(:disabled) {
+  opacity: 0.38;
+  pointer-events: none;
+}
+.patcher label:has(:focus-visible)::before {
+  outline: 2px solid var(--glow);
+  outline-offset: 3px;
+}
+.patcher-found {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0 1.25rem 1.25rem;
+}
+.patcher-found > section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.5rem;
+  padding-top: 0.875rem;
+  border-top: 1px solid var(--hairline);
+  animation: fade 0.4s ease backwards;
+}
+.patcher-found h3 {
+  font-size: 1.1875rem;
+  font-weight: 400;
+}
+.patcher-found :is(dl, table, ol, details, .patcher-map) {
+  font-family: ui-monospace, "Cascadia Mono", Menlo, monospace;
+  font-size: 0.8125rem;
+}
+.patcher-found :is(dl, ol, ul) {
+  margin: 0;
   padding: 0;
-  background: none;
-  white-space: pre-wrap;
+  list-style: none;
+  overflow-wrap: anywhere;
+}
+.patcher-found dl,
+.patcher-found ol > li {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 0.25rem 1rem;
+}
+.patcher-found ol > li {
+  grid-template-columns: 4rem 4rem minmax(0, 1fr);
+}
+.patcher-found time {
+  text-align: right;
+}
+.patcher-found :is(dt, time, summary) {
+  color: var(--dim);
+}
+.patcher-found dd {
+  margin: 0;
+}
+.patcher-found summary {
+  cursor: pointer;
+}
+.patcher-found details > :not(summary) {
+  margin-top: 0.5rem;
+}
+/* the segments by their size in memory, what Phigros++ adds marked at the end it's at */
+.patcher-map {
+  display: flex;
+  gap: 2px;
+  margin-inline: 0.25rem;
+  transform: skewX(var(--skew));
+}
+.patcher-map > div {
+  position: relative;
+  flex-shrink: 1;
+  min-width: 0;
+  padding: 0.25rem 0.5rem;
+  background: rgb(255 255 255 / 0.12);
+  overflow: hidden;
+  white-space: nowrap;
+}
+.patcher-map span {
+  display: inline-block;
+  transform: skewX(calc(-1 * var(--skew)));
+}
+.patcher-map [data-start]::before,
+.patcher-map [data-end]::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  width: 0.25rem;
+  background: var(--added);
+}
+.patcher-map ::before {
+  left: 0;
+}
+.patcher-map ::after {
+  right: 0;
+}
+.patcher-scroll {
+  max-height: 17rem;
+  overflow: auto;
+  background: rgb(0 0 0 / 0.3);
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 0.35) transparent;
+}
+.patcher-scroll table {
+  min-width: 0;
+}
+.patcher-scroll :is(th, td) {
+  padding: 0.25rem 0.75rem;
+}
+/* a cell for each stub that fits at the end of __TEXT, lit one after the other for those written */
+.patcher-stubs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 0.5rem);
+  gap: 3px;
+}
+.patcher-stubs i {
+  height: 0.5rem;
+  background: rgb(255 255 255 / 0.14);
+  transform: skewX(var(--skew));
+}
+.patcher-stubs [data-used] {
+  background: var(--added);
+  animation: pop 0.3s var(--ease) backwards;
+}
+@supports (animation-delay: calc(sibling-index() * 1ms)) {
+  .patcher-stubs [data-used] {
+    animation-delay: calc(sibling-index() * 2ms);
+  }
+}
+/* in a narrow box the names go above what they name, the log's lines under their times and the buttons in a column */
+@container (width < 34rem) {
+  .patcher-found dl {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  .patcher-found dd {
+    margin-bottom: 0.375rem;
+  }
+  .patcher-found ol > li {
+    grid-template-columns: repeat(2, max-content);
+  }
+  .patcher-found li span {
+    grid-column: 1 / -1;
+    margin-bottom: 0.375rem;
+  }
+  .patcher .ppp-bar-actions {
+    flex: 1 1 100%;
+    flex-direction: column;
+  }
+  .patcher .btn {
+    padding: 0.375rem 1.25rem;
+    font-size: 1rem;
+    white-space: normal;
+  }
+}
+@media (max-width: 45em) {
+  .patcher {
+    grid-column: 1 / -1;
+  }
 }

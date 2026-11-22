@@ -95,6 +95,16 @@ only goes from the game to the games of the same room, the site never sees it.
 Links to a room show a preview drawn by `server/card.tsx` like the others: the room's name over the ranking of its
 latest match, on that chart's cover.
 
+### Phigros++ for iPhone and iPad
+
+**Phigros++** (`/phigrospp`) says how to install [Phigros++](../mod), and on iOS it patches the game into it: the
+player chooses their decrypted IPA and the browser makes `Phigros++.ipa` from it without uploading anything. The
+patcher is `src/ipa.ts`, the mod's `scripts/ipa.ts` copied as it is (copy it again when it changes there). It patches
+with the latest release's `phigrospp.ios`, which the worker keeps in `data/ios/` (`server/ios.ts`) and the page only
+uses once the release key's signature on it is checked (`src/release.ts`). The page shows what the patcher finds as it
+goes: the game's version, the layout of its code, where it registers its methods, each one prepared for hooks and a
+log.
+
 Screenshots use a fictional demo save; regenerate them with `scripts/screenshots.ts` (see its header).
 
 ## Develop

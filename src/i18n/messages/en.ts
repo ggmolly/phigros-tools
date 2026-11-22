@@ -570,25 +570,32 @@ export const en = {
     install3:
       "Allow your browser or Files app to install unknown apps when Android asks. The installer asks the same for itself when you tap Install.",
     ios1: "Get Phigros decrypted, as the App Store’s copy is encrypted and can’t be patched. Only a device that can read a running app decrypts it: a jailbroken iPhone or iPad, one with TrollStore (TrollDecrypt does it there), or an Apple Silicon Mac with SIP turned off.",
-    ios2: "On your computer, save it as `Phigros.ipa` in a folder of its own, like `~/Phigros`.",
-    ios3: "On Linux, install Nix, which brings every tool the build needs:",
-    ios3b:
-      "Or, on Linux, Windows or macOS, start a shell with Nix in **Docker** from the folder you work in, and run the next steps in it:",
-    ios4: "Get the source of Phigros++ with its submodules:",
-    ios5: "Build it. The first build downloads a few GB of tools and takes a while, then it writes `build/Phigros++.ipa`:",
-    ios6: "Install **SideStore** on your iPhone or iPad with its guide (AltStore works too), and turn on Developer Mode in Settings → Privacy & Security when iOS asks for it.",
-    ios7: "Send `build/Phigros++.ipa` to the device, open SideStore and add it from My Apps with the + button. A free Apple ID signs it for 7 days, which SideStore renews in the background.",
-    copy: "Copy",
-    copied: "Copied",
+    ios2: "Choose that IPA here. Your browser patches it into `Phigros++.ipa` on this device, and nothing of the game is uploaded.",
+    ios3: "Install **SideStore** on your iPhone or iPad with its guide (AltStore works too), and turn on Developer Mode in Settings → Privacy & Security when iOS asks for it.",
+    ios4: "Send `Phigros++.ipa` to the device, open SideStore and add it from My Apps with the + button. A free Apple ID signs it for 7 days, which SideStore renews in the background.",
+    patchDrop: "Drop the decrypted IPA here, or choose it.",
+    patchChoose: "Choose the IPA",
+    patchPack: (version: string, games: string) => `Phigros++ ${version} runs on Phigros ${games}.`,
+    patchWorking: "Patching the IPA…",
+    patchReady: (seconds: string) => `Phigros++.ipa is ready, patched in ${seconds} s.`,
+    patchDownload: "Download Phigros++.ipa",
+    patchNoPack:
+      "phigros.tools has no Phigros++ signed by its release key to patch with right now. Try again later.",
+    patchEncrypted:
+      "This IPA is still encrypted, like every copy from the App Store. Only a decrypted one can be patched.",
+    patchUnsupported: (game: string, games: string) =>
+      `Phigros++ doesn’t run on Phigros ${game} yet, only on ${games}.`,
+    patchFailed: "This IPA couldn’t be patched, and the log below says why.",
     install4:
       "Tap **Install**: it patches your Phigros into Phigros++, an app of its own next to the game, and updates it later.",
     sync: "In Phigros++, open **Settings → Profile**, turn on **Sync to phigros.tools** and keep the 16 words it shows.",
     installNote: "Mods run with your phigros.tools key, so only add mods you trust.",
-    iosTitle: "Build It for iPhone and iPad",
+    iosTitle: "Patch It for iPhone and iPad",
     iosIntro:
-      "There’s no installer on iOS: you build Phigros++ on a computer from your own copy of the game, then SideStore or AltStore signs it with your Apple ID.",
+      "There’s no installer on iOS: this page patches your own copy of the game into Phigros++, then SideStore or AltStore signs it with your Apple ID.",
     iosNote:
-      "Mods and charts go in **Phigros++ → phigros++** of the Files app. A mod hooking parts of the game the built-in mods leave alone needs JIT, or a new build with it in `mods/`.",
+      "Mods and charts go in **Phigros++ → phigros++** of the Files app. A mod hooking parts of the game the built-in mods leave alone needs JIT, or a build of your own with it in `mods/`.",
+    iosBuild: "The wiki’s **Development** page explains how to build Phigros++ yourself.",
     bring: "Bring Your Save Over",
     source: "Source code",
   },
@@ -621,7 +628,7 @@ export const en = {
     androidText:
       "Android keeps the save of Phigros where only root can read it, and Phigros++ is a separate app, so it can’t copy it. You can rebuild it on phigros.tools from what your game shows, and Phigros++ then loads it.",
     iosText:
-      "iOS keeps the save of Phigros where only the game can read it, and Phigros++ is a separate app, so it can’t copy it. You can rebuild it on phigros.tools from what your game shows, and Phigros++ then loads it once you **build it for your iPhone or iPad**.",
+      "iOS keeps the save of Phigros where only the game can read it, and Phigros++ is a separate app, so it can’t copy it. You can rebuild it on phigros.tools from what your game shows, and Phigros++ then loads it once you **get it on your iPhone or iPad**.",
     goneText:
       "The save went with the device, but your scores didn’t if you remember them or kept screenshots. You can rebuild the save on phigros.tools, and Phigros++ then loads it.",
     rebuild1:

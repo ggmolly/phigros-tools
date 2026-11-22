@@ -580,26 +580,34 @@ export const id = {
     install3:
       "Izinkan browser atau app File menginstal aplikasi tak dikenal saat Android bertanya. Installer meminta hal yang sama untuk dirinya saat kamu mengetuk Install.",
     ios1: "Siapkan Phigros yang sudah didekripsi, karena salinan App Store terenkripsi dan tidak bisa ditambal. Hanya perangkat yang dapat membaca app yang sedang berjalan yang bisa mendekripsinya: iPhone atau iPad yang di-jailbreak, perangkat dengan TrollStore (TrollDecrypt bisa melakukannya), atau Mac Apple Silicon dengan SIP dimatikan.",
-    ios2: "Di komputermu, simpan sebagai `Phigros.ipa` di folder tersendiri, seperti `~/Phigros`.",
-    ios3: "Di Linux, pasang Nix, yang membawa semua alat yang dibutuhkan build:",
-    ios3b:
-      "Atau, di Linux, Windows, atau macOS, buka shell dengan Nix di **Docker** dari folder tempat kamu bekerja, lalu jalankan langkah berikutnya di sana:",
-    ios4: "Ambil kode sumber Phigros++ beserta submodulnya:",
-    ios5: "Build. Build pertama mengunduh beberapa GB alat dan butuh waktu, lalu menulis `build/Phigros++.ipa`:",
-    ios6: "Pasang **SideStore** di iPhone atau iPad kamu dengan panduannya (AltStore juga bisa), dan nyalakan Mode Pengembang di Pengaturan → Privasi & Keamanan saat iOS memintanya.",
-    ios7: "Kirim `build/Phigros++.ipa` ke perangkat, buka SideStore dan tambahkan dari My Apps dengan tombol +. Apple ID gratis menandatanganinya untuk 7 hari, dan SideStore memperbaruinya di latar belakang.",
-    copy: "Salin",
-    copied: "Tersalin",
+    ios2: "Pilih IPA itu di sini. Browsermu menambalnya menjadi `Phigros++.ipa` di perangkat ini, dan tidak ada bagian game yang diunggah.",
+    ios3: "Pasang **SideStore** di iPhone atau iPad kamu dengan panduannya (AltStore juga bisa), dan nyalakan Mode Pengembang di Pengaturan → Privasi & Keamanan saat iOS memintanya.",
+    ios4: "Kirim `Phigros++.ipa` ke perangkat, buka SideStore dan tambahkan dari My Apps dengan tombol +. Apple ID gratis menandatanganinya untuk 7 hari, dan SideStore memperbaruinya di latar belakang.",
+    patchDrop: "Letakkan IPA yang sudah didekripsi di sini, atau pilih filenya.",
+    patchChoose: "Pilih IPA",
+    patchPack: (version: string, games: string) =>
+      `Phigros++ ${version} berjalan di Phigros ${games}.`,
+    patchWorking: "Menambal IPA…",
+    patchReady: (seconds: string) => `Phigros++.ipa sudah siap, ditambal dalam ${seconds} detik.`,
+    patchDownload: "Unduh Phigros++.ipa",
+    patchNoPack:
+      "Saat ini phigros.tools belum punya Phigros++ bertanda tangan kunci rilisnya untuk menambal. Coba lagi nanti.",
+    patchEncrypted:
+      "IPA ini masih terenkripsi, seperti semua salinan dari App Store. Hanya IPA yang sudah didekripsi yang bisa ditambal.",
+    patchUnsupported: (game: string, games: string) =>
+      `Phigros++ belum berjalan di Phigros ${game}, hanya di ${games}.`,
+    patchFailed: "IPA ini tidak bisa ditambal, dan log di bawah menjelaskan alasannya.",
     install4:
       "Ketuk **Install**: installer akan mengubah Phigros kamu menjadi Phigros++, aplikasi tersendiri di samping game, dan memperbaruinya nanti.",
     sync: "Di Phigros++, buka **Pengaturan → Profil**, aktifkan **Sync to phigros.tools**, lalu simpan 16 kata yang ditampilkan.",
     installNote:
       "Mod berjalan dengan kunci phigros.tools kamu, jadi pasang hanya mod yang kamu percaya.",
-    iosTitle: "Build untuk iPhone dan iPad",
+    iosTitle: "Tambal untuk iPhone dan iPad",
     iosIntro:
-      "Di iOS tidak ada installer: kamu membuat Phigros++ di komputer dari salinan game milikmu sendiri, lalu SideStore atau AltStore menandatanganinya dengan Apple ID kamu.",
+      "Di iOS tidak ada installer: halaman ini menambal salinan game milikmu sendiri menjadi Phigros++, lalu SideStore atau AltStore menandatanganinya dengan Apple ID kamu.",
     iosNote:
-      "Mod dan chart masuk ke **Phigros++ → phigros++** di app File. Mod yang meng-hook bagian game yang tidak disentuh mod bawaan butuh JIT, atau build baru dengan mod itu di `mods/`.",
+      "Mod dan chart masuk ke **Phigros++ → phigros++** di app File. Mod yang meng-hook bagian game yang tidak disentuh mod bawaan butuh JIT, atau build buatanmu sendiri dengan mod itu di `mods/`.",
+    iosBuild: "Halaman **Development** di wiki menjelaskan cara mem-build Phigros++ sendiri.",
     bring: "Pindahkan Save Kamu",
     source: "Kode sumber",
   },
@@ -633,7 +641,7 @@ export const id = {
     androidText:
       "Android menyimpan save Phigros di tempat yang hanya bisa dibaca root, dan Phigros++ adalah aplikasi terpisah, jadi tidak bisa menyalinnya. Kamu bisa membangunnya ulang di phigros.tools dari apa yang ditampilkan game-mu, lalu Phigros++ memuatnya.",
     iosText:
-      "iOS menyimpan save Phigros di tempat yang hanya bisa dibaca game itu sendiri, dan Phigros++ adalah app terpisah, jadi tidak bisa menyalinnya. Kamu bisa membangun ulang save di phigros.tools dari apa yang ditampilkan game, lalu Phigros++ memuatnya setelah kamu **mem-build-nya untuk iPhone atau iPad kamu**.",
+      "iOS menyimpan save Phigros di tempat yang hanya bisa dibaca game itu sendiri, dan Phigros++ adalah app terpisah, jadi tidak bisa menyalinnya. Kamu bisa membangun ulang save di phigros.tools dari apa yang ditampilkan game, lalu Phigros++ memuatnya setelah kamu **memasangnya di iPhone atau iPad kamu**.",
     goneText:
       "Save-nya hilang bersama perangkat itu, tapi skormu tidak kalau kamu masih mengingatnya atau menyimpan tangkapan layar. Kamu bisa membangun ulang save itu di phigros.tools, lalu Phigros++ memuatnya.",
     rebuild1:

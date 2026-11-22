@@ -552,25 +552,31 @@ export const zh = {
     install3:
       "当 Android 询问时，允许你的浏览器或“文件”应用安装未知应用。点击 Install 时，安装器也会为自己请求同样的权限。",
     ios1: "获取解密后的 Phigros，因为 App Store 的副本是加密的，无法修补。只有能读取运行中应用的设备才能解密：越狱的 iPhone 或 iPad、装有 TrollStore 的设备（用 TrollDecrypt 即可），或关闭了 SIP 的 Apple 芯片 Mac。",
-    ios2: "在你的电脑上，把它保存为 `Phigros.ipa`，放在单独的文件夹里，比如 `~/Phigros`。",
-    ios3: "在 Linux 上安装 Nix，它会带来构建所需的所有工具：",
-    ios3b:
-      "或者在 Linux、Windows 或 macOS 上，从你工作的文件夹在 **Docker** 中打开一个带 Nix 的 shell，并在其中执行后续步骤：",
-    ios4: "获取 Phigros++ 的源码及其子模块：",
-    ios5: "构建它。第一次构建会下载几 GB 的工具，需要一些时间，然后生成 `build/Phigros++.ipa`：",
-    ios6: "按照 **SideStore** 的指南把它安装到你的 iPhone 或 iPad 上（AltStore 也可以），并在 iOS 提示时，在“设置 → 隐私与安全性”中打开开发者模式。",
-    ios7: "把 `build/Phigros++.ipa` 发送到设备上，打开 SideStore，在 My Apps 中用 + 按钮添加它。免费 Apple ID 的签名有效期为 7 天，SideStore 会在后台续签。",
-    copy: "复制",
-    copied: "已复制",
+    ios2: "在这里选择那个 IPA。你的浏览器会在这台设备上把它修补为 `Phigros++.ipa`，游戏的任何部分都不会上传。",
+    ios3: "按照 **SideStore** 的指南把它安装到你的 iPhone 或 iPad 上（AltStore 也可以），并在 iOS 提示时，在“设置 → 隐私与安全性”中打开开发者模式。",
+    ios4: "把 `Phigros++.ipa` 发送到设备上，打开 SideStore，在 My Apps 中用 + 按钮添加它。免费 Apple ID 的签名有效期为 7 天，SideStore 会在后台续签。",
+    patchDrop: "把解密后的 IPA 拖到这里，或者选择文件。",
+    patchChoose: "选择 IPA",
+    patchPack: (version: string, games: string) =>
+      `Phigros++ ${version} 可在 Phigros ${games} 上运行。`,
+    patchWorking: "正在修补 IPA…",
+    patchReady: (seconds: string) => `Phigros++.ipa 已就绪，修补用时 ${seconds} 秒。`,
+    patchDownload: "下载 Phigros++.ipa",
+    patchNoPack: "phigros.tools 目前没有用发布密钥签名、可用于修补的 Phigros++。请稍后再试。",
+    patchEncrypted: "这个 IPA 仍是加密的，和 App Store 的所有副本一样。只有解密后的 IPA 才能修补。",
+    patchUnsupported: (game: string, games: string) =>
+      `Phigros++ 暂不支持 Phigros ${game}，仅支持 ${games}。`,
+    patchFailed: "这个 IPA 无法修补，原因见下方的日志。",
     install4:
       "点击 **Install**：它会把你的 Phigros 修补为 Phigros++，作为独立应用安装在游戏旁边，并在之后负责更新。",
     sync: "在 Phigros++ 中打开**设置 → 个人资料**，开启 **Sync to phigros.tools**，并保管好它显示的 16 个单词。",
     installNote: "模组会以你的 phigros.tools 密钥运行，所以只添加你信任的模组。",
-    iosTitle: "为 iPhone 和 iPad 构建",
+    iosTitle: "为 iPhone 和 iPad 修补",
     iosIntro:
-      "iOS 上没有安装器：你需要在电脑上用你自己的游戏副本构建 Phigros++，再由 SideStore 或 AltStore 用你的 Apple ID 签名。",
+      "iOS 上没有安装器：本页面会把你自己的游戏副本修补为 Phigros++，再由 SideStore 或 AltStore 用你的 Apple ID 签名。",
     iosNote:
-      "模组和谱面放在“文件”App 的 **Phigros++ → phigros++** 中。如果模组要挂钩内置模组没有用到的游戏部分，就需要 JIT，或者把它放进 `mods/` 后重新构建。",
+      "模组和谱面放在“文件”App 的 **Phigros++ → phigros++** 中。如果模组要挂钩内置模组没有用到的游戏部分，就需要 JIT，或者把它放进 `mods/` 后自行构建。",
+    iosBuild: "wiki 的 **Development** 页面说明了如何自行构建 Phigros++。",
     bring: "迁移你的存档",
     source: "源代码",
   },
@@ -602,7 +608,7 @@ export const zh = {
     androidText:
       "Android 把 Phigros 的存档放在只有 root 才能读取的位置，而 Phigros++ 是独立的应用，所以无法复制它。你可以根据游戏中显示的内容在 phigros.tools 上重建存档，之后 Phigros++ 会载入它。",
     iosText:
-      "iOS 把 Phigros 的存档放在只有游戏本身能读取的地方，而 Phigros++ 是独立的应用，所以无法复制它。你可以根据游戏中显示的内容在 phigros.tools 上重建存档，**为你的 iPhone 或 iPad 构建** Phigros++ 后即可载入。",
+      "iOS 把 Phigros 的存档放在只有游戏本身能读取的地方，而 Phigros++ 是独立的应用，所以无法复制它。你可以根据游戏中显示的内容在 phigros.tools 上重建存档，**在你的 iPhone 或 iPad 上装好** Phigros++ 后即可载入。",
     goneText:
       "存档随设备一起没了，但只要你还记得成绩或留有截图，成绩就还在。你可以在 phigros.tools 上重建存档，之后 Phigros++ 会载入它。",
     rebuild1: "填写你的成绩，然后选择你的头像、课题模式段位和已解锁的内容。",

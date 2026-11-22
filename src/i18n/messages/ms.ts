@@ -582,26 +582,34 @@ export const ms = {
     install3:
       "Benarkan pelayar atau app Fail anda memasang app tidak diketahui apabila Android bertanya. Pemasang meminta perkara yang sama untuk dirinya apabila anda mengetik Install.",
     ios1: "Dapatkan Phigros yang telah dinyahsulit, kerana salinan App Store disulitkan dan tidak boleh ditampal. Hanya peranti yang dapat membaca app yang sedang berjalan boleh menyahsulitnya: iPhone atau iPad yang di-jailbreak, peranti dengan TrollStore (TrollDecrypt boleh melakukannya), atau Mac Apple Silicon dengan SIP dimatikan.",
-    ios2: "Pada komputer anda, simpan sebagai `Phigros.ipa` dalam folder tersendiri, seperti `~/Phigros`.",
-    ios3: "Di Linux, pasang Nix, yang membawa semua alat yang diperlukan oleh binaan:",
-    ios3b:
-      "Atau, di Linux, Windows atau macOS, buka shell dengan Nix dalam **Docker** dari folder tempat anda bekerja, dan jalankan langkah seterusnya di dalamnya:",
-    ios4: "Dapatkan kod sumber Phigros++ bersama submodulnya:",
-    ios5: "Binanya. Binaan pertama memuat turun beberapa GB alat dan mengambil sedikit masa, kemudian menulis `build/Phigros++.ipa`:",
-    ios6: "Pasang **SideStore** pada iPhone atau iPad anda dengan panduannya (AltStore juga boleh), dan hidupkan Mod Pembangun dalam Tetapan → Privasi & Keselamatan apabila iOS memintanya.",
-    ios7: "Hantar `build/Phigros++.ipa` ke peranti, buka SideStore dan tambahkannya dari My Apps dengan butang +. Apple ID percuma menandatanganinya selama 7 hari, dan SideStore memperbaharuinya di latar belakang.",
-    copy: "Salin",
-    copied: "Disalin",
+    ios2: "Pilih IPA itu di sini. Pelayar anda menampalnya menjadi `Phigros++.ipa` pada peranti ini, dan tiada bahagian permainan dimuat naik.",
+    ios3: "Pasang **SideStore** pada iPhone atau iPad anda dengan panduannya (AltStore juga boleh), dan hidupkan Mod Pembangun dalam Tetapan → Privasi & Keselamatan apabila iOS memintanya.",
+    ios4: "Hantar `Phigros++.ipa` ke peranti, buka SideStore dan tambahkannya dari My Apps dengan butang +. Apple ID percuma menandatanganinya selama 7 hari, dan SideStore memperbaharuinya di latar belakang.",
+    patchDrop: "Lepaskan IPA yang telah dinyahsulit di sini, atau pilih failnya.",
+    patchChoose: "Pilih IPA",
+    patchPack: (version: string, games: string) =>
+      `Phigros++ ${version} berjalan pada Phigros ${games}.`,
+    patchWorking: "Menampal IPA…",
+    patchReady: (seconds: string) => `Phigros++.ipa sudah sedia, ditampal dalam ${seconds} saat.`,
+    patchDownload: "Muat turun Phigros++.ipa",
+    patchNoPack:
+      "Buat masa ini phigros.tools tiada Phigros++ yang ditandatangani dengan kunci keluarannya untuk menampal. Cuba lagi nanti.",
+    patchEncrypted:
+      "IPA ini masih disulitkan, seperti setiap salinan dari App Store. Hanya IPA yang telah dinyahsulit boleh ditampal.",
+    patchUnsupported: (game: string, games: string) =>
+      `Phigros++ belum berjalan pada Phigros ${game}, hanya pada ${games}.`,
+    patchFailed: "IPA ini tidak dapat ditampal, dan log di bawah menerangkan sebabnya.",
     install4:
       "Ketik **Install**: ia menukar Phigros anda menjadi Phigros++, aplikasi tersendiri di sebelah permainan, dan mengemas kininya kemudian.",
     sync: "Dalam Phigros++, buka **Tetapan → Profil**, hidupkan **Sync to phigros.tools** dan simpan 16 perkataan yang dipaparkan.",
     installNote:
       "Mod berjalan dengan kunci phigros.tools anda, jadi tambah hanya mod yang anda percayai.",
-    iosTitle: "Bina untuk iPhone dan iPad",
+    iosTitle: "Tampal untuk iPhone dan iPad",
     iosIntro:
-      "Tiada pemasang di iOS: anda membina Phigros++ pada komputer daripada salinan permainan anda sendiri, kemudian SideStore atau AltStore menandatanganinya dengan Apple ID anda.",
+      "Tiada pemasang di iOS: halaman ini menampal salinan permainan anda sendiri menjadi Phigros++, kemudian SideStore atau AltStore menandatanganinya dengan Apple ID anda.",
     iosNote:
-      "Mod dan carta diletakkan dalam **Phigros++ → phigros++** pada app Fail. Mod yang mengait bahagian permainan yang tidak disentuh oleh mod terbina dalam memerlukan JIT, atau binaan baharu dengan mod itu dalam `mods/`.",
+      "Mod dan carta diletakkan dalam **Phigros++ → phigros++** pada app Fail. Mod yang mengait bahagian permainan yang tidak disentuh oleh mod terbina dalam memerlukan JIT, atau binaan anda sendiri dengan mod itu dalam `mods/`.",
+    iosBuild: "Halaman **Development** dalam wiki menerangkan cara membina Phigros++ sendiri.",
     bring: "Bawa Save Anda",
     source: "Kod sumber",
   },
@@ -635,7 +643,7 @@ export const ms = {
     androidText:
       "Android menyimpan save Phigros di tempat yang hanya boleh dibaca oleh root, dan Phigros++ ialah aplikasi berasingan, jadi ia tidak dapat menyalinnya. Anda boleh membinanya semula di phigros.tools daripada apa yang dipaparkan oleh permainan anda, dan Phigros++ kemudian memuatkannya.",
     iosText:
-      "iOS menyimpan save Phigros di tempat yang hanya boleh dibaca oleh permainan itu, dan Phigros++ ialah app berasingan, jadi ia tidak boleh menyalinnya. Anda boleh membina semula save di phigros.tools daripada apa yang dipaparkan permainan, dan Phigros++ memuatkannya sebaik sahaja anda **membinanya untuk iPhone atau iPad anda**.",
+      "iOS menyimpan save Phigros di tempat yang hanya boleh dibaca oleh permainan itu, dan Phigros++ ialah app berasingan, jadi ia tidak boleh menyalinnya. Anda boleh membina semula save di phigros.tools daripada apa yang dipaparkan permainan, dan Phigros++ memuatkannya sebaik sahaja anda **memasangnya pada iPhone atau iPad anda**.",
     goneText:
       "Save itu hilang bersama peranti, tetapi skor anda tidak jika anda mengingatinya atau menyimpan tangkapan skrin. Anda boleh membina semula save itu di phigros.tools, dan Phigros++ kemudian memuatkannya.",
     rebuild1:
