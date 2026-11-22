@@ -80,6 +80,21 @@ Links to a player or a replay show a preview on Discord and other apps, coloured
 card (their RKS, counts and best charts), or the replay's (score, rank, accuracy and judgements), both drawn by
 `server/card.tsx`.
 
+### Rooms
+
+[Phigros++](../mod) plays multiplayer rooms through the site: everyone in a room plays the chart its host picks at the
+same time, over one WebSocket per game (`server/rooms.ts`, which documents the protocol). **Rooms** lists the open
+ones live, and a room's page shows its players (the host wears a crown), the chart they're on and everyone's score
+while a match is played, with a link that opens the game in the room (`phigrospp://room/<id>`). Under it, the room's
+recap: the standings over its matches, then every match with its players ranked. The recap stays once the room is
+closed.
+
+A room with a password shows its name and how many players are in it, nothing else: its matches aren't kept. Chat
+only goes from the game to the games of the same room, the site never sees it.
+
+Links to a room show a preview drawn by `server/card.tsx` like the others: the room's name over the ranking of its
+latest match, on that chart's cover.
+
 Screenshots use a fictional demo save; regenerate them with `scripts/screenshots.ts` (see its header).
 
 ## Develop
