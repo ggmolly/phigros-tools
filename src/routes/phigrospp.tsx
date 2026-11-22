@@ -1,13 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useRef } from "react";
 import { Arrow } from "../components/arrow";
 import { SiteHeader } from "../components/chrome";
+import { Question } from "../components/question";
 import { Rich, useT } from "../i18n";
 import { headT, pageLinks, pageMeta } from "../seo";
 
 const INSTALLER = "https://github.com/ggmolly/PhigrosPlusPlus-Installer/releases/latest";
 const SOURCE = "https://github.com/ggmolly/PhigrosPlusPlus";
+const DEVICES = ["android", "ios"] as const;
 
 export const Route = createFileRoute("/phigrospp")({
+  // the answer is the address, so each platform's steps can be linked
+  validateSearch: (search): { device?: (typeof DEVICES)[number] } => ({
+    device: DEVICES.find((device) => device === search.device),
+  }),
   head: ({ match }) => {
     const { locale, t } = headT(match);
     return {
@@ -23,119 +30,89 @@ export const Route = createFileRoute("/phigrospp")({
   component: PhigrosppPage,
 });
 
-// what each feature looks like, drawn small over its text like in the trailer. decorative: the text says it all
-const REPLAY = (
-  <div className="ppp-visual ppp-replay" aria-hidden="true">
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M6 3.5v17l14-8.5z" />
-    </svg>
-    <span className="ppp-seek">
-      <i />
-      <i />
-      <i />
-      <i />
-    </span>
-    <b>16×</b>
-  </div>
-);
-const HUD = (
-  <div className="ppp-visual ppp-hud" aria-hidden="true">
-    <span>0996761</span>
-    <span>
-      <b>V</b> 99.57%
-    </span>
-    <span className="ppp-timing">
-      <i />
-      <i />
-      <i />
-      <i />
-      <i />
-    </span>
-  </div>
-);
-const WORDS = (
-  <ol className="ppp-visual ppp-words" aria-hidden="true">
-    {["pigeon", "geopelia", "gino", "coo", "rhythm", "bpm"].map((word) => (
-      <li key={word}>{word}</li>
-    ))}
-  </ol>
-);
-
+/** Getting Phigros++ on the player's platform, then their save into it. */
 function PhigrosppPage() {
   const t = useT();
   const p = t.pppPage;
+  const { device } = Route.useSearch();
+  const android = device === "android";
+  // the steps take the focus the answered tile had
+  const flow = useRef<HTMLElement>(null);
+  const loaded = useRef(false);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: the answer is what moves the focus
+  useEffect(() => {
+    if (loaded.current) flow.current?.querySelector<HTMLElement>("h2")?.focus();
+    loaded.current = true;
+  }, [device]);
   return (
     <>
       <SiteHeader />
       <main className="app-shell ppp-page">
-        <section className="panel ppp-hero">
+        <section className="panel" ref={flow}>
           <h1 className="ppp-title">
             Phigros<span>++</span>
           </h1>
           <p className="ppp-lead">{p.description}</p>
-          <div className="ppp-download">
-            <a className="btn" href={INSTALLER} target="_blank" rel="noopener noreferrer">
-              {p.download} <Arrow />
-            </a>
-            <span className="meta">{p.downloadNote}</span>
-            <a className="text-link" href={SOURCE} target="_blank" rel="noopener noreferrer">
-              {p.source}
-            </a>
+          <div className="start-flow">
+            <Question
+              to="/phigrospp"
+              title={p.platform}
+              answer={device && t.start[device]}
+              options={DEVICES.map((option) => ({
+                icon: option,
+                label: t.start[option],
+                search: { device: option },
+              }))}
+              back={{}}
+            />
+            {device && (
+              <div className="start-question">
+                <h2 tabIndex={-1}>{android ? p.install : p.iosTitle}</h2>
+                <p className="meta">{android ? p.downloadNote : p.iosIntro}</p>
+                <ol className="guide-steps start-steps">
+                  {(android
+                    ? [p.install1, p.install2, p.install3, p.install4]
+                    : [p.ios1, p.ios2, p.ios3, p.ios4, p.install4]
+                  ).map((step) => (
+                    <li key={step}>
+                      <Rich
+                        text={step}
+                        href={
+                          step === p.install2
+                            ? `${INSTALLER}/download/phigrospp-installer.apk`
+                            : undefined
+                        }
+                      />
+                    </li>
+                  ))}
+                </ol>
+                <div className="start-next">
+                  <p className="meta">
+                    <Rich text={android ? p.installNote : p.iosNote} />
+                  </p>
+                  <a
+                    className="btn start-go"
+                    href={android ? INSTALLER : SOURCE}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {android ? p.download : p.source} <Arrow />
+                  </a>
+                </div>
+              </div>
+            )}
           </div>
         </section>
-        <div className="ppp-features">
-          {(
-            [
-              [p.replays, p.replaysText, REPLAY],
-              [p.hud, p.hudText, HUD],
-              [p.sync, p.syncText, WORDS],
-            ] as const
-          ).map(([title, text, visual]) => (
-            <section key={title} className="panel">
-              {visual}
-              <h2 className="panel-title">{title}</h2>
-              <p className="meta">{text}</p>
-            </section>
-          ))}
-        </div>
-        <section className="panel">
-          <h2 className="panel-title">{p.install}</h2>
-          <ol className="guide-steps">
-            {[p.install1, p.install2, p.install3, p.install4].map((step) => (
-              <li key={step}>
-                <Rich
-                  text={step}
-                  href={
-                    step === p.install2
-                      ? `${INSTALLER}/download/phigrospp-installer.apk`
-                      : undefined
-                  }
-                />
-              </li>
-            ))}
-          </ol>
-          <p className="meta">{p.installNote}</p>
-        </section>
-        <section className="panel" id="ios">
-          <h2 className="panel-title">{p.iosTitle}</h2>
-          <p className="meta">{p.iosIntro}</p>
-          <ol className="guide-steps">
-            {[p.ios1, p.ios2, p.ios3, p.ios4, p.install4].map((step) => (
-              <li key={step}>
-                <Rich text={step} />
-              </li>
-            ))}
-          </ol>
-          <p className="meta">
-            <Rich text={p.iosNote} />
-          </p>
-        </section>
-        <section className="panel">
-          <h2 className="panel-title">{p.bring}</h2>
-          <p className="meta">{p.bringText}</p>
-          <Link to="/start" className="btn ppp-bring">
-            {t.start.cta} <Arrow />
-          </Link>
+        <section className="ppp-cases start-cases">
+          <div className="panel">
+            <div>
+              <h2>{p.bring}</h2>
+              <p className="meta">{p.bringText}</p>
+            </div>
+            <Link to="/start" className="btn btn-ghost">
+              {t.start.cta} <Arrow />
+            </Link>
+          </div>
         </section>
       </main>
     </>

@@ -571,18 +571,10 @@ export const ms = {
   },
   pppPage: {
     description:
-      "Phigros dengan main semula, HUD dan mod Lua, dipasang sebagai aplikasi tersendiri di sebelah permainan. Ia menyimpan save, rekod dan main semula anda di phigros.tools, tempat permainan anda dikira di papan pendahulu.",
+      "Phigros dengan main semula, bilik untuk memainkan carta bersama pemain lain, HUD dan mod Lua, dipasang sebagai aplikasi tersendiri di sebelah permainan. Ia menyimpan save, rekod dan main semula anda di phigros.tools, tempat permainan anda dikira di papan pendahulu.",
+    platform: "Di mana anda akan bermain Phigros++?",
     download: "Dapatkan pemasang",
     downloadNote: "Untuk Android 7 dan ke atas, dengan Phigros dari Play Store",
-    replays: "Main semula",
-    replaysText:
-      "Setiap permainan dirakam dan boleh dimainkan semula dari senarai lagu, dengan lompat, jeda dan kawalan kelajuan.",
-    hud: "HUD",
-    hudText:
-      "Gred dan ketepatan yang sedang dituju permainan anda, bar ralat pukulan, dan pilihan untuk melangkau tempoh memuatkan permainan.",
-    sync: "Segerak phigros.tools",
-    syncText:
-      "Profil pilihan dengan rekod, main semula dan statistik permainan anda, disenaraikan di papan pendahulu, serta save anda untuk dibuka di sini.",
     install: "Cara Memasang",
     install1: "Pasang Phigros dari Play Store.",
     install2:
@@ -596,12 +588,12 @@ export const ms = {
     iosTitle: "Bina untuk iPhone dan iPad",
     iosIntro:
       "Tiada pemasang di iOS: anda membina Phigros++ pada komputer Linux daripada salinan permainan anda sendiri, kemudian SideStore atau AltStore menandatanganinya dengan Apple ID anda.",
-    ios1: "Nyahsulit Phigros dari App Store, yang hanya boleh dilakukan oleh peranti yang dapat membaca app yang sedang berjalan: iPhone atau iPad yang di-jailbreak, peranti dengan TrollStore (TrollDecrypt boleh melakukannya), atau Mac Apple Silicon dengan SIP dimatikan. Simpan sebagai **Phigros.ipa** dalam folder tersendiri, seperti **~/Phigros**.",
-    ios2: "Pasang Nix, kemudian dapatkan kod sumber dengan **git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus**.",
-    ios3: "Dalam folder kod sumber, jalankan **nix-shell --run 'make ipa IPA=~/Phigros'**. Binaan pertama memuat turun alatnya, kemudian menulis **build/Phigros++.ipa**.",
-    ios4: "Pasang **build/Phigros++.ipa** dengan SideStore atau AltStore. Apple ID percuma menandatanganinya selama 7 hari, dan mereka memperbaharuinya untuk anda.",
+    ios1: "Nyahsulit Phigros dari App Store, yang hanya boleh dilakukan oleh peranti yang dapat membaca app yang sedang berjalan: iPhone atau iPad yang di-jailbreak, peranti dengan TrollStore (TrollDecrypt boleh melakukannya), atau Mac Apple Silicon dengan SIP dimatikan. Simpan sebagai `Phigros.ipa` dalam folder tersendiri, seperti `~/Phigros`.",
+    ios2: "Pasang Nix, kemudian dapatkan kod sumber dengan `git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus`.",
+    ios3: "Dalam folder kod sumber, jalankan `nix-shell --run 'make ipa IPA=~/Phigros'`. Binaan pertama memuat turun alatnya, kemudian menulis `build/Phigros++.ipa`.",
+    ios4: "Pasang `build/Phigros++.ipa` dengan SideStore atau AltStore. Apple ID percuma menandatanganinya selama 7 hari, dan mereka memperbaharuinya untuk anda.",
     iosNote:
-      "Mod dan carta diletakkan dalam **Phigros++ → phigros++** pada app Fail. Mod yang mengait bahagian permainan yang tidak disentuh oleh mod terbina dalam memerlukan JIT, atau binaan baharu dengan mod itu dalam **mods/**.",
+      "Mod dan carta diletakkan dalam **Phigros++ → phigros++** pada app Fail. Mod yang mengait bahagian permainan yang tidak disentuh oleh mod terbina dalam memerlukan JIT, atau binaan baharu dengan mod itu dalam `mods/`.",
     bring: "Bawa Save Anda",
     bringText:
       "Phigros++ bermula dengan save kosong, dan awan TapTap tidak lagi menjawab, jadi ia tidak dapat mengambil save anda dari sana. phigros.tools masih boleh memasukkan save anda ke dalamnya, tidak kira pada peranti mana save itu berada.",

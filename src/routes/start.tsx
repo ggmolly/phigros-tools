@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import { Arrow } from "../components/arrow";
 import { SiteHeader } from "../components/chrome";
+import { Question } from "../components/question";
 import { Rich, useT } from "../i18n";
 import { useSave } from "../save-context";
 import { headT, pageLinks, pageMeta } from "../seo";
@@ -29,58 +30,6 @@ export const Route = createFileRoute("/start")({
   },
   component: StartPage,
 });
-
-// the answers drawn like the game's icons, a phone or tablet told apart by what its screen shows
-const PHONE = "M21 5h22v38H21z";
-const BOTH = "M42 10V6H4v28h32M36 10h22v36H36z";
-const ICONS = {
-  android: `${BOTH}M43 38.75v4.5L39 41zM49.25 41a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0M50.75 38.75h4.5v4.5h-4.5zM46.5 15h1`,
-  ios: `${BOTH}M44 15h6M43 43h8M15 31h10`,
-  gone: PHONE,
-  rooted: `${PHONE}M30 16.5l-1.5 15M36 16.5l-1.5 15M26 21h12.5M25.5 27H38`,
-  unrooted: `${PHONE}M26.5 23h11v9.5h-11zM28.5 23v-3.5a3.5 3.5 0 0 1 7 0V23`,
-};
-type Option = { icon: keyof typeof ICONS; label: string; search: Answers };
-
-/** One question: its answers as tiles, or the one given as a chip leading back to it. */
-function Question({
-  title,
-  answer,
-  options,
-  back,
-}: {
-  title: string;
-  answer?: string;
-  options: Option[];
-  back: Answers;
-}) {
-  const t = useT();
-  if (answer)
-    return (
-      <Link to="/start" search={back} resetScroll={false} className="btn btn-ghost start-answer">
-        <span>
-          <strong>{answer}</strong>
-          <small>{title}</small>
-        </span>
-        <u>{t.start.change}</u>
-      </Link>
-    );
-  return (
-    <div className="start-question">
-      <h2 tabIndex={-1}>{title}</h2>
-      <div className="start-tiles">
-        {options.map(({ icon, label, search }) => (
-          <Link key={icon} to="/start" search={search} resetScroll={false} className="start-tile">
-            <svg aria-hidden="true" viewBox="0 0 64 48" data-icon={icon}>
-              <path d={ICONS[icon]} />
-            </svg>
-            {label}
-          </Link>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 /** Where a player's save is, then what phigros.tools does for it. */
 function StartPage() {
@@ -113,6 +62,7 @@ function StartPage() {
           <p className="meta">{s.description}</p>
           <div className="start-flow">
             <Question
+              to="/start"
               title={s.device}
               answer={device && s[device]}
               options={DEVICES.map((option) => ({
@@ -124,6 +74,7 @@ function StartPage() {
             />
             {asksRoot && (
               <Question
+                to="/start"
                 title={s.root}
                 answer={root === undefined ? undefined : root ? s.rooted : s.unrooted}
                 options={[
@@ -139,7 +90,7 @@ function StartPage() {
                 <p className="meta">
                   <Rich
                     text={rooted ? s.rootText : s[`${device}Text`]}
-                    href={device === "ios" ? "/phigrospp#ios" : undefined}
+                    href={device === "ios" ? "/phigrospp?device=ios" : undefined}
                   />
                 </p>
                 <ol className="guide-steps start-steps">

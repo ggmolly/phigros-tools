@@ -542,16 +542,10 @@ export const zh = {
   },
   pppPage: {
     description:
-      "带有回放、HUD 和 Lua 模组的 Phigros，作为独立应用安装在游戏旁边。它把你的存档、成绩和回放保存在 phigros.tools 上，你的成绩会计入排行榜。",
+      "带有回放、与其他玩家同玩一张谱面的房间、HUD 和 Lua 模组的 Phigros，作为独立应用安装在游戏旁边。它把你的存档、成绩和回放保存在 phigros.tools 上，你的成绩会计入排行榜。",
+    platform: "你会在哪里玩 Phigros++？",
     download: "获取安装器",
     downloadNote: "适用于 Android 7 及以上版本，需要从 Play Store 安装的 Phigros",
-    replays: "回放",
-    replaysText: "每次游玩都会被录制，可以在曲目列表中回放，支持拖动进度、暂停和调整速度。",
-    hud: "HUD",
-    hudText: "显示本次游玩预计的评级和准确率、判定偏差条，还可以跳过游戏的加载等待。",
-    sync: "phigros.tools 同步",
-    syncText:
-      "可选开启的资料，包含你的成绩、回放和游玩统计，在排行榜上参与排名，存档也能在这里打开。",
     install: "安装",
     install1: "从 Play Store 安装 Phigros。",
     install2: "从安装器的最新发布中下载 **phigrospp-installer.apk** 并打开。",
@@ -563,12 +557,12 @@ export const zh = {
     iosTitle: "为 iPhone 和 iPad 构建",
     iosIntro:
       "iOS 上没有安装器：你需要在 Linux 电脑上用你自己的游戏副本构建 Phigros++，再由 SideStore 或 AltStore 用你的 Apple ID 签名。",
-    ios1: "解密 App Store 上的 Phigros，这只有能读取运行中应用的设备才能做到：越狱的 iPhone 或 iPad、装有 TrollStore 的设备（用 TrollDecrypt 即可），或关闭了 SIP 的 Apple 芯片 Mac。把它保存为 **Phigros.ipa**，放在单独的文件夹里，比如 **~/Phigros**。",
-    ios2: "安装 Nix，然后用 **git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus** 获取源码。",
-    ios3: "在源码文件夹中运行 **nix-shell --run 'make ipa IPA=~/Phigros'**。第一次构建会先下载所需工具，然后生成 **build/Phigros++.ipa**。",
-    ios4: "用 SideStore 或 AltStore 安装 **build/Phigros++.ipa**。免费 Apple ID 的签名有效期为 7 天，它们会替你续签。",
+    ios1: "解密 App Store 上的 Phigros，这只有能读取运行中应用的设备才能做到：越狱的 iPhone 或 iPad、装有 TrollStore 的设备（用 TrollDecrypt 即可），或关闭了 SIP 的 Apple 芯片 Mac。把它保存为 `Phigros.ipa`，放在单独的文件夹里，比如 `~/Phigros`。",
+    ios2: "安装 Nix，然后用 `git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus` 获取源码。",
+    ios3: "在源码文件夹中运行 `nix-shell --run 'make ipa IPA=~/Phigros'`。第一次构建会先下载所需工具，然后生成 `build/Phigros++.ipa`。",
+    ios4: "用 SideStore 或 AltStore 安装 `build/Phigros++.ipa`。免费 Apple ID 的签名有效期为 7 天，它们会替你续签。",
     iosNote:
-      "模组和谱面放在“文件”App 的 **Phigros++ → phigros++** 中。如果模组要挂钩内置模组没有用到的游戏部分，就需要 JIT，或者把它放进 **mods/** 后重新构建。",
+      "模组和谱面放在“文件”App 的 **Phigros++ → phigros++** 中。如果模组要挂钩内置模组没有用到的游戏部分，就需要 JIT，或者把它放进 `mods/` 后重新构建。",
     bring: "迁移你的存档",
     bringText:
       "Phigros++ 从空存档开始，而 TapTap 云已不再响应，所以无法从那里获取你的存档。无论你的存档在哪台设备上，phigros.tools 仍然可以把它转入 Phigros++。",

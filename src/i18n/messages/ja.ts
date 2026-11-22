@@ -572,18 +572,10 @@ export const ja = {
   },
   pppPage: {
     description:
-      "リプレイ、HUD、Lua Mod を備えた Phigros で、ゲームとは別のアプリとしてインストールされます。セーブ、記録、リプレイを phigros.tools に保存し、プレイはランキングに反映されます。",
+      "リプレイ、ほかのプレイヤーと同じ譜面を遊べるルーム、HUD、Lua Mod を備えた Phigros で、ゲームとは別のアプリとしてインストールされます。セーブ、記録、リプレイを phigros.tools に保存し、プレイはランキングに反映されます。",
+    platform: "Phigros++ をどこで遊びますか？",
     download: "インストーラーを入手",
     downloadNote: "Android 7 以降、Play ストア版の Phigros が必要です",
-    replays: "リプレイ",
-    replaysText:
-      "すべてのプレイが記録され、楽曲リストから再生できます。シーク、一時停止、再生速度の変更にも対応しています。",
-    hud: "HUD",
-    hudText:
-      "プレイの到達見込みのランクと精度、判定ずれバー、そしてゲームの読み込み待ちを飛ばすオプションがあります。",
-    sync: "phigros.tools 同期",
-    syncText:
-      "任意で作れるプロフィールに記録、リプレイ、プレイ統計が保存され、ランキングに載り、セーブもこのサイトで開けます。",
     install: "インストール",
     install1: "Play ストアから Phigros をインストールします。",
     install2:
@@ -597,12 +589,12 @@ export const ja = {
     iosTitle: "iPhone と iPad 向けにビルドする",
     iosIntro:
       "iOS にはインストーラーがありません。自分のゲームのコピーから Linux パソコンで Phigros++ をビルドし、SideStore か AltStore があなたの Apple ID で署名します。",
-    ios1: "App Store の Phigros を復号します。これは実行中のアプリを読み取れるデバイスにしかできません。脱獄した iPhone や iPad、TrollStore の入ったデバイス（TrollDecrypt で行えます）、または SIP をオフにした Apple シリコンの Mac です。**Phigros.ipa** という名前で、**~/Phigros** のような専用フォルダに保存します。",
-    ios2: "Nix をインストールし、**git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus** でソースを取得します。",
-    ios3: "ソースのフォルダで **nix-shell --run 'make ipa IPA=~/Phigros'** を実行します。最初のビルドは必要なツールをダウンロードしてから **build/Phigros++.ipa** を書き出します。",
-    ios4: "SideStore か AltStore で **build/Phigros++.ipa** をインストールします。無料の Apple ID の署名は 7 日間有効で、更新はアプリが代わりに行います。",
+    ios1: "App Store の Phigros を復号します。これは実行中のアプリを読み取れるデバイスにしかできません。脱獄した iPhone や iPad、TrollStore の入ったデバイス（TrollDecrypt で行えます）、または SIP をオフにした Apple シリコンの Mac です。`Phigros.ipa` という名前で、`~/Phigros` のような専用フォルダに保存します。",
+    ios2: "Nix をインストールし、`git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus` でソースを取得します。",
+    ios3: "ソースのフォルダで `nix-shell --run 'make ipa IPA=~/Phigros'` を実行します。最初のビルドは必要なツールをダウンロードしてから `build/Phigros++.ipa` を書き出します。",
+    ios4: "SideStore か AltStore で `build/Phigros++.ipa` をインストールします。無料の Apple ID の署名は 7 日間有効で、更新はアプリが代わりに行います。",
     iosNote:
-      "Mod と譜面は「ファイル」アプリの **Phigros++ → phigros++** に入れます。内蔵 Mod が触れないゲームの部分をフックする Mod には JIT が必要です。または **mods/** に入れてビルドし直します。",
+      "Mod と譜面は「ファイル」アプリの **Phigros++ → phigros++** に入れます。内蔵 Mod が触れないゲームの部分をフックする Mod には JIT が必要です。または `mods/` に入れてビルドし直します。",
     bring: "セーブを引き継ぐ",
     bringText:
       "Phigros++ は空のセーブで始まり、TapTap のクラウドはもう応答しないため、そこからセーブを取得することはできません。それでも phigros.tools なら、セーブがどのデバイスにあっても Phigros++ に移せます。",

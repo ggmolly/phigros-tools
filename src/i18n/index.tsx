@@ -40,16 +40,23 @@ export function setLocale(locale: Locale) {
 }
 
 /**
- * A message with **bold** spans, rendered as <strong>; messages stay plain strings so every language can place them.
- * With an `href`, the bold spans link to it.
+ * A message with **bold** spans, rendered as <strong>, and `code` ones; messages stay plain strings so every language
+ * can place them. With an `href`, the bold spans link to it.
  */
 export function Rich({ text, href }: { text: string; href?: string }) {
-  return text.split("**").map((part, index) =>
-    index % 2 ? (
-      // biome-ignore lint/suspicious/noArrayIndexKey: the parts never reorder.
-      <strong key={index}>{href ? <a href={href}>{part}</a> : part}</strong>
-    ) : (
-      part
-    ),
-  );
+  // biome-ignore-start lint/suspicious/noArrayIndexKey: the parts never reorder.
+  return text
+    .split(/(\*\*.*?\*\*|`.*?`)/)
+    .map((part, index) =>
+      part.startsWith("**") ? (
+        <strong key={index}>
+          {href ? <a href={href}>{part.slice(2, -2)}</a> : part.slice(2, -2)}
+        </strong>
+      ) : part.startsWith("`") ? (
+        <code key={index}>{part.slice(1, -1)}</code>
+      ) : (
+        part
+      ),
+    );
+  // biome-ignore-end lint/suspicious/noArrayIndexKey: the parts never reorder.
 }

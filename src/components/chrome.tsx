@@ -122,15 +122,13 @@ export function SiteHeader({ children }: { children?: React.ReactNode }) {
   const t = useT();
   const pathname = useRouterState({ select: (state) => state.location.pathname });
   const signedIn = !!account && account === loaded?.playerId;
-  // a Phigros++ player has the app already
-  const hasApp = !!account;
   const tabIds = [
     ...toolTabs(!!loaded, signedIn),
     "/charts" as const,
     "/leaderboard" as const,
     "/rooms" as const,
     "/mods" as const,
-    ...(hasApp ? [] : ["/phigrospp" as const]),
+    "/phigrospp" as const,
   ];
   // a chart's ranking, a player's page and a replay are reached from the leaderboard
   const activeTab: TabId =

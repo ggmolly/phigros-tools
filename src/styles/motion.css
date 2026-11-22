@@ -42,8 +42,6 @@
 .panel,
 .hero,
 .menu-entry,
-.ppp-features > *,
-.ppp-case,
 .start-tile,
 .gallery-card:nth-child(-n + 24),
 .song-pager {
@@ -63,8 +61,6 @@
   .panel,
   .hero,
   .menu-entry,
-  .ppp-features > *,
-  .ppp-case,
   .start-tile {
     animation-delay: calc(min(sibling-index() - 1, 6) * 70ms);
   }

@@ -563,18 +563,10 @@ export const ko = {
   },
   pppPage: {
     description:
-      "리플레이, HUD, Lua 모드를 갖춘 Phigros로, 게임 옆에 별도의 앱으로 설치됩니다. 세이브, 기록, 리플레이를 phigros.tools에 보관하며, 플레이가 리더보드에 반영됩니다.",
+      "리플레이, 다른 플레이어와 같은 채보를 플레이하는 방, HUD, Lua 모드를 갖춘 Phigros로, 게임 옆에 별도의 앱으로 설치됩니다. 세이브, 기록, 리플레이를 phigros.tools에 보관하며, 플레이가 리더보드에 반영됩니다.",
+    platform: "Phigros++를 어디에서 플레이하나요?",
     download: "설치 프로그램 받기",
     downloadNote: "Android 7 이상, Play 스토어에서 받은 Phigros 필요",
-    replays: "리플레이",
-    replaysText:
-      "모든 플레이가 녹화되어 곡 목록에서 다시 볼 수 있으며, 탐색, 일시정지, 속도 조절을 지원합니다.",
-    hud: "HUD",
-    hudText:
-      "플레이가 향하는 등급과 정확도, 판정 오차 막대, 그리고 게임의 로딩 지연을 건너뛰는 옵션을 제공합니다.",
-    sync: "phigros.tools 동기화",
-    syncText:
-      "선택해서 만드는 프로필에 기록, 리플레이, 플레이 통계가 담겨 리더보드에 순위가 매겨지고, 세이브도 이곳에서 열 수 있습니다.",
     install: "설치하기",
     install1: "Play 스토어에서 Phigros를 설치하세요.",
     install2: "설치 프로그램의 최신 릴리스에서 **phigrospp-installer.apk**를 다운로드해 여세요.",
@@ -586,12 +578,12 @@ export const ko = {
     iosTitle: "iPhone과 iPad용으로 빌드하기",
     iosIntro:
       "iOS에는 설치 프로그램이 없습니다. 직접 가진 게임 사본으로 Linux 컴퓨터에서 Phigros++를 빌드하고, SideStore나 AltStore가 당신의 Apple ID로 서명합니다.",
-    ios1: "App Store의 Phigros를 복호화하세요. 이는 실행 중인 앱을 읽을 수 있는 기기만 할 수 있습니다: 탈옥한 iPhone이나 iPad, TrollStore가 있는 기기(TrollDecrypt로 가능), 또는 SIP를 끈 Apple Silicon Mac입니다. **~/Phigros** 같은 전용 폴더에 **Phigros.ipa**로 저장하세요.",
-    ios2: "Nix를 설치한 다음 **git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus**로 소스를 받으세요.",
-    ios3: "소스 폴더에서 **nix-shell --run 'make ipa IPA=~/Phigros'**를 실행하세요. 첫 빌드는 필요한 도구를 내려받은 뒤 **build/Phigros++.ipa**를 만듭니다.",
-    ios4: "SideStore나 AltStore로 **build/Phigros++.ipa**를 설치하세요. 무료 Apple ID는 7일 동안 서명하며, 갱신은 앱이 대신 해 줍니다.",
+    ios1: "App Store의 Phigros를 복호화하세요. 이는 실행 중인 앱을 읽을 수 있는 기기만 할 수 있습니다: 탈옥한 iPhone이나 iPad, TrollStore가 있는 기기(TrollDecrypt로 가능), 또는 SIP를 끈 Apple Silicon Mac입니다. `~/Phigros` 같은 전용 폴더에 `Phigros.ipa`로 저장하세요.",
+    ios2: "Nix를 설치한 다음 `git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus`로 소스를 받으세요.",
+    ios3: "소스 폴더에서 `nix-shell --run 'make ipa IPA=~/Phigros'`를 실행하세요. 첫 빌드는 필요한 도구를 내려받은 뒤 `build/Phigros++.ipa`를 만듭니다.",
+    ios4: "SideStore나 AltStore로 `build/Phigros++.ipa`를 설치하세요. 무료 Apple ID는 7일 동안 서명하며, 갱신은 앱이 대신 해 줍니다.",
     iosNote:
-      "모드와 채보는 파일 앱의 **Phigros++ → phigros++**에 넣습니다. 내장 모드가 건드리지 않는 게임 부분을 후킹하는 모드는 JIT가 필요하거나, **mods/**에 넣고 다시 빌드해야 합니다.",
+      "모드와 채보는 파일 앱의 **Phigros++ → phigros++**에 넣습니다. 내장 모드가 건드리지 않는 게임 부분을 후킹하는 모드는 JIT가 필요하거나, `mods/`에 넣고 다시 빌드해야 합니다.",
     bring: "세이브 옮기기",
     bringText:
       "Phigros++는 빈 세이브로 시작하며, TapTap 클라우드가 더 이상 응답하지 않아 그곳에서 세이브를 가져올 수 없습니다. 그래도 phigros.tools는 세이브가 어느 기기에 있든 Phigros++로 옮길 수 있습니다.",

@@ -567,18 +567,10 @@ export const vi = {
   },
   pppPage: {
     description:
-      "Phigros với replay, HUD và mod Lua, được cài như một ứng dụng riêng bên cạnh game. Nó giữ save, kỷ lục và replay của bạn trên phigros.tools, nơi lượt chơi của bạn được tính trên bảng xếp hạng.",
+      "Phigros với replay, phòng để chơi một chart cùng người chơi khác, HUD và mod Lua, được cài như một ứng dụng riêng bên cạnh game. Nó giữ save, kỷ lục và replay của bạn trên phigros.tools, nơi lượt chơi của bạn được tính trên bảng xếp hạng.",
+    platform: "Bạn sẽ chơi Phigros++ trên thiết bị nào?",
     download: "Tải trình cài đặt",
     downloadNote: "Dành cho Android 7 trở lên, với Phigros từ Play Store",
-    replays: "Replay",
-    replaysText:
-      "Mọi lượt chơi đều được ghi lại và có thể phát lại từ danh sách bài, với tua, tạm dừng và chỉnh tốc độ.",
-    hud: "HUD",
-    hudText:
-      "Hạng và độ chính xác mà lượt chơi đang hướng tới, thanh lệch phán định, và tùy chọn bỏ qua thời gian chờ tải của game.",
-    sync: "Đồng bộ phigros.tools",
-    syncText:
-      "Một hồ sơ tùy chọn chứa kỷ lục, replay và thống kê lượt chơi của bạn, được xếp hạng trên bảng xếp hạng, cùng save để mở tại đây.",
     install: "Cài đặt",
     install1: "Cài Phigros từ Play Store.",
     install2:
@@ -591,12 +583,12 @@ export const vi = {
     iosTitle: "Build cho iPhone và iPad",
     iosIntro:
       "Trên iOS không có trình cài đặt: bạn build Phigros++ trên một máy tính Linux từ bản game của chính mình, rồi SideStore hoặc AltStore ký nó bằng Apple ID của bạn.",
-    ios1: "Giải mã Phigros từ App Store, việc mà chỉ thiết bị đọc được một ứng dụng đang chạy mới làm được: iPhone hoặc iPad đã jailbreak, thiết bị có TrollStore (TrollDecrypt làm việc này), hoặc máy Mac Apple Silicon đã tắt SIP. Lưu nó thành **Phigros.ipa** trong một thư mục riêng, như **~/Phigros**.",
-    ios2: "Cài Nix, rồi tải mã nguồn bằng **git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus**.",
-    ios3: "Trong thư mục mã nguồn, chạy **nix-shell --run 'make ipa IPA=~/Phigros'**. Lần build đầu tiên tải các công cụ cần thiết, rồi ghi ra **build/Phigros++.ipa**.",
-    ios4: "Cài **build/Phigros++.ipa** bằng SideStore hoặc AltStore. Apple ID miễn phí ký nó trong 7 ngày, và chúng sẽ gia hạn giúp bạn.",
+    ios1: "Giải mã Phigros từ App Store, việc mà chỉ thiết bị đọc được một ứng dụng đang chạy mới làm được: iPhone hoặc iPad đã jailbreak, thiết bị có TrollStore (TrollDecrypt làm việc này), hoặc máy Mac Apple Silicon đã tắt SIP. Lưu nó thành `Phigros.ipa` trong một thư mục riêng, như `~/Phigros`.",
+    ios2: "Cài Nix, rồi tải mã nguồn bằng `git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus`.",
+    ios3: "Trong thư mục mã nguồn, chạy `nix-shell --run 'make ipa IPA=~/Phigros'`. Lần build đầu tiên tải các công cụ cần thiết, rồi ghi ra `build/Phigros++.ipa`.",
+    ios4: "Cài `build/Phigros++.ipa` bằng SideStore hoặc AltStore. Apple ID miễn phí ký nó trong 7 ngày, và chúng sẽ gia hạn giúp bạn.",
     iosNote:
-      "Mod và chart nằm trong **Phigros++ → phigros++** của ứng dụng Tệp. Một mod hook vào những phần của game mà các mod có sẵn không dùng tới cần JIT, hoặc một bản build mới có nó trong **mods/**.",
+      "Mod và chart nằm trong **Phigros++ → phigros++** của ứng dụng Tệp. Một mod hook vào những phần của game mà các mod có sẵn không dùng tới cần JIT, hoặc một bản build mới có nó trong `mods/`.",
     bring: "Chuyển save của bạn sang",
     bringText:
       "Phigros++ bắt đầu với save trống, và đám mây TapTap không còn phản hồi, nên nó không thể lấy save của bạn từ đó. phigros.tools vẫn có thể đưa save của bạn vào đó, dù nó nằm trên thiết bị nào.",

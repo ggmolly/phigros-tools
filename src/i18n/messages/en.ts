@@ -559,18 +559,10 @@ export const en = {
   },
   pppPage: {
     description:
-      "Phigros with replays, a HUD and Lua mods, installed as its own app next to the game. It keeps your save, records and replays on phigros.tools, where your plays count on the leaderboard.",
+      "Phigros with replays, rooms to play a chart with other players, a HUD and Lua mods, installed as its own app next to the game. It keeps your save, records and replays on phigros.tools, where your plays count on the leaderboard.",
+    platform: "Where will you play Phigros++?",
     download: "Get the installer",
     downloadNote: "For Android 7 and newer, with Phigros from the Play Store",
-    replays: "Replays",
-    replaysText:
-      "Every play is recorded and plays back from the song list, with seeking, pausing and speed control.",
-    hud: "HUD",
-    hudText:
-      "The grade and accuracy your play is heading for, a hit error bar, and an option to skip the game’s loading delays.",
-    sync: "phigros.tools sync",
-    syncText:
-      "An opt-in profile with your records, replays and play stats, ranked on the leaderboard, and your save to open here.",
     install: "Install It",
     install1: "Install Phigros from the Play Store.",
     install2:
@@ -583,12 +575,12 @@ export const en = {
     iosTitle: "Build It for iPhone and iPad",
     iosIntro:
       "There’s no installer on iOS: you build Phigros++ on a Linux computer from your own copy of the game, then SideStore or AltStore signs it with your Apple ID.",
-    ios1: "Decrypt Phigros from the App Store, which only a device that can read a running app does: a jailbroken iPhone or iPad, one with TrollStore (TrollDecrypt does it there), or an Apple Silicon Mac with SIP turned off. Save it as **Phigros.ipa** in a folder of its own, like **~/Phigros**.",
-    ios2: "Install Nix, then get the source with **git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus**.",
-    ios3: "In the source folder, run **nix-shell --run 'make ipa IPA=~/Phigros'**. The first build downloads its tools, then it writes **build/Phigros++.ipa**.",
-    ios4: "Install **build/Phigros++.ipa** with SideStore or AltStore. A free Apple ID signs it for 7 days, which they renew for you.",
+    ios1: "Decrypt Phigros from the App Store, which only a device that can read a running app does: a jailbroken iPhone or iPad, one with TrollStore (TrollDecrypt does it there), or an Apple Silicon Mac with SIP turned off. Save it as `Phigros.ipa` in a folder of its own, like `~/Phigros`.",
+    ios2: "Install Nix, then get the source with `git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus`.",
+    ios3: "In the source folder, run `nix-shell --run 'make ipa IPA=~/Phigros'`. The first build downloads its tools, then it writes `build/Phigros++.ipa`.",
+    ios4: "Install `build/Phigros++.ipa` with SideStore or AltStore. A free Apple ID signs it for 7 days, which they renew for you.",
     iosNote:
-      "Mods and charts go in **Phigros++ → phigros++** of the Files app. A mod hooking parts of the game the built-in mods leave alone needs JIT, or a new build with it in **mods/**.",
+      "Mods and charts go in **Phigros++ → phigros++** of the Files app. A mod hooking parts of the game the built-in mods leave alone needs JIT, or a new build with it in `mods/`.",
     bring: "Bring Your Save Over",
     bringText:
       "Phigros++ starts with an empty save, and TapTap’s cloud no longer answers, so it can’t fetch yours from there. phigros.tools can still get your save into it, whichever device it is on.",
