@@ -591,7 +591,7 @@ export const vi = {
     iosTitle: "Build cho iPhone và iPad",
     iosIntro:
       "Trên iOS không có trình cài đặt: bạn build Phigros++ trên một máy tính Linux từ bản game của chính mình, rồi SideStore hoặc AltStore ký nó bằng Apple ID của bạn.",
-    ios1: "Giải mã Phigros 4.0.4 trên một thiết bị đã jailbreak hoặc có TrollStore, ví dụ bằng TrollDecrypt: bản trên App Store được mã hóa nên không thể vá. Lưu nó thành **Phigros.ipa** trong một thư mục riêng, như **~/Phigros**.",
+    ios1: "Giải mã Phigros từ App Store, việc mà chỉ thiết bị đọc được một ứng dụng đang chạy mới làm được: iPhone hoặc iPad đã jailbreak, thiết bị có TrollStore (TrollDecrypt làm việc này), hoặc máy Mac Apple Silicon đã tắt SIP. Lưu nó thành **Phigros.ipa** trong một thư mục riêng, như **~/Phigros**.",
     ios2: "Cài Nix, rồi tải mã nguồn bằng **git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus**.",
     ios3: "Trong thư mục mã nguồn, chạy **nix-shell --run 'make ipa IPA=~/Phigros'**. Lần build đầu tiên tải các công cụ cần thiết, rồi ghi ra **build/Phigros++.ipa**.",
     ios4: "Cài **build/Phigros++.ipa** bằng SideStore hoặc AltStore. Apple ID miễn phí ký nó trong 7 ngày, và chúng sẽ gia hạn giúp bạn.",

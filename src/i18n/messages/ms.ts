@@ -596,7 +596,7 @@ export const ms = {
     iosTitle: "Bina untuk iPhone dan iPad",
     iosIntro:
       "Tiada pemasang di iOS: anda membina Phigros++ pada komputer Linux daripada salinan permainan anda sendiri, kemudian SideStore atau AltStore menandatanganinya dengan Apple ID anda.",
-    ios1: "Nyahsulit Phigros 4.0.4 pada peranti yang di-jailbreak atau ada TrollStore, contohnya dengan TrollDecrypt: salinan App Store disulitkan dan tidak boleh ditampal. Simpan sebagai **Phigros.ipa** dalam folder tersendiri, seperti **~/Phigros**.",
+    ios1: "Nyahsulit Phigros dari App Store, yang hanya boleh dilakukan oleh peranti yang dapat membaca app yang sedang berjalan: iPhone atau iPad yang di-jailbreak, peranti dengan TrollStore (TrollDecrypt boleh melakukannya), atau Mac Apple Silicon dengan SIP dimatikan. Simpan sebagai **Phigros.ipa** dalam folder tersendiri, seperti **~/Phigros**.",
     ios2: "Pasang Nix, kemudian dapatkan kod sumber dengan **git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus**.",
     ios3: "Dalam folder kod sumber, jalankan **nix-shell --run 'make ipa IPA=~/Phigros'**. Binaan pertama memuat turun alatnya, kemudian menulis **build/Phigros++.ipa**.",
     ios4: "Pasang **build/Phigros++.ipa** dengan SideStore atau AltStore. Apple ID percuma menandatanganinya selama 7 hari, dan mereka memperbaharuinya untuk anda.",

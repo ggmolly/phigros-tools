@@ -597,7 +597,7 @@ export const ja = {
     iosTitle: "iPhone と iPad 向けにビルドする",
     iosIntro:
       "iOS にはインストーラーがありません。自分のゲームのコピーから Linux パソコンで Phigros++ をビルドし、SideStore か AltStore があなたの Apple ID で署名します。",
-    ios1: "脱獄済みか TrollStore の入ったデバイスで、TrollDecrypt などを使って Phigros 4.0.4 を復号します。App Store のコピーは暗号化されていてパッチを当てられません。**Phigros.ipa** という名前で、**~/Phigros** のような専用フォルダに保存します。",
+    ios1: "App Store の Phigros を復号します。これは実行中のアプリを読み取れるデバイスにしかできません。脱獄した iPhone や iPad、TrollStore の入ったデバイス（TrollDecrypt で行えます）、または SIP をオフにした Apple シリコンの Mac です。**Phigros.ipa** という名前で、**~/Phigros** のような専用フォルダに保存します。",
     ios2: "Nix をインストールし、**git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus** でソースを取得します。",
     ios3: "ソースのフォルダで **nix-shell --run 'make ipa IPA=~/Phigros'** を実行します。最初のビルドは必要なツールをダウンロードしてから **build/Phigros++.ipa** を書き出します。",
     ios4: "SideStore か AltStore で **build/Phigros++.ipa** をインストールします。無料の Apple ID の署名は 7 日間有効で、更新はアプリが代わりに行います。",

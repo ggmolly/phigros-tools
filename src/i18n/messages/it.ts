@@ -595,7 +595,7 @@ export const it = {
     iosTitle: "Compilalo per iPhone e iPad",
     iosIntro:
       "Su iOS non c’è un installer: compili Phigros++ su un computer Linux dalla tua copia del gioco, poi SideStore o AltStore la firma con il tuo ID Apple.",
-    ios1: "Decripta Phigros 4.0.4 su un dispositivo con jailbreak o TrollStore, per esempio con TrollDecrypt: la copia dell’App Store è criptata e non si può modificare. Salvala come **Phigros.ipa** in una cartella a parte, come **~/Phigros**.",
+    ios1: "Decripta il Phigros dell’App Store, cosa che può fare solo un dispositivo in grado di leggere un’app in esecuzione: un iPhone o iPad con jailbreak, uno con TrollStore (lì ci pensa TrollDecrypt) o un Mac Apple Silicon con SIP disattivato. Salvalo come **Phigros.ipa** in una cartella a parte, come **~/Phigros**.",
     ios2: "Installa Nix, poi scarica il codice sorgente con **git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus**.",
     ios3: "Nella cartella del codice sorgente, esegui **nix-shell --run 'make ipa IPA=~/Phigros'**. La prima compilazione scarica i suoi strumenti, poi scrive **build/Phigros++.ipa**.",
     ios4: "Installa **build/Phigros++.ipa** con SideStore o AltStore. Un ID Apple gratuito la firma per 7 giorni, e loro la rinnovano per te.",

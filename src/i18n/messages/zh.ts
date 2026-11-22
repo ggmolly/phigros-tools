@@ -563,7 +563,7 @@ export const zh = {
     iosTitle: "为 iPhone 和 iPad 构建",
     iosIntro:
       "iOS 上没有安装器：你需要在 Linux 电脑上用你自己的游戏副本构建 Phigros++，再由 SideStore 或 AltStore 用你的 Apple ID 签名。",
-    ios1: "在越狱或装有 TrollStore 的设备上解密 Phigros 4.0.4，例如用 TrollDecrypt：App Store 的副本是加密的，无法修补。把它保存为 **Phigros.ipa**，放在单独的文件夹里，比如 **~/Phigros**。",
+    ios1: "解密 App Store 上的 Phigros，这只有能读取运行中应用的设备才能做到：越狱的 iPhone 或 iPad、装有 TrollStore 的设备（用 TrollDecrypt 即可），或关闭了 SIP 的 Apple 芯片 Mac。把它保存为 **Phigros.ipa**，放在单独的文件夹里，比如 **~/Phigros**。",
     ios2: "安装 Nix，然后用 **git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus** 获取源码。",
     ios3: "在源码文件夹中运行 **nix-shell --run 'make ipa IPA=~/Phigros'**。第一次构建会先下载所需工具，然后生成 **build/Phigros++.ipa**。",
     ios4: "用 SideStore 或 AltStore 安装 **build/Phigros++.ipa**。免费 Apple ID 的签名有效期为 7 天，它们会替你续签。",

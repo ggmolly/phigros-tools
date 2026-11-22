@@ -564,7 +564,7 @@ export const zhHant = {
     iosTitle: "為 iPhone 和 iPad 建置",
     iosIntro:
       "iOS 上沒有安裝器：你需要在 Linux 電腦上用你自己的遊戲副本建置 Phigros++，再由 SideStore 或 AltStore 用你的 Apple ID 簽署。",
-    ios1: "在越獄或裝有 TrollStore 的裝置上解密 Phigros 4.0.4，例如用 TrollDecrypt：App Store 的副本是加密的，無法修補。把它儲存為 **Phigros.ipa**，放在單獨的資料夾裡，例如 **~/Phigros**。",
+    ios1: "解密 App Store 上的 Phigros，這只有能讀取執行中 App 的裝置才能做到：越獄的 iPhone 或 iPad、裝有 TrollStore 的裝置（用 TrollDecrypt 即可），或關閉了 SIP 的 Apple 晶片 Mac。把它儲存為 **Phigros.ipa**，放在單獨的資料夾裡，例如 **~/Phigros**。",
     ios2: "安裝 Nix，然後用 **git clone --recursive https://github.com/ggmolly/PhigrosPlusPlus** 取得原始碼。",
     ios3: "在原始碼資料夾中執行 **nix-shell --run 'make ipa IPA=~/Phigros'**。第一次建置會先下載所需工具，然後產生 **build/Phigros++.ipa**。",
     ios4: "用 SideStore 或 AltStore 安裝 **build/Phigros++.ipa**。免費 Apple ID 的簽署有效期為 7 天，它們會替你續簽。",
