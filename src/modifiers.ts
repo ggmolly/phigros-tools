@@ -119,7 +119,7 @@ export function noteAlpha(mods: number, d: number, combo: number) {
   if (mods & Mod.HD) alpha *= clamp((d - 0.15) / 0.15);
   if (mods & Mod.FL) {
     const lit = combo >= 200 ? 0.625 : combo >= 100 ? 0.8125 : 1;
-    alpha *= clamp((0.5 * lit - d) / (0.1 * lit));
+    alpha *= clamp((0.7 * lit - d) / (0.15 * lit));
   }
   return alpha;
 }
