@@ -221,6 +221,13 @@ function eventIndex(list: Segment[], index: number, now: number) {
 
 /** Judges a replay's frames on the chart, like the game did when it was played. */
 export function judge(raw: RawChart, frames: ReplayFrame[], screen: ReplayHeader): Result {
+  const judging = createJudge(raw, screen);
+  judging.feed(frames);
+  return judging.result;
+}
+
+/** A judge fed a play's frames as they come, a room's live one: its result is what they gave so far. */
+export function createJudge(raw: RawChart, screen: ReplayHeader) {
   let [P, G, B] = windowsOf(screen.mods);
   const lastDeltas: number[] = [];
   const aspect = f(screen.width / screen.height);
@@ -383,278 +390,283 @@ export function judge(raw: RawChart, frames: ReplayFrame[], screen: ReplayHeader
     for (const note of list) control.set(note, { isJudged: false, safe: 0, at: 0, head: 0 });
   const queue = created.map((list) => [...list]);
 
-  for (const [index, frame] of frames.entries()) {
-    now = frame.t;
-    const dt = frame.dt;
-    // a ring of the last 10, summed in its slot order like ProgressControl.Update
-    if (screen.challenge === 1) {
-      lastDeltas[index % 10] = dt;
-      let sum = 0;
-      for (const delta of lastDeltas) sum = f(sum + delta);
-      const half = f(f(sum / lastDeltas.length) * 0.5);
-      [P, G, B] = CHALLENGE.map((window) => f(half + window)) as [number, number, number];
-    }
+  let fed = 0;
+  const feed = (frames: ReplayFrame[]) => {
+    for (const frame of frames) {
+      const index = fed++;
+      now = frame.t;
+      const dt = frame.dt;
+      // a ring of the last 10, summed in its slot order like ProgressControl.Update
+      if (screen.challenge === 1) {
+        lastDeltas[index % 10] = dt;
+        let sum = 0;
+        for (const delta of lastDeltas) sum = f(sum + delta);
+        const half = f(f(sum / lastDeltas.length) * 0.5);
+        [P, G, B] = CHALLENGE.map((window) => f(half + window)) as [number, number, number];
+      }
 
-    // FingerManagement: follow the touches, then tell new flicks
-    const ids = new Set(frame.touches.map((touch) => touch.id));
-    for (const id of blocked) if (!ids.has(id)) blocked.delete(id);
-    for (const touch of frame.touches)
-      if (!blocked.has(touch.id) && !fingers.some((finger) => finger.id === touch.id)) {
+      // FingerManagement: follow the touches, then tell new flicks
+      const ids = new Set(frame.touches.map((touch) => touch.id));
+      for (const id of blocked) if (!ids.has(id)) blocked.delete(id);
+      for (const touch of frame.touches)
+        if (!blocked.has(touch.id) && !fingers.some((finger) => finger.id === touch.id)) {
+          const p = toWorld(touch.x, touch.y);
+          fingers.push({
+            id: touch.id,
+            lastMove: [0, 0],
+            nowMove: [0, 0],
+            positions: [p, p, p],
+            phase: 0,
+            isNewFlick: false,
+            stopped: true,
+          });
+        }
+      fingers = fingers.filter((finger) => ids.has(finger.id));
+      for (const finger of fingers) {
+        const touch = frame.touches.find((t) => t.id === finger.id)!;
         const p = toWorld(touch.x, touch.y);
-        fingers.push({
-          id: touch.id,
-          lastMove: [0, 0],
-          nowMove: [0, 0],
-          positions: [p, p, p],
-          phase: 0,
-          isNewFlick: false,
-          stopped: true,
+        finger.positions = [p, finger.positions[0]!, finger.positions[1]!];
+        finger.lastMove = finger.nowMove;
+        finger.nowMove = [f(p[0] - finger.positions[2]![0]), f(p[1] - finger.positions[2]![1])];
+        finger.phase = touch.phase;
+      }
+      for (const finger of fingers) {
+        const lastLength = length(finger.lastMove);
+        let speed = 0;
+        if (lastLength > 0.10000000149011612)
+          speed = f(
+            f(
+              f(finger.lastMove[0] * finger.nowMove[0]) + f(finger.lastMove[1] * finger.nowMove[1]),
+            ) / lastLength,
+          );
+        const v = f(f(speed / 60) / dt);
+        if (!(v >= flickSpeed) || finger.stopped) {
+          const s = f(f(length(finger.nowMove) / 60) / dt);
+          const threshold = f(flickSpeed * 5);
+          finger.isNewFlick = s >= threshold;
+          finger.stopped = !(s >= threshold);
+        }
+      }
+
+      // JudgeControl: fingers measured against the lines as they were last frame, then taps and flicks
+      if (now >= 0) {
+        // JudgeControl.CheckBlocks: a live touch in an enabled area loses its finger
+        if (areas.length) {
+          for (const touch of frame.touches) {
+            if (touch.phase === 3 || touch.phase === 4 || blocked.has(touch.id)) continue;
+            const [x, y] = toWorld(touch.x, touch.y);
+            if (blocking(areas, now, x, y, areaW, 10, INSET)) blocked.add(touch.id);
+          }
+          fingers = fingers.filter((finger) => !blocked.has(finger.id));
+        }
+        for (const line of lines) {
+          const a1 = f(f(line.theta / -180) * PI);
+          const a2 = f(f(line.theta / 180) * PI);
+          const sin1 = f(Math.sin(a1));
+          const cos1 = f(Math.cos(a1));
+          const sin2 = f(Math.sin(a2));
+          line.fingerX = fingers.map((finger) => {
+            const [fx, fy] = finger.positions[0]!;
+            return f(f(f(line.y - fy) * sin1) - f(f(line.x - fx) * cos1));
+          });
+          line.fingerY = fingers.map((finger) => {
+            const [fx, fy] = finger.positions[0]!;
+            return f(f(f(line.x - fx) * sin2) - f(cos1 * f(line.y - fy)));
+          });
+        }
+        const distance = (note: Note, k: number) => {
+          const line = lines[note.line]!;
+          return f(
+            Math.abs(f(note.positionX - line.fingerX[k]!)) +
+              Math.abs(f(line.fingerY[k]! / 2.200000047683716)),
+          );
+        };
+        const window = (ahead: number, behind: number) => {
+          let end = -1;
+          while (end < byTime.length - 1 && byTime[end + 1]!.realTime < f(now + ahead)) end++;
+          let start = end;
+          while (start >= 1 && byTime[start - 1]!.realTime > f(now + behind)) start--;
+          return [start, end] as const;
+        };
+        fingers.forEach((finger, k) => {
+          if (finger.phase === BEGAN) {
+            const [start, end] = window(B, -G);
+            let min = 10000;
+            let code = -1;
+            if (start >= 0 && start <= end) {
+              for (let i = start; i <= end; i++) {
+                const n = byTime[i]!;
+                const along = Math.abs(f(n.positionX - lines[n.line]!.fingerX[k]!));
+                if (n.isJudged) continue;
+                if (!(f(n.realTime - now) < f(min + NEAR))) continue;
+                if (!(along < TAP_REACH)) continue;
+                let badTime = B;
+                if (along > 0.8999999761581421)
+                  badTime = f(B + f(f(f(along + -0.8999999761581421) * P) * -0.5));
+                if (f(n.realTime - now) > badTime) continue;
+                let take = code < 0;
+                if (!take) {
+                  const c = byTime[code]!;
+                  if (c.type === 2 || c.type === 4) take = true;
+                  else if (
+                    (n.type === 1 || n.type === 3) &&
+                    !(Math.abs(f(c.realTime - n.realTime)) > NEAR)
+                  )
+                    take = distance(n, k) < distance(c, k);
+                }
+                if (take) {
+                  code = i;
+                  min = Math.abs(f(n.realTime - now));
+                }
+              }
+              if (code >= 0 && byTime[code]!.type !== 4) byTime[code]!.isJudged = true;
+            }
+          }
+          if (finger.isNewFlick) {
+            const W = f(P * 1.75);
+            const [start, end] = window(W, f(P * -1.75));
+            let min = 10000;
+            let code = -1;
+            if (start >= 0 && start <= end) {
+              for (let i = start; i <= end; i++) {
+                const n = byTime[i]!;
+                if (n.type !== 4 || n.isJudgedForFlick) continue;
+                if (!(f(n.realTime - now) < f(min + NEAR))) continue;
+                if (!(Math.abs(f(n.positionX - lines[n.line]!.fingerX[k]!)) < REACH)) continue;
+                let take = code < 0;
+                if (!take) {
+                  if (Math.abs(f(byTime[code]!.realTime - n.realTime)) > NEAR) continue;
+                  take = distance(n, k) < distance(byTime[code]!, k);
+                }
+                if (take) {
+                  code = i;
+                  min = Math.abs(f(n.realTime - now));
+                }
+              }
+              if (code >= 0) {
+                byTime[code]!.isJudgedForFlick = true;
+                finger.isNewFlick = false;
+              }
+            }
+          }
         });
       }
-    fingers = fingers.filter((finger) => ids.has(finger.id));
-    for (const finger of fingers) {
-      const touch = frame.touches.find((t) => t.id === finger.id)!;
-      const p = toWorld(touch.x, touch.y);
-      finger.positions = [p, finger.positions[0]!, finger.positions[1]!];
-      finger.lastMove = finger.nowMove;
-      finger.nowMove = [f(p[0] - finger.positions[2]![0]), f(p[1] - finger.positions[2]![1])];
-      finger.phase = touch.phase;
-    }
-    for (const finger of fingers) {
-      const lastLength = length(finger.lastMove);
-      let speed = 0;
-      if (lastLength > 0.10000000149011612)
-        speed = f(
-          f(f(finger.lastMove[0] * finger.nowMove[0]) + f(finger.lastMove[1] * finger.nowMove[1])) /
-            lastLength,
-        );
-      const v = f(f(speed / 60) / dt);
-      if (!(v >= flickSpeed) || finger.stopped) {
-        const s = f(f(length(finger.nowMove) / 60) / dt);
-        const threshold = f(flickSpeed * 5);
-        finger.isNewFlick = s >= threshold;
-        finger.stopped = !(s >= threshold);
-      }
-    }
 
-    // JudgeControl: fingers measured against the lines as they were last frame, then taps and flicks
-    if (now >= 0) {
-      // JudgeControl.CheckBlocks: a live touch in an enabled area loses its finger
-      if (areas.length) {
-        for (const touch of frame.touches) {
-          if (touch.phase === 3 || touch.phase === 4 || blocked.has(touch.id)) continue;
-          const [x, y] = toWorld(touch.x, touch.y);
-          if (blocking(areas, now, x, y, areaW, 10, INSET)) blocked.add(touch.id);
-        }
-        fingers = fingers.filter((finger) => !blocked.has(finger.id));
-      }
+      // NoteUpdateManager: the lines move to now, then every note close enough judges itself
       for (const line of lines) {
-        const a1 = f(f(line.theta / -180) * PI);
-        const a2 = f(f(line.theta / 180) * PI);
-        const sin1 = f(Math.sin(a1));
-        const cos1 = f(Math.cos(a1));
-        const sin2 = f(Math.sin(a2));
-        line.fingerX = fingers.map((finger) => {
-          const [fx, fy] = finger.positions[0]!;
-          return f(f(f(line.y - fy) * sin1) - f(f(line.x - fx) * cos1));
-        });
-        line.fingerY = fingers.map((finger) => {
-          const [fx, fy] = finger.positions[0]!;
-          return f(f(f(line.x - fx) * sin2) - f(cos1 * f(line.y - fy)));
-        });
+        line.moveIndex = eventIndex(line.move, line.moveIndex, now);
+        line.rotateIndex = eventIndex(line.rotate, line.rotateIndex, now);
+        if (!(now >= 0)) {
+          line.x = 0;
+          line.y = 0;
+        } else {
+          const e = line.move[line.moveIndex];
+          if (e) {
+            line.x = lerp(e, now, e.start, e.end);
+            line.y = lerp(e, now, e.start2, e.end2);
+          }
+          const r = line.rotate[line.rotateIndex];
+          if (r) line.theta = lerp(r, now, r.start, r.end);
+        }
       }
-      const distance = (note: Note, k: number) => {
-        const line = lines[note.line]!;
-        return f(
-          Math.abs(f(note.positionX - line.fingerX[k]!)) +
-            Math.abs(f(line.fingerY[k]! / 2.200000047683716)),
-        );
-      };
-      const window = (ahead: number, behind: number) => {
-        let end = -1;
-        while (end < byTime.length - 1 && byTime[end + 1]!.realTime < f(now + ahead)) end++;
-        let start = end;
-        while (start >= 1 && byTime[start - 1]!.realTime > f(now + behind)) start--;
-        return [start, end] as const;
-      };
-      fingers.forEach((finger, k) => {
-        if (finger.phase === BEGAN) {
-          const [start, end] = window(B, -G);
-          let min = 10000;
-          let code = -1;
-          if (start >= 0 && start <= end) {
-            for (let i = start; i <= end; i++) {
-              const n = byTime[i]!;
-              const along = Math.abs(f(n.positionX - lines[n.line]!.fingerX[k]!));
-              if (n.isJudged) continue;
-              if (!(f(n.realTime - now) < f(min + NEAR))) continue;
-              if (!(along < TAP_REACH)) continue;
-              let badTime = B;
-              if (along > 0.8999999761581421)
-                badTime = f(B + f(f(f(along + -0.8999999761581421) * P) * -0.5));
-              if (f(n.realTime - now) > badTime) continue;
-              let take = code < 0;
-              if (!take) {
-                const c = byTime[code]!;
-                if (c.type === 2 || c.type === 4) take = true;
-                else if (
-                  (n.type === 1 || n.type === 3) &&
-                  !(Math.abs(f(c.realTime - n.realTime)) > NEAR)
-                )
-                  take = distance(n, k) < distance(c, k);
-              }
-              if (take) {
-                code = i;
-                min = Math.abs(f(n.realTime - now));
-              }
-            }
-            if (code >= 0 && byTime[code]!.type !== 4) byTime[code]!.isJudged = true;
-          }
-        }
-        if (finger.isNewFlick) {
-          const W = f(P * 1.75);
-          const [start, end] = window(W, f(P * -1.75));
-          let min = 10000;
-          let code = -1;
-          if (start >= 0 && start <= end) {
-            for (let i = start; i <= end; i++) {
-              const n = byTime[i]!;
-              if (n.type !== 4 || n.isJudgedForFlick) continue;
-              if (!(f(n.realTime - now) < f(min + NEAR))) continue;
-              if (!(Math.abs(f(n.positionX - lines[n.line]!.fingerX[k]!)) < REACH)) continue;
-              let take = code < 0;
-              if (!take) {
-                if (Math.abs(f(byTime[code]!.realTime - n.realTime)) > NEAR) continue;
-                take = distance(n, k) < distance(byTime[code]!, k);
-              }
-              if (take) {
-                code = i;
-                min = Math.abs(f(n.realTime - now));
-              }
-            }
-            if (code >= 0) {
-              byTime[code]!.isJudgedForFlick = true;
-              finger.isNewFlick = false;
-            }
-          }
-        }
-      });
-    }
-
-    // NoteUpdateManager: the lines move to now, then every note close enough judges itself
-    for (const line of lines) {
-      line.moveIndex = eventIndex(line.move, line.moveIndex, now);
-      line.rotateIndex = eventIndex(line.rotate, line.rotateIndex, now);
-      if (!(now >= 0)) {
-        line.x = 0;
-        line.y = 0;
-      } else {
-        const e = line.move[line.moveIndex];
-        if (e) {
-          line.x = lerp(e, now, e.start, e.end);
-          line.y = lerp(e, now, e.start2, e.end2);
-        }
-        const r = line.rotate[line.rotateIndex];
-        if (r) line.theta = lerp(r, now, r.start, r.end);
-      }
-    }
-    const fingersNear = (note: Note, reach: number) =>
-      lines[note.line]!.fingerX.some((x) => Math.abs(f(x - note.positionX)) < reach);
-    const judgeNote = (note: Note): boolean => {
-      const c = control.get(note)!;
-      const d = f(note.realTime - now);
-      switch (note.type) {
-        case 1: {
-          c.isJudged ||= note.isJudged;
-          if (c.isJudged) {
-            score(note, Math.abs(d) < P ? "perfect" : Math.abs(d) < G ? "good" : "bad", -d, now);
-            return true;
-          }
-          if (d < -G) {
-            score(note, "miss");
-            note.isJudged = true;
-            return true;
-          }
-          return false;
-        }
-        case 2: {
-          if (!(Math.abs(d) > DRAG_WINDOW) && !c.isJudged && fingersNear(note, REACH))
-            c.isJudged = true;
-          if (d < LAND && c.isJudged) {
-            score(note, "perfect", undefined, now);
-            note.isJudged = true;
-            return true;
-          }
-          if (d < -DRAG_WINDOW && !c.isJudged) {
-            score(note, "miss");
-            note.isJudged = true;
-            return true;
-          }
-          return false;
-        }
-        case 4: {
-          c.isJudged ||= note.isJudgedForFlick;
-          if (d < LAND && c.isJudged) {
-            score(note, "perfect", undefined, now);
-            note.isJudged = true;
-            return true;
-          }
-          if (d < f(P * -1.75)) {
-            score(note, "miss");
-            note.isJudged = true;
-            note.isJudgedForFlick = true;
-            return true;
-          }
-          return false;
-        }
-        default: {
-          // a hold: graded at its head, held with at most 3 frames without a finger, scored near its end
-          if (!c.judged && !c.missed) {
+      const fingersNear = (note: Note, reach: number) =>
+        lines[note.line]!.fingerX.some((x) => Math.abs(f(x - note.positionX)) < reach);
+      const judgeNote = (note: Note): boolean => {
+        const c = control.get(note)!;
+        const d = f(note.realTime - now);
+        switch (note.type) {
+          case 1: {
             c.isJudged ||= note.isJudged;
             if (c.isJudged) {
-              if (Math.abs(d) < P)
-                Object.assign(c, { judged: true, perfect: true, at: d, head: now });
-              else if (Math.abs(d) < G)
-                Object.assign(c, { judged: true, perfect: false, at: d, head: now });
-              else note.isJudged = false;
-            } else if (d < -G) {
-              note.isJudged = true;
-              c.missed = true;
+              score(note, Math.abs(d) < P ? "perfect" : Math.abs(d) < G ? "good" : "bad", -d, now);
+              return true;
+            }
+            if (d < -G) {
               score(note, "miss");
+              note.isJudged = true;
+              return true;
             }
+            return false;
           }
-          if (c.judged && !c.missed && !c.over) {
-            if (fingersNear(note, HOLD_REACH)) c.safe = 2;
-            else if (c.safe >= 0) c.safe--;
-            else {
+          case 2: {
+            if (!(Math.abs(d) > DRAG_WINDOW) && !c.isJudged && fingersNear(note, REACH))
+              c.isJudged = true;
+            if (d < LAND && c.isJudged) {
+              score(note, "perfect", undefined, now);
+              note.isJudged = true;
+              return true;
+            }
+            if (d < -DRAG_WINDOW && !c.isJudged) {
+              score(note, "miss");
+              note.isJudged = true;
+              return true;
+            }
+            return false;
+          }
+          case 4: {
+            c.isJudged ||= note.isJudgedForFlick;
+            if (d < LAND && c.isJudged) {
+              score(note, "perfect", undefined, now);
+              note.isJudged = true;
+              return true;
+            }
+            if (d < f(P * -1.75)) {
+              score(note, "miss");
+              note.isJudged = true;
+              note.isJudgedForFlick = true;
+              return true;
+            }
+            return false;
+          }
+          default: {
+            // a hold: graded at its head, held with at most 3 frames without a finger, scored near its end
+            if (!c.judged && !c.missed) {
+              c.isJudged ||= note.isJudged;
+              if (c.isJudged) {
+                if (Math.abs(d) < P)
+                  Object.assign(c, { judged: true, perfect: true, at: d, head: now });
+                else if (Math.abs(d) < G)
+                  Object.assign(c, { judged: true, perfect: false, at: d, head: now });
+                else note.isJudged = false;
+              } else if (d < -G) {
+                note.isJudged = true;
+                c.missed = true;
+                score(note, "miss");
+              }
+            }
+            if (c.judged && !c.missed && !c.over) {
+              if (fingersNear(note, HOLD_REACH)) c.safe = 2;
+              else if (c.safe >= 0) c.safe--;
+              else {
+                c.over = true;
+                c.missed = true;
+                score(note, "miss", undefined, c.head);
+              }
+            }
+            const end = f(note.realTime + note.holdTime);
+            if (now > f(end + -0.2199999988079071) && c.judged && !c.over) {
+              score(note, c.perfect ? "perfect" : "good", -c.at, c.head);
               c.over = true;
-              c.missed = true;
-              score(note, "miss", undefined, c.head);
             }
+            if (now > f(end + 0.25)) {
+              if (!c.judged && !c.missed && !c.over) score(note, "miss");
+              return true;
+            }
+            return false;
           }
-          const end = f(note.realTime + note.holdTime);
-          if (now > f(end + -0.2199999988079071) && c.judged && !c.over) {
-            score(note, c.perfect ? "perfect" : "good", -c.at, c.head);
-            c.over = true;
-          }
-          if (now > f(end + 0.25)) {
-            if (!c.judged && !c.missed && !c.over) score(note, "miss");
-            return true;
-          }
-          return false;
         }
-      }
-    };
-    for (const list of queue)
-      for (let i = 0; i < list.length; i++)
-        if (!(list[i]!.realTime > f(now + 2)) && judgeNote(list[i]!)) list.splice(i--, 1);
+      };
+      for (const list of queue)
+        for (let i = 0; i < list.length; i++)
+          if (!(list[i]!.realTime > f(now + 2)) && judgeNote(list[i]!)) list.splice(i--, 1);
 
-    // ScoreControl: the max combo is sampled once a frame
-    if (combo > result.maxcombo) result.maxcombo = combo;
-    const last = result.timeline.at(-1);
-    const scored = currentScore();
-    if (last?.[1] !== combo || last[2] !== scored) result.timeline.push([now, combo, scored]);
-  }
-  result.score = currentScore();
-  return result;
+      // ScoreControl: the max combo is sampled once a frame
+      if (combo > result.maxcombo) result.maxcombo = combo;
+      const last = result.timeline.at(-1);
+      const scored = currentScore();
+      if (last?.[1] !== combo || last[2] !== scored) result.timeline.push([now, combo, scored]);
+    }
+    result.score = currentScore();
+  };
+  return { result, feed };
 }
