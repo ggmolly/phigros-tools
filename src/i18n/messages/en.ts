@@ -590,8 +590,6 @@ export const en = {
     iosNote:
       "Mods and charts go in **Phigros++ → phigros++** of the Files app. A mod hooking parts of the game the built-in mods leave alone needs JIT, or a new build with it in `mods/`.",
     bring: "Bring Your Save Over",
-    bringText:
-      "Phigros++ starts with an empty save, and TapTap’s cloud no longer answers, so it can’t fetch yours from there. phigros.tools can still get your save into it, whichever device it is on.",
     source: "Source code",
   },
   start: {

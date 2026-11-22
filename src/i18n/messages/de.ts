@@ -607,8 +607,6 @@ export const de = {
     iosNote:
       "Mods und Charts kommen in **Phigros++ → phigros++** der Dateien-App. Ein Mod, der Teile des Spiels hookt, die die eingebauten Mods nicht anfassen, braucht JIT oder einen neuen Build mit ihm in `mods/`.",
     bring: "Spielstand mitnehmen",
-    bringText:
-      "Phigros++ startet mit einem leeren Spielstand, und da die TapTap-Cloud nicht mehr antwortet, kann es deinen nicht von dort holen. phigros.tools kann deinen Spielstand trotzdem hineinbringen, egal auf welchem Gerät er liegt.",
     source: "Quellcode",
   },
   start: {

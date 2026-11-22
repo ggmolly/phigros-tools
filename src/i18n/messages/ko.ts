@@ -593,8 +593,6 @@ export const ko = {
     iosNote:
       "모드와 채보는 파일 앱의 **Phigros++ → phigros++**에 넣습니다. 내장 모드가 건드리지 않는 게임 부분을 후킹하는 모드는 JIT가 필요하거나, `mods/`에 넣고 다시 빌드해야 합니다.",
     bring: "세이브 옮기기",
-    bringText:
-      "Phigros++는 빈 세이브로 시작하며, TapTap 클라우드가 더 이상 응답하지 않아 그곳에서 세이브를 가져올 수 없습니다. 그래도 phigros.tools는 세이브가 어느 기기에 있든 Phigros++로 옮길 수 있습니다.",
     source: "소스 코드",
   },
   start: {

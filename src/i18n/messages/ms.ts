@@ -603,8 +603,6 @@ export const ms = {
     iosNote:
       "Mod dan carta diletakkan dalam **Phigros++ → phigros++** pada app Fail. Mod yang mengait bahagian permainan yang tidak disentuh oleh mod terbina dalam memerlukan JIT, atau binaan baharu dengan mod itu dalam `mods/`.",
     bring: "Bawa Save Anda",
-    bringText:
-      "Phigros++ bermula dengan save kosong, dan awan TapTap tidak lagi menjawab, jadi ia tidak dapat mengambil save anda dari sana. phigros.tools masih boleh memasukkan save anda ke dalamnya, tidak kira pada peranti mana save itu berada.",
     source: "Kod sumber",
   },
   start: {

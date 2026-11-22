@@ -602,8 +602,6 @@ export const it = {
     iosNote:
       "Mod e chart vanno in **Phigros++ → phigros++** dell’app File. Una mod che aggancia parti del gioco che le mod incluse non toccano ha bisogno del JIT, o di una nuova compilazione con lei in `mods/`.",
     bring: "Porta con te il salvataggio",
-    bringText:
-      "Phigros++ parte con un salvataggio vuoto e, dato che il cloud di TapTap non risponde più, non può recuperare il tuo da lì. phigros.tools può comunque portarci il tuo salvataggio, su qualunque dispositivo si trovi.",
     source: "Codice sorgente",
   },
   start: {

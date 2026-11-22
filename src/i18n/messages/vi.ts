@@ -598,8 +598,6 @@ export const vi = {
     iosNote:
       "Mod và chart nằm trong **Phigros++ → phigros++** của ứng dụng Tệp. Một mod hook vào những phần của game mà các mod có sẵn không dùng tới cần JIT, hoặc một bản build mới có nó trong `mods/`.",
     bring: "Chuyển save của bạn sang",
-    bringText:
-      "Phigros++ bắt đầu với save trống, và đám mây TapTap không còn phản hồi, nên nó không thể lấy save của bạn từ đó. phigros.tools vẫn có thể đưa save của bạn vào đó, dù nó nằm trên thiết bị nào.",
     source: "Mã nguồn",
   },
   start: {

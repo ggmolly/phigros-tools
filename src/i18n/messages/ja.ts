@@ -604,8 +604,6 @@ export const ja = {
     iosNote:
       "Mod と譜面は「ファイル」アプリの **Phigros++ → phigros++** に入れます。内蔵 Mod が触れないゲームの部分をフックする Mod には JIT が必要です。または `mods/` に入れてビルドし直します。",
     bring: "セーブを引き継ぐ",
-    bringText:
-      "Phigros++ は空のセーブで始まり、TapTap のクラウドはもう応答しないため、そこからセーブを取得することはできません。それでも phigros.tools なら、セーブがどのデバイスにあっても Phigros++ に移せます。",
     source: "ソースコード",
   },
   start: {

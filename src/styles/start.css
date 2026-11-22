@@ -309,6 +309,11 @@
     font-size: 1rem;
     white-space: normal;
   }
+  /* the buttons of a step's end, one above the other */
+  .start-next .ppp-bar-actions {
+    flex: 1 1 100%;
+    flex-direction: column;
+  }
   .rebuild-stats {
     gap: 0.5rem 1.25rem;
   }

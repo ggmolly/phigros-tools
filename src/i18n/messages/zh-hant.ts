@@ -573,8 +573,6 @@ export const zhHant = {
     iosNote:
       "模組和譜面放在「檔案」App 的 **Phigros++ → phigros++** 中。如果模組要掛鉤內建模組沒有用到的遊戲部分，就需要 JIT，或者把它放進 `mods/` 後重新建置。",
     bring: "轉移你的存檔",
-    bringText:
-      "Phigros++ 從空存檔開始，而 TapTap 雲端已不再回應，所以無法從那裡取得你的存檔。無論你的存檔在哪台裝置上，phigros.tools 仍然可以把它轉入 Phigros++。",
     source: "原始碼",
   },
   start: {

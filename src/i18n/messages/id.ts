@@ -601,8 +601,6 @@ export const id = {
     iosNote:
       "Mod dan chart masuk ke **Phigros++ → phigros++** di app File. Mod yang meng-hook bagian game yang tidak disentuh mod bawaan butuh JIT, atau build baru dengan mod itu di `mods/`.",
     bring: "Pindahkan Save Kamu",
-    bringText:
-      "Phigros++ dimulai dengan save kosong, dan cloud TapTap sudah tidak merespons, jadi save kamu tidak bisa diambil dari sana. phigros.tools tetap bisa memasukkan save kamu ke sana, di perangkat mana pun save itu berada.",
     source: "Kode sumber",
   },
   start: {

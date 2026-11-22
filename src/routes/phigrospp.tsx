@@ -64,7 +64,7 @@ function Command({ text }: { text: string }) {
   );
 }
 
-/** Getting Phigros++ on the player's platform, then their save into it. */
+/** Getting Phigros++ on the player's platform, then on to bringing their save into it. */
 function PhigrosppPage() {
   const t = useT();
   const p = t.pppPage;
@@ -147,28 +147,22 @@ function PhigrosppPage() {
                   <p className="meta">
                     <Rich text={android ? p.installNote : p.iosNote} />
                   </p>
-                  <a
-                    className="btn start-go"
-                    href={android ? INSTALLER : SOURCE}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {android ? p.download : p.source} <Arrow />
-                  </a>
+                  <div className="ppp-bar-actions">
+                    <a
+                      className="btn start-go"
+                      href={android ? INSTALLER : SOURCE}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {android ? p.download : p.source} <Arrow />
+                    </a>
+                    <Link to="/start" className="btn btn-ghost start-go">
+                      {t.start.cta} <Arrow />
+                    </Link>
+                  </div>
                 </div>
               </div>
             )}
-          </div>
-        </section>
-        <section className="ppp-cases start-cases">
-          <div className="panel">
-            <div>
-              <h2>{p.bring}</h2>
-              <p className="meta">{p.bringText}</p>
-            </div>
-            <Link to="/start" className="btn btn-ghost">
-              {t.start.cta} <Arrow />
-            </Link>
           </div>
         </section>
       </main>

@@ -609,8 +609,6 @@ export const fr = {
     iosNote:
       "Les mods et les charts vont dans **Phigros++ → phigros++** de l’app Fichiers. Un mod qui modifie des parties du jeu que les mods intégrés ne touchent pas a besoin du JIT, ou d’une nouvelle compilation avec lui dans `mods/`.",
     bring: "Récupérer votre save",
-    bringText:
-      "Phigros++ démarre avec une save vide, et comme le cloud de TapTap ne répond plus, il ne peut pas y récupérer la vôtre. phigros.tools peut tout de même y amener votre save, quel que soit l’appareil où elle se trouve.",
     source: "Code source",
   },
   start: {
