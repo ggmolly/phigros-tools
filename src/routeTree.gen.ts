@@ -24,6 +24,8 @@ import { Route as LeaderboardIndexRouteImport } from './routes/leaderboard.index
 import { Route as ModsIndexRouteImport } from './routes/mods.index'
 import { Route as PlayersIdRouteImport } from './routes/players.$id'
 import { Route as ReplaysIdRouteImport } from './routes/replays.$id'
+import { Route as RoomsIndexRouteImport } from './routes/rooms.index'
+import { Route as RoomsIdRouteImport } from './routes/rooms.$id'
 import { Route as ModsOwnerNameRouteImport } from './routes/mods.$owner.$name'
 import { Route as ChartsIdPlayLevelRouteImport } from './routes/charts.$id_.play.$level'
 import { Route as ChartsIdPlaysLevelRouteImport } from './routes/charts.$id_.plays.$level'
@@ -102,6 +104,16 @@ const ReplaysIdRoute = ReplaysIdRouteImport.update({
   path: '/replays/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RoomsIndexRoute = RoomsIndexRouteImport.update({
+  id: '/rooms/',
+  path: '/rooms/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RoomsIdRoute = RoomsIdRouteImport.update({
+  id: '/rooms/$id',
+  path: '/rooms/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ModsOwnerNameRoute = ModsOwnerNameRouteImport.update({
   id: '/mods/$owner/$name',
   path: '/mods/$owner/$name',
@@ -130,9 +142,11 @@ export interface FileRoutesByFullPath {
   '/charts/$id': typeof ChartsIdRoute
   '/players/$id': typeof PlayersIdRoute
   '/replays/$id': typeof ReplaysIdRoute
+  '/rooms/$id': typeof RoomsIdRoute
   '/charts/': typeof ChartsIndexRoute
   '/leaderboard/': typeof LeaderboardIndexRoute
   '/mods/': typeof ModsIndexRoute
+  '/rooms/': typeof RoomsIndexRoute
   '/mods/$owner/$name': typeof ModsOwnerNameRoute
   '/charts/$id/play/$level': typeof ChartsIdPlayLevelRoute
   '/charts/$id/plays/$level': typeof ChartsIdPlaysLevelRoute
@@ -147,10 +161,12 @@ export interface FileRoutesByTo {
   '/charts/$id': typeof ChartsIdRoute
   '/players/$id': typeof PlayersIdRoute
   '/replays/$id': typeof ReplaysIdRoute
+  '/rooms/$id': typeof RoomsIdRoute
   '/': typeof ToolIndexRoute
   '/charts': typeof ChartsIndexRoute
   '/leaderboard': typeof LeaderboardIndexRoute
   '/mods': typeof ModsIndexRoute
+  '/rooms': typeof RoomsIndexRoute
   '/mods/$owner/$name': typeof ModsOwnerNameRoute
   '/charts/$id/play/$level': typeof ChartsIdPlayLevelRoute
   '/charts/$id/plays/$level': typeof ChartsIdPlaysLevelRoute
@@ -168,10 +184,12 @@ export interface FileRoutesById {
   '/charts/$id': typeof ChartsIdRoute
   '/players/$id': typeof PlayersIdRoute
   '/replays/$id': typeof ReplaysIdRoute
+  '/rooms/$id': typeof RoomsIdRoute
   '/_tool/': typeof ToolIndexRoute
   '/charts/': typeof ChartsIndexRoute
   '/leaderboard/': typeof LeaderboardIndexRoute
   '/mods/': typeof ModsIndexRoute
+  '/rooms/': typeof RoomsIndexRoute
   '/mods/$owner/$name': typeof ModsOwnerNameRoute
   '/charts/$id_/play/$level': typeof ChartsIdPlayLevelRoute
   '/charts/$id_/plays/$level': typeof ChartsIdPlaysLevelRoute
@@ -190,9 +208,11 @@ export interface FileRouteTypes {
     | '/charts/$id'
     | '/players/$id'
     | '/replays/$id'
+    | '/rooms/$id'
     | '/charts/'
     | '/leaderboard/'
     | '/mods/'
+    | '/rooms/'
     | '/mods/$owner/$name'
     | '/charts/$id/play/$level'
     | '/charts/$id/plays/$level'
@@ -207,10 +227,12 @@ export interface FileRouteTypes {
     | '/charts/$id'
     | '/players/$id'
     | '/replays/$id'
+    | '/rooms/$id'
     | '/'
     | '/charts'
     | '/leaderboard'
     | '/mods'
+    | '/rooms'
     | '/mods/$owner/$name'
     | '/charts/$id/play/$level'
     | '/charts/$id/plays/$level'
@@ -227,10 +249,12 @@ export interface FileRouteTypes {
     | '/charts/$id'
     | '/players/$id'
     | '/replays/$id'
+    | '/rooms/$id'
     | '/_tool/'
     | '/charts/'
     | '/leaderboard/'
     | '/mods/'
+    | '/rooms/'
     | '/mods/$owner/$name'
     | '/charts/$id_/play/$level'
     | '/charts/$id_/plays/$level'
@@ -245,8 +269,10 @@ export interface RootRouteChildren {
   ChartsIdRoute: typeof ChartsIdRoute
   PlayersIdRoute: typeof PlayersIdRoute
   ReplaysIdRoute: typeof ReplaysIdRoute
+  RoomsIdRoute: typeof RoomsIdRoute
   ChartsIndexRoute: typeof ChartsIndexRoute
   ModsIndexRoute: typeof ModsIndexRoute
+  RoomsIndexRoute: typeof RoomsIndexRoute
   ModsOwnerNameRoute: typeof ModsOwnerNameRoute
   ChartsIdPlayLevelRoute: typeof ChartsIdPlayLevelRoute
   ChartsIdPlaysLevelRoute: typeof ChartsIdPlaysLevelRoute
@@ -359,6 +385,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReplaysIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/rooms/': {
+      id: '/rooms/'
+      path: '/rooms'
+      fullPath: '/rooms/'
+      preLoaderRoute: typeof RoomsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rooms/$id': {
+      id: '/rooms/$id'
+      path: '/rooms/$id'
+      fullPath: '/rooms/$id'
+      preLoaderRoute: typeof RoomsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/mods/$owner/$name': {
       id: '/mods/$owner/$name'
       path: '/mods/$owner/$name'
@@ -420,8 +460,10 @@ const rootRouteChildren: RootRouteChildren = {
   ChartsIdRoute: ChartsIdRoute,
   PlayersIdRoute: PlayersIdRoute,
   ReplaysIdRoute: ReplaysIdRoute,
+  RoomsIdRoute: RoomsIdRoute,
   ChartsIndexRoute: ChartsIndexRoute,
   ModsIndexRoute: ModsIndexRoute,
+  RoomsIndexRoute: RoomsIndexRoute,
   ModsOwnerNameRoute: ModsOwnerNameRoute,
   ChartsIdPlayLevelRoute: ChartsIdPlayLevelRoute,
   ChartsIdPlaysLevelRoute: ChartsIdPlaysLevelRoute,

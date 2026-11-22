@@ -8,8 +8,11 @@ import { Arrow } from "./arrow";
 import { Modifiers } from "./modifiers";
 import { Avatar, Rank, score7 } from "./primitives";
 
-/** The player's avatar and name#0042, linking to their page, the number dimmed so the name reads first. */
-export function PlayerTag({ player }: { player: PlayerName }) {
+/**
+ * The player's avatar and name#0042, linking to their page, the number dimmed so the name reads first. `children`
+ * follow the name (a room's host has a crown).
+ */
+export function PlayerTag({ player, children }: { player: PlayerName; children?: ReactNode }) {
   return (
     <Link to="/players/$id" params={{ id: player.id }} className="leaderboard-player arrow-link">
       <Avatar name={player.avatar} className="leaderboard-avatar" />
@@ -17,6 +20,7 @@ export function PlayerTag({ player }: { player: PlayerName }) {
         {player.name}
         <span className="meta">#{String(player.number).padStart(4, "0")}</span>
       </span>
+      {children}
       <Arrow />
     </Link>
   );

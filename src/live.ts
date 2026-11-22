@@ -67,20 +67,22 @@ export function useLive(topics: (string | false | undefined)[], listener: LiveLi
   }, [key]);
 }
 
+/** What loads the page's own data again, never the root's. */
+export function useReload() {
+  const router = useRouter();
+  return () => void router.invalidate({ filter: (match) => match.routeId !== rootRouteId });
+}
+
 /**
  * Reloads once a burst of the topics' events is over (the game sends a few in a row after each song): the page's own
- * data by default, never the root's.
+ * data by default.
  */
 export function useLiveReload(topics: (string | false | undefined)[], reload?: () => void) {
-  const router = useRouter();
+  const reloadPage = useReload();
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
   useEffect(() => () => clearTimeout(timer.current), []);
   useLive(topics, () => {
     clearTimeout(timer.current);
-    timer.current = setTimeout(
-      reload ??
-        (() => void router.invalidate({ filter: (match) => match.routeId !== rootRouteId })),
-      500,
-    );
+    timer.current = setTimeout(reload ?? reloadPage, 500);
   });
 }

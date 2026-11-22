@@ -91,7 +91,7 @@ export function Card({ profile }: { profile: PlayerProfile }) {
  * A song's title and difficulty, linking to the chart's ranking, then the modifiers it was played with: the score's
  * column is only as wide as a score.
  */
-function ChartName({ chart }: { chart: { song: string; level: string; mods?: number } }) {
+export function ChartName({ chart }: { chart: { song: string; level: string; mods?: number } }) {
   return (
     <span className="profile-chart">
       <Difficulty level={chart.level} />

@@ -1,0 +1,156 @@
+/* ---------- Rooms ---------- */
+/* the list and a room's page: panels as high as what they hold, like the mod catalog's */
+.rooms-page,
+.room-page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: 1.125rem;
+}
+:is(.rooms-page, .room-page) > :is(.leaderboard-head, .chart-player-bar) {
+  margin-bottom: 0;
+}
+.rooms {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 32rem), 1fr));
+  gap: 1.125rem;
+}
+.rooms > li {
+  container-type: inline-size;
+}
+/* a room: the cover of what it plays, its name over its chart, and how full it is at the row's end */
+.room {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  grid-template-rows: auto auto;
+  align-items: center;
+  gap: 0.125rem 1.125rem;
+  padding-block: 1rem;
+  transition: background-color 0.15s ease;
+}
+.room:hover,
+.room:focus-visible {
+  background: var(--glass-strong);
+}
+.room-cover {
+  grid-row: 1 / -1;
+  width: 6rem;
+  height: 3.375rem;
+  object-fit: cover;
+  transform: skewX(var(--skew));
+}
+.room-name {
+  grid-column: 2;
+  overflow: hidden;
+  font-size: 1.5625rem;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.room-on {
+  grid-column: 2;
+  min-width: 0;
+}
+.room-on .profile-chart {
+  max-width: 100%;
+}
+.room-on .record-title {
+  min-width: 0;
+  white-space: nowrap;
+}
+.room-count {
+  grid-area: 1 / 3 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  gap: 0.25rem;
+  white-space: nowrap;
+}
+.room > .button-arrow {
+  grid-area: 1 / 4 / -1;
+}
+/* a narrow row keeps its width for the name: how full the room is goes under it */
+@container (width < 30rem) {
+  .room {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto;
+  }
+  .room-cover {
+    grid-row: 1 / 3;
+  }
+  .room-count {
+    grid-area: auto / 1 / auto / -1;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.375rem;
+  }
+  .room > .button-arrow {
+    display: none;
+  }
+}
+.room .status,
+.room-page .status {
+  cursor: inherit;
+}
+.room-lock {
+  display: inline;
+  width: 0.8em;
+  height: 0.8em;
+  margin-inline-start: 0.375em;
+  color: var(--dim);
+  vertical-align: -0.05em;
+}
+
+/* the join and share buttons end a room's bar, under its name once they don't fit beside it */
+.room-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.125rem;
+  margin-left: auto;
+}
+/* the host's crown, in the gold of a first place */
+.room-crown {
+  flex: none;
+  fill: var(--phi);
+  stroke: var(--phi);
+  filter: drop-shadow(0 0 0.25rem rgb(245 242 91 / 0.5));
+}
+/* tables as wide as their panel: the other columns are as narrow as what they hold, which leaves the rest to the
+ * player's, and the numbers end theirs */
+.room-page .chart-stats-scroll table {
+  min-width: max-content;
+  width: 100%;
+}
+.room-page :is(th, td):not(.room-player) {
+  width: 0;
+}
+/* rows change places as scores come, and a row that moved would slide in again (motion.css) */
+.room-live tbody tr {
+  animation: none;
+}
+.room-page .end {
+  padding-inline: 1.375rem 1.125rem;
+  text-align: right;
+}
+.room-page .panel-title .profile-chart {
+  gap: 0.75rem;
+}
+.room-page .panel-title .record-title {
+  font-size: inherit;
+}
+.match + .match {
+  margin-top: 1.625rem;
+}
+.match > header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem 1.125rem;
+  margin-bottom: 0.375rem;
+}
+.match time {
+  font-size: 0.9375rem;
+}

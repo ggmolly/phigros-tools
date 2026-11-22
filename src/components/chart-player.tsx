@@ -4,6 +4,7 @@ import { Mod, rateOf } from "../modifiers";
 import { type Chart, countUpTo } from "../player/chart";
 import { HitSounds } from "../player/hit-sounds";
 import { type Art, drawHud, drawScene, loadArt, type Play } from "../player/render";
+import { COPIED_NOTE, shareLink } from "../share";
 import { Slider, Switch } from "./primitives";
 
 const SPEEDS = [0.1, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
@@ -225,15 +226,11 @@ export function ChartPlayer({
     const url = new URL(window.location.href);
     url.search = "";
     url.searchParams.set("t", String(Math.max(0, Math.floor(now()))));
-    // phones get the share sheet; desktop ones (Windows, macOS) are clunkier than a copied link
-    if (navigator.share && matchMedia("(pointer: coarse)").matches) {
-      void navigator.share({ title: document.title, url: url.toString() }).catch(() => {});
-      return;
-    }
-    void navigator.clipboard.writeText(url.toString()).then(() => {
+    void shareLink(url.toString()).then((wasCopied) => {
+      if (!wasCopied) return;
       setCopied(performance.now());
       window.clearTimeout(copiedTimer.current);
-      copiedTimer.current = window.setTimeout(() => setCopied(0), 1800); // the note's animation length
+      copiedTimer.current = window.setTimeout(() => setCopied(0), COPIED_NOTE);
     });
   };
 
