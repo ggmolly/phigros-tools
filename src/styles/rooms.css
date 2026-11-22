@@ -126,6 +126,10 @@
 .room-page :is(th, td):not(.room-player) {
   width: 0;
 }
+/* spectators don't play */
+.room-spectator {
+  opacity: 0.5;
+}
 /* rows change places as scores come, and a row that moved would slide in again (motion.css) */
 .room-live tbody tr {
   animation: none;

@@ -97,11 +97,20 @@ function Player({ player, host }: { player: PlayerName; host?: boolean }) {
 }
 
 /**
- * An open room: the chart its host picked, then its players. In the lobby they say whether they're ready, during a
- * match they're ranked by the score they have so far.
+ * An open room: the chart its host picked, then its players, spectators grayed. In the lobby they say whether they're
+ * ready, during a match they're ranked by the score they have so far, and one watching the room picks whose play shows.
  */
-export function Lobby({ room }: { room: RoomView }) {
+export function Lobby({
+  room,
+  following,
+  onFollow,
+}: {
+  room: RoomView;
+  following?: string;
+  onFollow?: (player: string) => void;
+}) {
   const t = useT();
+  const picks = room.playing && onFollow;
   const mods = room.chart?.mods ?? 0;
   const players = room.playing ? room.players.toSorted((a, b) => b.score - a.score) : room.players;
   return (
@@ -122,7 +131,9 @@ export function Lobby({ room }: { room: RoomView }) {
       </div>
       <Scroll label={t.leaderboard.players}>
         {room.playing ? (
-          <Headings names={["#", t.song.player, t.song.score, t.song.acc]} />
+          <Headings
+            names={["#", t.song.player, t.song.score, t.song.acc, ...(picks ? [""] : [])]}
+          />
         ) : (
           <Headings names={[t.song.player, ""]} text={1} />
         )}
@@ -131,9 +142,13 @@ export function Lobby({ room }: { room: RoomView }) {
             const host = seat.player.id === room.host;
             // in the match, or out of it with the score they left it with
             const scored = seat.playing || seat.score > 0;
-            const out = seat.able ? t.rooms.waiting : t.rooms.missing;
+            const out = seat.watching
+              ? t.rooms.spectating
+              : seat.able
+                ? t.rooms.waiting
+                : t.rooms.missing;
             return (
-              <tr key={seat.player.id}>
+              <tr key={seat.player.id} className={seat.watching ? "room-spectator" : undefined}>
                 {room.playing && <Place rank={index + 1} />}
                 <Player player={seat.player} host={host} />
                 {room.playing ? (
@@ -149,13 +164,29 @@ export function Lobby({ room }: { room: RoomView }) {
                   )
                 ) : (
                   <td className="meta end">
-                    {seat.able
-                      ? !host && (
-                          <span className={seat.ready ? "status status-verified" : "status"}>
-                            {seat.ready ? t.rooms.ready : t.rooms.notReady}
-                          </span>
-                        )
-                      : t.rooms.missing}
+                    {seat.watching
+                      ? t.rooms.spectating
+                      : seat.able
+                        ? !host && (
+                            <span className={seat.ready ? "status status-verified" : "status"}>
+                              {seat.ready ? t.rooms.ready : t.rooms.notReady}
+                            </span>
+                          )
+                        : t.rooms.missing}
+                  </td>
+                )}
+                {picks && (
+                  <td className="end">
+                    {seat.playing && (
+                      <button
+                        type="button"
+                        className={seat.player.id === following ? "btn" : "btn btn-ghost"}
+                        aria-pressed={seat.player.id === following}
+                        onClick={() => onFollow(seat.player.id)}
+                      >
+                        {t.rooms.watchPlay}
+                      </button>
+                    )}
                   </td>
                 )}
               </tr>

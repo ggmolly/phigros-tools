@@ -200,6 +200,17 @@ export const id = {
     matches: "Pertandingan",
     total: "Total",
     latest: (chart: string, ranking: string) => `Pertandingan terakhir, ${chart}: ${ranking}`,
+    watch: "Tonton",
+    watchTitle: "Tonton room ini",
+    watchText:
+      "Ketik kata sandi room untuk melihatnya seperti para pemainnya, dan menonton permainan mereka.",
+    wrongPassword: "Itu bukan kata sandi room ini.",
+    tooMany: "Terlalu banyak yang menonton room ini, coba lagi nanti.",
+    spectating: "Penonton",
+    watchers: (n: number) => `${n} menonton`,
+    watchPlay: "Tonton",
+    live: "Langsung",
+    waitingPlay: "Menunggu permainannya",
   },
   song: {
     notFoundBody: "Tidak ada lagu dengan ID ini di katalog.",

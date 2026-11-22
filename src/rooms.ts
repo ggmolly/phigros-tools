@@ -11,6 +11,9 @@ import type { PlayerName } from "./plays";
 /** What a room's name, players and chat messages are held to. */
 export const ROOM_NAME = 24;
 export const ROOM_PLAYERS = 8;
+/** How many may spectate a room from their game, and watch it from a browser. */
+export const ROOM_SPECTATORS = 8;
+export const ROOM_WATCHERS = 64;
 export const ROOM_CHAT = 200;
 
 /** The chart a room plays next: the catalog's song id, the game's own (`id`), and the modifiers' bits. */
@@ -55,6 +58,8 @@ export interface RoomPlayer {
   ready: boolean;
   /** Whether their game has the room's chart unlocked: one who doesn't sits the match out. */
   able: boolean;
+  /** Spectating: they don't play, nor count among the room's players. */
+  watching: boolean;
   /** In the match being played, with their score so far. */
   playing: boolean;
   score: number;
@@ -72,6 +77,8 @@ export interface RoomView {
   playing: boolean;
   chart: RoomChart | null;
   players: RoomPlayer[];
+  /** How many browsers watch it. */
+  watchers: number;
   /** The match it played last, null before any. */
   last: Match | null;
 }

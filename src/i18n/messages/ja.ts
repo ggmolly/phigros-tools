@@ -197,6 +197,17 @@ export const ja = {
     matches: "マッチ",
     total: "合計",
     latest: (chart: string, ranking: string) => `最新のマッチ、${chart}：${ranking}`,
+    watch: "観戦",
+    watchTitle: "このルームを観戦",
+    watchText:
+      "ルームのパスワードを入力すると、プレイヤーと同じようにルームを見て、プレイを観戦できます。",
+    wrongPassword: "ルームのパスワードが違います。",
+    tooMany: "このルームを観戦している人が多すぎます。しばらくしてからもう一度お試しください。",
+    spectating: "観戦中",
+    watchers: (n: number) => `${n}人が観戦中`,
+    watchPlay: "観戦",
+    live: "ライブ",
+    waitingPlay: "プレイの到着を待っています",
   },
   song: {
     notFoundBody: "この ID の楽曲はカタログにありません。",

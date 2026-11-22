@@ -10,6 +10,8 @@ import {
   ROOM_CHAT,
   ROOM_NAME,
   ROOM_PLAYERS,
+  ROOM_SPECTATORS,
+  ROOM_WATCHERS,
   type RoomChart,
   type RoomPage,
   type RoomResult,
@@ -33,6 +35,12 @@ import { announce } from "./queue";
  * the chart, and the host starts once everyone who has it is ready ({ t: "start", seed } to those who play). Players
  * send their score as they play, which the room hears about once a second, and their result at the end: the match is
  * over when nobody plays any more. Chat lines go to the room's players and nowhere else.
+ *
+ * A player may spectate instead ({ t: "spectate" }), and a browser may watch a room without signing in ({ t: "watch",
+ * room, password }), unlisted and never told the chat. Players stream what they play as they play it ({ t: "frames",
+ * data }: a replay of the frames since the last one, in base64), and those who spectate or watch hear the stream of the
+ * player they follow ({ t: "follow", player, from }), from its start when they follow mid-match, or from the part they
+ * miss when their connection dropped.
  *
  * Rooms live in memory, the matches of those without a password are kept: the site shows both (src/rooms.ts).
  */
@@ -67,7 +75,9 @@ sqlite.run(`
 
 const DOMAIN = "phigros.tools rooms v1\0"; // the key signs requests and replays too
 const MAX_ROOMS = 500;
-const MAX_MESSAGE = 4096;
+const MAX_MESSAGE = 16_384; // frames are the longest
+const STREAM = 4_000_000; // what a match keeps of a player's frames, a long song takes about a tenth
+const GUESS_PAUSE = 1000; // a wrong password, and the room takes no other for this long
 const AWAY = 30_000; // how long a player whose connection dropped keeps their place
 const MATCH_LIMIT = 20 * 60_000; // a match nobody ends is over after this
 const SCORES_PUSH = 1000; // the room and the site hear of scores this often at most
@@ -88,11 +98,21 @@ interface Seat {
   away?: Timer;
   ready: boolean;
   able: boolean;
+  watching: boolean;
+  /** The player whose frames they hear, when watching. */
+  follows: string;
   playing: boolean;
   score: number;
   accuracy: number;
   combo: number;
   chatted: number;
+}
+
+/** A browser watching a room. */
+interface Watcher {
+  peer: Peer;
+  room: Room;
+  follows: string;
 }
 
 interface Room {
@@ -109,6 +129,11 @@ interface Room {
   playing: boolean;
   /** The match being played: its results as they come, and what ends it when it takes too long. */
   results: { seat: Seat; result: RoomResult }[];
+  /** The frames of the match being played by player id, for whoever follows one late. */
+  streams: Map<string, { chunks: string[]; size: number }>;
+  watchers: Set<Watcher>;
+  /** When it was last given a wrong password. */
+  guessed: number;
   limit?: Timer;
   /** A push to the site that waits, and the summary the list last heard. */
   pushing?: Timer;
@@ -124,6 +149,7 @@ interface Session {
 const rooms = new Map<string, Room>();
 const seated = new Map<string, Seat>(); // by player id: a player sits in one room
 const sessions = new Map<Peer, Session>();
+const watching = new Map<Peer, Watcher>();
 
 const send = (peer: Peer | undefined, message: object) => peer?.send(JSON.stringify(message));
 const fail = (peer: Peer, code: string) => send(peer, { t: "error", code });
@@ -140,14 +166,18 @@ function view(room: Room): RoomView {
       player: seat.player,
       ready: seat.ready,
       able: seat.able,
+      watching: seat.watching,
       playing: seat.playing,
       score: seat.score,
       accuracy: seat.accuracy,
       combo: seat.combo,
     })),
+    watchers: room.watchers.size,
     last: room.last,
   };
 }
+
+const players = (room: Room) => room.seats.filter((seat) => !seat.watching).length;
 
 function summary(room: Room): RoomSummary {
   const locked = room.password !== "";
@@ -156,7 +186,7 @@ function summary(room: Room): RoomSummary {
     name: room.name,
     locked,
     playing: room.playing,
-    players: room.seats.length,
+    players: players(room),
     chart: locked ? null : room.chart,
   };
 }
@@ -174,7 +204,7 @@ function publish(room: Room) {
 
 function push(room: Room) {
   const text = JSON.stringify({ t: "room", room: view(room) });
-  for (const seat of room.seats) seat.peer?.send(text);
+  for (const each of [...room.seats, ...room.watchers]) each.peer?.send(text);
   publish(room);
 }
 
@@ -197,6 +227,7 @@ function finish(room: Room) {
   clearTimeout(room.limit);
   room.playing = false;
   for (const seat of room.seats) seat.ready = seat.playing = false;
+  room.streams.clear();
   const results = room.results.sort(
     (a, b) => b.result.score - a.result.score || b.result.accuracy - a.result.accuracy,
   );
@@ -247,6 +278,10 @@ function close(room: Room) {
   clearTimeout(room.limit);
   clearTimeout(room.pushing);
   rooms.delete(room.id);
+  for (const watcher of room.watchers) {
+    watching.delete(watcher.peer);
+    send(watcher.peer, { t: "room", room: null });
+  }
   void announce(topics.rooms);
   void announce(topics.room(room.id));
 }
@@ -280,7 +315,7 @@ function freeId(): string {
   }
 }
 
-function sit(room: Room, session: Session, peer: Peer) {
+function sit(room: Room, session: Session, peer: Peer, spectating: boolean) {
   const seat: Seat = {
     player: session.player!,
     key: session.key!,
@@ -288,6 +323,8 @@ function sit(room: Room, session: Session, peer: Peer) {
     peer,
     ready: false,
     able: true,
+    watching: spectating,
+    follows: "",
     playing: false,
     score: 0,
     accuracy: 0,
@@ -305,6 +342,7 @@ const count = (max: number) => v.pipe(v.number(), v.integer(), v.minValue(0), v.
 const Score = count(1_000_000);
 const Notes = count(100_000);
 const Accuracy = v.pipe(v.number(), v.minValue(0), v.maxValue(100));
+const Base64 = v.pipe(v.string(), v.regex(/^[A-Za-z0-9+/]*={0,2}$/), v.maxLength(MAX_MESSAGE));
 
 const Message = v.variant("t", [
   v.object({ t: v.literal("auth"), key: hex(32), sig: hex(64) }),
@@ -329,6 +367,10 @@ const Message = v.variant("t", [
   v.object({ t: v.literal("quit") }),
   v.object({ t: v.literal("chat"), text: text(1024) }),
   v.object({ t: v.literal("kick"), player: text(16) }),
+  v.object({ t: v.literal("watch"), room: text(16), password: text(64) }),
+  v.object({ t: v.literal("spectate"), spectate: v.boolean() }),
+  v.object({ t: v.literal("frames"), data: Base64 }),
+  v.object({ t: v.literal("follow"), player: text(16), from: count(100_000) }),
 ]);
 type Message = v.InferOutput<typeof Message>;
 
@@ -374,10 +416,22 @@ function create(peer: Peer, session: Session, m: Extract<Message, { t: "create" 
     last: null,
     playing: false,
     results: [],
+    streams: new Map(),
+    watchers: new Set(),
+    guessed: 0,
     listed: "",
   };
   rooms.set(room.id, room);
-  sit(room, session, peer);
+  sit(room, session, peer, false);
+}
+
+// a room takes one guess a second from anyone, so its password can't be found by trying them all
+function admits(room: Room, password: string) {
+  if (!room.password) return true;
+  const now = Date.now();
+  if (password === room.password && now - room.guessed >= GUESS_PAUSE) return true;
+  room.guessed = now;
+  return false;
 }
 
 function join(peer: Peer, session: Session, m: Extract<Message, { t: "join" }>) {
@@ -387,19 +441,53 @@ function join(peer: Peer, session: Session, m: Extract<Message, { t: "join" }>) 
   const current = seated.get(id);
   if (current?.room === room) return send(peer, { t: "room", room: view(room) });
   if (room.banned.has(id)) return fail(peer, "kicked");
-  if (room.password && m.password !== room.password) return fail(peer, "password");
-  if (room.seats.length >= ROOM_PLAYERS) return fail(peer, "full");
+  if (!admits(room, m.password)) return fail(peer, "password");
+  // a room full of players still takes spectators
+  const spectating = players(room) >= ROOM_PLAYERS;
+  if (spectating && room.seats.length >= ROOM_PLAYERS + ROOM_SPECTATORS) return fail(peer, "full");
   if (current) leave(current);
-  sit(room, session, peer);
+  sit(room, session, peer, spectating);
+}
+
+function unwatch(peer: Peer) {
+  const watcher = watching.get(peer);
+  if (!watcher) return;
+  watching.delete(peer);
+  watcher.room.watchers.delete(watcher);
+  push(watcher.room);
+}
+
+function watch(peer: Peer, m: Extract<Message, { t: "watch" }>) {
+  const room = rooms.get(m.room.toUpperCase());
+  if (!room) return fail(peer, "gone");
+  if (!admits(room, m.password)) return fail(peer, "password");
+  if (room.watchers.size >= ROOM_WATCHERS) return fail(peer, "full");
+  unwatch(peer);
+  const watcher = { peer, room, follows: "" };
+  watching.set(peer, watcher);
+  room.watchers.add(watcher);
+  push(room);
+}
+
+// the frames the player streamed this match from the given part (a viewer back from a dropped connection has the
+// ones before), then the next ones as they come
+function follow(viewer: Seat | Watcher, { player, from }: { player: string; from: number }) {
+  viewer.follows = player;
+  for (const data of viewer.room.streams.get(player)?.chunks.slice(from) ?? [])
+    send(viewer.peer, { t: "frames", player, data });
 }
 
 function start(room: Room, host: Seat) {
-  if (!room.chart || room.seats.some((seat) => seat !== host && seat.able && !seat.ready)) return;
+  const waits = (seat: Seat) => seat !== host && !seat.watching && seat.able && !seat.ready;
+  // those who have the chart play, but one whose connection is down wouldn't hear of it
+  const plays = (seat: Seat) =>
+    !seat.watching && (seat === host || seat.able) && seat.peer !== undefined;
+  if (!room.chart || room.seats.some(waits) || !room.seats.some(plays)) return;
   room.playing = true;
   room.results = [];
-  // those who have the chart play, but one whose connection is down wouldn't hear of it
+  room.streams.clear();
   for (const seat of room.seats) {
-    seat.playing = (seat === host || seat.able) && seat.peer !== undefined;
+    seat.playing = plays(seat);
     seat.score = seat.accuracy = seat.combo = 0;
   }
   room.limit = setTimeout(() => {
@@ -436,7 +524,7 @@ function act(seat: Seat, m: Message) {
       return push(room);
     }
     case "ready":
-      if (room.playing || !seat.able) return;
+      if (room.playing || !seat.able || seat.watching) return;
       seat.ready = m.ready;
       return push(room);
     case "able":
@@ -472,6 +560,31 @@ function act(seat: Seat, m: Message) {
       for (const each of room.seats) each.peer?.send(told);
       return;
     }
+    case "spectate": {
+      if (seat.playing || seat.watching === m.spectate) return;
+      const full = m.spectate
+        ? room.seats.length - players(room) >= ROOM_SPECTATORS
+        : players(room) >= ROOM_PLAYERS;
+      if (full) return fail(seat.peer!, "full");
+      Object.assign(seat, { watching: m.spectate, ready: false, follows: "" });
+      return push(room);
+    }
+    case "frames": {
+      if (!seat.playing) return;
+      const id = seat.player.id;
+      const stream = room.streams.get(id) ?? { chunks: [], size: 0 };
+      if (stream.size + m.data.length > STREAM) return;
+      stream.chunks.push(m.data);
+      stream.size += m.data.length;
+      room.streams.set(id, stream);
+      const told = JSON.stringify({ t: "frames", player: id, data: m.data });
+      for (const each of [...room.seats, ...room.watchers])
+        if (each.follows === id) each.peer?.send(told);
+      return;
+    }
+    case "follow":
+      if (seat.watching) follow(seat, m);
+      return;
     case "kick": {
       const target = room.seats.find((each) => each.player.id === m.player);
       if (!host || !target || target === seat) return;
@@ -499,6 +612,10 @@ export function message(peer: Peer, raw: string) {
     return peer.close(1003, "Not a room message");
   }
   if (m.t === "auth") return auth(peer, session, m);
+  // a browser that watches never signs in, and says nothing but who it follows
+  if (m.t === "watch" && !session.player) return watch(peer, m);
+  const watcher = watching.get(peer);
+  if (watcher) return m.t === "follow" ? follow(watcher, m) : undefined;
   if (!session.player) return fail(peer, "auth");
   if (m.t === "create") return create(peer, session, m);
   if (m.t === "join") return join(peer, session, m);
@@ -510,6 +627,7 @@ export function message(peer: Peer, raw: string) {
 export function closed(peer: Peer) {
   const session = sessions.get(peer);
   sessions.delete(peer);
+  unwatch(peer);
   const seat = session?.player && seated.get(session.player.id);
   if (!seat || seat.peer !== peer) return;
   seat.peer = undefined;

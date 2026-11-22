@@ -198,6 +198,17 @@ export const it = {
     matches: "Partite",
     total: "Totale",
     latest: (chart: string, ranking: string) => `Ultima partita, ${chart}: ${ranking}`,
+    watch: "Guarda",
+    watchTitle: "Guarda questa stanza",
+    watchText:
+      "Scrivi la password della stanza per vederla come i suoi giocatori e guardare le loro partite.",
+    wrongPassword: "Non è la password della stanza.",
+    tooMany: "Troppe persone stanno guardando questa stanza, riprova più tardi.",
+    spectating: "Spettatore",
+    watchers: (n: number) => `${n} spettatori`,
+    watchPlay: "Guarda",
+    live: "In diretta",
+    waitingPlay: "In attesa della partita",
   },
   song: {
     notFoundBody: "Nessun brano con questo ID nel catalogo.",

@@ -199,6 +199,17 @@ export const de = {
     matches: "Matches",
     total: "Gesamt",
     latest: (chart: string, ranking: string) => `Letztes Match, ${chart}: ${ranking}`,
+    watch: "Zuschauen",
+    watchTitle: "Diesem Raum zuschauen",
+    watchText:
+      "Gib das Passwort des Raums ein, um ihn wie seine Spieler zu sehen und ihren Runden zuzuschauen.",
+    wrongPassword: "Das ist nicht das Passwort des Raums.",
+    tooMany: "Zu viele schauen diesem Raum zu, versuch es später noch einmal.",
+    spectating: "Zuschauer",
+    watchers: (n: number) => `${n} schauen zu`,
+    watchPlay: "Zuschauen",
+    live: "Live",
+    waitingPlay: "Warte auf die Runde",
   },
   song: {
     notFoundBody: "Im Katalog gibt es keinen Song mit dieser ID.",

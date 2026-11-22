@@ -13,6 +13,13 @@ const VOLUME_KEY = "chart-player-volume"; // for our localStorage thing
 const OFFSET_STEP = 5;
 /** how long before the first note "First Note" lands, so it can be seen coming */
 const FIRST_NOTE_LEAD = 1;
+/**
+ * a live play is drawn this far behind its frames, so notes still within their judgement windows don't fade as missed,
+ * starts this far behind them, and waits for this much once they're late
+ */
+const LIVE_MARGIN = 0.3;
+const LIVE_DELAY = 2;
+const LIVE_RESUME = 1;
 
 function savedVolume() {
   try {
@@ -39,6 +46,7 @@ export function ChartPlayer({
   startAt = 0,
   overlay,
   play,
+  live,
 }: {
   chart: Chart;
   background: string;
@@ -51,6 +59,8 @@ export function ChartPlayer({
   overlay?: (ctx: CanvasRenderingContext2D, t: number, W: number, H: number) => void;
   /** a replay's judged play: the chart is drawn as it was played, its hit sounds where notes were hit */
   play?: Play & { hits: Chart["hits"] };
+  /** a play followed as it's played: the song time its frames reached so far, which time never passes */
+  live?: () => number;
 }) {
   const t = useT();
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -69,6 +79,12 @@ export function ChartPlayer({
     return sounds;
   });
   const lastT = useRef(0);
+  const stalled = useRef(false); // a live play waits for its frames
+  const behind = useRef(true); // a live play keeps near its player until the viewer seeks
+  const jumped = useRef(Number.NEGATIVE_INFINITY);
+  // the browser refused the music until the page is clicked: time runs on the clock alone, Play brings the music
+  const silent = useRef(false);
+  const [muted, setMuted] = useState(false);
   const [art, setArt] = useState<Art>();
   const [playing, setPlaying] = useState(false);
   const [audioDuration, setAudioDuration] = useState(0);
@@ -126,7 +142,7 @@ export function ChartPlayer({
   );
 
   const now = () => {
-    if (audio.current) return audio.current.currentTime - leadRef.current;
+    if (audio.current && !silent.current) return audio.current.currentTime - leadRef.current;
     const c = clock.current;
     return c.playing ? c.base + ((performance.now() - c.wall) / 1000) * c.rate : c.base;
   };
@@ -135,14 +151,28 @@ export function ChartPlayer({
     const song = audio.current;
     if (song) {
       song.currentTime = Math.max(0, t + leadRef.current);
-      if (play) void song.play();
+      if (play)
+        song.play().then(
+          () => {
+            silent.current = false;
+            setMuted(false);
+          },
+          () => {
+            silent.current = true;
+            setMuted(true);
+          },
+        );
       else song.pause();
     }
     setPlaying(play);
   };
 
+  // a live play starts playing, which a browser allows once the page was clicked (the player picked)
   // biome-ignore lint/correctness/useExhaustiveDependencies: seek only reads refs; start over per chart.
-  useEffect(() => seek(startAt, false), [chart, startAt]);
+  useEffect(() => {
+    if (live) hitSounds.start();
+    seek(startAt, live !== undefined);
+  }, [chart, startAt]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: now/seek only read refs; restart the loop per chart.
   useEffect(() => {
@@ -160,6 +190,24 @@ export function ChartPlayer({
       if (t > duration) {
         t = duration;
         seek(t, false);
+      }
+      const head = live && live() - LIVE_MARGIN;
+      if (head !== undefined && clock.current.playing && t > head) {
+        t = Math.max(start, head);
+        seek(t, false);
+        stalled.current = true;
+      } else if (head !== undefined && stalled.current && head - t > LIVE_RESUME) {
+        stalled.current = false;
+        seek(t, true);
+      } else if (head !== undefined && behind.current && head - t > LIVE_DELAY + LIVE_RESUME) {
+        // what came at once (a play followed late) is skipped to near where it is. a skip that didn't take (music
+        // from a server without ranges can't seek) isn't asked again every frame
+        behind.current = t >= jumped.current - LIVE_RESUME;
+        if (behind.current) {
+          t = head + LIVE_MARGIN - LIVE_DELAY;
+          jumped.current = t;
+          seek(t, clock.current.playing);
+        }
       }
       // notes passed since the last frame get their hit sound, unless that jump was a seek
       const prev = lastT.current;
@@ -191,12 +239,16 @@ export function ChartPlayer({
     };
     tick();
     return () => cancelAnimationFrame(frame);
-  }, [chart, duration, start, title, level, art, hitSounds, overlay, play, mods]);
+  }, [chart, duration, start, title, level, art, hitSounds, overlay, play, mods, live]);
 
+  // a live play starts near where its player is
   const toggle = () => {
     hitSounds.start();
-    const t = now();
-    seek(t >= duration ? 0 : t, !playing);
+    stalled.current = false;
+    behind.current = true;
+    jumped.current = Number.NEGATIVE_INFINITY;
+    const t = live && !muted ? Math.max(start, live() - LIVE_DELAY) : now();
+    seek(t >= duration ? 0 : t, muted || !playing);
   };
 
   const changeRate = (speed: number) => {
@@ -243,7 +295,7 @@ export function ChartPlayer({
       </div>
       <div className="chart-player-transport">
         <button type="button" className="btn chart-player-play" onClick={toggle}>
-          {playing ? t.player.pause : t.player.play}
+          {playing && !muted ? t.player.pause : t.player.play}
         </button>
         <button type="button" className="btn btn-ghost" onClick={jumpToFirstNote}>
           {t.player.firstNote}
@@ -267,7 +319,10 @@ export function ChartPlayer({
           label={t.player.position}
           boxRef={scrubBox}
           inputRef={scrub}
-          onChange={(t) => seek(t, playing)}
+          onChange={(t) => {
+            behind.current = false;
+            seek(t, playing);
+          }}
         >
           {marks.map(([key, mark]) => (
             <span
@@ -281,40 +336,43 @@ export function ChartPlayer({
         <span className="num chart-player-time">{clockTime(duration)}</span>
       </div>
       <section className="panel chart-player-settings" aria-label={t.player.settings}>
-        <div className="player-setting">
-          <div className="player-setting-head">
-            <span>{t.player.speed}</span>
-            <span className="num">{rate.toFixed(2)}×</span>
+        {/* a live play keeps to its player's speed */}
+        {!live && (
+          <div className="player-setting">
+            <div className="player-setting-head">
+              <span>{t.player.speed}</span>
+              <span className="num">{rate.toFixed(2)}×</span>
+            </div>
+            <div className="stepper">
+              <button
+                type="button"
+                className="step"
+                aria-label={t.player.slower}
+                disabled={rate <= SPEEDS[0]!}
+                onClick={() => changeRate(SPEEDS.findLast((speed) => speed < rate) ?? rate)}
+              >
+                −
+              </button>
+              <Slider
+                value={rate}
+                min={0.1}
+                max={2}
+                step={0.05}
+                label={t.player.speed}
+                onChange={changeRate}
+              />
+              <button
+                type="button"
+                className="step"
+                aria-label={t.player.faster}
+                disabled={rate >= SPEEDS.at(-1)!}
+                onClick={() => changeRate(SPEEDS.find((speed) => speed > rate) ?? rate)}
+              >
+                +
+              </button>
+            </div>
           </div>
-          <div className="stepper">
-            <button
-              type="button"
-              className="step"
-              aria-label={t.player.slower}
-              disabled={rate <= SPEEDS[0]!}
-              onClick={() => changeRate(SPEEDS.findLast((speed) => speed < rate) ?? rate)}
-            >
-              −
-            </button>
-            <Slider
-              value={rate}
-              min={0.1}
-              max={2}
-              step={0.05}
-              label={t.player.speed}
-              onChange={changeRate}
-            />
-            <button
-              type="button"
-              className="step"
-              aria-label={t.player.faster}
-              disabled={rate >= SPEEDS.at(-1)!}
-              onClick={() => changeRate(SPEEDS.find((speed) => speed > rate) ?? rate)}
-            >
-              +
-            </button>
-          </div>
-        </div>
+        )}
         <div className="player-setting">
           <div className="player-setting-head">
             <span>{t.player.musicVolume}</span>

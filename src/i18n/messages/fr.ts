@@ -200,6 +200,17 @@ export const fr = {
     matches: "Matchs",
     total: "Total",
     latest: (chart: string, ranking: string) => `Dernier match, ${chart} : ${ranking}`,
+    watch: "Regarder",
+    watchTitle: "Regarder ce salon",
+    watchText:
+      "Saisis le mot de passe du salon pour le voir comme ses joueurs, et regarder leurs parties.",
+    wrongPassword: "Ce n'est pas le mot de passe du salon.",
+    tooMany: "Trop de monde regarde ce salon, réessaie plus tard.",
+    spectating: "Spectateur",
+    watchers: (n: number) => `${n} spectateurs`,
+    watchPlay: "Regarder",
+    live: "En direct",
+    waitingPlay: "En attente de sa partie",
   },
   song: {
     notFoundBody: "Aucun morceau avec cet identifiant dans le catalogue.",

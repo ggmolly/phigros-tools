@@ -200,6 +200,17 @@ export const ms = {
     matches: "Perlawanan",
     total: "Jumlah",
     latest: (chart: string, ranking: string) => `Perlawanan terkini, ${chart}: ${ranking}`,
+    watch: "Tonton",
+    watchTitle: "Tonton bilik ini",
+    watchText:
+      "Taip kata laluan bilik untuk melihatnya seperti pemainnya, dan menonton permainan mereka.",
+    wrongPassword: "Itu bukan kata laluan bilik ini.",
+    tooMany: "Terlalu ramai menonton bilik ini, cuba lagi nanti.",
+    spectating: "Penonton",
+    watchers: (n: number) => `${n} menonton`,
+    watchPlay: "Tonton",
+    live: "Langsung",
+    waitingPlay: "Menunggu permainannya",
   },
   song: {
     notFoundBody: "Tiada lagu dengan ID ini dalam katalog.",
