@@ -593,6 +593,7 @@ export const ja = {
     patchWorking: "IPA にパッチを当てています…",
     patchReady: (seconds: string) => `Phigros++.ipa ができました（${seconds} 秒）。`,
     patchDownload: "Phigros++.ipa をダウンロード",
+    patchDetails: "パッチの詳細",
     patchNoPack:
       "現在 phigros.tools には、リリース鍵で署名されたパッチ用の Phigros++ がありません。しばらくしてからもう一度お試しください。",
     patchEncrypted:

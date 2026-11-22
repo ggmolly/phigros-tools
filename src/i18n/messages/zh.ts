@@ -562,6 +562,7 @@ export const zh = {
     patchWorking: "正在修补 IPA…",
     patchReady: (seconds: string) => `Phigros++.ipa 已就绪，修补用时 ${seconds} 秒。`,
     patchDownload: "下载 Phigros++.ipa",
+    patchDetails: "修补详情",
     patchNoPack: "phigros.tools 目前没有用发布密钥签名、可用于修补的 Phigros++。请稍后再试。",
     patchEncrypted: "这个 IPA 仍是加密的，和 App Store 的所有副本一样。只有解密后的 IPA 才能修补。",
     patchUnsupported: (game: string, games: string) =>

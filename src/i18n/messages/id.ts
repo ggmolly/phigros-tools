@@ -590,6 +590,7 @@ export const id = {
     patchWorking: "Menambal IPA…",
     patchReady: (seconds: string) => `Phigros++.ipa sudah siap, ditambal dalam ${seconds} detik.`,
     patchDownload: "Unduh Phigros++.ipa",
+    patchDetails: "Detail penambalan",
     patchNoPack:
       "Saat ini phigros.tools belum punya Phigros++ bertanda tangan kunci rilisnya untuk menambal. Coba lagi nanti.",
     patchEncrypted:

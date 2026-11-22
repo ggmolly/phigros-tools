@@ -596,6 +596,7 @@ export const de = {
     patchWorking: "Die IPA wird gepatcht…",
     patchReady: (seconds: string) => `Phigros++.ipa ist fertig, gepatcht in ${seconds} s.`,
     patchDownload: "Phigros++.ipa herunterladen",
+    patchDetails: "Details zum Patchen",
     patchNoPack:
       "phigros.tools hat gerade kein Phigros++ zum Patchen, das mit dem Release-Schlüssel signiert ist. Versuch es später noch einmal.",
     patchEncrypted:

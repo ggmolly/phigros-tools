@@ -583,6 +583,7 @@ export const ko = {
     patchWorking: "IPA를 패치하는 중…",
     patchReady: (seconds: string) => `${seconds}초 만에 패치된 Phigros++.ipa가 준비되었습니다.`,
     patchDownload: "Phigros++.ipa 다운로드",
+    patchDetails: "패치 세부 정보",
     patchNoPack:
       "지금 phigros.tools에는 릴리스 키로 서명된 패치용 Phigros++가 없습니다. 나중에 다시 시도하세요.",
     patchEncrypted:

@@ -588,6 +588,7 @@ export const vi = {
     patchWorking: "Đang vá tệp IPA…",
     patchReady: (seconds: string) => `Phigros++.ipa đã sẵn sàng, vá xong trong ${seconds} giây.`,
     patchDownload: "Tải Phigros++.ipa về",
+    patchDetails: "Chi tiết vá",
     patchNoPack:
       "Hiện phigros.tools chưa có bản Phigros++ nào được ký bằng khóa phát hành để vá. Hãy thử lại sau.",
     patchEncrypted:

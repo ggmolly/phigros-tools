@@ -592,6 +592,7 @@ export const ms = {
     patchWorking: "Menampal IPA…",
     patchReady: (seconds: string) => `Phigros++.ipa sudah sedia, ditampal dalam ${seconds} saat.`,
     patchDownload: "Muat turun Phigros++.ipa",
+    patchDetails: "Butiran tampalan",
     patchNoPack:
       "Buat masa ini phigros.tools tiada Phigros++ yang ditandatangani dengan kunci keluarannya untuk menampal. Cuba lagi nanti.",
     patchEncrypted:

@@ -311,6 +311,11 @@
   outline: 2px solid var(--glow);
   outline-offset: 3px;
 }
+.patcher-details > summary {
+  padding: 0 1.25rem 1rem;
+  color: var(--dim);
+  cursor: pointer;
+}
 .patcher-found {
   display: grid;
   grid-template-columns: minmax(0, 1fr);

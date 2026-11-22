@@ -415,7 +415,13 @@ export function Patcher() {
           </label>
         </div>
       </div>
-      {run && <Found run={run} />}
+      {run && (
+        // the debug output, opened by a failure so its log says why
+        <details className="patcher-details" open={!!failure || undefined}>
+          <summary>{p.patchDetails}</summary>
+          <Found run={run} />
+        </details>
+      )}
     </div>
   );
 }
