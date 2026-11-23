@@ -1,5 +1,5 @@
 import type { SaveDocumentV1 } from "./document";
-import data from "./keys.json";
+import { onGame } from "./game";
 import type { GameKey, GameProgress, SongRecord } from "./modules";
 
 /**
@@ -10,15 +10,23 @@ import type { GameKey, GameProgress, SongRecord } from "./modules";
 
 /** The kinds of key, in the game's order (Key.kindOfKey). A key's value sits one slot after its kind's index. */
 export const KEY_KINDS = ["song", "collection", "illustration", "avatar"] as const;
-const { keys, songKeys, gates, chapters, legacy } = data as unknown as {
+/** keys.json, made by scripts/build-keys.ts */
+export interface KeysFile {
   keys: Record<string, number>[];
   songKeys: Record<string, string>;
   gates: Record<string, string[][]>;
   chapters: { songs: string[]; gate: string | number; score: number }[];
   legacy: string[];
-};
+}
 /** Every key of each kind, and how many times it's found to be whole. */
-export const KEYS = keys;
+export let KEYS: KeysFile["keys"];
+let songKeys: KeysFile["songKeys"];
+let gates: KeysFile["gates"];
+let chapters: KeysFile["chapters"];
+let legacy: KeysFile["legacy"];
+onGame(({ keys }) => {
+  ({ keys: KEYS, songKeys, gates, chapters, legacy } = keys);
+});
 
 type Save = Pick<SaveDocumentV1, "gameKey" | "gameProgress">;
 /** Where a save holds a pref: the module, its field, and the field's bit (true for a field of its own). */

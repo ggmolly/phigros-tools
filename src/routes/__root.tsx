@@ -12,6 +12,7 @@ import { Backdrop, SiteFooter, SiteHeader } from "../components/chrome";
 import { getHome } from "../home";
 import { I18nProvider, useT } from "../i18n";
 import type { Locale } from "../i18n/locales";
+import { game } from "../game";
 import { fogStyle } from "../palettes";
 import { watchErrors } from "../report";
 import { SaveProvider } from "../save-context";
@@ -70,6 +71,7 @@ export const Route = createRootRouteWithContext<{ i18n: { locale: Locale } }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       // sizes are in rem, so the page can follow the system's text size (Chrome on Android)
       { name: "text-scale", content: "scale" },
+      { name: "game", content: game().version },
       ...pageMeta({
         title: SITE_NAME,
         description: headT(match).t.seo.siteDescription,
@@ -78,6 +80,12 @@ export const Route = createRootRouteWithContext<{ i18n: { locale: Locale } }>()(
       }),
     ],
     links: [
+      {
+        rel: "preload",
+        href: `/game.json?v=${game().version}`,
+        as: "fetch",
+        crossOrigin: "anonymous",
+      },
       {
         rel: "preload",
         href: "/fonts/Saira.woff2",

@@ -5,7 +5,7 @@ import { LEVELS } from "./modules";
 
 /*
  * How alike two charts are built (patterns, movement, rhythm, line choreography), from the vectors that
- * scripts/build-chart-similarity.ts writes to public/chart-similarity.bin. The file is small (~32 KB) and static,
+ * scripts/build-chart-similarity.ts writes to data/game/chart-similarity.bin. The file is small (~32 KB) and static,
  * so it's fetched once by the browser and every comparison runs client-side.
  *
  * File: "PHSM", u8 schema version, u8 dims, u16 LE chart count, u8 revision length, the catalog revision, then one

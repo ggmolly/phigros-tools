@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { type CatalogSong, catalogSong, catalogSongs, searchFold } from "../catalog";
 import { blankDocument, parseJsonDocument, type SaveDocumentV1 } from "../document";
+import { onGame } from "../game";
 import { Rich, useFormat, useT } from "../i18n";
 import { calculateRanking, chartRks } from "../metrics";
 import { LEVELS, type LevelRecord, type SongRecord } from "../modules";
@@ -21,14 +22,17 @@ interface Chart {
   fold: string;
 }
 /** Every chart from the hardest: a player's best ones, which make their RKS, sit near the top of what they play. */
-const CHARTS: Chart[] = catalogSongs
-  .flatMap((song) => {
-    const fold = searchFold(song.title, song.artist, ...(song.romanized ?? []));
-    return song.constants.flatMap((constant, level) =>
-      constant ? [{ song, level, constant, fold }] : [],
-    );
-  })
-  .sort((a, b) => b.constant - a.constant);
+let allCharts: Chart[];
+onGame(() => {
+  allCharts = catalogSongs
+    .flatMap((song) => {
+      const fold = searchFold(song.title, song.artist, ...(song.romanized ?? []));
+      return song.constants.flatMap((constant, level) =>
+        constant ? [{ song, level, constant, fold }] : [],
+      );
+    })
+    .sort((a, b) => b.constant - a.constant);
+});
 
 type Typed = { record: LevelRecord; fc: boolean } | null;
 
@@ -203,7 +207,7 @@ export function Rebuild() {
   const songs = new Map(draft.songs.map((song) => [song.songId, song]));
   const ranking = calculateRanking({ songs: draft.songs });
   const fold = searchFold(query);
-  const charts = CHARTS.filter(
+  const charts = allCharts.filter(
     (chart) =>
       (level === "" || chart.level === Number(level)) &&
       chart.fold.includes(fold) &&

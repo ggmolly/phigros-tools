@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { serverFetch } from "nitro/app";
-import accents from "./accents.json";
+import { game } from "./game";
 /** The leaderboard, from players' uploaded bests: `GET /api/players`, `GET /api/charts` and `GET /api/charts/<id>/<level>`. */
 
 /** A player as the site shows them: their avatar and name#number, and the id their page is at. */
@@ -171,8 +171,7 @@ async function api<T>(path: string): Promise<T | null> {
 }
 
 // a song's cover colour (scripts/build-accents.ts), the stripe of its link previews like on the chart pages
-const accentOf = (song: string | undefined): string | undefined =>
-  song && (accents as Record<string, string>)[song];
+const accentOf = (song: string | undefined): string | undefined => song && game().accents![song];
 
 /** A player's page with the colour of their illustration, else of their top chart, null for an unknown id. */
 export const getProfile = createServerFn({ method: "GET" })

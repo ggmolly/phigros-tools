@@ -16,8 +16,7 @@ import { useFormat, useT } from "../i18n";
 import { LEVELS } from "../modules";
 import { breadcrumbs, chartsImage, headT, jsonLd, localeUrl, pageLinks, pageMeta } from "../seo";
 
-const CHAPTERS = [...new Set(catalogSongs.map((song) => song.chapter))].sort();
-const CHART_TOTAL = catalogChartTotals.reduce((sum, total) => sum + total, 0);
+const chapters = () => [...new Set(catalogSongs.map((song) => song.chapter))].sort();
 
 export const Route = createFileRoute("/charts/")({
   // Filters live in the URL, so song pages and artist names can link straight to a filtered list.
@@ -33,7 +32,13 @@ export const Route = createFileRoute("/charts/")({
       undefined,
     ),
     chapter: v.fallback(
-      v.optional(v.pipe(v.string(), v.transform(canonicalChapter), v.picklist(CHAPTERS))),
+      v.optional(
+        v.pipe(
+          v.string(),
+          v.transform(canonicalChapter),
+          v.check((chapter) => chapters().includes(chapter)),
+        ),
+      ),
       undefined,
     ),
     view: v.fallback(v.optional(v.literal("gallery")), undefined),
@@ -44,9 +49,9 @@ export const Route = createFileRoute("/charts/")({
       meta: pageMeta({
         title: t.seo.chartsTitle,
         description: t.seo.chartsDescription(
-          CHART_TOTAL,
+          catalogChartTotals.reduce((sum, total) => sum + total, 0),
           catalogSongs.length,
-          CHAPTERS.length,
+          chapters().length,
           String(catalogManifest.gameVersion),
         ),
         path: "/charts",
@@ -132,7 +137,7 @@ function ChartsPage() {
                 onChange={(e) => setFilter("chapter", e.target.value)}
               >
                 <option value="">{t.charts.allChapters}</option>
-                {CHAPTERS.map((name) => (
+                {chapters().map((name) => (
                   <option key={name} value={name}>
                     {name}
                   </option>

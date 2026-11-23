@@ -5,6 +5,8 @@ const TYPES: Record<string, string> = {
   json: "application/json",
   txt: "text/plain; charset=utf-8",
   jpg: "image/jpeg",
+  avif: "image/avif",
+  ttf: "font/ttf",
   webm: "audio/webm",
   mp4: "video/mp4",
 };

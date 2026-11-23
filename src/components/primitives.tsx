@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode, Ref } from "react";
-import avatars from "../avatars.json";
+import { game } from "../game";
 import { useFormat, useT } from "../i18n";
 import { LEVELS } from "../modules";
 
@@ -169,8 +169,8 @@ export function dataAmount(money: readonly number[]) {
  * the site doesn't have yet (a newer game's) shows as the default too, like in Phigros++.
  */
 export function avatarUrl(name: string) {
-  const files: Record<string, string> = avatars;
-  const file = files[name] ?? files.Introduction!;
+  const { avatars } = game();
+  const file = avatars[name] ?? avatars.Introduction!;
   return `/avatars/${encodeURIComponent(file)}.avif`;
 }
 

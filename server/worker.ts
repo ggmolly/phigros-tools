@@ -9,6 +9,7 @@ import { topics } from "../src/topics";
 import { db, lock } from "./db";
 import { announceRank } from "./discord";
 import { expireEvents } from "./events";
+import { followGame, GAME_DIR, loadGame } from "./game";
 import { refreshIos } from "./ios";
 import { flush, log } from "./log";
 import { refreshMods } from "./mods";
@@ -24,7 +25,8 @@ import { replays } from "./schema";
 // the players' daily RKS history. a replay of a game version whose charts the site doesn't
 // have stays pending. it also keeps the mod catalog and what patches the ios game up to date. run beside the server:
 // bun worker.mjs
-const CHARTS = process.env.CHART_DIR ?? "./public/chart-data";
+loadGame();
+const CHARTS = `${GAME_DIR}/chart-data`;
 const RESULT = ["score", "maxcombo", "perfect", "good", "bad", "miss", "early", "late"] as const;
 
 // how fast the song ran against real time: the median of what a frame's song time moved over its delta time, which
@@ -126,6 +128,14 @@ const pending = await db
   .from(replays)
   .where(eq(replays.status, "pending"));
 for (const { sha256 } of pending) await attempt(sha256);
+// a game update brings the charts the replays of its version waited for
+followGame(async () => {
+  const waiting = await db
+    .select({ sha256: replays.sha256 })
+    .from(replays)
+    .where(eq(replays.status, "pending"));
+  for (const { sha256 } of waiting) await attempt(sha256);
+});
 // one at a time: the next is only handed over once this one is judged
 await channel.consume(VERIFY_QUEUE, (message) => {
   if (message) void attempt(message.content.toString()).then(() => channel.ack(message));

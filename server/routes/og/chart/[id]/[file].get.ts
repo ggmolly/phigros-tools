@@ -1,17 +1,13 @@
 import { defineHandler, getQuery, HTTPError } from "nitro/h3";
 import satori from "satori";
 import sharp from "sharp";
-import catalog from "../../../../../src/catalog.json";
-import stats from "../../../../../src/chart-stats.json";
+import { catalogSong } from "../../../../../src/catalog";
+import { game } from "../../../../../src/game";
 
 const LEVELS = ["EZ", "HD", "IN", "AT"];
 const W = 1200;
 const H = 630;
 const TAN = 0.25;
-const songs = new Map(
-  (catalog.songs as { id: string; constants: (number | null)[] }[]).map((song) => [song.id, song]),
-);
-const lengths = stats.songs as Record<string, ({ lengthSec: number } | null)[]>;
 
 let font: Promise<ArrayBuffer> | undefined;
 
@@ -26,7 +22,7 @@ const box = (style: Record<string, unknown>, children?: unknown) => ({
 
 export default defineHandler(async (event) => {
   const { id, file } = event.context.params as { id: string; file: string };
-  const song = songs.get(decodeURIComponent(id));
+  const song = catalogSong(decodeURIComponent(id));
   const level = /^(EZ|HD|IN|AT)\.jpg$/.exec(file)?.[1];
   const index = level ? LEVELS.indexOf(level) : -1;
   if (!song || index < 0 || song.constants[index] == null) throw new HTTPError({ status: 404 });
@@ -36,7 +32,7 @@ export default defineHandler(async (event) => {
   if (!base.ok) throw new HTTPError({ status: 404 });
   font ??= fetch(`${origin}/fonts/card/Saira-500.ttf`).then((res) => res.arrayBuffer());
 
-  const length = lengths[song.id]?.[index]?.lengthSec ?? 0;
+  const length = game().chartStats![song.id]?.[index]?.lengthSec ?? 0;
   const requested = Math.floor(Number(getQuery(event).t));
   const t = Number.isFinite(requested) ? Math.min(Math.max(requested, 0), Math.floor(length)) : 0;
   const p = length > 0 ? t / length : 0;

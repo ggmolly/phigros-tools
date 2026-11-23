@@ -122,8 +122,7 @@ The tables are declared in `server/schema.ts` (Drizzle). After changing them, `b
 
 Production: `bun run build && bun run start`, with the replay worker beside it: `bun .output/worker.mjs`. They share
 `data/`, a PostgreSQL database (`DATABASE_URL`, `postgres://phigros@localhost/phigros` by default) and a RabbitMQ
-queue (`AMQP_URL`, `amqp://localhost` by default), and the worker reads charts from `CHART_DIR`
-(`./public/chart-data`).
+queue (`AMQP_URL`, `amqp://localhost` by default), and the game's data in `GAME_DIR` (`./data/game`, see Data).
 
 Both write one JSON line per event to stdout (`server/log.ts`): each request with its route, status and duration, what
 happens in rooms and between friends, the replays judged, and the errors pages report. A line names a signed-in
@@ -133,14 +132,10 @@ on phigros.tools, and `/admin` shows them with the pages seen to the players `ad
 
 ## Data
 
-Songs, constants, charters, chapters, covers and chart stats all come from the game's APK. To refresh after a game update:
-
-```sh
-cd ../extract && .venv/bin/python export_game_info.py   # song database -> game_info.json
-cd ../web && bun scripts/build-catalog.ts ../extract/game_info.json
-```
-
-The export reads the APKs' `assets/bin/Data` unzipped into `../extract/game_data/` (see the script's header). The other `scripts/build-*.ts` regenerate chart stats, covers, avatars, share-card fonts, palettes, accent colours and the sitemap; each file's header says what it reads.
+Songs, constants, charters, chapters, covers, music, charts and avatars all come from the game's APK and aren't in
+this repository: they live in `data/game/` (`server/game.ts`), so a game update reaches the site without a deploy. An
+updater made from the APK on Google Play keeps it on the latest build; the server and the worker load each version it
+publishes within 30 seconds, and the browser gets what it needs of it from `/game.json` (`src/client.tsx`).
 
 ## Credits
 

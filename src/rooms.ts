@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { serverFetch } from "nitro/app";
-import accents from "./accents.json";
+import { game } from "./game";
 import type { PlayerName } from "./plays";
 
 /**
@@ -148,5 +148,5 @@ export const getRoom = createServerFn({ method: "GET" })
   .handler(async ({ data: id }) => {
     const page = await api<RoomPage>(`/api/rooms/${encodeURIComponent(id)}`);
     const song = page?.room?.chart?.song ?? page?.matches[0]?.song;
-    return page && { ...page, themeColor: song && (accents as Record<string, string>)[song] };
+    return page && { ...page, themeColor: song && game().accents![song] };
   });
