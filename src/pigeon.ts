@@ -359,3 +359,229 @@ export function decodeReplay(
   }
   return { header, frames };
 }
+
+// the encoder of mod/phigrospp/lua/replayfile.lua, for the seeder (server/seed.ts): the same coder writing what the
+// decoder above reads. low can carry past 32 bits, so it's kept in a number rather than with bitwise ops
+class Encoder {
+  private range = U32 - 1;
+  private low = 0;
+  private cache = 0;
+  private pending = 1;
+  private readonly out: number[] = [];
+  readonly contexts = new Map<string, Map<number, number> | number>();
+
+  // LZMA's carry handling: a byte is held until no carry can reach it
+  private shift() {
+    if (this.low < 0xff000000 || this.low > U32 - 1) {
+      const carry = Math.floor(this.low / U32);
+      let byte = this.cache;
+      do {
+        this.out.push((byte + carry) & 0xff);
+        byte = 0xff;
+      } while (--this.pending !== 0);
+      this.cache = Math.floor(this.low / TOP) & 0xff;
+    }
+    this.pending++;
+    this.low = (this.low % TOP) * 256;
+  }
+
+  private normalize() {
+    while (this.range < TOP) {
+      this.range = (this.range * 256) % U32;
+      this.shift();
+    }
+  }
+
+  bit(probs: Map<number | string, number>, key: number | string, b: number) {
+    const state = probs.get(key) ?? ONE << 4;
+    let p = state >> 5;
+    const n = state & 31;
+    const bound = Math.floor(this.range / ONE) * p;
+    if (b === 0) {
+      this.range = bound;
+      p += Math.floor((ONE - p) / (n + 2));
+    } else {
+      this.low += bound;
+      this.range -= bound;
+      p -= Math.floor(p / (n + 2));
+    }
+    probs.set(key, (p << 5) | Math.min(n + 1, LIMIT));
+    this.normalize();
+  }
+
+  flag(name: string, b: number) {
+    this.bit(this.contexts as Map<number | string, number>, name, b);
+  }
+
+  private raw(n: number, v: number) {
+    for (let i = n - 1; i >= 0; i--) {
+      this.range = Math.floor(this.range / 2);
+      if (Math.floor(v / 2 ** i) % 2) this.low += this.range;
+      this.normalize();
+    }
+  }
+
+  int(name: string, v: number) {
+    let probs = this.contexts.get(name) as Map<number, number> | undefined;
+    if (!probs) {
+      probs = new Map();
+      this.contexts.set(name, probs);
+    }
+    const a = Math.abs(v);
+    const n = bucket(a, 63);
+    let node = 1;
+    for (let i = 5; i >= 0; i--) {
+      const b = (n >> i) & 1;
+      this.bit(probs, node, b);
+      node = node * 2 + b;
+    }
+    if (n === 0) return v;
+    this.bit(probs, 64, v < 0 ? 1 : 0);
+    const below = n - 1;
+    const adaptive = Math.min(MANT, below);
+    let m = 1;
+    for (let i = 1; i <= adaptive; i++) {
+      const b = Math.floor(a / 2 ** (below - i)) % 2;
+      this.bit(probs, 100 + (n << (MANT + 1)) + m, b);
+      m = m * 2 + b;
+    }
+    const rest = below - adaptive;
+    if (rest > 0) this.raw(rest, a % 2 ** rest);
+    return v;
+  }
+
+  finish() {
+    for (let i = 0; i < 5; i++) this.shift();
+    return this.out;
+  }
+}
+
+/**
+ * A replay of these frames, its touches on whole pixels. The game's other clocks are written as predicted from the
+ * delta times, as nothing on the site reads them.
+ */
+export function encodeReplay(header: ReplayHeader, frames: ReplayFrame[]): Uint8Array {
+  const version = header.mods ? 6 : 5;
+  const head: number[] = [...MAGIC].map((char) => char.charCodeAt(0));
+  const put = (n: number, write: (view: DataView) => void) => {
+    const view = new DataView(new ArrayBuffer(n));
+    write(view);
+    head.push(...new Uint8Array(view.buffer));
+  };
+  const text = (value: string, width: number) => {
+    const bytes = new TextEncoder().encode(value);
+    put(width, (view) =>
+      width === 1 ? view.setUint8(0, bytes.length) : view.setUint16(0, bytes.length, true),
+    );
+    head.push(...bytes);
+  };
+  const write: Record<Format, (v: string | number) => void> = {
+    B: (v) => put(1, (view) => view.setUint8(0, +v)),
+    s1: (v) => text(`${v}`, 1),
+    s2: (v) => text(`${v}`, 2),
+    I2: (v) => put(2, (view) => view.setUint16(0, +v, true)),
+    i2: (v) => put(2, (view) => view.setInt16(0, +v, true)),
+    I4: (v) => put(4, (view) => view.setUint32(0, +v, true)),
+    i4: (v) => put(4, (view) => view.setInt32(0, +v, true)),
+    i8: (v) => put(8, (view) => view.setBigInt64(0, BigInt(v), true)),
+    f: (v) => put(4, (view) => view.setFloat32(0, +v, true)),
+    d: (v) => put(8, (view) => view.setFloat64(0, +v, true)),
+  };
+  write.B(version);
+  for (const [name, format] of FIELDS.slice(0, version === 5 ? -2 : undefined))
+    write[format](header[name]);
+
+  // the steps of frames() in replayfile.lua, with the grid of whole pixels
+  const c = new Encoder();
+  const grid = 10;
+  c.int("count", frames.length);
+  c.int("grid", grid);
+  let t1 = 0;
+  let guess = 0;
+  let rdt = 0;
+  let fix = 0;
+  let fix2 = 0;
+  let fingers: Finger[] = [];
+  for (const frame of frames) {
+    rdt = c.int(`dt${near(Math.floor(rdt / 8), 6)}`, ordf(frame.dt) - guess);
+    const dt = unordf(guess + rdt);
+    guess += Math.floor(rdt / 2);
+    const step = ordf(Math.fround(t1 + dt));
+    const correction = c.int(
+      `t${signedBucket(fix, 3)}.${signedBucket(fix - fix2, 3)}`,
+      ordf(frame.t) - step - fix,
+    );
+    fix2 = fix;
+    fix += correction;
+
+    const alive = fingers.filter((f) => f.phase !== ENDED && f.phase !== CANCELED);
+    const used = new Set(alive.map((f) => f.id));
+    const { touches } = frame;
+    const regular = alive.every((f, i) => touches[i]?.id === f.id);
+    c.flag("regular", regular ? 1 : 0);
+    const order: (Finger | undefined)[] = [];
+    if (regular) {
+      order.push(...alive);
+      for (let i = c.int("new", touches.length - alive.length); i > 0; i--) order.push(undefined);
+    } else {
+      const byId = new Map(alive.map((f) => [f.id, f]));
+      c.int("listed", touches.length);
+      for (const touch of touches) order.push(byId.get(c.int("id", touch.id)));
+    }
+
+    fingers = touches.map((touch, i) => {
+      const last = order[i];
+      const split = (v: number) => {
+        const n = Math.floor((v * 1024 * grid + 512) / 1024);
+        return [n, v * 1024 - join(n, 0, grid)] as const;
+      };
+      const [nx, rx] = split(touch.x);
+      const [ny, ry] = split(touch.y);
+      if (last) {
+        const phase = c.int(`phase${last.phase}${last.moves}`, touch.phase);
+        const moved = nx !== last.nx || rx !== last.rx || ny !== last.ny || ry !== last.ry ? 1 : 0;
+        c.flag(`moved${phase}${last.moves}`, moved);
+        const f = { ...last, phase, moves: ((last.moves << 1) | moved) & 3 };
+        if (moved) {
+          f.vx = last.vx + c.int(`dx${phase}`, nx - last.nx - last.vx);
+          f.vy = last.vy + c.int(`dy${phase}.${bucket(f.vx - last.vx, 8)}`, ny - last.ny - last.vy);
+          f.nx = nx;
+          f.ny = ny;
+          f.rx = c.int(`rx${near(f.vx, 2)}${last.rx === 0 ? "=" : ""}`, rx);
+          f.ry = c.int(`ry${near(f.vy, 2)}${f.rx === 0 ? "=" : ""}`, ry);
+        }
+        used.add(f.id);
+        return f;
+      }
+      if (regular) {
+        let free = 0;
+        while (used.has(free)) free++;
+        c.int("newid", touch.id - free);
+      }
+      const f = {
+        id: touch.id,
+        phase: c.int("phase", touch.phase),
+        nx,
+        ny,
+        rx,
+        ry,
+        vx: 0,
+        vy: 0,
+        moves: 0,
+      };
+      c.int("x", nx);
+      c.int("y", ny);
+      c.int("rx", rx);
+      c.int(`ry${rx === 0 ? "=" : ""}`, ry);
+      used.add(f.id);
+      return f;
+    });
+
+    // the clocks as predicted: unscaled delta time, time scale, monotonic, realtime, audio step, music, focus
+    for (const name of ["udt", "scale", "mono", "real", "dsp0", "music"]) c.int(name, 0);
+    c.flag("focus1", 1);
+    t1 = unordf(step + fix);
+  }
+  c.int("events", 0);
+  return new Uint8Array([...head, ...c.finish()]);
+}
