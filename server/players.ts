@@ -1,6 +1,8 @@
 import { eq, sql } from "drizzle-orm";
 import { HTTPError } from "nitro/h3";
 import type { PlayerName } from "../src/plays";
+import { ROLES, type Role } from "../src/roles";
+import { config } from "./config";
 import { db, lock, type Tx } from "./db";
 import * as t from "./schema";
 
@@ -12,6 +14,15 @@ export async function markSeen(key: Uint8Array) {
 const NUMBERS = 9999;
 const NAME_LENGTH = 32;
 const INTRO_LENGTH = 500;
+
+/** The public keys (hex) holding each role, as data/config.toml names them. */
+const HOLDERS: Record<Role, string[]> = { admin: config.admins };
+
+/** The roles of a profile's key. */
+export function rolesOf(key: Uint8Array): Role[] {
+  const hex = Buffer.from(key).toString("hex");
+  return ROLES.filter((role) => HOLDERS[role].includes(hex));
+}
 
 /** The first 12 hex characters of the key: the player's id in URLs. */
 export const playerId = (key: Uint8Array) => Buffer.from(key.subarray(0, 6)).toString("hex");

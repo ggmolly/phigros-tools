@@ -66,6 +66,35 @@
 .hero-rks::before {
   background: var(--white);
 }
+/* The player's roles, small tags resting on the RKS tag's top edge. */
+.role-tags {
+  position: absolute;
+  bottom: 100%;
+  left: 1.5rem;
+  display: flex;
+  gap: 0.5rem;
+}
+.role-tag {
+  position: relative;
+  isolation: isolate;
+  padding: 0.125rem 0.875rem;
+  color: var(--white);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.role-tag::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  transform: skewX(var(--skew));
+}
+.role-admin::before {
+  background: var(--in);
+}
 .hero-rks-label {
   font-size: 1.125rem;
   font-weight: 500;

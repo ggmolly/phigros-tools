@@ -147,6 +147,15 @@
   .hero-rks-label {
     font-size: 0.9375rem;
   }
+  /* at the band's right end, clear of the name above */
+  .role-tags {
+    right: 1rem;
+    left: auto;
+  }
+  .role-tag {
+    padding: 0 0.625rem;
+    font-size: 0.75rem;
+  }
   .ranking-number {
     font-size: 2.25rem;
   }

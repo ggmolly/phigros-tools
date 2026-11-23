@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { serverFetch } from "nitro/app";
 import { game } from "./game";
+import type { Role } from "./roles";
 /** The leaderboard, from players' uploaded bests: `GET /api/players`, `GET /api/charts` and `GET /api/charts/<id>/<level>`. */
 
 /** A player as the site shows them: their avatar and name#number, and the id their page is at. */
@@ -130,6 +131,8 @@ export const LIST_MORE = 30;
 
 export interface PlayerProfile {
   player: PlayerName;
+  /** Each shows as a tag on their card, "admin" opens /admin too. */
+  roles: Role[];
   intro: string;
   /** The illustration they show in Phigros, a song id ("Introduction" by default, empty when not shared). */
   background: string;

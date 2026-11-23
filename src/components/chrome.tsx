@@ -174,7 +174,7 @@ export function SiteHeader({ children }: { children?: React.ReactNode }) {
           </Link>
         ))}
         {/* only who data/config.toml names sees it (server/admin.ts) */}
-        {home?.roles.includes("admin") && (
+        {home?.profile.roles.includes("admin") && (
           <Link
             to="/admin"
             className="tab"

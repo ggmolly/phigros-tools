@@ -4,7 +4,8 @@ import type { SaveDocumentV1 } from "../../document";
 import { useT } from "../../i18n";
 import type { RankingResult } from "../../metrics";
 import { countLevels, LEVELS } from "../../modules";
-import { Avatar, challengeRank, dataAmount, LevelStats, Stat } from "../primitives";
+import type { Role } from "../../roles";
+import { Avatar, challengeRank, dataAmount, LevelStats, RoleTags, Stat } from "../primitives";
 
 /** The in-game profile strip (avatar, name, RKS tag, Challenge Mode badge), overall totals, self-intro and
  * per-difficulty completion. */
@@ -12,10 +13,12 @@ export function Hero({
   ranking,
   document,
   playerName,
+  roles,
 }: {
   ranking: RankingResult;
   document: SaveDocumentV1;
   playerName?: string;
+  roles?: Role[];
 }) {
   const t = useT();
   const songs = document.songs;
@@ -42,6 +45,7 @@ export function Hero({
           <span className="hero-name-text">{playerName || t.overview.localSave}</span>
         </h1>
         <p className="hero-rks">
+          <RoleTags roles={roles} />
           <span className="hero-rks-label">RKS</span>
           <span className="ranking-number">{ranking.rankingScore.toFixed(3)}</span>
         </p>

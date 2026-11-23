@@ -52,7 +52,7 @@ export function Overview({
   const ranking = calculateRanking(document);
   const counts = countLevels(document.songs);
   const unknown = unknownSongIds(document.songs.map((song) => song.songId));
-  const { chartKey, setChartKey } = useSave();
+  const { chartKey, setChartKey, home, loaded } = useSave();
   const [accuracy, setAccuracy] = useState("100.00");
   const playedChart = ranking.charts.find((record) => record.key === chartKey);
   const unplayed = playedChart ? undefined : unplayedChart(chartKey);
@@ -85,7 +85,12 @@ export function Overview({
           <RksHistory history={profile.history} />
         </>
       ) : (
-        <Hero ranking={ranking} document={document} playerName={playerName} />
+        <Hero
+          ranking={ranking}
+          document={document}
+          playerName={playerName}
+          roles={home && home.id === loaded?.playerId ? home.profile.roles : undefined}
+        />
       )}
 
       {chart ? (

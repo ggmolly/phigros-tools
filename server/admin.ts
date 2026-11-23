@@ -1,11 +1,12 @@
 import { count, countDistinct, desc, eq, gte, sql } from "drizzle-orm";
 import type { AnyPgColumn } from "drizzle-orm/pg-core";
 import { getCookie, type H3Event, HTTPError } from "nitro/h3";
-import { config } from "./config";
+import type { Role } from "../src/roles";
 import { db } from "./db";
 import * as friends from "./friends";
 import * as live from "./live";
 import { build, logged } from "./log";
+import { rolesOf } from "./players";
 import * as rooms from "./rooms";
 import { event_days, events, matches, players, replays } from "./schema";
 import { SESSION, sessionPlayer } from "./session";
@@ -15,13 +16,6 @@ import { SESSION, sessionPlayer } from "./session";
  * keeps (routes/api/admin). Only the players data/config.toml names as admins get any of it, anyone else a 404 as if
  * there were nothing here.
  */
-
-/** What a player may do beyond their own profile. */
-export type Role = "admin";
-
-/** The roles of a profile's key. */
-export const rolesOf = (key: Uint8Array): Role[] =>
-  config.admins.includes(Buffer.from(key).toString("hex")) ? ["admin"] : [];
 
 /** The signed-in player when they have the role, a 404 otherwise. */
 export async function allowed(event: H3Event, role: Role = "admin") {

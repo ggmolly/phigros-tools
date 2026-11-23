@@ -2,6 +2,7 @@ import type { CSSProperties, ReactNode, Ref } from "react";
 import { game } from "../game";
 import { useFormat, useT } from "../i18n";
 import { LEVELS } from "../modules";
+import type { Role } from "../roles";
 
 // toLocaleDateString rejects timeStyle, so the time is asked for field by field.
 export const DATE_TIME: Intl.DateTimeFormatOptions = {
@@ -172,6 +173,20 @@ export function avatarUrl(name: string) {
   const { avatars } = game();
   const file = avatars[name] ?? avatars.Introduction!;
   return `/avatars/${encodeURIComponent(file)}.avif`;
+}
+
+/** A tag per role the player holds, resting on their RKS tag. Each role has its colour (.role-<name>). */
+export function RoleTags({ roles }: { roles?: Role[] }) {
+  if (!roles?.length) return null;
+  return (
+    <span className="role-tags">
+      {roles.map((role) => (
+        <span key={role} className={`role-tag role-${role}`}>
+          {role}
+        </span>
+      ))}
+    </span>
+  );
 }
 
 /** The player's in-game avatar. */

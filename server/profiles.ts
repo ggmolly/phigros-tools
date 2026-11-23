@@ -14,7 +14,7 @@ import {
   type PlayStatus,
 } from "../src/plays";
 import { db, excluded, type Tx } from "./db";
-import { keyOf } from "./players";
+import { keyOf, rolesOf } from "./players";
 import { placeOf, ranked } from "./replays";
 import * as t from "./schema";
 
@@ -255,6 +255,7 @@ export async function profilePage(id: string): Promise<PlayerProfile | undefined
     .where(eq(plays.key, row.key));
   return {
     player: { id: row.id, name: row.name, number: row.number, avatar: row.avatar },
+    roles: rolesOf(row.key),
     intro: row.intro,
     background: row.background,
     rks: row.rks,

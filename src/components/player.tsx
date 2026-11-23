@@ -12,7 +12,7 @@ import {
 } from "../plays";
 import { Modifiers } from "./modifiers";
 import { ChartLink, PlayStatusLabel, Timing } from "./plays";
-import { Avatar, Difficulty, Rank, Stat, score7 } from "./primitives";
+import { Avatar, Difficulty, Rank, RoleTags, Stat, score7 } from "./primitives";
 
 // a player's public page in parts: their own Overview shows them around what only their save has
 
@@ -52,6 +52,7 @@ export function Card({ profile }: { profile: PlayerProfile }) {
           </span>
         </h1>
         <p className="hero-rks">
+          <RoleTags roles={profile.roles} />
           <span className="hero-rks-label">RKS</span>
           <span className="ranking-number">{profile.rks.toFixed(3)}</span>
         </p>
