@@ -1,11 +1,53 @@
-import { createContext, type ReactNode, useContext, useMemo } from "react";
+import { createServerFn } from "@tanstack/react-start";
+import { getCookie } from "@tanstack/react-start/server";
+import {
+  createContext,
+  type ReactNode,
+  useContext,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from "react";
 import { LOCALE_COOKIE, type Locale, splitLocale, withLocale } from "./locales";
 import { MESSAGES, type Messages } from "./messages";
 
+const ZONE_COOKIE = "tz";
 const LocaleContext = createContext<Locale>("en");
+const ZoneContext = createContext("UTC");
 
-export function I18nProvider({ locale, children }: { locale: Locale; children: ReactNode }) {
-  return <LocaleContext.Provider value={locale}>{children}</LocaleContext.Provider>;
+/** The reader's time zone as their browser last told it (I18nProvider), UTC until it has. */
+export const getTimeZone = createServerFn({ method: "GET" }).handler(() => {
+  const zone = getCookie(ZONE_COOKIE) ?? "UTC";
+  try {
+    new Intl.DateTimeFormat("en", { timeZone: zone });
+    return zone;
+  } catch {
+    return "UTC";
+  }
+});
+
+// dates are written in the zone the server was given, so the page hydrates as it was rendered, then in the
+// browser's own zone, which the next page's request carries
+export function I18nProvider({
+  locale,
+  timeZone,
+  children,
+}: {
+  locale: Locale;
+  timeZone: string;
+  children: ReactNode;
+}) {
+  const [zone, setZone] = useState(timeZone);
+  useLayoutEffect(() => {
+    const local = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    document.cookie = `${ZONE_COOKIE}=${local}; path=/; max-age=31536000; samesite=lax`;
+    setZone(local);
+  }, []);
+  return (
+    <LocaleContext.Provider value={locale}>
+      <ZoneContext.Provider value={zone}>{children}</ZoneContext.Provider>
+    </LocaleContext.Provider>
+  );
 }
 
 export const useLocale = () => useContext(LocaleContext);
@@ -18,14 +60,15 @@ export function useT(): Messages {
 /** Number and date formatters for the current language. */
 export function useFormat() {
   const locale = useLocale();
+  const timeZone = useContext(ZoneContext);
   return useMemo(
     () => ({
       number: (value: number, options?: Intl.NumberFormatOptions) =>
         value.toLocaleString(locale, options),
       date: (value: Date | number | string, options?: Intl.DateTimeFormatOptions) =>
-        new Date(value).toLocaleDateString(locale, options),
+        new Date(value).toLocaleDateString(locale, { timeZone, ...options }),
     }),
-    [locale],
+    [locale, timeZone],
   );
 }
 
