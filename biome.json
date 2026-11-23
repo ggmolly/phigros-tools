@@ -46,6 +46,10 @@
       "complexity": {
         "noUselessFragments": "error",
         "noImportantStyles": "off"
+      },
+      "nursery": {
+        "noFloatingPromises": "error",
+        "noMisusedPromises": "error"
       }
     }
   },

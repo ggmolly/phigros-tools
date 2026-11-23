@@ -1,10 +1,11 @@
 import { defineHandler, getCookie, HTTPError } from "nitro/h3";
+import { rolesOf } from "../../admin";
 import { home, SESSION, sessionPlayer } from "../../session";
 
-// the signed-in player's save and profile, for the pages rendered with them, 404 without a valid cookie
+// the signed-in player's save, profile and roles, for the pages rendered with them, 404 without a valid cookie
 export default defineHandler(async (event) => {
-  const id = sessionPlayer(getCookie(event, SESSION));
-  const found = id && (await home(id));
+  const who = await sessionPlayer(getCookie(event, SESSION));
+  const found = who && (await home(who.id));
   if (!found) throw HTTPError.status(404);
-  return found;
+  return { ...found, roles: rolesOf(who.key) };
 });

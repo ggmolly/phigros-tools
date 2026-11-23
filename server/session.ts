@@ -4,7 +4,7 @@ import type { SaveDocumentV1 } from "../src/document";
 import { openArchive, parseArchive } from "../src/save";
 import { deviceOf } from "./auth";
 import { config } from "./config";
-import { sqlite } from "./db";
+import { keyOf } from "./players";
 import { profilePage } from "./profiles";
 import { savedAt, savedSummary, saveFile } from "./saves";
 
@@ -24,24 +24,25 @@ export const sessionValue = (id: string, device: Uint8Array) => {
   return `${value}.${mac(value)}`;
 };
 
-const playerKey = sqlite.prepare<{ key: Uint8Array }, [string]>(
-  "SELECT key FROM players WHERE id = ?",
-);
-
-/** The player id of a valid cookie: signed here, by a device still signed in to that player. */
-export function sessionPlayer(cookie: string | undefined): string | undefined {
+/** What a cookie signed here says: a player's id and the device that signed in, which may have been removed since. */
+export function sessionClaim(cookie: string | undefined) {
   const [id, device, signature] = cookie?.split(".") ?? [];
   if (!id || !device || !signature) return undefined;
   const expected = Buffer.from(mac(`${id}.${device}`));
   if (expected.length !== signature.length || !timingSafeEqual(expected, Buffer.from(signature)))
     return undefined;
-  const key = playerKey.get(id)?.key;
+  return { id, device: Buffer.from(device, "hex") };
+}
+
+/** The player of a valid cookie: signed here, by a device still signed in to that player. */
+export async function sessionPlayer(cookie: string | undefined) {
+  const claim = sessionClaim(cookie);
+  const key = claim && (await keyOf(claim.id));
   if (!key) return undefined;
   // the profile's own key, or a device added to it and not removed
-  const signer = Buffer.from(device, "hex");
-  const added = deviceOf.get(signer);
-  const owner = signer.equals(key) ? key : added && !added.removed && added.owner;
-  return owner && Buffer.from(owner).equals(key) ? id : undefined;
+  const added = await deviceOf(claim.device);
+  const owner = claim.device.equals(key) ? key : added && !added.removed && added.owner;
+  return owner && Buffer.from(owner).equals(key) ? { id: claim.id, key } : undefined;
 }
 
 // the uploaded save read once per upload, it's read for every page the player opens
@@ -49,12 +50,13 @@ let parsed: { id: string; at: number; document: SaveDocumentV1 } | undefined;
 
 /** What a signed-in player's pages show: their save as the site reads it and their public profile. */
 export async function home(id: string) {
-  const profile = profilePage(id);
-  const at = savedAt(id, "saves");
-  if (!profile || at === undefined) return profile && { id, profile, document: undefined };
+  const profile = await profilePage(id);
+  if (!profile) return undefined;
+  const at = await savedAt(id, "saves");
+  if (at === undefined) return { id, profile, document: undefined };
   if (parsed?.id !== id || parsed.at !== at) {
     const archive = await openArchive(readFileSync(saveFile(id)));
-    const summary = savedSummary(id);
+    const summary = await savedSummary(id);
     const document = parseArchive(archive, {
       kind: "phigrospp",
       cloudUpdatedAt: new Date(at).toISOString(),

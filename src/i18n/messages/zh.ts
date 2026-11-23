@@ -26,6 +26,11 @@ export const zh = {
     or: "或",
     browseCharts: "浏览谱面列表",
   },
+  crashed: {
+    title: "出错了",
+    body: "此页面无法显示，错误已上报，重新加载或许就能解决。",
+    reload: "重新加载",
+  },
   menu: {
     label: "主菜单",
     import: "导入",

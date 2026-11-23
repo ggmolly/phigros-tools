@@ -19,8 +19,8 @@ const Profile = v.object({
 export default defineHandler(async (event) => {
   const { key, body } = await signed(event);
   const { name, ...look } = signedJson(Profile, body);
-  const { id } = setName(key, name);
-  setLook(key, look);
+  const { id } = await setName(key, name);
+  await setLook(key, look);
   // the name, avatar and listing show on the rankings
   await Promise.all([announce(topics.player(id)), announce(topics.ranking)]);
   return player(key);

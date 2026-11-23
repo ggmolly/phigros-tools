@@ -3,6 +3,7 @@ import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync 
 import { strFromU8, unzipSync } from "fflate";
 import type { Block, Media, Mod } from "../src/mods";
 import { config } from "./config";
+import { log } from "./log";
 import { parse } from "./readme";
 
 // the Phigros++ mod catalog. registry.txt (mod/scripts/registry.sh puts it here, signed for the game) lists the mods
@@ -255,7 +256,7 @@ async function document(repo: string, readme: string, branch: string): Promise<B
         known && (await same(known))
           ? known
           : ((await media(repo, src).catch((error) =>
-              console.error(`mods: ${src} not shown:`, error),
+              log.warn("mods.media.failed", { repo, src, error }),
             )) ?? known);
       if (made) blocks.push(made);
     }
@@ -318,7 +319,7 @@ export async function refreshMods() {
     try {
       mods.push(await refresh(repo, authors.get(repo.split("/")[0]!)!, known));
     } catch (error) {
-      console.error(`mods: ${repo} not refreshed:`, error);
+      log.warn("mods.refresh.failed", { repo, error });
       if (known) mods.push(known);
     }
   }

@@ -1,5 +1,6 @@
 import type { Peer } from "crossws";
 import type { LiveEvent } from "../src/topics";
+import { log } from "./log";
 import { EVENTS, openQueue } from "./queue";
 import { savedAt } from "./saves";
 
@@ -17,6 +18,7 @@ export function consume() {
       // the pages reconnect, which consumes again and fetches what they missed
       channel.on("close", () => {
         consuming = false;
+        log.warn("live.broker.lost", { topics: followers.size });
         for (const peers of followers.values()) for (const peer of peers) peer.close(1012);
       });
       const { queue } = await channel.assertQueue("", { exclusive: true, autoDelete: true });
@@ -34,7 +36,7 @@ export function consume() {
     })
     .catch((error) => {
       consuming = false;
-      console.error("events not received:", error);
+      log.error("live.broker.failed", { error });
     });
 }
 
@@ -56,9 +58,17 @@ export function follow(peer: Peer, topics: string[]) {
     peer.subscribe(topic);
     followers.set(topic, (followers.get(topic) ?? new Set()).add(peer));
     if (!topic.startsWith("player:")) continue;
-    const data = String(savedAt(topic.slice("player:".length), "saves") ?? 0);
-    peer.send(JSON.stringify({ topic, event: "save", data }));
+    savedAt(topic.slice("player:".length), "saves")
+      .then((at) => {
+        // the page may have left for another one meanwhile
+        if (peer.topics.has(topic))
+          peer.send(JSON.stringify({ topic, event: "save", data: String(at ?? 0) }));
+      })
+      .catch((error) => log.error("live.save.failed", { error }));
   }
 }
+
+/** How many topics are followed, for /admin. */
+export const gauges = () => ({ topics: followers.size });
 
 export const leave = (peer: Peer) => follow(peer, []);

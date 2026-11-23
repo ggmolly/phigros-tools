@@ -1,11 +1,27 @@
 import type { Peer } from "crossws";
+import { and, eq, inArray, or } from "drizzle-orm";
 import { type H3Event, HTTPError } from "nitro/h3";
 import * as v from "valibot";
 import type { PlayerName } from "../src/plays";
 import { signed, socketPlayer } from "./auth";
-import { sqlite } from "./db";
-import { clean, fold, keyOf, player, playerId } from "./players";
-import { Auth, Base64, count, fail, greet, heard, roomOf, STREAM, send, text } from "./rooms";
+import { db } from "./db";
+import { log } from "./log";
+import { clean, fold, keyOf, NAME, player, playerId } from "./players";
+import {
+  Auth,
+  Base64,
+  count,
+  fail,
+  failed,
+  greet,
+  heard,
+  roomOf,
+  STREAM,
+  send,
+  serial,
+  text,
+} from "./rooms";
+import * as t from "./schema";
 
 /*
  * Friends. Phigros++ keeps one WebSocket open while it runs (routes/api/friends.ts), signed in like a room's
@@ -25,19 +41,13 @@ import { Auth, Base64, count, fail, greet, heard, roomOf, STREAM, send, text } f
  * The site does the same for the profile a browser is signed in to (routes/api/friendships.*.ts): it lists the
  * player's friends, asks, accepts and removes, with the same limits. A browser isn't a game: it never shows online.
  *
- * Who asked whom is kept, who is online only lives in memory.
+ * Who asked whom is kept (a row of friends is a player asking another: they're friends once both asked), who is
+ * online only lives in memory.
+ *
+ * What the sockets, the site's requests and the timers do runs one after the other (`turn`), as most of it reads the
+ * database before it acts: a friend removed while they ask to watch is told no, and a list never arrives after a
+ * newer one.
  */
-
-// a row is a player asking another: they're friends once both asked
-sqlite.run(`
-  CREATE TABLE IF NOT EXISTS friends (
-    player BLOB NOT NULL,
-    friend BLOB NOT NULL,
-    added INTEGER NOT NULL,
-    PRIMARY KEY (player, friend)
-  ) WITHOUT ROWID
-`);
-sqlite.run("CREATE INDEX IF NOT EXISTS idx_friends_friend ON friends(friend)");
 
 const DOMAIN = "phigros.tools friends v1\0"; // the key signs requests, replays and rooms too
 const MAX_ASKED = 200; // friends and requests sent
@@ -80,28 +90,24 @@ const asking = new Map<string, Partial<Record<Limited, number[]>>>();
 const sessions = new Map<Peer, Session>();
 let plays = 0;
 
-const listed = sqlite.prepare<PlayerName & { mine: number; theirs: number }, [Uint8Array]>(
-  `SELECT p.id, p.name, p.number, p.avatar, MAX(f.mine) AS mine, MAX(f.theirs) AS theirs
-   FROM (SELECT friend AS key, 1 AS mine, 0 AS theirs FROM friends WHERE player = ?1
-         UNION ALL SELECT player, 0, 1 FROM friends WHERE friend = ?1) f
-   JOIN players p ON p.key = f.key GROUP BY p.key ORDER BY p.fold, p.number`,
-);
-const asked = sqlite.prepare<{ count: number }, [Uint8Array]>(
-  "SELECT COUNT(*) AS count FROM friends WHERE player = ?",
-);
-const ask = sqlite.prepare<unknown, [Uint8Array, Uint8Array, number]>(
-  "INSERT OR IGNORE INTO friends (player, friend, added) VALUES (?, ?, ?)",
-);
-const drop = sqlite.prepare<unknown, [Uint8Array, Uint8Array]>(
-  "DELETE FROM friends WHERE (player = ?1 AND friend = ?2) OR (player = ?2 AND friend = ?1)",
-);
-const tagged = sqlite.prepare<{ key: Uint8Array }, [string, number]>(
-  "SELECT key FROM players WHERE fold = ? AND number = ?",
-);
+const turn = serial();
+const { friends, players } = t;
+
+// everyone a player asked or was asked by, and which of the two it is
+function listed(key: Uint8Array) {
+  const asked = db.select({ key: friends.friend }).from(friends).where(eq(friends.player, key));
+  const asking = db.select({ key: friends.player }).from(friends).where(eq(friends.friend, key));
+  const [mine, theirs] = [inArray(players.key, asked), inArray(players.key, asking)];
+  return db
+    .select({ player: NAME, mine: mine.mapWith(Boolean), theirs: theirs.mapWith(Boolean) })
+    .from(players)
+    .where(or(mine, theirs))
+    .orderBy(players.fold, players.number);
+}
 
 /** A player's friends and requests as their game and the site show them. Only a friend who shows is online. */
-export function friendships(key: Uint8Array) {
-  return listed.all(key).map(({ mine, theirs, ...player }) => {
+export async function friendships(key: Uint8Array) {
+  return (await listed(key)).map(({ mine, theirs, player }) => {
     const friend = mine && theirs ? online.get(player.id) : undefined;
     const shown = friend?.visible ? friend : undefined;
     return {
@@ -114,28 +120,36 @@ export function friendships(key: Uint8Array) {
   });
 }
 
-const tell = (p: Presence | undefined) =>
-  p && send(p.peer, { t: "friends", friends: friendships(p.key) });
+const tell = async (p: Presence | undefined) =>
+  p && send(p.peer, { t: "friends", friends: await friendships(p.key) });
 
-const friendOf = (p: Presence, other: Presence) =>
-  listed.all(p.key).some((row) => row.id === other.player.id && row.mine && row.theirs);
+// both asked the other
+async function friendOf(p: Presence, other: Presence) {
+  const asks = (from: Presence, to: Presence) =>
+    and(eq(friends.player, from.key), eq(friends.friend, to.key));
+  const rows = await db
+    .select()
+    .from(friends)
+    .where(or(asks(p, other), asks(other, p)));
+  return rows.length === 2;
+}
 
 // the friends whose game is open hear how the player is now. what changes again within ANNOUNCE goes once it passed,
 // as it is then: a player flipping how they show, or starting songs over, tells their friends at that pace
-function announce(p: Presence) {
+async function announce(p: Presence) {
   if (p.announcing) return;
   const wait = p.announced + ANNOUNCE - Date.now();
   if (wait > 0) {
     p.announcing = setTimeout(() => {
       p.announcing = undefined;
-      announce(p);
+      turn(() => announce(p)).catch(failed());
     }, wait);
     return;
   }
   p.announced = Date.now();
-  for (const row of listed.all(p.key)) {
-    const friend = row.mine && row.theirs && online.get(row.id);
-    if (friend) tell(friend);
+  for (const row of await listed(p.key)) {
+    const friend = row.mine && row.theirs && online.get(row.player.id);
+    if (friend) await tell(friend);
   }
 }
 
@@ -178,9 +192,12 @@ type Message = v.InferOutput<typeof Message>;
 
 // the game proves it holds a profile's key. one whose connection dropped is back as it was, another device of the
 // player takes their place: the older one is told, and what it played is forgotten
-function auth(peer: Peer, session: Session, m: Extract<Message, { t: "auth" }>) {
-  const who = socketPlayer(DOMAIN, session.nonce, m);
-  if (typeof who === "string") return fail(peer, who);
+async function auth(peer: Peer, session: Session, m: Extract<Message, { t: "auth" }>) {
+  const who = await socketPlayer(DOMAIN, session.nonce, m);
+  if (typeof who === "string") {
+    log.warn("friends.auth.refused", { code: who });
+    return fail(peer, who);
+  }
   const p: Presence = online.get(who.player.id) ?? {
     ...who,
     visible: false,
@@ -204,14 +221,20 @@ function auth(peer: Peer, session: Session, m: Extract<Message, { t: "auth" }>) 
   session.presence = p;
   // a game back from a dropped connection hears whether its play is still known
   send(peer, { t: "welcome", player: p.player, playing: p.playing !== null });
-  tell(p);
+  log.info("friends.online", { player: p.player.id });
+  await tell(p);
 }
 
 // the key of an id or a name#0042
-function keyFor(typed: string) {
+async function keyFor(typed: string) {
   if (/^[0-9a-f]{12}$/.test(typed)) return keyOf(typed);
   const [, name, number] = /^(.*)#(\d{1,4})$/.exec(typed.trim()) ?? [];
-  return name === undefined ? undefined : tagged.get(fold(clean(name)), Number(number))?.key;
+  if (name === undefined) return undefined;
+  const [tagged] = await db
+    .select({ key: players.key })
+    .from(players)
+    .where(and(eq(players.fold, fold(clean(name))), eq(players.number, Number(number))));
+  return tagged?.key;
 }
 
 type Who = { player: PlayerName; key: Uint8Array };
@@ -220,28 +243,46 @@ type Who = { player: PlayerName; key: Uint8Array };
  * A player asks another (an id or a name#0042) to be their friend, or accepts their request. Their games hear of it.
  * The code of why not, if any.
  */
-export function befriend(who: Who, typed: string) {
+export async function befriend(who: Who, typed: string) {
   if (limited(who.player.id, "add")) return "slow";
-  const key = keyFor(typed);
+  const key = await keyFor(typed);
   if (!key) return "unknown";
   if (playerId(key) === who.player.id) return "self";
-  if (asked.get(who.key)!.count >= MAX_ASKED) return "full";
+  const asked = await db.select().from(friends).where(eq(friends.player, who.key));
+  if (asked.length >= MAX_ASKED) return "full";
+  const added = await db
+    .insert(friends)
+    .values({ player: who.key, friend: key, added: Date.now() })
+    .onConflictDoNothing()
+    .returning();
   // asking again changes nothing, and tells nobody
-  if (!ask.run(who.key, key, Date.now()).changes) return;
-  tell(online.get(playerId(key)));
-  tell(online.get(who.player.id));
+  if (!added.length) return;
+  log.info("friends.add", { player: who.player.id, friend: playerId(key) });
+  await tell(online.get(playerId(key)));
+  await tell(online.get(who.player.id));
 }
 
 /** A player ends a friendship, turns a request down or takes one back. The code of why not, if any. */
-export function unfriend(who: Who, id: string) {
+export async function unfriend(who: Who, id: string) {
   if (limited(who.player.id, "remove")) return "slow";
-  const key = keyOf(id);
-  if (!key || !drop.run(who.key, key).changes) return;
+  const key = await keyOf(id);
+  if (!key) return;
+  const dropped = await db
+    .delete(friends)
+    .where(
+      or(
+        and(eq(friends.player, who.key), eq(friends.friend, key)),
+        and(eq(friends.player, key), eq(friends.friend, who.key)),
+      ),
+    )
+    .returning();
+  if (!dropped.length) return;
+  log.info("friends.remove", { player: who.player.id, friend: id });
   const [mine, other] = [online.get(who.player.id), online.get(id)];
   if (mine && other?.follows === mine) unfollow(other);
   if (mine && other && mine.follows === other) unfollow(mine);
-  tell(other);
-  tell(mine);
+  await tell(other);
+  await tell(mine);
 }
 
 // why a change was refused, as the site's requests answer it
@@ -250,27 +291,30 @@ const REFUSED = { unknown: 404, self: 400, full: 400, slow: 429 };
 /** A change the site asks for the signed-in profile, with a player in its body: the list as it is after it. */
 export async function changed(event: H3Event, change: typeof befriend) {
   const { key, body } = await signed(event);
-  const found = player(key);
+  const found = await player(key);
   if (!found) throw HTTPError.status(403, "Not registered");
-  const why = change({ player: found, key }, new TextDecoder().decode(body).slice(0, 64));
+  const typed = new TextDecoder().decode(body).slice(0, 64);
+  const why = await turn(() => change({ player: found, key }, typed));
   if (why) throw new HTTPError({ status: REFUSED[why], body: { code: why } });
   return friendships(key);
 }
 
-function act(p: Presence, peer: Peer, m: Exclude<Message, { t: "auth" }>) {
-  if ((m.t === "invite" || m.t === "follow") && limited(p.player.id, m.t))
+async function act(p: Presence, peer: Peer, m: Exclude<Message, { t: "auth" }>) {
+  if ((m.t === "invite" || m.t === "follow") && limited(p.player.id, m.t)) {
+    log.warn("friends.limited", { player: p.player.id, kind: m.t });
     return fail(peer, "slow");
+  }
   switch (m.t) {
     case "status": {
       const changed = p.visible !== m.visible || p.spectating !== m.spectating;
       Object.assign(p, { visible: m.visible, spectating: m.spectating });
       if (!m.visible || !m.spectating) stop(p);
-      if (changed) announce(p);
+      if (changed) await announce(p);
       return;
     }
     case "add":
     case "remove": {
-      const why = m.t === "add" ? befriend(p, m.player) : unfriend(p, m.player);
+      const why = await (m.t === "add" ? befriend(p, m.player) : unfriend(p, m.player));
       if (why) fail(peer, why);
       return;
     }
@@ -279,7 +323,7 @@ function act(p: Presence, peer: Peer, m: Exclude<Message, { t: "auth" }>) {
       const id = clean(m.song, 128);
       plays += 1;
       p.playing = id ? { id, level: clean(m.level, 16), play: plays } : null;
-      if (p.visible) announce(p);
+      if (p.visible) await announce(p);
       return;
     }
     case "frames": {
@@ -290,13 +334,14 @@ function act(p: Presence, peer: Peer, m: Exclude<Message, { t: "auth" }>) {
       const told = JSON.stringify({ t: "frames", player: p.player.id, data: m.data });
       for (const watcher of p.watchers) watcher.peer?.send(told);
       // its friends hear that it can be watched
-      if (p.chunks.length === 1) announce(p);
+      if (p.chunks.length === 1) await announce(p);
       return;
     }
     case "follow": {
       unfollow(p);
       const friend = online.get(m.player);
-      if (!friend?.chunks.length || !friendOf(p, friend)) return;
+      if (!friend?.chunks.length || !(await friendOf(p, friend))) return;
+      log.info("friends.watch", { player: p.player.id, friend: m.player });
       p.follows = friend;
       friend.watchers.add(p);
       for (const data of friend.chunks.slice(m.from))
@@ -306,7 +351,8 @@ function act(p: Presence, peer: Peer, m: Exclude<Message, { t: "auth" }>) {
     case "invite": {
       const room = roomOf(p.player.id);
       const friend = online.get(m.player);
-      if (!room || !friend || !friendOf(p, friend)) return;
+      if (!room || !friend || !(await friendOf(p, friend))) return;
+      log.info("friends.invite", { player: p.player.id, friend: m.player, room: room.id });
       return send(friend.peer, { t: "invite", player: p.player, room: room.id, name: room.name });
     }
   }
@@ -317,25 +363,37 @@ export function open(peer: Peer) {
 }
 
 export function message(peer: Peer, raw: string) {
-  const session = sessions.get(peer);
-  const m = session && heard(peer, Message, raw);
-  if (!m) return;
-  if (m.t === "auth") return auth(peer, session, m);
-  const p = session.presence;
-  if (p?.peer !== peer) return fail(peer, "auth");
-  act(p, peer, m);
+  turn(async () => {
+    const session = sessions.get(peer);
+    const m = session && heard(peer, Message, raw);
+    if (!m) return;
+    if (m.t === "auth") return auth(peer, session, m);
+    const p = session.presence;
+    if (p?.peer !== peer) return fail(peer, "auth");
+    await act(p, peer, m);
+  }).catch(failed(peer));
 }
 
 // a dropped connection stays online for a while: the game connects again, and its friends saw nothing
 export function closed(peer: Peer) {
-  const p = sessions.get(peer)?.presence;
-  sessions.delete(peer);
-  if (p?.peer !== peer) return;
-  p.peer = undefined;
-  unfollow(p);
-  p.away = setTimeout(() => {
-    online.delete(p.player.id);
-    stop(p);
-    if (p.visible) announce(p);
-  }, AWAY);
+  turn(() => {
+    const p = sessions.get(peer)?.presence;
+    sessions.delete(peer);
+    if (p?.peer !== peer) return;
+    p.peer = undefined;
+    unfollow(p);
+    p.away = setTimeout(() => turn(() => leave(p)).catch(failed()), AWAY);
+  }).catch(failed());
 }
+
+// by the time its turn comes, the game may be back
+async function leave(p: Presence) {
+  if (p.peer) return;
+  online.delete(p.player.id);
+  stop(p);
+  log.info("friends.offline", { player: p.player.id });
+  if (p.visible) await announce(p);
+}
+
+/** How many games are connected and how many players show online, for /admin. */
+export const gauges = () => ({ sockets: sessions.size, online: online.size });

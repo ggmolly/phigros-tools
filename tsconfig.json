@@ -3,7 +3,7 @@
     "target": "ES2022",
     "jsx": "react-jsx",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "types": ["vite/client", "node"],
+    "types": ["vite/client", "node", "bun"],
     "module": "ESNext",
     "moduleResolution": "bundler",
     "strict": true,
@@ -11,5 +11,5 @@
     "skipLibCheck": true,
     "resolveJsonModule": true
   },
-  "include": ["src", "vite.config.ts"]
+  "include": ["src", "server", "vite.config.ts", "drizzle.config.ts"]
 }

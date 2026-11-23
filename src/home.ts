@@ -10,6 +10,8 @@ export interface Home {
   profile: PlayerProfile;
   /** Undefined until their game uploads a save. */
   document?: SaveDocumentV1;
+  /** What they may do beyond their own profile: "admin" opens /admin. */
+  roles: string[];
 }
 
 /** The signed-in player of the page's request (its cookie, see server/session.ts), null for anyone else. */

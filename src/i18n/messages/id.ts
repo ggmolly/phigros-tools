@@ -26,6 +26,11 @@ export const id = {
     or: "atau",
     browseCharts: "lihat daftar chart",
   },
+  crashed: {
+    title: "Terjadi Kesalahan",
+    body: "Halaman ini tidak dapat ditampilkan dan kesalahannya sudah dilaporkan, jadi memuat ulang mungkin sudah cukup.",
+    reload: "Muat ulang",
+  },
   menu: {
     label: "Menu utama",
     import: "Impor",

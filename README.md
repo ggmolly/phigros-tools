@@ -113,12 +113,23 @@ Screenshots use a fictional demo save; regenerate them with `scripts/screenshots
 
 ```sh
 bun install
+bun run db   # PostgreSQL 18 in Docker, kept in data/pg
 bun run dev
 ```
 
+The tables are declared in `server/schema.ts` (Drizzle). After changing them, `bun run generate` writes the change to
+`drizzle/` as SQL, which the server and the worker apply when they start.
+
 Production: `bun run build && bun run start`, with the replay worker beside it: `bun .output/worker.mjs`. They share
-`data/` and a RabbitMQ queue (`AMQP_URL`, `amqp://localhost` by default), and the worker reads charts from
-`CHART_DIR` (`./public/chart-data`).
+`data/`, a PostgreSQL database (`DATABASE_URL`, `postgres://phigros@localhost/phigros` by default) and a RabbitMQ
+queue (`AMQP_URL`, `amqp://localhost` by default), and the worker reads charts from `CHART_DIR`
+(`./public/chart-data`).
+
+Both write one JSON line per event to stdout (`server/log.ts`): each request with its route, status and duration, what
+happens in rooms and between friends, the replays judged, and the errors pages report. A line names a signed-in
+player by their public id at most, never an address, a request's body, a key, a password or a chat line. With
+`LOGS_URL` naming a [VictoriaLogs](https://docs.victoriametrics.com/victorialogs/), the lines are kept there, 90 days
+on phigros.tools, and `/admin` shows them with the pages seen to the players `admins` names in `data/config.toml`.
 
 ## Data
 

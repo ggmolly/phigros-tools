@@ -1,9 +1,11 @@
 import { createPublicKey, verify } from "node:crypto";
+import { eq, lt } from "drizzle-orm";
 import { assertBodySize, type H3Event, HTTPError } from "nitro/h3";
 import * as v from "valibot";
 import type { PlayerName } from "../src/plays";
-import { sqlite } from "./db";
-import { markSeen, player } from "./players";
+import { db } from "./db";
+import { markSeen, player, playerId } from "./players";
+import * as t from "./schema";
 
 // spki der header of a raw ed25519 public key
 const SPKI = Buffer.from("302a300506032b6570032100", "hex");
@@ -12,28 +14,14 @@ const MAX_BODY = 8 * 1024 * 1024;
 // the key also signs replays, so a request's signature is of its own kind
 const DOMAIN = "phigros.tools request v1\0";
 
-sqlite.run("CREATE TABLE IF NOT EXISTS keys (key BLOB PRIMARY KEY, last_time INTEGER NOT NULL)");
-// a device signed in to a profile with a code (see devices.ts) signs with its own key, which acts as the owner's: the
-// key that made the profile, whose recovery phrase always brings it back. a removed device stays, refused
-sqlite.run(`
-  CREATE TABLE IF NOT EXISTS devices (
-    key BLOB PRIMARY KEY,
-    owner BLOB NOT NULL,
-    name TEXT NOT NULL,
-    added INTEGER NOT NULL,
-    removed INTEGER
-  )
-`);
-sqlite.run("CREATE INDEX IF NOT EXISTS idx_devices_owner ON devices(owner)");
-export const deviceOf = sqlite.prepare<{ owner: Uint8Array; removed: number | null }, [Uint8Array]>(
-  "SELECT owner, removed FROM devices WHERE key = ?",
-);
-export const lastTime = sqlite.prepare<{ last_time: number }, [Uint8Array]>(
-  "SELECT last_time FROM keys WHERE key = ?",
-);
-const setTime = sqlite.prepare<unknown, [Uint8Array, number]>(
-  "INSERT INTO keys (key, last_time) VALUES (?1, ?2) ON CONFLICT (key) DO UPDATE SET last_time = ?2",
-);
+/** The profile a device signs for and when it was removed from it, undefined for a key that's no device. */
+export async function deviceOf(key: Uint8Array) {
+  const [device] = await db
+    .select({ owner: t.devices.owner, removed: t.devices.removed })
+    .from(t.devices)
+    .where(eq(t.devices.key, key));
+  return device;
+}
 
 /** Whether `signature` is the ed25519 signature of `message` by the raw public `key`. */
 export function verifySignature(
@@ -53,18 +41,18 @@ export function verifySignature(
  * Who holds a socket: the game signs the nonce the server greeted it with, after `domain` so the signature is good for
  * nothing else, with its profile's key or a device's. The code of the refusal when it isn't a profile's.
  */
-export function socketPlayer(
+export async function socketPlayer(
   domain: string,
   nonce: string,
   m: { key: string; sig: string },
-): { player: PlayerName; key: Uint8Array } | "auth" | "no-profile" {
+): Promise<{ player: PlayerName; key: Uint8Array } | "auth" | "no-profile"> {
   const key = Buffer.from(m.key, "hex");
   if (!verifySignature(key, Buffer.from(domain + nonce), Buffer.from(m.sig, "hex"))) return "auth";
-  const device = deviceOf.get(key);
+  const device = await deviceOf(key);
   const owner = device?.owner ?? key;
-  const found = !device?.removed && player(owner);
+  const found = !device?.removed && (await player(owner));
   if (!found) return "no-profile";
-  markSeen(owner);
+  await markSeen(owner);
   return { player: found, key: owner };
 }
 
@@ -92,13 +80,29 @@ export async function signed(
   ]);
   if (!verifySignature(key, signedBytes, signature)) throw HTTPError.status(401, "Bad signature");
   if (Math.abs(time - Date.now()) > DAY) throw HTTPError.status(401, "Bad time");
-  const last = lastTime.get(key)?.last_time ?? 0;
-  if (time <= last) throw new HTTPError({ status: 409, message: "Old time", body: { last } });
-  const device = deviceOf.get(key);
+  // one statement moves the time forward or doesn't: of a request sent twice at once, one finds it moved
+  const [moved] = await db
+    .insert(t.keys)
+    .values({ key, last_time: time })
+    .onConflictDoUpdate({
+      target: t.keys.key,
+      set: { last_time: time },
+      setWhere: lt(t.keys.last_time, time),
+    })
+    .returning({ key: t.keys.key });
+  if (!moved) {
+    const [{ last }] = await db
+      .select({ last: t.keys.last_time })
+      .from(t.keys)
+      .where(eq(t.keys.key, key));
+    throw new HTTPError({ status: 409, message: "Old time", body: { last } });
+  }
+  const device = await deviceOf(key);
   if (device?.removed) throw new HTTPError({ status: 403, body: { code: "removed" } });
-  setTime.run(key, time);
   const owner = device?.owner ?? key;
-  markSeen(owner);
+  await markSeen(owner);
+  // the request's log line names who signed it (server/plugins/log.ts)
+  event.context.player = playerId(owner);
   return { key: owner, device: key, body: message.subarray(8) };
 }
 

@@ -26,6 +26,11 @@ export const fr = {
     or: "ou",
     browseCharts: "parcourez la liste des charts",
   },
+  crashed: {
+    title: "Une erreur est survenue",
+    body: "Cette page n'a pas pu s'afficher et l'erreur a été signalée, la recharger peut suffire.",
+    reload: "Recharger",
+  },
   menu: {
     label: "Menu principal",
     import: "Importer",

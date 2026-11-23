@@ -26,6 +26,11 @@ export const it = {
     or: "oppure",
     browseCharts: "sfoglia l'elenco dei chart",
   },
+  crashed: {
+    title: "Qualcosa è andato storto",
+    body: "Non è stato possibile mostrare questa pagina e l'errore è stato segnalato, ricaricarla può bastare.",
+    reload: "Ricarica",
+  },
   menu: {
     label: "Menu principale",
     import: "Importa",

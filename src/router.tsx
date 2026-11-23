@@ -1,4 +1,5 @@
 import { createRouter } from "@tanstack/react-router";
+import { PageError } from "./components/chrome";
 import { type Locale, splitLocale, withLocale } from "./i18n/locales";
 import { routeTree } from "./routeTree.gen";
 
@@ -12,6 +13,7 @@ export function getRouter() {
   return createRouter({
     routeTree,
     context: { i18n },
+    defaultErrorComponent: PageError,
     // a new page wipes in (styles/motion.css), a search or a filter changing the address doesn't
     defaultViewTransition: { types: ({ pathChanged }) => pathChanged && ["page"] },
     rewrite: {

@@ -1,4 +1,5 @@
 import { mkdirSync } from "node:fs";
+import { and, count, desc, eq, gt, like, lte, or, sql } from "drizzle-orm";
 import { calculateRanking } from "../src/metrics";
 import { totalOf } from "../src/modifiers";
 import { LEVELS, type LevelName, type SongRecord } from "../src/modules";
@@ -7,141 +8,25 @@ import type {
   Board,
   ChartCount,
   ChartPlays,
-  PlayerName,
   PlayerRanking,
   PlayStatus,
   ReplayInfo,
 } from "../src/plays";
-import { sqlite } from "./db";
-import { fold, setRks } from "./players";
+import { db, excluded, type Tx } from "./db";
+import { fold, NAME, setRks } from "./players";
+import * as t from "./schema";
 
 export const REPLAY_DIR = "./data/replays";
 mkdirSync(REPLAY_DIR, { recursive: true });
 
-// song is the catalog's id, status is pending until the re-simulation verifies the result or finds it unverified
-sqlite.run(`
-  CREATE TABLE IF NOT EXISTS replays (
-    sha256 TEXT PRIMARY KEY,
-    key BLOB NOT NULL,
-    song TEXT NOT NULL,
-    level TEXT NOT NULL,
-    score INTEGER NOT NULL,
-    game INTEGER NOT NULL,
-    header TEXT NOT NULL,
-    status TEXT NOT NULL DEFAULT 'pending',
-    result TEXT,
-    created INTEGER NOT NULL
-  )
-`);
-// added after the table: the timing accuracy of its touches (timingAccuracy), and the modifiers it was played with
-const columns = sqlite.query<{ name: string }, []>("PRAGMA table_info(replays)").all();
-for (const [name, type] of [
-  ["timing", "REAL"],
-  ["mods", "INTEGER NOT NULL DEFAULT 0"],
-])
-  if (!columns.some((c) => c.name === name))
-    sqlite.run(`ALTER TABLE replays ADD COLUMN ${name} ${type}`);
-sqlite.run("CREATE INDEX IF NOT EXISTS idx_replays_key ON replays(key)");
-// each player's best on each chart, so a chart's ranking is read in order from the index: a verified replay (sha256),
-// or a record their game sent (imported, no sha256, no date). a tie goes to the earliest played replay, then to
-// the earliest record (created is when it became the best). the scope is what a leaderboard counts: 0 for all
-// (both), 1 for verified replays only
-sqlite.run(`
-  CREATE TABLE IF NOT EXISTS bests (
-    key BLOB NOT NULL,
-    song TEXT NOT NULL,
-    level TEXT NOT NULL,
-    scope INTEGER NOT NULL,
-    score INTEGER NOT NULL,
-    accuracy REAL NOT NULL,
-    fc INTEGER NOT NULL,
-    played INTEGER,
-    created INTEGER NOT NULL,
-    sha256 TEXT,
-    PRIMARY KEY (key, song, level, scope)
-  )
-`);
-// the records a player typed on the site to rebuild their save (see declareRecords): each sits above their best on
-// its chart and counts nowhere, until a play from the game reaches it. kept here as the worker raises bests too
-sqlite.run(`
-  CREATE TABLE IF NOT EXISTS declared (
-    key BLOB NOT NULL,
-    song TEXT NOT NULL,
-    level TEXT NOT NULL,
-    score INTEGER NOT NULL,
-    accuracy REAL NOT NULL,
-    fc INTEGER NOT NULL,
-    PRIMARY KEY (key, song, level)
-  )
-`);
-// each player's best with each set of modifiers on each chart (src/modifiers.ts), all verified replays: the board of
-// plays with modifiers, apart from the bests as those are no records of the game's. score is the total the modifiers
-// give it, which the board is ranked by
-sqlite.run(`
-  CREATE TABLE IF NOT EXISTS modded (
-    key BLOB NOT NULL,
-    song TEXT NOT NULL,
-    level TEXT NOT NULL,
-    mods INTEGER NOT NULL,
-    score INTEGER NOT NULL,
-    accuracy REAL NOT NULL,
-    fc INTEGER NOT NULL,
-    played INTEGER NOT NULL,
-    created INTEGER NOT NULL,
-    sha256 TEXT NOT NULL,
-    PRIMARY KEY (key, song, level, mods)
-  )
-`);
-sqlite.run(
-  "CREATE INDEX IF NOT EXISTS idx_modded_order ON modded(song, level, score DESC, played, created)",
-);
-sqlite.run("DROP INDEX IF EXISTS idx_bests_rank");
-sqlite.run(
-  "CREATE INDEX IF NOT EXISTS idx_bests_order ON bests(scope, song, level, score DESC, played IS NULL, played, created)",
-);
+const { bests, declared, modded, players, replays } = t;
 
 /** What a leaderboard counts: all (verified replays and imported records), or verified replays only. */
 export type Scope = 0 | 1;
-const insert = sqlite.prepare<
-  unknown,
-  [string, Uint8Array, string, string, number, number, string, number, number]
->(
-  `INSERT INTO replays (sha256, key, song, level, score, game, header, created, mods)
-   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (sha256) DO NOTHING`,
-);
-const declaredScore = sqlite.prepare<{ score: number }, [Uint8Array, string, string]>(
-  "SELECT score FROM declared WHERE key = ? AND song = ? AND level = ?",
-);
-const undeclare = sqlite.prepare<unknown, [Uint8Array, string, string, number]>(
-  "DELETE FROM declared WHERE key = ? AND song = ? AND level = ? AND score <= ?",
-);
-// a higher score replaces the best, and so does a replay of the score an imported record has
-const raise = sqlite.prepare<
-  unknown,
-  [Uint8Array, string, string, Scope, number, number, number, number | null, number, string | null]
->(
-  `INSERT INTO bests (key, song, level, scope, score, accuracy, fc, played, created, sha256)
-   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-   ON CONFLICT (key, song, level, scope) DO UPDATE SET score = excluded.score, accuracy = excluded.accuracy,
-   fc = excluded.fc, played = excluded.played, sha256 = excluded.sha256,
-   created = CASE WHEN excluded.score > bests.score THEN excluded.created ELSE bests.created END
-   WHERE excluded.score > bests.score
-     OR (excluded.score = bests.score AND bests.sha256 IS NULL AND excluded.sha256 IS NOT NULL)`,
-);
-
-// with modifiers, a higher total replaces the best with the same ones
-const raiseModded = sqlite.prepare<
-  unknown,
-  [Uint8Array, string, string, number, number, number, number, number, number, string]
->(
-  `INSERT INTO modded (key, song, level, mods, score, accuracy, fc, played, created, sha256)
-   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-   ON CONFLICT (key, song, level, mods) DO UPDATE SET score = excluded.score, accuracy = excluded.accuracy,
-   fc = excluded.fc, played = excluded.played, sha256 = excluded.sha256, created = excluded.created
-   WHERE excluded.score > modded.score`,
-);
 
 export interface Best {
+  song: string;
+  level: string;
   score: number;
   accuracy: number;
   fc: boolean;
@@ -152,119 +37,165 @@ export interface Best {
 }
 
 /**
- * A record counts for all, a verified replay for both scopes. Whether it became the player's best counting all. A
- * record no higher than the one the player declared is their rebuilt save sent back by the game, and counts for
- * nothing; anything reaching the declared score takes its place.
+ * A record counts for all, a verified replay for both scopes: the charts where one became the player's best counting
+ * all. A record no higher than the one the player declared is their rebuilt save sent back by the game, and counts
+ * for nothing; anything reaching the declared score takes its place. A chart is given once.
  */
-export function raiseBest(key: Uint8Array, song: string, level: string, best: Best) {
-  const { score, accuracy, fc, played, sha256 } = best;
-  if (!sha256 && (declaredScore.get(key, song, level)?.score ?? -1) >= score) return false;
-  undeclare.run(key, song, level, score);
-  const now = Date.now();
-  const raised =
-    raise.run(key, song, level, 0, score, accuracy, fc ? 1 : 0, played, now, sha256).changes > 0;
-  if (sha256) raise.run(key, song, level, 1, score, accuracy, fc ? 1 : 0, played, now, sha256);
+export async function raiseBests(tx: Tx, key: Uint8Array, given: Best[]) {
+  const chart = (of: { song: string; level: string }) => `${of.song}\t${of.level}`;
+  const typed = new Map(
+    (await tx.select().from(declared).where(eq(declared.key, key))).map((d) => [chart(d), d.score]),
+  );
+  const counted = given.filter(
+    (best) => best.sha256 || (typed.get(chart(best)) ?? -1) < best.score,
+  );
+  if (!counted.length) return [];
+  const reached = counted.filter((best) => typed.has(chart(best)));
+  if (reached.length)
+    await tx
+      .delete(declared)
+      .where(
+        and(
+          eq(declared.key, key),
+          or(
+            ...reached.map((best) =>
+              and(
+                eq(declared.song, best.song),
+                eq(declared.level, best.level),
+                lte(declared.score, best.score),
+              ),
+            ),
+          ),
+        ),
+      );
+  const created = Date.now();
+  // a higher score replaces the best, and so does a replay of the score an imported record has
+  const raise = (scope: Scope, rows: Best[]) =>
+    tx
+      .insert(bests)
+      .values(rows.map((best) => ({ ...best, key, scope, created })))
+      .onConflictDoUpdate({
+        target: [bests.key, bests.song, bests.level, bests.scope],
+        set: {
+          score: excluded(bests.score),
+          accuracy: excluded(bests.accuracy),
+          fc: excluded(bests.fc),
+          played: excluded(bests.played),
+          sha256: excluded(bests.sha256),
+          created: sql`case when excluded.score > ${bests.score} then excluded.created else ${bests.created} end`,
+        },
+        setWhere: sql`excluded.score > ${bests.score}
+          or (excluded.score = ${bests.score} and ${bests.sha256} is null and excluded.sha256 is not null)`,
+      })
+      .returning({ song: bests.song, level: bests.level });
+  const raised = await raise(0, counted);
+  const proven = counted.filter((best) => best.sha256);
+  if (proven.length) await raise(1, proven);
   return raised;
 }
-const playerBests = sqlite.prepare<
-  { song: string; level: LevelName; score: number; accuracy: number },
-  [Uint8Array, Scope]
->("SELECT song, level, score, accuracy FROM bests WHERE key = ? AND scope = ?");
 
 /** A player's RKS from their bests in a scope, counted like the game: best 27 plus the 3 best Phi charts. */
-function rksOf(key: Uint8Array, scope: Scope) {
+async function rksOf(tx: Tx, key: Uint8Array, scope: Scope) {
   const songs = new Map<string, Pick<SongRecord, "songId" | "fc" | "levels">>();
-  for (const best of playerBests.all(key, scope)) {
+  const rows = await tx
+    .select()
+    .from(bests)
+    .where(and(eq(bests.key, key), eq(bests.scope, scope)));
+  for (const best of rows) {
     const song = songs.get(best.song) ?? {
       songId: best.song,
       fc: 0,
       levels: [null, null, null, null],
     };
-    song.levels[LEVELS.indexOf(best.level)] = best;
+    song.levels[LEVELS.indexOf(best.level as LevelName)] = best;
     songs.set(best.song, song);
   }
   return calculateRanking({ songs: [...songs.values()] }, "b30").rankingScore;
 }
 
-export function updateRks(key: Uint8Array) {
-  setRks(key, rksOf(key, 0), rksOf(key, 1));
-}
+export const updateRks = async (tx: Tx, key: Uint8Array) =>
+  setRks(tx, key, await rksOf(tx, key, 0), await rksOf(tx, key, 1));
 
 /** Keeps an uploaded replay, pending until the worker judged it (server/worker.ts). */
-export function addReplay(sha256: string, key: Uint8Array, song: string, header: ReplayHeader) {
-  const json = JSON.stringify(header);
-  const { difficulty, score, game, mods } = header;
-  insert.run(sha256, key, song, difficulty, score, game, json, Date.now(), mods);
+export async function addReplay(
+  sha256: string,
+  key: Uint8Array,
+  song: string,
+  header: ReplayHeader,
+) {
+  await db
+    .insert(replays)
+    .values({
+      sha256,
+      key,
+      song,
+      level: header.difficulty,
+      score: header.score,
+      game: header.game,
+      header,
+      created: Date.now(),
+      mods: header.mods,
+    })
+    .onConflictDoNothing();
 }
-
-const verified = sqlite.prepare<{ key: Uint8Array; song: string; level: string }, [string]>(
-  "SELECT key, song, level FROM replays WHERE sha256 = ?",
-);
 
 /**
- * A replay the worker verified counts: it can become its player's best on the chart, and their RKS follows. The
- * player and chart, and whether it became their best. One played with modifiers only counts on their board, as the
- * player's best with those: it's no record of the game's, so it raises nothing else.
+ * A replay the worker verified counts: it can become its player's best on the chart, and their RKS follows. Whether
+ * it became their best. One played with modifiers only counts on their board, as the player's best with those: it's
+ * no record of the game's, so it raises nothing else.
  */
-export function countReplay(sha256: string, header: ReplayHeader) {
-  const { key, song, level } = verified.get(sha256)!;
+export async function countReplay(
+  tx: Tx,
+  { sha256, key, song, level }: { sha256: string; key: Uint8Array; song: string; level: string },
+  header: ReplayHeader,
+) {
   const { score, accuracy, mods } = header;
-  const fc = header.bad + header.miss === 0;
+  const best = { key, song, level, accuracy, sha256, fc: header.bad + header.miss === 0 };
   const played = header.date * 1000;
-  return sqlite.transaction(() => {
-    if (mods) {
-      const total = totalOf(score, mods);
-      raiseModded.run(
-        key,
-        song,
-        level,
-        mods,
-        total,
-        accuracy,
-        fc ? 1 : 0,
-        played,
-        Date.now(),
-        sha256,
-      );
-      return { key, song, level, raised: false };
-    }
-    const raised = raiseBest(key, song, level, { score, accuracy, fc, played, sha256 });
-    updateRks(key);
-    return { key, song, level, raised };
-  })();
+  if (mods) {
+    // with modifiers, a higher total replaces the best with the same ones
+    await tx
+      .insert(modded)
+      .values({ ...best, mods, score: totalOf(score, mods), played, created: Date.now() })
+      .onConflictDoUpdate({
+        target: [modded.key, modded.song, modded.level, modded.mods],
+        set: {
+          score: excluded(modded.score),
+          accuracy: excluded(modded.accuracy),
+          fc: excluded(modded.fc),
+          played: excluded(modded.played),
+          sha256: excluded(modded.sha256),
+          created: excluded(modded.created),
+        },
+        setWhere: sql`excluded.score > ${modded.score}`,
+      });
+    return false;
+  }
+  const raised = await raiseBests(tx, key, [{ ...best, score, played }]);
+  await updateRks(tx, key);
+  return raised.length > 0;
 }
 
-const about = sqlite.prepare<
-  PlayerName & {
-    song: string;
-    level: string;
-    header: string;
-    status: ReplayInfo["status"];
-    timing: number | null;
-    mods: number;
-  },
-  [string]
->(
-  `SELECT r.song, r.level, r.header, r.status, r.timing, r.mods, p.id, p.name, p.number, p.avatar
-   FROM replays r JOIN players p ON p.key = r.key WHERE r.sha256 = ?`,
-);
-
 /** Who played a replay and what they got. */
-export function replayInfo(sha256: string): ReplayInfo | undefined {
-  const row = about.get(sha256);
+export async function replayInfo(sha256: string): Promise<ReplayInfo | undefined> {
+  const [row] = await db
+    .select({ replay: replays, player: NAME })
+    .from(replays)
+    .innerJoin(players, eq(players.key, replays.key))
+    .where(eq(replays.sha256, sha256));
   if (!row) return undefined;
-  const header = JSON.parse(row.header) as ReplayHeader;
+  const { header, song, level, status, timing, mods } = row.replay;
   return {
-    player: { id: row.id, name: row.name, number: row.number, avatar: row.avatar },
-    song: row.song,
-    level: row.level,
-    status: row.status,
+    player: row.player,
+    song,
+    level,
+    status: status as ReplayInfo["status"],
     date: header.date * 1000,
     score: header.score,
-    mods: row.mods,
-    total: totalOf(header.score, row.mods),
+    mods,
+    total: totalOf(header.score, mods),
     accuracy: header.accuracy,
-    timing: row.timing,
+    timing,
     fc: header.bad + header.miss === 0,
     maxcombo: header.maxcombo,
     perfect: header.perfect,
@@ -277,133 +208,169 @@ export function replayInfo(sha256: string): ReplayInfo | undefined {
   };
 }
 
-// a statement over a board's rows for each board: the bests of a scope, or the ones with modifiers. from(joins) is
-// its FROM up to the conditions of its own
+// the rows of each board: the bests of a scope, or the ones with modifiers. those read as bests here, as these
+// queries only name what both tables have
 const BOARDS = [
-  ["bests", "b.scope = 0 AND"],
-  ["bests", "b.scope = 1 AND"],
-  ["modded", ""],
-] as const;
-const boards = <T, P extends unknown[]>(sql: (from: (joins: string) => string) => string) =>
-  BOARDS.map(([table, scope]) =>
-    sqlite.prepare<T, P>(sql((joins) => `${table} b ${joins} WHERE ${scope}`)),
-  );
-
-const chartPage = boards<
-  PlayerName & {
-    sha256: string | null;
-    score: number;
-    total: number;
-    mods: number;
-    accuracy: number;
-    fc: number;
-    played: number | null;
-    status: string | null;
-    timing: number | null;
-  },
-  [string, string, number, number]
->(
-  (from) =>
-    `SELECT b.sha256, COALESCE(r.score, b.score) AS score, b.score AS total, COALESCE(r.mods, 0) AS mods,
-     b.accuracy, b.fc, b.played, r.status, r.timing, p.id, p.name, p.number, p.avatar
-     FROM ${from("LEFT JOIN replays r ON r.sha256 = b.sha256 JOIN players p ON p.key = b.key")}
-     b.song = ? AND b.level = ? AND p.unlisted = 0
-     ORDER BY b.score DESC, b.played IS NULL, b.played, b.created LIMIT ? OFFSET ?`,
-);
-const chartCount = boards<{ count: number }, [string, string]>(
-  (from) =>
-    `SELECT COUNT(*) AS count FROM ${from("JOIN players p ON p.key = b.key")}
-     b.song = ? AND b.level = ? AND p.unlisted = 0`,
-);
+  { b: bests, scoped: eq(bests.scope, 0) },
+  { b: bests, scoped: eq(bests.scope, 1) },
+  { b: modded as unknown as typeof bests, scoped: undefined },
+];
+const listed = eq(players.unlisted, false);
 
 /**
  * A chart's players on a board, best score first and on a tie the earliest verified replay, then the earliest record.
  * With modifiers it's each player's best with each set of them, best total first.
  */
-export function chartPlays(
+export async function chartPlays(
   board: Board,
   song: string,
   level: string,
   limit: number,
   offset: number,
-): ChartPlays {
-  const plays = chartPage[board]!.all(song, level, limit, offset).map((row, index) => ({
-    id: row.sha256 ?? `imported:${row.id}`,
+): Promise<ChartPlays> {
+  const { b, scoped } = BOARDS[board]!;
+  const on = and(scoped, eq(b.song, song), eq(b.level, level), listed);
+  const rows = await db
+    .select({
+      sha256: b.sha256,
+      score: sql<number>`coalesce(${replays.score}, ${b.score})`,
+      total: b.score,
+      mods: sql<number>`coalesce(${replays.mods}, 0)`,
+      accuracy: b.accuracy,
+      fc: b.fc,
+      played: b.played,
+      status: replays.status,
+      timing: replays.timing,
+      player: NAME,
+    })
+    .from(b)
+    .leftJoin(replays, eq(replays.sha256, b.sha256))
+    .innerJoin(players, eq(players.key, b.key))
+    .where(on)
+    .orderBy(desc(b.score), b.played, b.created)
+    .limit(limit)
+    .offset(offset);
+  const [total] = await db
+    .select({ count: count() })
+    .from(b)
+    .innerJoin(players, eq(players.key, b.key))
+    .where(on);
+  const plays = rows.map((row, index) => ({
+    id: row.sha256 ?? `imported:${row.player.id}`,
     replay: row.sha256,
     rank: offset + index + 1,
-    player: { id: row.id, name: row.name, number: row.number, avatar: row.avatar },
+    player: row.player,
     score: row.score,
     mods: row.mods,
     total: row.total,
     accuracy: row.accuracy,
     timing: row.timing,
-    fc: row.fc === 1,
+    fc: row.fc,
     status: (row.status ?? "imported") as PlayStatus,
     date: row.played,
   }));
-  return { count: chartCount[board]!.get(song, level)!.count, plays };
+  return { count: total!.count, plays };
 }
 
-const place = sqlite.prepare<{ rank: number }, [Uint8Array, string, string]>(
-  `SELECT 1 + (SELECT COUNT(*) FROM bests b JOIN players p ON p.key = b.key
-     WHERE b.scope = 0 AND b.song = mine.song AND b.level = mine.level AND b.score > mine.score AND p.unlisted = 0)
-   AS rank FROM bests mine WHERE mine.key = ? AND mine.song = ? AND mine.level = ? AND mine.scope = 0`,
-);
+/** The place a score takes on a chart counting all plays: one past the listed players above it. */
+export async function placeOf(tx: Tx, song: string, level: string, score: number) {
+  const [{ above }] = await tx
+    .select({ above: count() })
+    .from(bests)
+    .innerJoin(players, eq(players.key, bests.key))
+    .where(
+      and(
+        eq(bests.scope, 0),
+        eq(bests.song, song),
+        eq(bests.level, level),
+        gt(bests.score, score),
+        listed,
+      ),
+    );
+  return above + 1;
+}
 
 /** Where a player's best stands on a chart counting all plays, undefined if they have none there. */
-export const chartPlace = (key: Uint8Array, song: string, level: string) =>
-  place.get(key, song, level)?.rank;
+export async function chartPlace(tx: Tx, key: Uint8Array, song: string, level: string) {
+  const [mine] = await tx
+    .select({ score: bests.score })
+    .from(bests)
+    .where(
+      and(eq(bests.key, key), eq(bests.song, song), eq(bests.level, level), eq(bests.scope, 0)),
+    );
+  return mine && placeOf(tx, song, level, mine.score);
+}
 
-// the listed players with their rank by the scope's RKS, the ones whose name holds the search (a pattern for LIKE,
-// "%" for all) and whose number is the searched one (0 for any)
-const ranked = (
-  rks: string,
-) => `SELECT * FROM (SELECT id, name, fold, number, avatar, ${rks} AS rks,
-  ROW_NUMBER() OVER (ORDER BY ${rks} DESC, ${rks}_at) AS rank FROM players WHERE ${rks} > 0 AND unlisted = 0)
-  WHERE fold LIKE ?1 ESCAPE '\\' AND (?2 = 0 OR number = ?2)`;
-const RKS = ["rks", "rks_verified"] as const;
-const playerPage = RKS.map((rks) =>
-  sqlite.prepare<PlayerName & { rks: number; rank: number }, [string, number, number, number]>(
-    `${ranked(rks)} ORDER BY rank LIMIT ?3 OFFSET ?4`,
-  ),
-);
-const playerCount = RKS.map((rks) =>
-  sqlite.prepare<{ count: number }, [string, number]>(
-    `SELECT COUNT(*) AS count FROM (${ranked(rks)})`,
-  ),
-);
+const RKS = [
+  { rks: players.rks, at: players.rks_at },
+  { rks: players.rks_verified, at: players.rks_verified_at },
+];
 
-/**
- * Players by RKS, the earliest to reach it first on a tie, those matching a search if there's one: part of the name,
- * then "#0042" for a number.
- */
-export function playerRanking(
+/** The listed players with their rank by the scope's RKS, the earliest to reach it first on a tie. */
+export function ranked(scope: Scope) {
+  const { rks, at } = RKS[scope]!;
+  return db
+    .select({
+      key: players.key,
+      fold: players.fold,
+      ...NAME,
+      rks: sql<number>`${rks}`.as("rks"),
+      rank: sql<number>`(row_number() over (order by ${rks} desc, ${at}))::int`.as("rank"),
+    })
+    .from(players)
+    .where(and(gt(rks, 0), listed))
+    .as("ranked");
+}
+
+/** Players by RKS, those matching a search if there's one: part of the name, then "#0042" for a number. */
+export async function playerRanking(
   scope: Scope,
   limit: number,
   offset: number,
   search = "",
-): PlayerRanking {
+): Promise<PlayerRanking> {
   const [name = "", number = ""] = search.trim().split("#");
-  const pattern = `%${fold(name).replace(/[\\%_]/g, "\\$&")}%`;
   const wanted = Number.parseInt(number, 10) || 0;
-  const players = playerPage[scope]!.all(pattern, wanted, limit, offset).map((row) => ({
-    rank: row.rank,
-    player: { id: row.id, name: row.name, number: row.number, avatar: row.avatar },
-    rks: row.rks,
+  const all = ranked(scope);
+  const found = and(
+    like(all.fold, `%${fold(name).replace(/[\\%_]/g, "\\$&")}%`),
+    wanted ? eq(all.number, wanted) : undefined,
+  );
+  const rows = await db
+    .select()
+    .from(all)
+    .where(found)
+    .orderBy(all.rank)
+    .limit(limit)
+    .offset(offset);
+  const [total] = await db.select({ count: count() }).from(all).where(found);
+  const listing = rows.map(({ rank, rks, id, name, number, avatar }) => ({
+    rank,
+    player: { id, name, number, avatar },
+    rks,
   }));
-  return { count: playerCount[scope]!.get(pattern, wanted)!.count, players };
+  return { count: total!.count, players: listing };
 }
 
-const counts = boards<ChartCount, []>(
-  (from) =>
-    `SELECT b.song, b.level, COUNT(*) AS count FROM ${from("JOIN players p ON p.key = b.key")}
-     p.unlisted = 0 GROUP BY b.song, b.level ORDER BY count DESC`,
-);
-const cached: { at: number; charts: ChartCount[] }[] = [];
+const cached: ({ at: number; charts: Promise<ChartCount[]> } | undefined)[] = [];
 
 /** Every chart with a best on the board, most players first. Counted at most once a minute, as it reads every best. */
-export function chartCounts(board: Board): ChartCount[] {
-  if (!cached[board] || Date.now() - cached[board].at > 60_000)
-    cached[board] = { at: Date.now(), charts: counts[board]!.all() };
-  return cached[board].charts;
+export function chartCounts(board: Board): Promise<ChartCount[]> {
+  const known = cached[board];
+  if (known && Date.now() - known.at < 60_000) return known.charts;
+  const { b, scoped } = BOARDS[board]!;
+  const charts = db
+    .select({ song: b.song, level: b.level, count: count() })
+    .from(b)
+    .innerJoin(players, eq(players.key, b.key))
+    .where(and(scoped, listed))
+    .groupBy(b.song, b.level)
+    .orderBy(desc(count()), b.song, b.level)
+    .then((rows) => rows);
+  // the answer is kept as it's asked for, so pages loading at once count once. one that failed isn't kept
+  cached[board] = { at: Date.now(), charts };
+  charts.catch(() => {
+    cached[board] = undefined;
+  });
+  return charts;
 }

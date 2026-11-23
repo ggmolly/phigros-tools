@@ -1,3 +1,5 @@
 hash_secret = "replace-with-a-long-random-value"
+# optional: the public keys (hex) of the players who see /admin, which also needs a hash_secret of its own
+# admins = ["0123..."]
 # optional: a GitHub token (no scope needed) for the mod catalog, which is limited to 60 requests an hour without
 # github_token = "github_pat_..."

@@ -1,40 +1,13 @@
+import { eq, sql } from "drizzle-orm";
 import { HTTPError } from "nitro/h3";
 import type { PlayerName } from "../src/plays";
-import { sqlite } from "./db";
-
-// a player is a key with the name it has in Phigros and a number the server picks, unique per name. fold is the name
-// as compared: case and unicode variants of a name share its numbers
-sqlite.run(`
-  CREATE TABLE IF NOT EXISTS players (
-    key BLOB PRIMARY KEY,
-    id TEXT NOT NULL UNIQUE,
-    name TEXT NOT NULL,
-    fold TEXT NOT NULL,
-    number INTEGER NOT NULL,
-    intro TEXT NOT NULL DEFAULT '',
-    avatar TEXT NOT NULL DEFAULT '',
-    background TEXT NOT NULL DEFAULT '',
-    unlisted INTEGER NOT NULL DEFAULT 0,
-    rks REAL NOT NULL DEFAULT 0,
-    rks_at INTEGER NOT NULL DEFAULT 0,
-    rks_verified REAL NOT NULL DEFAULT 0,
-    rks_verified_at INTEGER NOT NULL DEFAULT 0,
-    created INTEGER NOT NULL,
-    seen INTEGER NOT NULL DEFAULT 0,
-    UNIQUE (fold, number)
-  )
-`);
-sqlite.run("CREATE INDEX IF NOT EXISTS idx_players_rank ON players(rks DESC, rks_at)");
-sqlite.run(
-  "CREATE INDEX IF NOT EXISTS idx_players_rank_verified ON players(rks_verified DESC, rks_verified_at)",
-);
-
-const touch = sqlite.prepare<unknown, [number, Uint8Array]>(
-  "UPDATE players SET seen = ? WHERE key = ?",
-);
+import { db, lock, type Tx } from "./db";
+import * as t from "./schema";
 
 /** The player was just online: any request their game signed says so. */
-export const markSeen = (key: Uint8Array) => touch.run(Date.now(), key);
+export async function markSeen(key: Uint8Array) {
+  await db.update(t.players).set({ seen: Date.now() }).where(eq(t.players.key, key));
+}
 
 const NUMBERS = 9999;
 const NAME_LENGTH = 32;
@@ -68,42 +41,52 @@ function cleanIntro(intro: string): string {
   return [...cleaned].slice(0, INTRO_LENGTH).join("");
 }
 
-const byKey = sqlite.prepare<PlayerName & { fold: string }, [Uint8Array]>(
-  "SELECT id, name, number, avatar, fold FROM players WHERE key = ?",
-);
-const taken = sqlite.prepare<{ number: number }, [string]>(
-  "SELECT number FROM players WHERE fold = ?",
-);
-const create = sqlite.prepare<unknown, [Uint8Array, string, string, string, number, number]>(
-  "INSERT INTO players (key, id, name, fold, number, created) VALUES (?, ?, ?, ?, ?, ?)",
-);
-const rename = sqlite.prepare<unknown, [string, string, number, Uint8Array]>(
-  "UPDATE players SET name = ?, fold = ?, number = ? WHERE key = ?",
-);
-const idTaken = sqlite.prepare<{ key: Uint8Array }, [string]>(
-  "SELECT key FROM players WHERE id = ?",
-);
+/** A player as every list names them. */
+export const NAME = {
+  id: t.players.id,
+  name: t.players.name,
+  number: t.players.number,
+  avatar: t.players.avatar,
+};
 
 /** The key of a player's id, undefined for no such player. */
-export const keyOf = (id: string) => idTaken.get(id)?.key;
+export async function keyOf(id: string) {
+  const [found] = await db
+    .select({ key: t.players.key })
+    .from(t.players)
+    .where(eq(t.players.id, id));
+  return found?.key;
+}
 
-export function player(key: Uint8Array): PlayerName | undefined {
-  const row = byKey.get(key);
-  return row && { id: row.id, name: row.name, number: row.number, avatar: row.avatar };
+export async function player(key: Uint8Array): Promise<PlayerName | undefined> {
+  const [found] = await db.select(NAME).from(t.players).where(eq(t.players.key, key));
+  return found;
 }
 
 /**
  * Registers the key under its Phigros name, or follows a rename. The number is kept when it's free for the new name,
  * otherwise a random free one: the client never chooses it. "GUEST" is the name of a guest who never set one.
  */
-export function setName(key: Uint8Array, raw: string): PlayerName {
+export async function setName(key: Uint8Array, raw: string): Promise<PlayerName> {
   const name = clean(raw);
   if (!name || name === "GUEST") throw new HTTPError({ status: 400, body: { code: "no-name" } });
-  return sqlite.transaction(() => {
-    const current = byKey.get(key);
-    const folded = fold(name);
-    if (current?.name === name) return player(key)!;
-    const used = new Set(taken.all(folded).map((row) => row.number));
+  const folded = fold(name);
+  return db.transaction(async (tx) => {
+    // two keys taking a name at once wait here, so each draws a number the other didn't
+    await lock(tx, key);
+    await lock(tx, `name:${folded}`);
+    const [current] = await tx
+      .select({ ...NAME, fold: t.players.fold })
+      .from(t.players)
+      .where(eq(t.players.key, key));
+    const id = current?.id ?? playerId(key);
+    const avatar = current?.avatar ?? "";
+    if (current?.name === name) return { id, name, number: current.number, avatar };
+    const taken = await tx
+      .select({ number: t.players.number })
+      .from(t.players)
+      .where(eq(t.players.fold, folded));
+    const used = new Set(taken.map((row) => row.number));
     if (current?.fold === folded) used.delete(current.number);
     let number = current && !used.has(current.number) ? current.number : 0;
     if (!number) {
@@ -111,51 +94,54 @@ export function setName(key: Uint8Array, raw: string): PlayerName {
       if (!free.length) throw new HTTPError({ status: 409, body: { code: "name-full" } });
       number = free[Math.floor(Math.random() * free.length)]!;
     }
-    if (current) rename.run(name, folded, number, key);
+    if (current)
+      await tx.update(t.players).set({ name, fold: folded, number }).where(eq(t.players.key, key));
     else {
-      if (idTaken.get(playerId(key)))
+      if ((await tx.select(NAME).from(t.players).where(eq(t.players.id, id))).length)
         throw new HTTPError({ status: 409, body: { code: "id-taken" } });
-      create.run(key, playerId(key), name, folded, number, Date.now());
+      await tx
+        .insert(t.players)
+        .values({ key, id, name, fold: folded, number, created: Date.now() });
     }
-    return player(key)!;
-  })();
+    return { id, name, number, avatar };
+  });
 }
-
-const updateLook = sqlite.prepare<unknown, [string, string, string, number, Uint8Array]>(
-  "UPDATE players SET intro = ?, avatar = ?, background = ?, unlisted = ? WHERE key = ?",
-);
 
 /**
  * What the player shows on their Phigros profile: their self-introduction ("" when they kept the game's placeholder or
  * don't share it), avatar and background (the game's keys, "" for its defaults), and whether they're left out of the
  * leaderboards (their page still opens from its link).
  */
-export function setLook(
+export async function setLook(
   key: Uint8Array,
   look: { intro: string; avatar: string; background: string; unlisted: boolean },
 ) {
   const short = (value: string) => clean(value).slice(0, 128);
-  updateLook.run(
-    cleanIntro(look.intro),
-    short(look.avatar),
-    short(look.background),
-    look.unlisted ? 1 : 0,
-    key,
-  );
+  await db
+    .update(t.players)
+    .set({
+      intro: cleanIntro(look.intro),
+      avatar: short(look.avatar),
+      background: short(look.background),
+      unlisted: look.unlisted,
+    })
+    .where(eq(t.players.key, key));
 }
 
-// each RKS keeps when it last changed, so the earlier player to reach it ranks first
-const updateRks = sqlite.prepare<unknown, [number, number, Uint8Array]>(
-  `UPDATE players SET rks_at = CASE WHEN rks != ?1 THEN ?2 ELSE rks_at END, rks = ?1 WHERE key = ?3`,
-);
-const updateVerifiedRks = sqlite.prepare<unknown, [number, number, Uint8Array]>(
-  `UPDATE players SET rks_verified_at = CASE WHEN rks_verified != ?1 THEN ?2 ELSE rks_verified_at END,
-   rks_verified = ?1 WHERE key = ?3`,
-);
-
-/** The player's RKS counting all their bests, and counting verified replays only. */
-export function setRks(key: Uint8Array, rks: number, verified: number) {
+/**
+ * The player's RKS counting all their bests, and counting verified replays only. Each keeps when it last changed, so
+ * the earlier player to reach it ranks first.
+ */
+export async function setRks(tx: Tx, key: Uint8Array, rks: number, verified: number) {
   const now = Date.now();
-  updateRks.run(rks, now, key);
-  updateVerifiedRks.run(verified, now, key);
+  const { players } = t;
+  await tx
+    .update(players)
+    .set({
+      rks_at: sql`case when ${players.rks} <> ${rks} then ${now} else ${players.rks_at} end`,
+      rks,
+      rks_verified_at: sql`case when ${players.rks_verified} <> ${verified} then ${now} else ${players.rks_verified_at} end`,
+      rks_verified: verified,
+    })
+    .where(eq(players.key, key));
 }

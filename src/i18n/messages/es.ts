@@ -26,6 +26,11 @@ export const es = {
     or: "o",
     browseCharts: "explora la lista de charts",
   },
+  crashed: {
+    title: "Algo salió mal",
+    body: "No se pudo mostrar esta página y el error ya fue notificado, así que recargarla puede bastar.",
+    reload: "Recargar",
+  },
   menu: {
     label: "Menú principal",
     import: "Importar",

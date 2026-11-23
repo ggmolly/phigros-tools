@@ -26,6 +26,11 @@ export const de = {
     or: "oder",
     browseCharts: "durchsuche die Chart-Liste",
   },
+  crashed: {
+    title: "Etwas ist schiefgelaufen",
+    body: "Diese Seite konnte nicht angezeigt werden und der Fehler wurde gemeldet, ein Neuladen kann schon genügen.",
+    reload: "Neu laden",
+  },
   menu: {
     label: "Hauptmenü",
     import: "Importieren",

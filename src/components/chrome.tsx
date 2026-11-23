@@ -1,7 +1,8 @@
 import { Link, useLoaderData, useRouterState } from "@tanstack/react-router";
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import { setLocale, useFormat, useLocale, useT } from "../i18n";
 import { isLocale, LOCALE_NAME, LOCALES } from "../i18n/locales";
+import { report } from "../report";
 import { useSave } from "../save-context";
 
 /** Positions (x%, y%, size) for the drifting bokeh dots, shared by the dashboard and the static reference pages. */
@@ -120,7 +121,7 @@ export function toolTabs(hasSave: boolean, signedIn: boolean): TabId[] {
 
 /** Every page's header: brand mark, the tabs (the tool's sections plus Charts), the page's own actions, then the Discord and GitHub links at the far right. */
 export function SiteHeader({ children }: { children?: React.ReactNode }) {
-  const { loaded, account } = useSave();
+  const { loaded, account, home } = useSave();
   const t = useT();
   const pathname = useRouterState({ select: (state) => state.location.pathname });
   const signedIn = !!account && account === loaded?.playerId;
@@ -133,7 +134,7 @@ export function SiteHeader({ children }: { children?: React.ReactNode }) {
     "/phigrospp" as const,
   ];
   // a chart's ranking, a player's page and a replay are reached from the leaderboard
-  const activeTab: TabId =
+  const activeTab: TabId | undefined =
     pathname.startsWith("/leaderboard") ||
     pathname.startsWith("/players/") ||
     pathname.startsWith("/replays/") ||
@@ -147,7 +148,7 @@ export function SiteHeader({ children }: { children?: React.ReactNode }) {
             ? "/rooms"
             : pathname === "/start" || pathname === "/rebuild"
               ? "/phigrospp"
-              : (tabIds.find((id) => id === pathname) ?? "/");
+              : (tabIds.find((id) => id === pathname) ?? (pathname === "/admin" ? undefined : "/"));
   return (
     <header className="topbar">
       <Link className="corner brand" to="/" aria-label={t.header.home}>
@@ -170,10 +171,40 @@ export function SiteHeader({ children }: { children?: React.ReactNode }) {
             {id === "/" && signedIn ? t.tabs.profile : t.tabs[TAB_KEY[id]]}
           </Link>
         ))}
+        {/* only who data/config.toml names sees it (server/admin.ts) */}
+        {home?.roles.includes("admin") && (
+          <Link
+            to="/admin"
+            className="tab"
+            aria-current={pathname === "/admin" ? "page" : undefined}
+          >
+            Admin
+          </Link>
+        )}
       </nav>
       {children}
       <HeaderLinks />
     </header>
+  );
+}
+
+/** What a page that threw shows in its place, once the server is told (src/report.ts). */
+export function PageError({ error }: { error: unknown }) {
+  const t = useT();
+  useEffect(() => report("render", error), [error]);
+  return (
+    <>
+      <SiteHeader />
+      <main className="app-shell">
+        <section className="panel">
+          <h1 className="panel-title">{t.crashed.title}</h1>
+          <p className="meta">{t.crashed.body}</p>
+          <button type="button" className="btn" onClick={() => location.reload()}>
+            {t.crashed.reload}
+          </button>
+        </section>
+      </main>
+    </>
   );
 }
 

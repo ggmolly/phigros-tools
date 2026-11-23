@@ -11,7 +11,7 @@ const Join = v.object({ code: v.string(), name: v.string() });
 export default defineHandler(async (event) => {
   const { device, body } = await signed(event);
   const { code, name } = signedJson(Join, body);
-  const joined = redeemInvite(device, code, name);
+  const joined = await redeemInvite(device, code, name);
   await announce(topics.player(joined.id));
   return joined;
 });

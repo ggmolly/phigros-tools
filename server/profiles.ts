@@ -1,3 +1,5 @@
+import { and, count, desc, eq, gt, sql } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 import { HTTPError } from "nitro/h3";
 import { canonicalSongId, catalogSong } from "../src/catalog";
 import { chartRks } from "../src/metrics";
@@ -8,270 +10,166 @@ import {
   LIST_FIRST,
   type Page,
   type PlayedChart,
-  type PlayerName,
   type PlayerProfile,
   type PlayStatus,
 } from "../src/plays";
-import { sqlite } from "./db";
-import "./replays"; // the bests and replays tables
+import { db, excluded, type Tx } from "./db";
+import { keyOf } from "./players";
+import { placeOf, ranked } from "./replays";
+import * as t from "./schema";
 
-// what a player's page shows besides their bests: every song they finished (a summary sent by the game, no replay),
-// the rank each new best took on its chart, and their RKS and rank once a day
-sqlite.run(`
-  CREATE TABLE IF NOT EXISTS plays (
-    key BLOB NOT NULL,
-    song TEXT NOT NULL,
-    level TEXT NOT NULL,
-    score INTEGER NOT NULL,
-    accuracy REAL NOT NULL,
-    maxcombo INTEGER NOT NULL,
-    perfect INTEGER NOT NULL,
-    good INTEGER NOT NULL,
-    bad INTEGER NOT NULL,
-    miss INTEGER NOT NULL,
-    duration REAL NOT NULL,
-    played INTEGER NOT NULL,
-    PRIMARY KEY (key, played, song, level)
-  )
-`);
-// the modifiers it was played with (src/modifiers.ts), added after the table
-if (
-  !sqlite
-    .query<{ name: string }, []>("PRAGMA table_info(plays)")
-    .all()
-    .some((c) => c.name === "mods")
-)
-  sqlite.run("ALTER TABLE plays ADD COLUMN mods INTEGER NOT NULL DEFAULT 0");
-sqlite.run(`
-  CREATE TABLE IF NOT EXISTS activity (
-    key BLOB NOT NULL,
-    song TEXT NOT NULL,
-    level TEXT NOT NULL,
-    score INTEGER NOT NULL,
-    rank INTEGER NOT NULL,
-    at INTEGER NOT NULL
-  )
-`);
-sqlite.run("CREATE INDEX IF NOT EXISTS idx_activity_key ON activity(key, at DESC)");
-sqlite.run(`
-  CREATE TABLE IF NOT EXISTS history (
-    key BLOB NOT NULL,
-    day TEXT NOT NULL,
-    rks REAL NOT NULL,
-    rank INTEGER NOT NULL,
-    PRIMARY KEY (key, day)
-  )
-`);
-
+// what a player's page shows besides their bests (the plays, activity and history tables in server/schema.ts)
 const MAX_PLAYS = 500;
-const insertPlay = sqlite.prepare<
-  unknown,
-  [
-    Uint8Array,
-    string,
-    string,
-    number,
-    number,
-    number,
-    number,
-    number,
-    number,
-    number,
-    number,
-    number,
-    number,
-  ]
->(
-  `INSERT INTO plays (key, song, level, score, accuracy, maxcombo, perfect, good, bad, miss, duration, played, mods)
-   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT DO NOTHING`,
-);
+const MAX_COUNT = 1_000_000; // a note count or a score, far past any chart's
+const { activity, bests, declared, history, players, plays, replays } = t;
 
 /**
  * Songs a player finished, one JSON object per line as the game sends them. Sending one again changes nothing. Levels
  * the site doesn't rank (the game's Legacy charts) are skipped, and so are modifiers it doesn't know: the game drops
  * a whole batch that's refused.
  */
-export function addPlays(key: Uint8Array, text: string): number {
+export async function addPlays(key: Uint8Array, text: string): Promise<number> {
   const lines = text.split("\n").filter(Boolean);
   if (lines.length > MAX_PLAYS) throw HTTPError.status(413, "Too many plays");
-  const plays = lines.flatMap((line) => {
+  const sent = lines.flatMap((line) => {
     const p = JSON.parse(line) as Record<string, unknown>;
-    const n = (field: string) => {
+    const n = (field: string, max = Number.MAX_SAFE_INTEGER) => {
       const value = Number(p[field]);
-      if (!Number.isFinite(value) || value < 0)
+      if (!Number.isFinite(value) || value < 0 || value > max)
         throw HTTPError.status(400, `Bad ${field}: ${line}`);
       return value;
     };
+    const whole = (field: string) => Math.round(n(field, MAX_COUNT));
     const level = String(p.level);
     const mods = Number(p.mods ?? 0);
     if (!LEVELS.includes(level as LevelName) || !validMods(mods, 0)) return [];
     return {
+      key,
       mods,
-      song: canonicalSongId(String(p.song).replace(/\.0$/, "")),
+      // PostgreSQL keeps no NUL in a text
+      song: canonicalSongId(String(p.song).replaceAll("\0", "").replace(/\.0$/, "")),
       level,
-      score: n("score"),
+      score: whole("score"),
       accuracy: Math.min(100, n("accuracy")),
-      maxcombo: n("maxcombo"),
-      perfect: n("perfect"),
-      good: n("good"),
-      bad: n("bad"),
-      miss: n("miss"),
+      maxcombo: whole("maxcombo"),
+      perfect: whole("perfect"),
+      good: whole("good"),
+      bad: whole("bad"),
+      miss: whole("miss"),
       duration: n("duration"),
-      played: n("date") * 1000,
+      played: Math.round(n("date", 1e11) * 1000),
     };
   });
-  sqlite.transaction(() => {
-    for (const p of plays)
-      insertPlay.run(
-        key,
-        p.song,
-        p.level,
-        p.score,
-        p.accuracy,
-        p.maxcombo,
-        p.perfect,
-        p.good,
-        p.bad,
-        p.miss,
-        p.duration,
-        p.played,
-        p.mods,
-      );
-  })();
-  return plays.length;
+  if (sent.length) await db.insert(plays).values(sent).onConflictDoNothing();
+  return sent.length;
 }
-
-const higher = sqlite.prepare<{ above: number }, [string, string, number]>(
-  `SELECT COUNT(*) AS above FROM bests b JOIN players p ON p.key = b.key
-   WHERE b.scope = 0 AND b.song = ? AND b.level = ? AND b.score > ? AND p.unlisted = 0`,
-);
-const addActivity = sqlite.prepare<unknown, [Uint8Array, string, string, number, number, number]>(
-  "INSERT INTO activity (key, song, level, score, rank, at) VALUES (?, ?, ?, ?, ?, ?)",
-);
 
 /** A verified replay became the player's best: the rank it took on its chart goes to their activity. */
-export function addAchievement(key: Uint8Array, song: string, level: string, score: number) {
-  addActivity.run(key, song, level, score, higher.get(song, level, score)!.above + 1, Date.now());
+export async function addAchievement(
+  tx: Tx,
+  key: Uint8Array,
+  song: string,
+  level: string,
+  score: number,
+) {
+  const rank = await placeOf(tx, song, level, score);
+  await tx.insert(activity).values({ key, song, level, score, rank, at: Date.now() });
 }
-
-const snapshot = sqlite.prepare<unknown, [string]>(
-  `INSERT OR REPLACE INTO history (key, day, rks, rank)
-   SELECT key, ?, rks, ROW_NUMBER() OVER (ORDER BY rks DESC, rks_at) FROM players WHERE rks > 0 AND unlisted = 0`,
-);
 
 /** Keeps today's RKS and rank of every listed player, the last call of a day staying. */
-export function snapshotHistory() {
-  snapshot.run(new Date().toISOString().slice(0, 10));
+export async function snapshotHistory() {
+  await db
+    .insert(history)
+    .select(
+      db
+        .select({
+          key: players.key,
+          day: sql<string>`${new Date().toISOString().slice(0, 10)}::date`.as("day"),
+          rks: players.rks,
+          rank: sql<number>`(row_number() over (order by ${players.rks} desc, ${players.rks_at}))::int`.as(
+            "rank",
+          ),
+        })
+        .from(players)
+        .where(and(gt(players.rks, 0), eq(players.unlisted, false))),
+    )
+    .onConflictDoUpdate({
+      target: [history.key, history.day],
+      set: { rks: excluded(history.rks), rank: excluded(history.rank) },
+    });
 }
-
-const card = sqlite.prepare<
-  PlayerName & {
-    key: Uint8Array;
-    intro: string;
-    rks: number;
-    unlisted: number;
-    created: number;
-    seen: number;
-    background: string;
-  },
-  [string]
->(
-  "SELECT key, id, name, number, avatar, intro, rks, unlisted, created, seen, background FROM players WHERE id = ?",
-);
-const rankOf = sqlite.prepare<{ rank: number }, [Uint8Array]>(
-  `SELECT rank FROM (SELECT key, ROW_NUMBER() OVER (ORDER BY rks DESC, rks_at) AS rank FROM players
-   WHERE rks > 0 AND unlisted = 0) WHERE key = ?`,
-);
-const totals = sqlite.prepare<
-  { plays: number; notes: number; accuracy: number | null; maxcombo: number },
-  [Uint8Array]
->(
-  `SELECT COUNT(*) AS plays, COALESCE(SUM(perfect + good + bad), 0) AS notes,
-   AVG(accuracy) AS accuracy, COALESCE(MAX(maxcombo), 0) AS maxcombo FROM plays WHERE key = ?`,
-);
-const bestsOf = sqlite.prepare<
-  {
-    song: string;
-    level: string;
-    score: number;
-    accuracy: number;
-    fc: number;
-    played: number | null;
-    status: string | null;
-    sha256: string | null;
-    timing: number | null;
-  },
-  [Uint8Array]
->(
-  `SELECT b.song, b.level, b.score, b.accuracy, b.fc, b.played, r.status, b.sha256, r.timing FROM bests b
-   LEFT JOIN replays r ON r.sha256 = b.sha256 WHERE b.key = ?1 AND b.scope = 0
-   UNION ALL SELECT song, level, score, accuracy, fc, NULL, 'declared', NULL, NULL FROM declared WHERE key = ?1`,
-);
-const recentOf = sqlite.prepare<
-  {
-    song: string;
-    level: string;
-    score: number;
-    accuracy: number;
-    bad: number;
-    miss: number;
-    played: number;
-    mods: number;
-    replay: string | null;
-    timing: number | null;
-  },
-  [Uint8Array, number, number]
->(
-  `SELECT p.song, p.level, p.score, p.accuracy, p.bad, p.miss, p.played, p.mods, r.sha256 AS replay, r.timing
-   FROM plays p LEFT JOIN replays r ON r.sha256 = (SELECT sha256 FROM replays WHERE key = p.key AND song = p.song
-    AND level = p.level AND score = p.score AND mods = p.mods AND status = 'verified' LIMIT 1)
-   WHERE p.key = ? ORDER BY p.played DESC LIMIT ? OFFSET ?`,
-);
-const activityOf = sqlite.prepare<
-  { song: string; level: string; score: number; rank: number; at: number },
-  [Uint8Array, number, number]
->(
-  "SELECT song, level, score, rank, at FROM activity WHERE key = ? ORDER BY at DESC LIMIT ? OFFSET ?",
-);
-const historyOf = sqlite.prepare<{ day: string; rks: number; rank: number }, [Uint8Array]>(
-  "SELECT day, rks, rank FROM history WHERE key = ? ORDER BY day DESC LIMIT 365",
-);
-
-const keyOf = sqlite.prepare<{ key: Uint8Array }, [string]>("SELECT key FROM players WHERE id = ?");
 
 // one row past the page tells whether there's another
 function page<T>(rows: T[], limit: number): Page<T> {
   return { items: rows.slice(0, limit), more: rows.length > limit };
 }
 
-function recentPlays(key: Uint8Array, offset: number, limit: number): Page<PlayedChart> {
-  const rows = recentOf.all(key, limit + 1, offset).map((play) => ({
-    song: play.song,
-    level: play.level,
-    score: play.score,
-    mods: play.mods,
-    total: totalOf(play.score, play.mods),
-    accuracy: play.accuracy,
-    timing: play.timing,
-    fc: play.bad + play.miss === 0,
-    date: play.played,
-    replay: play.replay,
-  }));
-  return page(rows, limit);
+// a play shows the verified replay of the same result, when the player uploaded one
+const proof = alias(replays, "proof");
+const proven = db
+  .select({ sha256: proof.sha256 })
+  .from(proof)
+  .where(
+    and(
+      eq(proof.key, plays.key),
+      eq(proof.song, plays.song),
+      eq(proof.level, plays.level),
+      eq(proof.score, plays.score),
+      eq(proof.mods, plays.mods),
+      eq(proof.status, "verified"),
+    ),
+  )
+  .limit(1);
+
+async function recentPlays(
+  key: Uint8Array,
+  offset: number,
+  limit: number,
+): Promise<Page<PlayedChart>> {
+  const rows = await db
+    .select({ play: plays, replay: replays.sha256, timing: replays.timing })
+    .from(plays)
+    .leftJoin(replays, eq(replays.sha256, sql`(${proven})`))
+    .where(eq(plays.key, key))
+    .orderBy(desc(plays.played))
+    .limit(limit + 1)
+    .offset(offset);
+  return page(
+    rows.map(({ play, replay, timing }) => ({
+      song: play.song,
+      level: play.level,
+      score: play.score,
+      mods: play.mods,
+      total: totalOf(play.score, play.mods),
+      accuracy: play.accuracy,
+      timing,
+      fc: play.bad + play.miss === 0,
+      date: play.played,
+      replay,
+    })),
+    limit,
+  );
 }
 
-function activities(key: Uint8Array, offset: number, limit: number): Page<Activity> {
-  const rows = activityOf
-    .all(key, limit + 1, offset)
-    .map(({ at, ...rest }) => ({ ...rest, date: at }));
-  return page(rows, limit);
+async function activities(key: Uint8Array, offset: number, limit: number): Promise<Page<Activity>> {
+  const rows = await db
+    .select()
+    .from(activity)
+    .where(eq(activity.key, key))
+    .orderBy(desc(activity.at), desc(activity.id))
+    .limit(limit + 1)
+    .offset(offset);
+  return page(
+    rows.map(({ song, level, score, rank, at }) => ({ song, level, score, rank, date: at })),
+    limit,
+  );
 }
 
 const LISTS = { recent: recentPlays, activity: activities };
 
 /** More of a player's recent plays or activity, after the ones already shown. */
-export function profileList(id: string, list: string, offset: number, limit: number) {
-  const key = keyOf.get(id)?.key;
+export async function profileList(id: string, list: string, offset: number, limit: number) {
+  const key = await keyOf(id);
   const read = LISTS[list as keyof typeof LISTS];
   return key && read ? read(key, offset, limit) : undefined;
 }
@@ -280,11 +178,30 @@ const BEST = 27;
 const PHI = 3;
 
 /** A player's page: their card, rank, stats, top and recent plays, activity and RKS history. */
-export function profilePage(id: string): PlayerProfile | undefined {
-  const row = card.get(id);
+export async function profilePage(id: string): Promise<PlayerProfile | undefined> {
+  const [row] = await db.select().from(players).where(eq(players.id, id));
   if (!row) return undefined;
-  const top = bestsOf
-    .all(row.key)
+  const played = await db
+    .select({ best: bests, status: replays.status, timing: replays.timing })
+    .from(bests)
+    .leftJoin(replays, eq(replays.sha256, bests.sha256))
+    .where(and(eq(bests.key, row.key), eq(bests.scope, 0)))
+    .orderBy(bests.song, bests.level);
+  const typed = await db
+    .select()
+    .from(declared)
+    .where(eq(declared.key, row.key))
+    .orderBy(declared.song, declared.level);
+  const top = [
+    ...played.map(({ best, status, timing }) => ({ ...best, status, timing })),
+    ...typed.map((best) => ({
+      ...best,
+      played: null,
+      sha256: null,
+      status: "declared",
+      timing: null,
+    })),
+  ]
     .map((best) => {
       const constant = catalogSong(best.song)?.constants[LEVELS.indexOf(best.level as LevelName)];
       return {
@@ -295,7 +212,7 @@ export function profilePage(id: string): PlayerProfile | undefined {
         total: best.score,
         accuracy: best.accuracy,
         timing: best.timing,
-        fc: best.fc === 1,
+        fc: best.fc,
         date: best.played,
         replay: best.sha256,
         status: (best.status ?? "imported") as PlayStatus,
@@ -305,18 +222,37 @@ export function profilePage(id: string): PlayerProfile | undefined {
     })
     .sort((a, b) => b.rks - a.rks);
   // declared records are listed with the bests and count for nothing
-  const ranked = top.filter((best) => best.status !== "declared");
+  const counting = top.filter((best) => best.status !== "declared");
   // counted like the game's RKS: the 27 best charts, and the 3 best of those with 100% accuracy
-  for (const best of ranked.slice(0, BEST)) best.counted = true;
-  for (const best of ranked.filter((b) => b.accuracy >= 100).slice(0, PHI)) best.counted = true;
-  const rank = row.unlisted ? null : (rankOf.get(row.key)?.rank ?? null);
+  for (const best of counting.slice(0, BEST)) best.counted = true;
+  for (const best of counting.filter((b) => b.accuracy >= 100).slice(0, PHI)) best.counted = true;
+  const all = ranked(0);
+  const [place] = row.unlisted
+    ? []
+    : await db.select({ rank: all.rank }).from(all).where(eq(all.key, row.key));
+  const rank = place?.rank ?? null;
   // the worker keeps a day hourly (snapshotHistory), today's point follows the RKS shown above it
-  const history = historyOf.all(row.key).reverse();
+  const days = await db
+    .select({ day: history.day, rks: history.rks, rank: history.rank })
+    .from(history)
+    .where(eq(history.key, row.key))
+    .orderBy(desc(history.day))
+    .limit(365);
+  days.reverse();
   const today = new Date().toISOString().slice(0, 10);
   if (rank !== null && row.rks > 0) {
-    if (history.at(-1)?.day === today) history.pop();
-    history.push({ day: today, rks: row.rks, rank });
+    if (days.at(-1)?.day === today) days.pop();
+    days.push({ day: today, rks: row.rks, rank });
   }
+  const [totals] = await db
+    .select({
+      plays: count(),
+      notes: sql<number>`coalesce(sum(${plays.perfect} + ${plays.good} + ${plays.bad}), 0)::float8`,
+      accuracy: sql<number | null>`avg(${plays.accuracy})`,
+      maxcombo: sql<number>`coalesce(max(${plays.maxcombo}), 0)`,
+    })
+    .from(plays)
+    .where(eq(plays.key, row.key));
   return {
     player: { id: row.id, name: row.name, number: row.number, avatar: row.avatar },
     intro: row.intro,
@@ -326,14 +262,14 @@ export function profilePage(id: string): PlayerProfile | undefined {
     joined: row.created,
     seen: Math.max(row.seen, row.created),
     stats: {
-      ...totals.get(row.key)!,
-      cleared: ranked.length,
-      fc: ranked.filter((best) => best.fc).length,
-      phi: ranked.filter((best) => best.score >= 1_000_000).length,
+      ...totals!,
+      cleared: counting.length,
+      fc: counting.filter((best) => best.fc).length,
+      phi: counting.filter((best) => best.score >= 1_000_000).length,
     },
     top,
-    recent: recentPlays(row.key, 0, LIST_FIRST),
-    activity: activities(row.key, 0, LIST_FIRST),
-    history,
+    recent: await recentPlays(row.key, 0, LIST_FIRST),
+    activity: await activities(row.key, 0, LIST_FIRST),
+    history: days,
   };
 }

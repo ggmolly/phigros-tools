@@ -26,6 +26,11 @@ export const ko = {
     or: "또는",
     browseCharts: "채보 목록 보기",
   },
+  crashed: {
+    title: "문제가 발생했습니다",
+    body: "이 페이지를 표시하지 못했고 오류는 이미 보고되었으니, 새로고침하면 해결될 수 있습니다.",
+    reload: "새로고침",
+  },
   menu: {
     label: "메인 메뉴",
     import: "가져오기",

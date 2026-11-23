@@ -1,5 +1,6 @@
 import amqp, { type ConfirmChannel } from "amqplib";
 import type { LiveEvent } from "../src/topics";
+import { log } from "./log";
 
 /** The queue of uploaded replays waiting to be judged (server/worker.ts), by their sha256. */
 export const VERIFY_QUEUE = "replays.verify";
@@ -14,7 +15,7 @@ export function openQueue(): Promise<ConfirmChannel> {
     .connect(URL)
     .then((connection) => {
       // without a listener, a dropped connection's error would crash the server
-      connection.on("error", (error) => console.error("queue connection lost:", error));
+      connection.on("error", (error) => log.error("queue.error", { error }));
       return connection.createConfirmChannel();
     })
     .then(async (opened) => {
@@ -22,6 +23,7 @@ export function openQueue(): Promise<ConfirmChannel> {
       await opened.assertExchange(EVENTS, "fanout", { durable: false });
       opened.on("close", () => {
         channel = undefined;
+        log.warn("queue.closed");
       });
       return opened;
     })
@@ -40,7 +42,7 @@ export async function queueVerify(sha256: string) {
     // resolves once the broker has written it to disk
     await opened.waitForConfirms();
   } catch (error) {
-    console.error(`replay ${sha256} not queued:`, error);
+    log.error("queue.verify.failed", { sha256, error });
   }
 }
 
@@ -49,6 +51,6 @@ export async function announce(topic: string, event: LiveEvent = "change", data 
   try {
     (await openQueue()).publish(EVENTS, "", Buffer.from(JSON.stringify({ topic, event, data })));
   } catch (error) {
-    console.error(`event ${event} of ${topic} not sent:`, error);
+    log.error("queue.announce.failed", { topic, sent: event, error });
   }
 }

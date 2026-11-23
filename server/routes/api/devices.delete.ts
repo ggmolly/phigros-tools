@@ -8,7 +8,7 @@ import { announce } from "../../queue";
 // signs a device of the profile out for good, by its key in hex
 export default defineHandler(async (event) => {
   const { key, body } = await signed(event);
-  removeDevice(key, new TextDecoder().decode(body));
+  await removeDevice(key, new TextDecoder().decode(body));
   await announce(topics.player(playerId(key)));
   return { ok: true };
 });

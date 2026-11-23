@@ -161,7 +161,10 @@ const profileInput = v.object({
   ),
 });
 
-/** The one relayed call (see the top of this file). Fixed URLs only, and nothing is stored or logged. */
+/**
+ * The one relayed call (see the top of this file). Fixed URLs only, and neither the token nor the profile is stored or
+ * logged: the server's log only says a call was made and how long it took (server/plugins/log.ts).
+ */
 export const getTapTapProfile = createServerFn({ method: "POST" })
   .validator((input: unknown) => v.parse(profileInput, input))
   .handler(async ({ data }) => {

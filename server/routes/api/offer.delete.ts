@@ -7,9 +7,9 @@ import { dropOffer } from "../../saves";
 
 // the game loaded or declined the save the player sent from the site
 export default defineHandler(async (event) => {
-  const found = player((await signed(event)).key);
+  const found = await player((await signed(event)).key);
   if (!found) throw HTTPError.status(403, "Not registered");
-  dropOffer(found.id);
+  await dropOffer(found.id);
   await announce(topics.player(found.id));
   return { ok: true };
 });

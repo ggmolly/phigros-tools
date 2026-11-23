@@ -26,6 +26,11 @@ export const ms = {
     or: "atau",
     browseCharts: "lihat senarai chart",
   },
+  crashed: {
+    title: "Sesuatu Tidak Kena",
+    body: "Halaman ini tidak dapat dipaparkan dan ralatnya telah dilaporkan, jadi memuat semula mungkin sudah memadai.",
+    reload: "Muat semula",
+  },
   menu: {
     label: "Menu utama",
     import: "Import",

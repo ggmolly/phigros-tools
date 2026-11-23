@@ -13,7 +13,8 @@ const TOP = 10; // the places worth a post
 export async function announceRank(sha256: string, song: string, level: string, was?: number) {
   if (!config.discord_webhook) return;
   // an unlisted player isn't in the ranking, so isn't announced either
-  const play = chartPlays(0, song, level, TOP, 0).plays.find((play) => play.replay === sha256);
+  const { plays } = await chartPlays(0, song, level, TOP, 0);
+  const play = plays.find((play) => play.replay === sha256);
   if (!play || (was && was <= play.rank)) return;
   const { title, constants } = catalogSong(song)!;
   const constant = constants[LEVELS.indexOf(level as (typeof LEVELS)[number])]!;

@@ -1,5 +1,6 @@
 import { randomBytes, randomInt } from "node:crypto";
 import type { Peer } from "crossws";
+import { desc, eq, inArray } from "drizzle-orm";
 import * as v from "valibot";
 import { canonicalSongId, catalogSong } from "../src/catalog";
 import { totalOf, validMods } from "../src/modifiers";
@@ -17,16 +18,17 @@ import {
   ROOM_WATCHERS,
   type RoomChart,
   type RoomPage,
-  type RoomResult,
   type RoomSummary,
   type RoomView,
   type Standing,
 } from "../src/rooms";
 import { topics } from "../src/topics";
 import { socketPlayer } from "./auth";
-import { sqlite } from "./db";
-import { clean } from "./players";
+import { db } from "./db";
+import { log } from "./log";
+import { clean, NAME } from "./players";
 import { announce } from "./queue";
+import * as t from "./schema";
 
 /*
  * Multiplayer rooms. Phigros++ keeps one WebSocket open (routes/api/room.ts) and talks in JSON objects named by `t`.
@@ -49,45 +51,10 @@ import { announce } from "./queue";
  * miss when their connection dropped.
  *
  * Rooms live in memory, the matches of those without a password are kept: the site shows both (src/rooms.ts).
+ *
+ * A room changes without waiting for the database, so what its players do stays in the order they did it. Only who a
+ * socket is and a new room's id are read from it first, each socket's messages waiting their turn meanwhile.
  */
-
-sqlite.run(`
-  CREATE TABLE IF NOT EXISTS matches (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    room TEXT NOT NULL,
-    name TEXT NOT NULL,
-    song TEXT NOT NULL,
-    level TEXT NOT NULL,
-    mods INTEGER NOT NULL,
-    played INTEGER NOT NULL
-  )
-`);
-sqlite.run("CREATE INDEX IF NOT EXISTS idx_matches_room ON matches(room, id DESC)");
-// inserted best first, so plays that tie keep the order they finished in
-sqlite.run(`
-  CREATE TABLE IF NOT EXISTS match_plays (
-    match INTEGER NOT NULL,
-    key BLOB NOT NULL,
-    score INTEGER NOT NULL,
-    accuracy REAL NOT NULL,
-    maxcombo INTEGER NOT NULL,
-    perfect INTEGER NOT NULL,
-    good INTEGER NOT NULL,
-    bad INTEGER NOT NULL,
-    miss INTEGER NOT NULL,
-    PRIMARY KEY (match, key)
-  )
-`);
-// what each player picked, added after the table: the plays before it were on the match's level and modifiers
-if (
-  !sqlite
-    .query<{ name: string }, []>("PRAGMA table_info(match_plays)")
-    .all()
-    .some((c) => c.name === "level")
-) {
-  sqlite.run("ALTER TABLE match_plays ADD COLUMN level TEXT");
-  sqlite.run("ALTER TABLE match_plays ADD COLUMN mods INTEGER");
-}
 
 const DOMAIN = "phigros.tools rooms v1\0"; // the key signs requests and replays too
 const MAX_ROOMS = 500;
@@ -168,7 +135,25 @@ interface Session {
   nonce: string;
   player?: PlayerName;
   key?: Uint8Array;
+  /** What the socket said runs in the order it said it. */
+  turn: ReturnType<typeof serial>;
 }
+
+/** Runs what it's given one after the other, each waiting for the one before to end. */
+export function serial() {
+  let last: Promise<unknown> = Promise.resolve();
+  return <T>(work: () => T | Promise<T>): Promise<T> => {
+    const done = last.then(work);
+    last = done.catch(() => undefined);
+    return done;
+  };
+}
+
+/** What a socket's turn does when it throws: the game hears it by losing the connection, and connects again. */
+export const failed = (peer?: Peer) => (error: unknown) => {
+  log.error("socket.failed", { error });
+  peer?.close(1011, "Try again");
+};
 
 const rooms = new Map<string, Room>();
 const seated = new Map<string, Seat>(); // by player id: a player sits in one room
@@ -237,19 +222,9 @@ function push(room: Room) {
   publish(room);
 }
 
-const insertMatch = sqlite.prepare<
-  { id: number },
-  [string, string, string, string, number, number]
->(
-  "INSERT INTO matches (room, name, song, level, mods, played) VALUES (?, ?, ?, ?, ?, ?) RETURNING id",
-);
-const insertPlay = sqlite.prepare<
-  unknown,
-  [number, Uint8Array, number, number, number, number, number, number, number, string, number]
->(
-  `INSERT INTO match_plays (match, key, score, accuracy, maxcombo, perfect, good, bad, miss, level, mods)
-   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-);
+// what a room plays, for the log: with a password it stays between its players
+const played = (room: Room, { song, level, mods }: RoomChart) =>
+  room.password ? {} : { song, difficulty: level, mods };
 
 // the room is on another chart, none once its queue is empty: everyone plays it as it was added until they pick
 // otherwise. a game says again whether it has it, an older one only when the song or the level changed
@@ -292,35 +267,42 @@ function finish(room: Room) {
     })),
   };
   room.last = match;
-  if (room.password || !catalogSong(chart.song)) return;
-  sqlite.transaction(() => {
-    match.id = insertMatch.get(
-      room.id,
-      room.name,
-      match.song,
-      match.level,
-      match.mods,
-      match.date,
-    )!.id;
-    for (const { seat, result: r } of results)
-      insertPlay.run(
-        match.id,
-        seat.key,
-        r.score,
-        r.accuracy,
-        r.maxcombo,
-        r.perfect,
-        r.good,
-        r.bad,
-        r.miss,
-        r.level,
-        r.mods,
-      );
-  })();
-  void announce(topics.room(room.id));
+  const kept = !room.password && catalogSong(chart.song) !== undefined;
+  log.info("room.match.finish", {
+    room: room.id,
+    plays: results.length,
+    kept,
+    ...played(room, chart),
+  });
+  if (!kept) return;
+  const plays = results.map(({ seat, result: { total, ...result } }, place) => ({
+    ...result,
+    key: seat.key,
+    place,
+  }));
+  // kept behind the room's back: the site hears of the match once it's there
+  keep(room, match, plays).catch((error) => log.error("room.match.lost", { room: room.id, error }));
+}
+
+async function keep(
+  room: Room,
+  match: Match,
+  plays: Omit<typeof t.match_plays.$inferInsert, "match">[],
+) {
+  const { song, level, mods, date: played } = match;
+  match.id = await db.transaction(async (tx) => {
+    const [{ id }] = await tx
+      .insert(t.matches)
+      .values({ room: room.id, name: room.name, song, level, mods, played })
+      .returning({ id: t.matches.id });
+    await tx.insert(t.match_plays).values(plays.map((play) => ({ ...play, match: id })));
+    return id;
+  });
+  await announce(topics.room(room.id));
 }
 
 function close(room: Room) {
+  log.info("room.close", { room: room.id });
   clearTimeout(room.limit);
   clearTimeout(room.pushing);
   rooms.delete(room.id);
@@ -349,15 +331,12 @@ function leave(seat: Seat) {
   settle(room);
 }
 
-const matchOf = sqlite.prepare<{ id: number }, [string]>(
-  "SELECT id FROM matches WHERE room = ? LIMIT 1",
-);
-
 // an id no room has or had: a new room never takes over the page of an old one
-function freeId(): string {
+async function freeId(): Promise<string> {
   for (;;) {
     const id = Array.from({ length: 6 }, () => ID_LETTERS[randomInt(ID_LETTERS.length)]).join("");
-    if (!rooms.has(id) && !matchOf.get(id)) return id;
+    const had = await db.select().from(t.matches).where(eq(t.matches.room, id)).limit(1);
+    if (!had.length && !rooms.has(id)) return id;
   }
 }
 
@@ -435,9 +414,12 @@ const Message = v.variant("t", [
 type Message = v.InferOutput<typeof Message>;
 
 // the game proves it holds a profile's key, and gets back the room it was in if its connection dropped
-function auth(peer: Peer, session: Session, m: Extract<Message, { t: "auth" }>) {
-  const who = socketPlayer(DOMAIN, session.nonce, m);
-  if (typeof who === "string") return fail(peer, who);
+async function auth(peer: Peer, session: Session, m: Extract<Message, { t: "auth" }>) {
+  const who = await socketPlayer(DOMAIN, session.nonce, m);
+  if (typeof who === "string") {
+    log.warn("room.auth.refused", { code: who });
+    return fail(peer, who);
+  }
   const found = who.player;
   session.player = found;
   session.key = who.key;
@@ -458,12 +440,20 @@ function auth(peer: Peer, session: Session, m: Extract<Message, { t: "auth" }>) 
 const nameOf = (typed: string, player: PlayerName) =>
   clean(typed.replace(URLS, " "), ROOM_NAME) || clean(player.name, ROOM_NAME);
 
-function create(peer: Peer, session: Session, m: Extract<Message, { t: "create" }>) {
-  if (rooms.size >= MAX_ROOMS) return fail(peer, "rooms");
+// why a player wasn't let in a room or given what they asked of it
+function refuse(peer: Peer, action: string, code: string, room?: Room, player?: string) {
+  log.warn("room.refused", { action, code, room: room?.id, player });
+  fail(peer, code);
+}
+
+async function create(peer: Peer, session: Session, m: Extract<Message, { t: "create" }>) {
+  const id = await freeId();
+  if (rooms.size >= MAX_ROOMS)
+    return refuse(peer, "create", "rooms", undefined, session.player!.id);
   const current = seated.get(session.player!.id);
   if (current) leave(current);
   const room: Room = {
-    id: freeId(),
+    id,
     name: nameOf(m.name, session.player!),
     password: m.password,
     host: session.player!.id,
@@ -482,6 +472,7 @@ function create(peer: Peer, session: Session, m: Extract<Message, { t: "create" 
     listed: "",
   };
   rooms.set(room.id, room);
+  log.info("room.create", { room: id, player: room.host, locked: room.password !== "" });
   sit(room, session, peer, false);
 }
 
@@ -497,15 +488,17 @@ function admits(room: Room, password: string) {
 function join(peer: Peer, session: Session, m: Extract<Message, { t: "join" }>) {
   const id = session.player!.id;
   const room = rooms.get(m.room.toUpperCase());
-  if (!room) return fail(peer, "gone");
+  if (!room) return refuse(peer, "join", "gone", room, id);
   const current = seated.get(id);
   if (current?.room === room) return send(peer, { t: "room", room: view(room) });
-  if (room.banned.has(id)) return fail(peer, "kicked");
-  if (!admits(room, m.password)) return fail(peer, "password");
+  if (room.banned.has(id)) return refuse(peer, "join", "kicked", room, id);
+  if (!admits(room, m.password)) return refuse(peer, "join", "password", room, id);
   // a room full of players still takes spectators
   const spectating = players(room) >= ROOM_PLAYERS;
-  if (spectating && room.seats.length >= ROOM_PLAYERS + ROOM_SPECTATORS) return fail(peer, "full");
+  if (spectating && room.seats.length >= ROOM_PLAYERS + ROOM_SPECTATORS)
+    return refuse(peer, "join", "full", room, id);
   if (current) leave(current);
+  log.info("room.join", { room: room.id, player: id, spectating });
   sit(room, session, peer, spectating);
 }
 
@@ -519,9 +512,9 @@ function unwatch(peer: Peer) {
 
 function watch(peer: Peer, m: Extract<Message, { t: "watch" }>) {
   const room = rooms.get(m.room.toUpperCase());
-  if (!room) return fail(peer, "gone");
-  if (!admits(room, m.password)) return fail(peer, "password");
-  if (room.watchers.size >= ROOM_WATCHERS) return fail(peer, "full");
+  if (!room) return refuse(peer, "watch", "gone");
+  if (!admits(room, m.password)) return refuse(peer, "watch", "password", room);
+  if (room.watchers.size >= ROOM_WATCHERS) return refuse(peer, "watch", "full", room);
   unwatch(peer);
   const watcher = { peer, room, follows: "" };
   watching.set(peer, watcher);
@@ -550,9 +543,15 @@ function start(room: Room, host: Seat) {
     seat.score = seat.accuracy = seat.combo = 0;
   }
   room.limit = setTimeout(() => {
+    log.warn("room.match.timeout", { room: room.id });
     finish(room);
     push(room);
   }, MATCH_LIMIT);
+  log.info("room.match.start", {
+    room: room.id,
+    player: host.player.id,
+    ...played(room, room.chart),
+  });
   // players hear of the match before the room: a game told it plays without having started knows it was restarted
   const started = JSON.stringify({ t: "start", seed: randomInt(1, 2 ** 32) });
   for (const seat of room.seats) if (seat.playing) seat.peer!.send(started);
@@ -593,7 +592,7 @@ function act(seat: Seat, m: Message) {
         charts.filter((chart) => chart.by === seat.player.id).length >= ROOM_QUEUE_EACH;
       // a chart already played leaves its place to the next one added
       if (room.chart && (room.playing || !room.played)) {
-        if (full) return fail(seat.peer!, "queue");
+        if (full) return refuse(seat.peer!, "queue", "queue", room, seat.player.id);
         room.queue.push(added(seat, m));
       } else turn(room, added(seat, m));
       return push(room);
@@ -665,7 +664,7 @@ function act(seat: Seat, m: Message) {
       const full = m.spectate
         ? room.seats.length - players(room) >= ROOM_SPECTATORS
         : players(room) >= ROOM_PLAYERS;
-      if (full) return fail(seat.peer!, "full");
+      if (full) return refuse(seat.peer!, "spectate", "full", room, seat.player.id);
       Object.assign(seat, { watching: m.spectate, ready: false, follows: "" });
       return push(room);
     }
@@ -698,6 +697,7 @@ function act(seat: Seat, m: Message) {
         return push(room);
       }
       room.banned.add(m.player);
+      log.info("room.kick", { room: room.id, player: seat.player.id, target: m.player });
       if (target.peer) fail(target.peer, "kicked");
       return leave(target);
     }
@@ -717,40 +717,61 @@ export function heard<Schema extends v.GenericSchema>(peer: Peer, schema: Schema
     if (raw.length > MAX_MESSAGE) throw new Error("too long");
     return v.parse(schema, JSON.parse(raw));
   } catch {
+    // a game and a server that don't speak the same show here. what it said may hold a password: only its size is kept
+    log.warn("socket.bad", {
+      path: peer.request.url.replace(/^.*?\/api/, "/api"),
+      size: raw.length,
+    });
     peer.close(1003, "Not a message");
   }
 }
 
 export function open(peer: Peer) {
-  sessions.set(peer, { nonce: greet(peer) });
+  sessions.set(peer, { nonce: greet(peer), turn: serial() });
 }
 
 export function message(peer: Peer, raw: string) {
   const session = sessions.get(peer);
-  const m = session && heard(peer, Message, raw);
-  if (!m) return;
-  if (m.t === "auth") return auth(peer, session, m);
-  // a browser that watches never signs in, and says nothing but who it follows
-  if (m.t === "watch" && !session.player) return watch(peer, m);
-  const watcher = watching.get(peer);
-  if (watcher) return m.t === "follow" ? follow(watcher, m) : undefined;
-  if (!session.player) return fail(peer, "auth");
-  if (m.t === "create") return create(peer, session, m);
-  if (m.t === "join") return join(peer, session, m);
-  const seat = seated.get(session.player.id);
-  if (seat?.peer === peer) act(seat, m);
+  session
+    ?.turn(() => {
+      const m = heard(peer, Message, raw);
+      if (!m) return;
+      if (m.t === "auth") return auth(peer, session, m);
+      // a browser that watches never signs in, and says nothing but who it follows
+      if (m.t === "watch" && !session.player) return watch(peer, m);
+      const watcher = watching.get(peer);
+      if (watcher) return m.t === "follow" ? follow(watcher, m) : undefined;
+      if (!session.player) return fail(peer, "auth");
+      if (m.t === "create") return create(peer, session, m);
+      if (m.t === "join") return join(peer, session, m);
+      const seat = seated.get(session.player.id);
+      if (seat?.peer === peer) act(seat, m);
+    })
+    .catch(failed(peer));
 }
 
 // a dropped connection keeps its place for a while: the game connects again and finds its room
 export function closed(peer: Peer) {
   const session = sessions.get(peer);
-  sessions.delete(peer);
-  unwatch(peer);
-  const seat = session?.player && seated.get(session.player.id);
-  if (!seat || seat.peer !== peer) return;
-  seat.peer = undefined;
-  seat.away = setTimeout(() => leave(seat), AWAY);
+  session
+    ?.turn(() => {
+      sessions.delete(peer);
+      unwatch(peer);
+      const seat = session.player && seated.get(session.player.id);
+      if (!seat || seat.peer !== peer) return;
+      seat.peer = undefined;
+      seat.away = setTimeout(() => leave(seat), AWAY);
+    })
+    .catch(failed());
 }
+
+/** How many rooms are open, players seated, browsers watching and sockets connected, for /admin. */
+export const gauges = () => ({
+  rooms: rooms.size,
+  seated: seated.size,
+  watching: watching.size,
+  sockets: sessions.size,
+});
 
 /** The room a player sits in, for an invitation to it (server/friends.ts). */
 export const roomOf = (player: string) => seated.get(player)?.room;
@@ -759,61 +780,48 @@ export const roomOf = (player: string) => seated.get(player)?.room;
 export const openRooms = (): RoomSummary[] =>
   [...rooms.values()].map(summary).sort((a, b) => b.players - a.players);
 
-const played = sqlite.prepare<
-  {
-    match: number;
-    name: string;
-    song: string;
-    level: string;
-    mods: number;
-    played: number;
-    id: string;
-    player: string;
-    number: number;
-    avatar: string;
-    picked: string;
-    with: number;
-  } & RoomResult,
-  [string, number]
->(
-  `SELECT m.id AS match, m.name, m.song, m.level, m.mods, m.played, p.id, p.name AS player, p.number, p.avatar,
-     mp.score, mp.accuracy, mp.maxcombo, mp.perfect, mp.good, mp.bad, mp.miss,
-     COALESCE(mp.level, m.level) AS picked, COALESCE(mp.mods, m.mods) AS "with"
-   FROM matches m JOIN match_plays mp ON mp.match = m.id JOIN players p ON p.key = mp.key
-   WHERE m.id IN (SELECT id FROM matches WHERE room = ?1 ORDER BY id DESC LIMIT ?2)
-   ORDER BY m.id DESC, mp.rowid`,
-);
-
 /** A room and the matches it played, latest first, undefined when there's no such room and never was. */
-export function roomPage(id: string): RoomPage | undefined {
+export async function roomPage(id: string): Promise<RoomPage | undefined> {
   const room = rooms.get(id);
   const matches: Match[] = [];
   const standings = new Map<string, Standing>();
   let name = room?.name;
-  for (const row of played.all(id, PAGE_MATCHES)) {
-    name ??= row.name;
+  const latest = db
+    .select({ id: t.matches.id })
+    .from(t.matches)
+    .where(eq(t.matches.room, id))
+    .orderBy(desc(t.matches.played), desc(t.matches.id))
+    .limit(PAGE_MATCHES);
+  const rows = await db
+    .select({ of: t.matches, play: t.match_plays, who: NAME })
+    .from(t.matches)
+    .innerJoin(t.match_plays, eq(t.match_plays.match, t.matches.id))
+    .innerJoin(t.players, eq(t.players.key, t.match_plays.key))
+    .where(inArray(t.matches.id, latest))
+    .orderBy(desc(t.matches.played), desc(t.matches.id), t.match_plays.place);
+  for (const { of, play, who } of rows) {
+    name ??= of.name;
     let match = matches.at(-1);
-    if (match?.id !== row.match) {
+    if (match?.id !== of.id) {
       match = {
-        id: row.match,
-        song: row.song,
-        level: row.level,
-        mods: row.mods,
-        date: row.played,
+        id: of.id,
+        song: of.song,
+        level: of.level,
+        mods: of.mods,
+        date: of.played,
         plays: [],
       };
       matches.push(match);
     }
-    const { score, accuracy, maxcombo, perfect, good, bad, miss } = row;
-    const who = { id: row.id, name: row.player, number: row.number, avatar: row.avatar };
-    const total = totalOf(score, row.with);
+    const { score, accuracy, maxcombo, perfect, good, bad, miss, level, mods } = play;
+    const total = totalOf(score, mods);
     const rank = match.plays.length + 1;
     match.plays.push({
       player: who,
       rank,
       total,
-      level: row.picked,
-      mods: row.with,
+      level,
+      mods,
       score,
       accuracy,
       maxcombo,

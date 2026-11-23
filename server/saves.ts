@@ -1,8 +1,10 @@
 import { mkdirSync, readFileSync, rmSync } from "node:fs";
+import { eq } from "drizzle-orm";
 import { unzipSync, zipSync } from "fflate";
 import { HTTPError } from "nitro/h3";
 import { MODULE_NAMES } from "../src/modules";
-import { sqlite } from "./db";
+import { db } from "./db";
+import { offers, saves } from "./schema";
 
 // a player's whole save, as their game's cloud save would be: a zip of its modules, each still encrypted the game's way
 // (see src/save.ts), and the game's summary of it (CloudSaveSummary, base64), which says its save version. next to it,
@@ -10,31 +12,16 @@ import { sqlite } from "./db";
 const DIR = "./data/saves";
 mkdirSync(DIR, { recursive: true });
 
-sqlite.run(
-  "CREATE TABLE IF NOT EXISTS saves (id TEXT PRIMARY KEY, updated INTEGER NOT NULL, size INTEGER NOT NULL)",
-);
-if (!sqlite.query("SELECT 1 FROM pragma_table_info('saves') WHERE name = 'summary'").get())
-  sqlite.run("ALTER TABLE saves ADD COLUMN summary TEXT");
-
-sqlite.run(
-  "CREATE TABLE IF NOT EXISTS offers (id TEXT PRIMARY KEY, updated INTEGER NOT NULL, size INTEGER NOT NULL, summary TEXT)",
-);
-
 export type Slot = "saves" | "offers";
 const FILE = { saves: "", offers: ".offer" };
 const MAX = 4 * 1024 * 1024;
-const statements = (slot: Slot) => ({
-  store: sqlite.prepare<unknown, [string, number, number, string | null]>(
-    `INSERT INTO ${slot} (id, updated, size, summary) VALUES (?1, ?2, ?3, ?4)
-     ON CONFLICT (id) DO UPDATE SET updated = ?2, size = ?3, summary = ?4`,
-  ),
-  stored: sqlite.prepare<{ updated: number; summary: string | null }, [string]>(
-    `SELECT updated, summary FROM ${slot} WHERE id = ?`,
-  ),
-  drop: sqlite.prepare<unknown, [string]>(`DELETE FROM ${slot} WHERE id = ?`),
-});
-const SLOTS = { saves: statements("saves"), offers: statements("offers") };
+const TABLES = { saves, offers };
 const path = (slot: Slot, id: string) => `${DIR}/${id}${FILE[slot]}.zip`;
+
+async function stored(slot: Slot, id: string) {
+  const [row] = await db.select().from(TABLES[slot]).where(eq(TABLES[slot].id, id));
+  return row;
+}
 
 /** Files one after the other, each a 1 byte name length, the name, a 4 byte LE length and the file. */
 function unpack(body: Uint8Array): Record<string, Uint8Array> {
@@ -50,7 +37,7 @@ function unpack(body: Uint8Array): Record<string, Uint8Array> {
   return files;
 }
 
-function pack(files: Record<string, Uint8Array>): Uint8Array {
+function pack(files: Record<string, Uint8Array>) {
   const parts = Object.entries(files).flatMap(([name, data]) => {
     const head = new Uint8Array(1 + name.length + 4);
     head[0] = name.length;
@@ -69,22 +56,24 @@ export async function storeSave(id: string, body: Uint8Array, slot: Slot = "save
     throw HTTPError.status(400, "Not a save");
   const zip = zipSync(files);
   await Bun.write(path(slot, id), zip);
-  const updated = Date.now();
-  SLOTS[slot].store.run(
-    id,
-    updated,
-    zip.length,
-    summary ? new TextDecoder().decode(summary) : null,
-  );
-  return updated;
+  const row = {
+    updated: Date.now(),
+    size: zip.length,
+    summary: summary ? new TextDecoder().decode(summary) : null,
+  };
+  await db
+    .insert(TABLES[slot])
+    .values({ id, ...row })
+    .onConflictDoUpdate({ target: TABLES[slot].id, set: row });
+  return row.updated;
 }
 
 /**
  * The player's uploaded save for their game to load (CloudSaveManager.LoadFromFolder), packed like it was sent: when
  * it was uploaded (ms), its summary when it came with one, and its module files. Undefined when there's none.
  */
-export function savedSaveFiles(id: string, slot: Slot = "saves"): Uint8Array | undefined {
-  const row = SLOTS[slot].stored.get(id);
+export async function savedSaveFiles(id: string, slot: Slot = "saves") {
+  const row = await stored(slot, id);
   if (!row) return undefined;
   const encoder = new TextEncoder();
   return pack({
@@ -96,13 +85,13 @@ export function savedSaveFiles(id: string, slot: Slot = "saves"): Uint8Array | u
 
 /** Where a player's uploaded save is kept, and its summary when it came with one. */
 export const saveFile = (id: string) => path("saves", id);
-export const savedSummary = (id: string) => SLOTS.saves.stored.get(id)?.summary ?? undefined;
+export const savedSummary = async (id: string) => (await stored("saves", id))?.summary ?? undefined;
 
 /** When the save of the slot was stored (ms), undefined when there's none. */
-export const savedAt = (id: string, slot: Slot) => SLOTS[slot].stored.get(id)?.updated;
+export const savedAt = async (id: string, slot: Slot) => (await stored(slot, id))?.updated;
 
 /** Forgets the offer once the game loaded or declined it. */
-export function dropOffer(id: string) {
-  SLOTS.offers.drop.run(id);
+export async function dropOffer(id: string) {
+  await db.delete(offers).where(eq(offers.id, id));
   rmSync(path("offers", id), { force: true });
 }

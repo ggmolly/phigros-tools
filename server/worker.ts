@@ -1,18 +1,22 @@
 import { existsSync, readFileSync } from "node:fs";
+import { and, eq } from "drizzle-orm";
 import { catalogManifest } from "../src/catalog";
 import { judge, timingAccuracy } from "../src/judge";
 import { Mod, modChart, rateOf } from "../src/modifiers";
 import { decodeReplay, type ReplayFrame } from "../src/pigeon";
 import { decodePhc } from "../src/player/phc";
 import { topics } from "../src/topics";
-import { sqlite } from "./db";
+import { db, lock } from "./db";
 import { announceRank } from "./discord";
+import { expireEvents } from "./events";
 import { refreshIos } from "./ios";
+import { flush, log } from "./log";
 import { refreshMods } from "./mods";
 import { playerId } from "./players";
 import { addAchievement, snapshotHistory } from "./profiles";
 import { announce, openQueue, VERIFY_QUEUE } from "./queue";
 import { chartPlace, countReplay, REPLAY_DIR } from "./replays";
+import { replays } from "./schema";
 
 // judges uploaded replays like the game did, with the modifiers they were played with, and marks them verified when
 // the game's recorded result is what their touches give, unverified otherwise (with both results). only a verified
@@ -23,17 +27,6 @@ import { chartPlace, countReplay, REPLAY_DIR } from "./replays";
 const CHARTS = process.env.CHART_DIR ?? "./public/chart-data";
 const RESULT = ["score", "maxcombo", "perfect", "good", "bad", "miss", "early", "late"] as const;
 
-const replay = sqlite.prepare<
-  { key: Uint8Array; song: string; level: string; status: string },
-  [string]
->("SELECT key, song, level, status FROM replays WHERE sha256 = ?");
-const pending = sqlite.prepare<{ sha256: string }, []>(
-  "SELECT sha256 FROM replays WHERE status = 'pending'",
-);
-const settle = sqlite.prepare<unknown, [string, string, number | null, string]>(
-  "UPDATE replays SET status = ?, result = ?, timing = ? WHERE sha256 = ?",
-);
-
 // how fast the song ran against real time: the median of what a frame's song time moved over its delta time, which
 // stays within 0.2% of the speed played at on every device seen
 function pace(frames: ReplayFrame[]) {
@@ -42,15 +35,18 @@ function pace(frames: ReplayFrame[]) {
 }
 const PACE = 0.02; // how far from its modifiers' speed a replay may run
 
-function verify(sha256: string) {
-  const row = replay.get(sha256);
+async function verify(sha256: string) {
+  const [row] = await db.select().from(replays).where(eq(replays.sha256, sha256));
   if (row?.status !== "pending") return;
+  const began = performance.now();
   const { header, frames } = decodeReplay(
     new Uint8Array(readFileSync(`${REPLAY_DIR}/${sha256}.pigeon`)),
     true,
   );
   const chart = `${CHARTS}/${row.song}/${row.level}.phc`;
-  if (header.game !== catalogManifest.gameVersion || !existsSync(chart)) return;
+  const { key, song, level } = row;
+  if (header.game !== catalogManifest.gameVersion || !existsSync(chart))
+    return log.info("replay.skipped", { sha256, song, difficulty: level, game: header.game });
   const { mods, seed, mirror } = header;
   const played = modChart(decodePhc(new Uint8Array(readFileSync(chart))), mods, seed, mirror === 1);
   const judged = judge(played, frames, header);
@@ -63,57 +59,75 @@ function verify(sha256: string) {
     (mods & Mod.PF && judged.good + judged.bad + judged.miss) ||
     (mods && Math.abs(pace(frames) / rateOf(mods) - 1) > PACE);
   const same = !broken && RESULT.every((field) => recorded[field] === replayed[field]);
-  const result = JSON.stringify({ recorded, replayed });
+  const status = same ? "verified" : "unverified";
   const timing = timingAccuracy(judged.hits, mods);
-  settle.run(same ? "verified" : "unverified", result, timing, sha256);
-  if (same) {
-    const was = chartPlace(row.key, row.song, row.level);
-    const { key, song, level, raised } = countReplay(sha256, header);
-    if (raised) {
-      addAchievement(key, song, level, header.score);
-      announceRank(sha256, song, level, was).catch((error) =>
-        console.error(`${sha256} not announced:`, error),
-      );
-    }
+  // judged and counted at once: a replay marked verified is on the leaderboard
+  const counted = await db.transaction(async (tx) => {
+    await lock(tx, key);
+    const settled = await tx
+      .update(replays)
+      .set({ status, result: { recorded, replayed }, timing })
+      .where(and(eq(replays.sha256, sha256), eq(replays.status, "pending")))
+      .returning({ sha256: replays.sha256 });
+    if (!settled.length || !same) return;
+    const was = await chartPlace(tx, key, song, level);
+    const raised = await countReplay(tx, row, header);
+    if (raised) await addAchievement(tx, key, song, level, header.score);
+    return { was, raised };
+  });
+  if (counted?.raised)
+    announceRank(sha256, song, level, counted.was).catch((error) =>
+      log.warn("discord.failed", { sha256, error }),
+    );
+  if (counted) {
     void announce(topics.chart(song, level));
     void announce(topics.ranking);
   }
-  void announce(topics.player(playerId(row.key)));
-  console.log(`${sha256} ${row.song} ${row.level}: ${same ? "verified" : "unverified"}`);
+  void announce(topics.player(playerId(key)));
+  const ms = Math.round(performance.now() - began);
+  const player = playerId(key);
+  log.info("replay.judged", { sha256, player, song, difficulty: level, status, mods, ms });
 }
 
-function attempt(sha256: string) {
-  try {
-    verify(sha256);
-  } catch (error) {
-    console.error(`${sha256} could not be judged:`, error);
-  }
-}
+const attempt = (sha256: string) =>
+  verify(sha256).catch((error) => log.error("replay.failed", { sha256, error }));
 
-// every player's RKS and rank of the day, kept hourly so the day's last one stays
-snapshotHistory();
-setInterval(snapshotHistory, 3_600_000);
+// every player's RKS and rank of the day, kept hourly so the day's last one stays. and the pages seen keep 90 days
+const HOUR = 3_600_000;
+const hourly = () =>
+  Promise.all([snapshotHistory(), expireEvents()]).catch((error) =>
+    log.error("hourly.failed", { error }),
+  );
+void hourly();
+setInterval(hourly, HOUR);
 
 // the mod catalog follows its mods' releases and READMEs on GitHub, and what patches the ios game the releases of
 // Phigros++
-for (const [name, refresh] of [
+for (const [what, refresh] of [
   ["mods", refreshMods],
   ["phigrospp.ios", refreshIos],
 ] as const) {
-  const follow = () => refresh().catch((error) => console.error(`${name} not refreshed:`, error));
+  const follow = () => refresh().catch((error) => log.warn("refresh.failed", { what, error }));
   void follow();
   setInterval(follow, 900_000);
 }
 
 const channel = await openQueue();
 // the broker went away: exit so the container restarts and reconnects, the queue keeps what came meanwhile
-channel.on("close", () => process.exit(1));
+channel.on("close", async () => {
+  log.error("queue.lost");
+  await flush();
+  process.exit(1);
+});
 await channel.prefetch(1);
 // what was uploaded while no worker ran, then what comes
-for (const { sha256 } of pending.all()) attempt(sha256);
+const pending = await db
+  .select({ sha256: replays.sha256 })
+  .from(replays)
+  .where(eq(replays.status, "pending"));
+for (const { sha256 } of pending) await attempt(sha256);
+// one at a time: the next is only handed over once this one is judged
 await channel.consume(VERIFY_QUEUE, (message) => {
-  if (!message) return;
-  attempt(message.content.toString());
-  channel.ack(message);
+  if (message) void attempt(message.content.toString()).then(() => channel.ack(message));
 });
-console.log(`judging replays from ${VERIFY_QUEUE}`);
+log.info("start", { queue: VERIFY_QUEUE, pending: pending.length });

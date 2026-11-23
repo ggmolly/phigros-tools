@@ -6,7 +6,7 @@ import { SESSION, sessionValue } from "../../session";
 // a browser signed in to a Phigros++ profile gets the cookie its pages render with, for a year
 export default defineHandler(async (event) => {
   const { key, device } = await signed(event);
-  const found = player(key);
+  const found = await player(key);
   if (!found) throw HTTPError.status(403, "Not registered");
   setCookie(event, SESSION, sessionValue(found.id, device), {
     httpOnly: true,

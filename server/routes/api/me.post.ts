@@ -8,12 +8,12 @@ import { savedAt } from "../../saves";
 // site were stored (ms)
 export default defineHandler(async (event) => {
   const { key, device } = await signed(event);
-  const found = player(key);
+  const found = await player(key);
   if (!found) throw HTTPError.status(404);
   return {
     ...found,
     phrase: Buffer.from(key).equals(device),
-    save: savedAt(found.id, "saves") ?? null,
-    offer: savedAt(found.id, "offers") ?? null,
+    save: (await savedAt(found.id, "saves")) ?? null,
+    offer: (await savedAt(found.id, "offers")) ?? null,
   };
 });

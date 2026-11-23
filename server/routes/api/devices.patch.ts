@@ -12,7 +12,7 @@ const Rename = v.object({ key: v.pipe(v.string(), v.hexadecimal()), name: v.stri
 export default defineHandler(async (event) => {
   const { key, body } = await signed(event);
   const { key: device, name } = signedJson(Rename, body);
-  renameDevice(key, device, name);
+  await renameDevice(key, device, name);
   await announce(topics.player(playerId(key)));
   return { ok: true };
 });

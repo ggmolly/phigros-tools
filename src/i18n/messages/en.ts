@@ -24,6 +24,11 @@ export const en = {
     or: "or",
     browseCharts: "browse the chart list",
   },
+  crashed: {
+    title: "Something Went Wrong",
+    body: "This page couldn't be shown and the error was reported, so reloading may be enough.",
+    reload: "Reload",
+  },
   menu: {
     label: "Main menu",
     import: "Import",

@@ -26,6 +26,11 @@ export const vi = {
     or: "hoặc",
     browseCharts: "xem danh sách chart",
   },
+  crashed: {
+    title: "Đã xảy ra lỗi",
+    body: "Không thể hiển thị trang này và lỗi đã được báo cáo, nên tải lại trang có thể là đủ.",
+    reload: "Tải lại",
+  },
   menu: {
     label: "Menu chính",
     import: "Nhập",

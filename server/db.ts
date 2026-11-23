@@ -1,65 +1,37 @@
-import { Database } from "bun:sqlite";
-import { mkdirSync } from "node:fs";
+import { SQL } from "bun";
+import { sql } from "drizzle-orm";
+import { drizzle } from "drizzle-orm/bun-sql";
+import { migrate } from "drizzle-orm/bun-sql/migrator";
+import type { AnyPgColumn } from "drizzle-orm/pg-core";
+import { port } from "./sqlite";
 
-mkdirSync("./data", { recursive: true });
-export const sqlite = new Database("./data/db.sqlite3");
-sqlite.run("PRAGMA journal_mode = WAL;");
-sqlite.run("PRAGMA busy_timeout = 5000;");
+// PostgreSQL, through Bun's own client. the tables are in server/schema.ts
+const client = new SQL(process.env.DATABASE_URL ?? "postgres://phigros@localhost/phigros");
+export const db = drizzle({ client });
 
-sqlite.run(`
-  CREATE TABLE IF NOT EXISTS events (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    ts INTEGER NOT NULL,
-    day TEXT NOT NULL,
-    path TEXT NOT NULL,
-    referrer_domain TEXT,
-    browser TEXT NOT NULL,
-    device TEXT NOT NULL,
-    is_bot INTEGER NOT NULL DEFAULT 0,
-    visitor_hash TEXT NOT NULL,
-    bot_ua TEXT,
-    bot_match TEXT
-  )
-`);
-const eventColumns = new Set(
-  sqlite
-    .query<{ name: string }, []>("PRAGMA table_info(events)")
-    .all()
-    .map((c) => c.name),
-);
-if (!eventColumns.has("bot_ua")) sqlite.run("ALTER TABLE events ADD COLUMN bot_ua TEXT");
-if (!eventColumns.has("bot_match")) sqlite.run("ALTER TABLE events ADD COLUMN bot_match TEXT");
-sqlite.run("CREATE INDEX IF NOT EXISTS idx_events_day ON events(day)");
-sqlite.run("CREATE INDEX IF NOT EXISTS idx_events_day_path ON events(day, path)");
-sqlite.run("CREATE INDEX IF NOT EXISTS idx_events_day_bot ON events(day, is_bot)");
+/** What runs inside `db.transaction`: every query of it goes through this, never through `db`. */
+export type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
-const insertStmt = sqlite.prepare(`
-  INSERT INTO events (ts, day, path, referrer_domain, browser, device, is_bot, visitor_hash, bot_ua, bot_match)
-  VALUES ($ts, $day, $path, $referrerDomain, $browser, $device, $isBot, $visitorHash, $botUa, $botMatch)
-`);
+/**
+ * Makes the transactions that take the same name wait for each other, in the server and the worker alike. One that
+ * reads a player's rows to decide what it writes takes the player's key first.
+ */
+export async function lock(tx: Tx, name: string | Uint8Array) {
+  const text = typeof name === "string" ? name : Buffer.from(name).toString("hex");
+  await tx.execute(sql`select pg_advisory_xact_lock(hashtextextended(${text}, 0))`);
+}
 
-export function insertEvent(row: {
-  ts: number;
-  day: string;
-  path: string;
-  referrerDomain: string | null;
-  browser: string;
-  device: string;
-  isBot: boolean;
-  visitorHash: string;
-  botUa: string | null;
-  botMatch: string | null;
-}) {
-  insertStmt.run({
-    $ts: row.ts,
-    $day: row.day,
-    $path: row.path,
-    $referrerDomain: row.referrerDomain,
-    $browser: row.browser,
-    $device: row.device,
-    $isBot: row.isBot ? 1 : 0,
-    $visitorHash: row.visitorHash,
-    $botUa: row.botUa,
-    $botMatch: row.botMatch,
-  });
+/** The value an upsert was about to insert, in what it sets on a conflict. */
+export const excluded = (column: AnyPgColumn) => sql.raw(`excluded."${column.name}"`);
+
+// the server and the worker start together: one brings the tables up to date, the other waits for it. migrate
+// takes no lock of its own
+const boot = await client.reserve();
+await boot`select pg_advisory_lock(1)`;
+try {
+  await migrate(db, { migrationsFolder: "./drizzle" });
+  await port(db);
+} finally {
+  await boot`select pg_advisory_unlock(1)`;
+  boot.release();
 }

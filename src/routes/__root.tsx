@@ -13,6 +13,7 @@ import { getHome } from "../home";
 import { I18nProvider, useT } from "../i18n";
 import type { Locale } from "../i18n/locales";
 import { fogStyle } from "../palettes";
+import { watchErrors } from "../report";
 import { SaveProvider } from "../save-context";
 import { headT, pageMeta, SITE_NAME } from "../seo";
 import { getStars } from "../stars";
@@ -21,6 +22,7 @@ import stylesheet from "../style.css?url";
 // our goal is just to know if we have users, we don't want to track them
 function Analytics() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  useEffect(watchErrors, []);
   useEffect(() => {
     const ref = document.referrer;
     let referrer: string | null = null;

@@ -26,6 +26,11 @@ export const zhHant = {
     or: "或",
     browseCharts: "瀏覽譜面列表",
   },
+  crashed: {
+    title: "發生錯誤",
+    body: "此頁面無法顯示，錯誤已回報，重新載入或許就能解決。",
+    reload: "重新載入",
+  },
   menu: {
     label: "主選單",
     import: "匯入",

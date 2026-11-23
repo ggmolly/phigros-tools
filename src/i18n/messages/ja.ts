@@ -26,6 +26,11 @@ export const ja = {
     or: "または",
     browseCharts: "譜面一覧を見る",
   },
+  crashed: {
+    title: "エラーが発生しました",
+    body: "このページを表示できませんでした。エラーは報告済みなので、再読み込みで直るかもしれません。",
+    reload: "再読み込み",
+  },
   menu: {
     label: "メインメニュー",
     import: "インポート",

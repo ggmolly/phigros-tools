@@ -3,9 +3,9 @@ import { LIST_MORE } from "../../../../../src/plays";
 import { profileList } from "../../../../profiles";
 
 // more of a player's recent plays or activity: ?offset= is how many are already shown
-export default defineHandler((event) => {
+export default defineHandler(async (event) => {
   const offset = Math.max(0, Math.floor(Number(getQuery(event).offset)) || 0);
-  const list = profileList(
+  const list = await profileList(
     getRouterParam(event, "id")!,
     getRouterParam(event, "list")!,
     offset,

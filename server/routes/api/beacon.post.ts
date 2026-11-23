@@ -1,10 +1,10 @@
-import { createHmac } from "node:crypto";
 import { isbot, isbotMatch } from "isbot";
 import { defineHandler } from "nitro/h3";
 import { UAParser } from "ua-parser-js";
 import * as v from "valibot";
-import { config } from "../../config";
-import { insertEvent } from "../../db";
+import { countryOf, visitorOf } from "../../client";
+import { db } from "../../db";
+import { events } from "../../schema";
 
 const noContent = () => new Response(null, { status: 204 });
 
@@ -24,38 +24,33 @@ function hostnameOf(value: string): string | null {
   return null;
 }
 
+// a page was seen (see the events table in server/schema.ts). a visitor who asks not to be tracked isn't counted
 export default defineHandler(async (event) => {
-  if (event.req.headers.get("dnt") === "1") return noContent();
+  const { headers } = event.req;
+  if (headers.get("dnt") === "1" || headers.get("sec-gpc") === "1") return noContent();
 
-  const ua = event.req.headers.get("user-agent") ?? "";
+  const ua = headers.get("user-agent") ?? "";
   const bot = !ua || isbot(ua);
 
   const beacon = v.safeParse(Beacon, await event.req.json().catch(() => null));
   if (!beacon.success) return new Response(null, { status: 400 });
   const { path, referrer } = beacon.output;
-  const referrerDomain = referrer ? hostnameOf(referrer) : null;
-
-  const ip = event.req.headers.get("cf-connecting-ip") ?? "";
 
   const day = new Date().toISOString().slice(0, 10);
-  const visitorHash = createHmac("sha256", config.hash_secret)
-    .update(`${day}:${ip}:${ua}`)
-    .digest("hex")
-    .slice(0, 16);
-
   const { browser, device } = UAParser(ua);
-  insertEvent({
+  await db.insert(events).values({
     ts: Date.now(),
     day,
     path,
-    referrerDomain,
+    referrer_domain: referrer ? hostnameOf(referrer) : null,
     browser: browser.name ?? "Other",
     device: device.type ?? "desktop",
-    isBot: bot,
-    visitorHash,
+    is_bot: bot,
+    visitor_hash: visitorOf(event.req, day),
     // only keep the UA of bots
-    botUa: bot ? ua.slice(0, 512) : null,
-    botMatch: bot && ua ? isbotMatch(ua) : null,
+    bot_ua: bot ? ua.slice(0, 512) : null,
+    bot_match: bot && ua ? isbotMatch(ua) : null,
+    country: countryOf(event.req),
   });
   return noContent();
 });

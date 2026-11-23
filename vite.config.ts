@@ -14,8 +14,12 @@ export default defineConfig({
       preset: "bun",
       features: { websocket: true },
       serverDir: "server",
+      // drizzle talks to PostgreSQL through Bun's own client, which it imports by this name
+      builtinModules: ["bun"],
       compressPublicAssets: { gzip: true, zstd: true },
       routeRules: {
+        // what an admin sees is kept by no cache, the browser's included
+        "/api/admin/**": { headers: { "cache-control": "private, no-store" } },
         "/**": {
           headers: {
             "strict-transport-security": "max-age=31536000",
