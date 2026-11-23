@@ -201,8 +201,14 @@ function TrafficTab() {
           <section className="panel" key={title}>
             <h2 className="panel-title">{title}</h2>
             <Table
-              head={[title, "Views", "Visitors"]}
-              rows={(top ?? []).map((row) => [row.name || "none", row.views, row.visitors])}
+              head={["", "Views", "Visitors"]}
+              rows={(top ?? []).map((row) => [
+                <span key="name" title={row.name}>
+                  {row.name || "none"}
+                </span>,
+                row.views,
+                row.visitors,
+              ])}
             />
           </section>
         ))}
@@ -435,7 +441,7 @@ function LiveTab({ first }: { first: AdminState }) {
             {title === "Server" && <span className="panel-count">build {data.build}</span>}
           </div>
           <div className="stat-bar">
-            <div className="stat-row">
+            <div className="stat-row admin-stats">
               {stats.map(([label, value]) => (
                 <Stat key={label} label={label} value={value} />
               ))}
