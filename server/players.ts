@@ -44,9 +44,15 @@ const INTRO_LENGTH = 500;
 export const playerId = (key: Uint8Array) => Buffer.from(key.subarray(0, 6)).toString("hex");
 
 // spaces (line breaks too) collapse to one, then the other unicode "other" characters (controls, bidi overrides,
-// zero widths) are dropped
+// zero widths) are dropped. curly quotes become straight, the game's font draws them as wide as a CJK character
 export function clean(name: string, length = NAME_LENGTH): string {
-  const cleaned = name.normalize("NFC").replace(/\s+/gu, " ").replace(/\p{C}/gu, "").trim();
+  const cleaned = name
+    .normalize("NFC")
+    .replace(/\s+/gu, " ")
+    .replace(/\p{C}/gu, "")
+    .replace(/[‘’]/gu, "'")
+    .replace(/[“”]/gu, '"')
+    .trim();
   return [...cleaned].slice(0, length).join("");
 }
 export const fold = (name: string) => name.normalize("NFKC").toLowerCase();
