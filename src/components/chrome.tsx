@@ -72,6 +72,7 @@ function HeaderLinks() {
 export type TabId =
   | "/"
   | "/records"
+  | "/friends"
   | "/devices"
   | "/charts"
   | "/leaderboard"
@@ -82,6 +83,7 @@ export type TabId =
 export const TAB_KEY = {
   "/": "overview",
   "/records": "records",
+  "/friends": "friends",
   "/devices": "devices",
   "/charts": "charts",
   "/leaderboard": "leaderboard",
@@ -110,10 +112,10 @@ function LanguageSwitch() {
   );
 }
 
-/** The save-analyzer tabs that have something to show right now: a save has Records, a Phigros++ profile's Devices. */
+/** The save-analyzer tabs that have something to show right now: a save has Records, a Phigros++ profile's Friends and Devices. */
 export function toolTabs(hasSave: boolean, signedIn: boolean): TabId[] {
   if (!hasSave) return ["/"];
-  return signedIn ? ["/", "/records", "/devices"] : ["/", "/records"];
+  return signedIn ? ["/", "/records", "/friends", "/devices"] : ["/", "/records"];
 }
 
 /** Every page's header: brand mark, the tabs (the tool's sections plus Charts), the page's own actions, then the Discord and GitHub links at the far right. */

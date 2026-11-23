@@ -1,6 +1,7 @@
 import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { SiteHeader } from "../components/chrome";
+import { FriendBar } from "../components/friends";
 import { useProfileCredential } from "../components/phigrospp";
 import { Card, RecentActivity, RecentPlays, TopPlays } from "../components/player";
 import { RksHistory } from "../components/rks-history";
@@ -58,7 +59,8 @@ function PlayerPage() {
   const { loaded } = useSave();
   const navigate = useNavigate();
   useLiveReload([topics.player(profile.player.id), topics.ranking]);
-  const mine = useProfileCredential()?.playerId === profile.player.id;
+  const credential = useProfileCredential();
+  const mine = credential?.playerId === profile.player.id;
   // a player's own page is their Overview, with their save around it
   useEffect(() => {
     if (mine && loaded) void navigate({ to: "/", replace: true });
@@ -68,6 +70,7 @@ function PlayerPage() {
       <SiteHeader />
       <main className="app-shell">
         <Card profile={profile} />
+        {credential && !mine && <FriendBar credential={credential} player={profile.player} />}
         <RksHistory history={profile.history} />
         <TopPlays profile={profile} />
         <RecentActivity profile={profile} />

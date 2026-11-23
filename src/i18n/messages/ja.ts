@@ -9,6 +9,7 @@ export const ja = {
     rooms: "ルーム",
     mods: "Mod",
     devices: "デバイス",
+    friends: "フレンド",
     phigrospp: "Phigros++",
     profile: "プロフィール",
     label: "セクション",
@@ -171,6 +172,23 @@ export const ja = {
     noCharts: "まだプレイのある譜面がありません。Phigros++ でプレイして最初の一人になりましょう。",
     description:
       "RKS 順の Phigros プレイヤーと、各譜面のベストプレイ。Phigros++ で同期しているプレイヤーのデータです。",
+  },
+  friends: {
+    add: "フレンドを追加",
+    yours: (tag: string) => `フレンドはあなたを ${tag} で追加します。`,
+    empty: "まだフレンドがいません。名前と番号で、ここか Phigros++ から追加してください。",
+    incoming: "フレンド申請が届いています",
+    outgoing: "申請を送信済み",
+    online: "オンライン",
+    offline: "オフライン",
+    playing: (chart: string) => `${chart} をプレイ中`,
+    accept: "承認",
+    decline: "拒否",
+    takeBack: "取り消す",
+    remove: "削除",
+    removeConfirm: (name: string) => `${name} をフレンドから削除しますか？`,
+    addFriend: "フレンドに追加",
+    friend: "フレンド",
   },
   rooms: {
     description:
@@ -501,6 +519,10 @@ export const ja = {
     pppNameFull: "この名前はすでに多くのプレイヤーが使っています。別の名前を選んでください。",
     pppServer: (status: string) =>
       `phigros.tools から応答がありませんでした（HTTP ${status}）。もう一度お試しください。`,
+    friendUnknown: "この名前と番号のプレイヤーはいません。",
+    friendSelf: "それはあなた自身です。",
+    friendFull: "フレンドリストがいっぱいです。フレンドと申請は合わせて200件までです。",
+    friendSlow: "短時間に操作が多すぎます。1分後にもう一度お試しください。",
     pppWord: (word: string) => `「${word}」はリカバリーワードではありません。`,
     pppWords: (count: string) => `入力されたのは ${count} 語です。リカバリーフレーズは 16 語です。`,
     pppNoSave:

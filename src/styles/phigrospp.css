@@ -66,6 +66,24 @@
 .devices-head {
   justify-content: space-between;
 }
+.friend-add,
+.friend-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+.friend-add {
+  justify-content: flex-end;
+}
+.friend-add .field {
+  width: 16rem;
+  max-width: 100%;
+}
+.friend-bar {
+  justify-content: flex-end;
+  margin: 0 0 1.125rem;
+}
 .device-invite {
   display: grid;
   grid-template-columns: minmax(0, 1fr);

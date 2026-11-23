@@ -9,6 +9,7 @@ export const vi = {
     rooms: "Phòng",
     mods: "Mod",
     devices: "Thiết bị",
+    friends: "Bạn bè",
     phigrospp: "Phigros++",
     profile: "Hồ sơ",
     label: "Mục",
@@ -173,6 +174,23 @@ export const vi = {
       "Chưa có chart nào có lượt chơi. Hãy chơi một chart với Phigros++ để là người đầu tiên.",
     description:
       "Người chơi Phigros xếp theo RKS và lượt chơi tốt nhất của từng chart, từ những người đồng bộ bằng Phigros++.",
+  },
+  friends: {
+    add: "Thêm bạn",
+    yours: (tag: string) => `Bạn bè thêm bạn bằng ${tag}.`,
+    empty: "Chưa có bạn nào. Hãy thêm bằng tên và số của họ, tại đây hoặc trong Phigros++.",
+    incoming: "Muốn kết bạn với bạn",
+    outgoing: "Đã gửi lời mời",
+    online: "Trực tuyến",
+    offline: "Ngoại tuyến",
+    playing: (chart: string) => `Đang chơi ${chart}`,
+    accept: "Chấp nhận",
+    decline: "Từ chối",
+    takeBack: "Thu hồi",
+    remove: "Xóa",
+    removeConfirm: (name: string) => `Xóa ${name} khỏi danh sách bạn bè?`,
+    addFriend: "Thêm bạn",
+    friend: "Bạn bè",
   },
   rooms: {
     description:
@@ -496,6 +514,10 @@ export const vi = {
     pppNameFull: "Đã có quá nhiều người chơi dùng tên này. Hãy chọn tên khác.",
     pppServer: (status: string) =>
       `phigros.tools không phản hồi được (HTTP ${status}). Hãy thử lại.`,
+    friendUnknown: "Không có người chơi nào có tên và số này.",
+    friendSelf: "Đó là bạn.",
+    friendFull: "Danh sách bạn bè đã đầy: tối đa 200 bạn và lời mời.",
+    friendSlow: "Quá nhiều thao tác trong thời gian ngắn. Hãy thử lại sau một phút.",
     pppWord: (word: string) => `“${word}” không phải là một từ khôi phục.`,
     pppWords: (count: string) => `Bạn đã nhập ${count} từ, còn cụm từ khôi phục có 16 từ.`,
     pppNoSave:

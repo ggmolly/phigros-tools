@@ -16,6 +16,7 @@ import { Route as RebuildRouteImport } from './routes/rebuild'
 import { Route as StartRouteImport } from './routes/start'
 import { Route as ToolIndexRouteImport } from './routes/_tool.index'
 import { Route as ToolDevicesRouteImport } from './routes/_tool.devices'
+import { Route as ToolFriendsRouteImport } from './routes/_tool.friends'
 import { Route as ToolInRouteImport } from './routes/_tool.in'
 import { Route as ToolRecordsRouteImport } from './routes/_tool.records'
 import { Route as ChartsIndexRouteImport } from './routes/charts.index'
@@ -62,6 +63,11 @@ const ToolIndexRoute = ToolIndexRouteImport.update({
 const ToolDevicesRoute = ToolDevicesRouteImport.update({
   id: '/devices',
   path: '/devices',
+  getParentRoute: () => ToolRoute,
+} as any)
+const ToolFriendsRoute = ToolFriendsRouteImport.update({
+  id: '/friends',
+  path: '/friends',
   getParentRoute: () => ToolRoute,
 } as any)
 const ToolInRoute = ToolInRouteImport.update({
@@ -137,6 +143,7 @@ export interface FileRoutesByFullPath {
   '/rebuild': typeof RebuildRoute
   '/start': typeof StartRoute
   '/devices': typeof ToolDevicesRoute
+  '/friends': typeof ToolFriendsRoute
   '/in': typeof ToolInRoute
   '/records': typeof ToolRecordsRoute
   '/charts/$id': typeof ChartsIdRoute
@@ -156,6 +163,7 @@ export interface FileRoutesByTo {
   '/rebuild': typeof RebuildRoute
   '/start': typeof StartRoute
   '/devices': typeof ToolDevicesRoute
+  '/friends': typeof ToolFriendsRoute
   '/in': typeof ToolInRoute
   '/records': typeof ToolRecordsRoute
   '/charts/$id': typeof ChartsIdRoute
@@ -179,6 +187,7 @@ export interface FileRoutesById {
   '/rebuild': typeof RebuildRoute
   '/start': typeof StartRoute
   '/_tool/devices': typeof ToolDevicesRoute
+  '/_tool/friends': typeof ToolFriendsRoute
   '/_tool/in': typeof ToolInRoute
   '/_tool/records': typeof ToolRecordsRoute
   '/charts/$id': typeof ChartsIdRoute
@@ -203,6 +212,7 @@ export interface FileRouteTypes {
     | '/rebuild'
     | '/start'
     | '/devices'
+    | '/friends'
     | '/in'
     | '/records'
     | '/charts/$id'
@@ -222,6 +232,7 @@ export interface FileRouteTypes {
     | '/rebuild'
     | '/start'
     | '/devices'
+    | '/friends'
     | '/in'
     | '/records'
     | '/charts/$id'
@@ -244,6 +255,7 @@ export interface FileRouteTypes {
     | '/rebuild'
     | '/start'
     | '/_tool/devices'
+    | '/_tool/friends'
     | '/_tool/in'
     | '/_tool/records'
     | '/charts/$id'
@@ -327,6 +339,13 @@ declare module '@tanstack/react-router' {
       path: '/devices'
       fullPath: '/devices'
       preLoaderRoute: typeof ToolDevicesRouteImport
+      parentRoute: typeof ToolRoute
+    }
+    '/_tool/friends': {
+      id: '/_tool/friends'
+      path: '/friends'
+      fullPath: '/friends'
+      preLoaderRoute: typeof ToolFriendsRouteImport
       parentRoute: typeof ToolRoute
     }
     '/_tool/in': {
@@ -425,6 +444,7 @@ declare module '@tanstack/react-router' {
 
 interface ToolRouteChildren {
   ToolDevicesRoute: typeof ToolDevicesRoute
+  ToolFriendsRoute: typeof ToolFriendsRoute
   ToolInRoute: typeof ToolInRoute
   ToolRecordsRoute: typeof ToolRecordsRoute
   ToolIndexRoute: typeof ToolIndexRoute
@@ -432,6 +452,7 @@ interface ToolRouteChildren {
 
 const ToolRouteChildren: ToolRouteChildren = {
   ToolDevicesRoute: ToolDevicesRoute,
+  ToolFriendsRoute: ToolFriendsRoute,
   ToolInRoute: ToolInRoute,
   ToolRecordsRoute: ToolRecordsRoute,
   ToolIndexRoute: ToolIndexRoute,

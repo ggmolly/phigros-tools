@@ -12,7 +12,9 @@ Analyze your Phigros save (ranking score, Best charts, records, progress) privat
 
 Sign in from [Phigros++](../mod) to open the save it uploads: the game shows a code to type here (or opens the site
 already signed in), or type the profile's 16-word recovery phrase. The browser makes its own key for the profile,
-listed in **Devices** with every phone signed in, each removable. A ZIP or JSON save file opens too. The main menu
+listed in **Devices** with every phone signed in, each removable. **Friends** lists the profile's friends as the
+game does, with who is online and what they play, and adds, accepts or removes them; another player's page offers the
+same. A ZIP or JSON save file opens too. The main menu
 remembers every player you've opened before, laid out as a carousel like the game's own.
 
 A save that only lives in this browser can be sent to Phigros++, which offers to load it at its next start.

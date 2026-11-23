@@ -9,6 +9,7 @@ export const ko = {
     rooms: "방",
     mods: "모드",
     devices: "기기",
+    friends: "친구",
     phigrospp: "Phigros++",
     profile: "프로필",
     label: "섹션",
@@ -171,6 +172,23 @@ export const ko = {
       "아직 플레이 기록이 있는 채보가 없습니다. Phigros++로 플레이해서 첫 번째가 되어 보세요.",
     description:
       "RKS 순 Phigros 플레이어 순위와 각 채보의 최고 기록입니다. Phigros++로 동기화하는 플레이어의 기록입니다.",
+  },
+  friends: {
+    add: "친구 추가",
+    yours: (tag: string) => `친구가 ${tag}(으)로 나를 추가합니다.`,
+    empty: "아직 친구가 없습니다. 여기나 Phigros++에서 이름과 번호로 추가하세요.",
+    incoming: "친구 요청을 보냈습니다",
+    outgoing: "요청 보냄",
+    online: "온라인",
+    offline: "오프라인",
+    playing: (chart: string) => `${chart} 플레이 중`,
+    accept: "수락",
+    decline: "거절",
+    takeBack: "취소",
+    remove: "삭제",
+    removeConfirm: (name: string) => `${name}님을 친구에서 삭제할까요?`,
+    addFriend: "친구 추가",
+    friend: "친구",
   },
   rooms: {
     description:
@@ -492,6 +510,10 @@ export const ko = {
     pppNameFull: "이미 너무 많은 플레이어가 이 이름을 쓰고 있습니다. 다른 이름을 고르세요.",
     pppServer: (status: string) =>
       `phigros.tools가 응답하지 못했습니다(HTTP ${status}). 다시 시도하세요.`,
+    friendUnknown: "이 이름과 번호의 플레이어가 없습니다.",
+    friendSelf: "본인입니다.",
+    friendFull: "친구 목록이 가득 찼습니다. 친구와 요청은 200개까지입니다.",
+    friendSlow: "짧은 시간에 너무 많이 요청했습니다. 1분 뒤에 다시 시도하세요.",
     pppWord: (word: string) => `“${word}”은(는) 복구 단어가 아닙니다.`,
     pppWords: (count: string) => `입력한 단어는 ${count}개이며, 복구 문구는 16개 단어입니다.`,
     pppNoSave:

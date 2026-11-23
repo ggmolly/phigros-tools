@@ -1,9 +1,10 @@
 import type { Peer } from "crossws";
+import { type H3Event, HTTPError } from "nitro/h3";
 import * as v from "valibot";
 import type { PlayerName } from "../src/plays";
-import { socketPlayer } from "./auth";
+import { signed, socketPlayer } from "./auth";
 import { sqlite } from "./db";
-import { clean, fold, keyOf, playerId } from "./players";
+import { clean, fold, keyOf, player, playerId } from "./players";
 import { Auth, Base64, count, fail, greet, heard, roomOf, STREAM, send, text } from "./rooms";
 
 /*
@@ -20,6 +21,9 @@ import { Auth, Base64, count, fail, greet, heard, roomOf, STREAM, send, text } f
  *
  * What a player asks of others is held to a few times a minute (LIMITS, { t: "error", code: "slow" } past them), and
  * their friends hear how they are every ANNOUNCE at most: nobody floods someone else's game.
+ *
+ * The site does the same for the profile a browser is signed in to (routes/api/friendships.*.ts): it lists the
+ * player's friends, asks, accepts and removes, with the same limits. A browser isn't a game: it never shows online.
  *
  * Who asked whom is kept, who is online only lives in memory.
  */
@@ -60,8 +64,6 @@ interface Presence {
   size: number;
   watchers: Set<Presence>;
   follows?: Presence;
-  /** When they last asked for each thing that has a limit, within the minute. */
-  asked: Partial<Record<Limited, number[]>>;
   /** When their friends last heard how they are, and what tells them again once ANNOUNCE passed. */
   announced: number;
   announcing?: ReturnType<typeof setTimeout>;
@@ -73,6 +75,8 @@ interface Session {
 }
 
 const online = new Map<string, Presence>(); // by player id
+// when each player last asked for each thing that has a limit, within the minute: their game and the site count together
+const asking = new Map<string, Partial<Record<Limited, number[]>>>();
 const sessions = new Map<Peer, Session>();
 let plays = 0;
 
@@ -95,9 +99,9 @@ const tagged = sqlite.prepare<{ key: Uint8Array }, [string, number]>(
   "SELECT key FROM players WHERE fold = ? AND number = ?",
 );
 
-/** The player's friends and requests as their game shows them. Only a friend who shows is online. */
-function view(p: Presence) {
-  return listed.all(p.key).map(({ mine, theirs, ...player }) => {
+/** A player's friends and requests as their game and the site show them. Only a friend who shows is online. */
+export function friendships(key: Uint8Array) {
+  return listed.all(key).map(({ mine, theirs, ...player }) => {
     const friend = mine && theirs ? online.get(player.id) : undefined;
     const shown = friend?.visible ? friend : undefined;
     return {
@@ -110,7 +114,8 @@ function view(p: Presence) {
   });
 }
 
-const tell = (p: Presence) => send(p.peer, { t: "friends", friends: view(p) });
+const tell = (p: Presence | undefined) =>
+  p && send(p.peer, { t: "friends", friends: friendships(p.key) });
 
 const friendOf = (p: Presence, other: Presence) =>
   listed.all(p.key).some((row) => row.id === other.player.id && row.mine && row.theirs);
@@ -135,10 +140,12 @@ function announce(p: Presence) {
 }
 
 // whether the player asked for this as often as a minute allows, which counts this time otherwise
-function limited(p: Presence, kind: Limited) {
+function limited(id: string, kind: Limited) {
   const now = Date.now();
-  const times = (p.asked[kind] ?? []).filter((time) => now - time < MINUTE);
-  p.asked[kind] = times;
+  const asked = asking.get(id) ?? {};
+  const times = (asked[kind] ?? []).filter((time) => now - time < MINUTE);
+  asked[kind] = times;
+  asking.set(id, asked);
   if (times.length >= LIMITS[kind]) return true;
   times.push(now);
   return false;
@@ -182,7 +189,6 @@ function auth(peer: Peer, session: Session, m: Extract<Message, { t: "auth" }>) 
     chunks: [],
     size: 0,
     watchers: new Set(),
-    asked: {},
     announced: 0,
   };
   if (p.peer && p.peer !== peer) {
@@ -208,8 +214,52 @@ function keyFor(typed: string) {
   return name === undefined ? undefined : tagged.get(fold(clean(name)), Number(number))?.key;
 }
 
+type Who = { player: PlayerName; key: Uint8Array };
+
+/**
+ * A player asks another (an id or a name#0042) to be their friend, or accepts their request. Their games hear of it.
+ * The code of why not, if any.
+ */
+export function befriend(who: Who, typed: string) {
+  if (limited(who.player.id, "add")) return "slow";
+  const key = keyFor(typed);
+  if (!key) return "unknown";
+  if (playerId(key) === who.player.id) return "self";
+  if (asked.get(who.key)!.count >= MAX_ASKED) return "full";
+  // asking again changes nothing, and tells nobody
+  if (!ask.run(who.key, key, Date.now()).changes) return;
+  tell(online.get(playerId(key)));
+  tell(online.get(who.player.id));
+}
+
+/** A player ends a friendship, turns a request down or takes one back. The code of why not, if any. */
+export function unfriend(who: Who, id: string) {
+  if (limited(who.player.id, "remove")) return "slow";
+  const key = keyOf(id);
+  if (!key || !drop.run(who.key, key).changes) return;
+  const [mine, other] = [online.get(who.player.id), online.get(id)];
+  if (mine && other?.follows === mine) unfollow(other);
+  if (mine && other && mine.follows === other) unfollow(mine);
+  tell(other);
+  tell(mine);
+}
+
+// why a change was refused, as the site's requests answer it
+const REFUSED = { unknown: 404, self: 400, full: 400, slow: 429 };
+
+/** A change the site asks for the signed-in profile, with a player in its body: the list as it is after it. */
+export async function changed(event: H3Event, change: typeof befriend) {
+  const { key, body } = await signed(event);
+  const found = player(key);
+  if (!found) throw HTTPError.status(403, "Not registered");
+  const why = change({ player: found, key }, new TextDecoder().decode(body).slice(0, 64));
+  if (why) throw new HTTPError({ status: REFUSED[why], body: { code: why } });
+  return friendships(key);
+}
+
 function act(p: Presence, peer: Peer, m: Exclude<Message, { t: "auth" }>) {
-  if (m.t in LIMITS && limited(p, m.t as Limited)) return fail(peer, "slow");
+  if ((m.t === "invite" || m.t === "follow") && limited(p.player.id, m.t))
+    return fail(peer, "slow");
   switch (m.t) {
     case "status": {
       const changed = p.visible !== m.visible || p.spectating !== m.spectating;
@@ -218,26 +268,11 @@ function act(p: Presence, peer: Peer, m: Exclude<Message, { t: "auth" }>) {
       if (changed) announce(p);
       return;
     }
-    case "add": {
-      const key = keyFor(m.player);
-      if (!key) return fail(peer, "unknown");
-      if (playerId(key) === p.player.id) return fail(peer, "self");
-      if (asked.get(p.key)!.count >= MAX_ASKED) return fail(peer, "full");
-      // asking again changes nothing, and tells nobody
-      if (!ask.run(p.key, key, Date.now()).changes) return;
-      const other = online.get(playerId(key));
-      if (other) tell(other);
-      return tell(p);
-    }
+    case "add":
     case "remove": {
-      const key = keyOf(m.player);
-      if (!key) return;
-      if (!drop.run(p.key, key).changes) return;
-      const other = online.get(m.player);
-      if (other?.follows === p) unfollow(other);
-      if (other && p.follows === other) unfollow(p);
-      if (other) tell(other);
-      return tell(p);
+      const why = m.t === "add" ? befriend(p, m.player) : unfriend(p, m.player);
+      if (why) fail(peer, why);
+      return;
     }
     case "playing": {
       stop(p);

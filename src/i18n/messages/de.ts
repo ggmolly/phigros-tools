@@ -9,6 +9,7 @@ export const de = {
     rooms: "Räume",
     mods: "Mods",
     devices: "Geräte",
+    friends: "Freunde",
     phigrospp: "Phigros++",
     profile: "Profil",
     label: "Bereiche",
@@ -172,6 +173,23 @@ export const de = {
     noCharts: "Noch kein Chart hat Spiele. Spiel eins mit Phigros++, um der Erste zu sein.",
     description:
       "Phigros-Spieler nach RKS geordnet und die besten Runs jedes Charts, von Spielern, die mit Phigros++ synchronisieren.",
+  },
+  friends: {
+    add: "Freund hinzufügen",
+    yours: (tag: string) => `Deine Freunde fügen dich als ${tag} hinzu.`,
+    empty: "Noch keine Freunde. Füge jemanden mit Namen und Nummer hinzu, hier oder in Phigros++.",
+    incoming: "Möchte dein Freund sein",
+    outgoing: "Anfrage gesendet",
+    online: "Online",
+    offline: "Offline",
+    playing: (chart: string) => `Spielt ${chart}`,
+    accept: "Annehmen",
+    decline: "Ablehnen",
+    takeBack: "Zurückziehen",
+    remove: "Entfernen",
+    removeConfirm: (name: string) => `${name} aus deinen Freunden entfernen?`,
+    addFriend: "Als Freund hinzufügen",
+    friend: "Freund",
   },
   rooms: {
     description:
@@ -504,6 +522,10 @@ export const de = {
     pppNameFull: "Zu viele Spieler haben diesen Namen bereits. Wähle einen anderen.",
     pppServer: (status: string) =>
       `phigros.tools konnte nicht antworten (HTTP ${status}). Versuch es noch einmal.`,
+    friendUnknown: "Kein Spieler hat diesen Namen und diese Nummer.",
+    friendSelf: "Das bist du.",
+    friendFull: "Deine Freundesliste ist voll: Sie fasst 200 Freunde und Anfragen.",
+    friendSlow: "Das war viel in kurzer Zeit. Versuch es in einer Minute erneut.",
     pppWord: (word: string) => `„${word}“ ist keines der Wiederherstellungswörter.`,
     pppWords: (count: string) =>
       `Das sind ${count} Wörter, die Wiederherstellungsphrase hat aber 16.`,

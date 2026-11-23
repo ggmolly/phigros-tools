@@ -9,6 +9,7 @@ export const id = {
     rooms: "Ruang",
     mods: "Mod",
     devices: "Perangkat",
+    friends: "Teman",
     phigrospp: "Phigros++",
     profile: "Profil",
     label: "Bagian",
@@ -173,6 +174,23 @@ export const id = {
       "Belum ada chart yang dimainkan. Mainkan satu dengan Phigros++ untuk jadi yang pertama.",
     description:
       "Pemain Phigros diurutkan menurut RKS dan permainan terbaik di setiap chart, dari pemain yang menyinkronkan dengan Phigros++.",
+  },
+  friends: {
+    add: "Tambah teman",
+    yours: (tag: string) => `Teman menambahkan Anda sebagai ${tag}.`,
+    empty: "Belum ada teman. Tambahkan dengan nama dan nomornya, di sini atau di Phigros++.",
+    incoming: "Ingin berteman dengan Anda",
+    outgoing: "Permintaan terkirim",
+    online: "Online",
+    offline: "Offline",
+    playing: (chart: string) => `Memainkan ${chart}`,
+    accept: "Terima",
+    decline: "Tolak",
+    takeBack: "Batalkan",
+    remove: "Hapus",
+    removeConfirm: (name: string) => `Hapus ${name} dari teman Anda?`,
+    addFriend: "Tambah teman",
+    friend: "Teman",
   },
   rooms: {
     description:
@@ -499,6 +517,10 @@ export const id = {
     pppNoName: "Pilih nama dulu: profil tidak boleh tanpa nama atau bernama GUEST.",
     pppNameFull: "Sudah terlalu banyak pemain yang memakai nama ini. Pilih nama lain.",
     pppServer: (status: string) => `phigros.tools tidak bisa menjawab (HTTP ${status}). Coba lagi.`,
+    friendUnknown: "Tidak ada pemain dengan nama dan nomor ini.",
+    friendSelf: "Itu Anda sendiri.",
+    friendFull: "Daftar teman Anda penuh: muat 200 teman dan permintaan.",
+    friendSlow: "Terlalu banyak dalam waktu singkat. Coba lagi semenit lagi.",
     pppWord: (word: string) => `“${word}” bukan salah satu kata pemulihan.`,
     pppWords: (count: string) => `Itu ${count} kata, sedangkan frasa pemulihan berisi 16 kata.`,
     pppNoSave:

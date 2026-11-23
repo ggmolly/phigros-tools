@@ -9,6 +9,7 @@ export const fr = {
     rooms: "Salons",
     mods: "Mods",
     devices: "Appareils",
+    friends: "Amis",
     phigrospp: "Phigros++",
     profile: "Profil",
     label: "Sections",
@@ -172,6 +173,23 @@ export const fr = {
     noCharts: "Aucun chart n'a encore de partie. Jouez-en un avec Phigros++ pour être le premier.",
     description:
       "Les joueurs de Phigros classés par RKS, et les meilleures parties de chaque chart, envoyées par les joueurs qui synchronisent avec Phigros++.",
+  },
+  friends: {
+    add: "Ajouter un ami",
+    yours: (tag: string) => `Vos amis vous ajoutent avec ${tag}.`,
+    empty: "Pas encore d’ami. Ajoutez-en un avec son nom et son numéro, ici ou dans Phigros++.",
+    incoming: "Veut être votre ami",
+    outgoing: "Demande envoyée",
+    online: "En ligne",
+    offline: "Hors ligne",
+    playing: (chart: string) => `Joue ${chart}`,
+    accept: "Accepter",
+    decline: "Refuser",
+    takeBack: "Retirer",
+    remove: "Retirer",
+    removeConfirm: (name: string) => `Retirer ${name} de vos amis ?`,
+    addFriend: "Ajouter en ami",
+    friend: "Ami",
   },
   rooms: {
     description:
@@ -506,6 +524,10 @@ export const fr = {
       "Choisissez d’abord un nom : un profil ne peut pas être sans nom ni s’appeler GUEST.",
     pppNameFull: "Trop de joueurs portent déjà ce nom. Choisissez-en un autre.",
     pppServer: (status: string) => `phigros.tools n’a pas pu répondre (HTTP ${status}). Réessayez.`,
+    friendUnknown: "Aucun joueur n’a ce nom et ce numéro.",
+    friendSelf: "C’est vous.",
+    friendFull: "Votre liste d’amis est pleine : elle contient 200 amis et demandes.",
+    friendSlow: "Cela fait beaucoup en peu de temps. Réessayez dans une minute.",
     pppWord: (word: string) => `« ${word} » ne fait pas partie des mots de récupération.`,
     pppWords: (count: string) =>
       `Vous avez saisi ${count} mots, alors que la phrase de récupération en compte 16.`,

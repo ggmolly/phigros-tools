@@ -90,6 +90,14 @@ export async function answer<T>(response: Response): Promise<T> {
   if (code === "no-code") throw new AppError("pppNoCode");
   if (code === "no-name") throw new AppError("pppNoName");
   if (code === "name-full") throw new AppError("pppNameFull");
+  // why a friend was refused (server/friends.ts)
+  const friend = {
+    unknown: "friendUnknown",
+    self: "friendSelf",
+    full: "friendFull",
+    slow: "friendSlow",
+  } as const;
+  if (code in friend) throw new AppError(friend[code as keyof typeof friend]);
   if (response.status === 403 || response.status === 404) throw new AppError("pppNoProfile");
   throw new AppError("pppServer", String(response.status));
 }

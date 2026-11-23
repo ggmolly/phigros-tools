@@ -7,6 +7,7 @@ export const en = {
     rooms: "Rooms",
     mods: "Mods",
     devices: "Devices",
+    friends: "Friends",
     phigrospp: "Phigros++",
     profile: "Profile",
     label: "Sections",
@@ -169,6 +170,23 @@ export const en = {
     noCharts: "No chart has plays yet. Play one with Phigros++ to be the first.",
     description:
       "Phigros players ranked by RKS, and the best plays on each chart, from players who sync their plays with Phigros++.",
+  },
+  friends: {
+    add: "Add a friend",
+    yours: (tag: string) => `Your friends add you as ${tag}.`,
+    empty: "No friend yet. Add one with their name and number, here or in Phigros++.",
+    incoming: "Wants to be your friend",
+    outgoing: "Request sent",
+    online: "Online",
+    offline: "Offline",
+    playing: (chart: string) => `Playing ${chart}`,
+    accept: "Accept",
+    decline: "Decline",
+    takeBack: "Take back",
+    remove: "Remove",
+    removeConfirm: (name: string) => `Remove ${name} from your friends?`,
+    addFriend: "Add friend",
+    friend: "Friend",
   },
   rooms: {
     description:
@@ -490,6 +508,10 @@ export const en = {
     pppNoName: "Choose a name first: a profile can't be nameless or called GUEST.",
     pppNameFull: "Too many players already have this name. Choose another one.",
     pppServer: (status: string) => `phigros.tools couldn't answer (HTTP ${status}). Try again.`,
+    friendUnknown: "No player has this name and number.",
+    friendSelf: "That's you.",
+    friendFull: "Your friends list is full: it takes 200 friends and requests.",
+    friendSlow: "That's a lot in a short time. Try again in a minute.",
     pppWord: (word: string) => `“${word}” isn't one of the recovery words.`,
     pppWords: (count: string) => `That's ${count} words, the recovery phrase has 16.`,
     pppNoSave:
