@@ -34,7 +34,8 @@ import { announce } from "./queue";
  * In a room, its host picks the chart and its modifiers, the others say when they're ready and whether their game has
  * the chart, and the host starts once everyone who has it is ready ({ t: "start", seed } to those who play). Players
  * send their score as they play, which the room hears about once a second, and their result at the end: the match is
- * over when nobody plays any more. Chat lines go to the room's players and nowhere else.
+ * over when nobody plays any more. Chat lines go to the room's players and nowhere else. The host may rename the room
+ * or hand it to another player.
  *
  * A player may spectate instead ({ t: "spectate" }), and a browser may watch a room without signing in ({ t: "watch",
  * room, password }), unlisted and never told the chat. Players stream what they play as they play it ({ t: "frames",
@@ -367,6 +368,8 @@ const Message = v.variant("t", [
   v.object({ t: v.literal("quit") }),
   v.object({ t: v.literal("chat"), text: text(1024) }),
   v.object({ t: v.literal("kick"), player: text(16) }),
+  v.object({ t: v.literal("host"), player: text(16) }),
+  v.object({ t: v.literal("rename"), name: text(256) }),
   v.object({ t: v.literal("watch"), room: text(16), password: text(64) }),
   v.object({ t: v.literal("spectate"), spectate: v.boolean() }),
   v.object({ t: v.literal("frames"), data: Base64 }),
@@ -399,15 +402,17 @@ function auth(peer: Peer, session: Session, m: Extract<Message, { t: "auth" }>) 
   send(peer, { t: "room", room: view(seat.room) });
 }
 
+// a room's name, links taken out, or the player's when nothing is left
+const nameOf = (typed: string, player: PlayerName) =>
+  clean(typed.replace(URLS, " "), ROOM_NAME) || clean(player.name, ROOM_NAME);
+
 function create(peer: Peer, session: Session, m: Extract<Message, { t: "create" }>) {
   if (rooms.size >= MAX_ROOMS) return fail(peer, "rooms");
   const current = seated.get(session.player!.id);
   if (current) leave(current);
-  const name =
-    clean(m.name.replace(URLS, " "), ROOM_NAME) || clean(session.player!.name, ROOM_NAME);
   const room: Room = {
     id: freeId(),
-    name,
+    name: nameOf(m.name, session.player!),
     password: m.password,
     host: session.player!.id,
     seats: [],
@@ -586,9 +591,18 @@ function act(seat: Seat, m: Message) {
     case "follow":
       if (seat.watching) follow(seat, m);
       return;
+    case "rename":
+      if (!host) return;
+      room.name = nameOf(m.name, seat.player);
+      return push(room);
+    case "host":
     case "kick": {
       const target = room.seats.find((each) => each.player.id === m.player);
       if (!host || !target || target === seat) return;
+      if (m.t === "host") {
+        room.host = m.player;
+        return push(room);
+      }
       room.banned.add(m.player);
       if (target.peer) fail(target.peer, "kicked");
       return leave(target);
