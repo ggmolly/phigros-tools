@@ -97,7 +97,8 @@ export const PREFS: Record<string, Place> = Object.fromEntries<Place>([
   ["ReadSideStory4Begin", ["gameKey", "sideStory4BeginReadKey", 1]],
 ]);
 
-function open(save: Save, pref: string) {
+/** Sets a pref where the save holds it. */
+export function openPref(save: Save, pref: string) {
   const [module, field, bit] = PREFS[pref]!;
   const fields = save[module] as unknown as Record<string, number | boolean | undefined>;
   fields[field] = bit === true || Number(fields[field] ?? 0) | bit;
@@ -155,10 +156,10 @@ export function unlock(document: SaveDocumentV1): SaveDocumentV1 {
     const key = songKeys[song.songId];
     if (key) setKey(gameKey, 0, key, true);
     song.levels.forEach((record, level) => {
-      if (record) for (const pref of gates[song.songId]?.[level] ?? []) open(save, pref);
+      if (record) for (const pref of gates[song.songId]?.[level] ?? []) openPref(save, pref);
     });
     const grade = `${song.songId.split(".")[0]}INSGrade`;
-    if (grade in PREFS && (song.levels[2]?.score ?? 0) >= S_GRADE) open(save, grade);
+    if (grade in PREFS && (song.levels[2]?.score ?? 0) >= S_GRADE) openPref(save, grade);
   }
   if (profile?.avatar) setKey(gameKey, 3, profile.avatar, true);
   // a song of chapters 8 and 9 is unlocked along their story, which has begun for a save that has one

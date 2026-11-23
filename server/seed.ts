@@ -1,9 +1,11 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { catalogManifest, catalogSongs } from "../src/catalog";
+import { blankDocument } from "../src/document";
 import { game } from "../src/game";
 import { judge } from "../src/judge";
-import { LEVELS } from "../src/modules";
+import { LEVELS, type SongRecord } from "../src/modules";
+import { pack, seedSigner } from "../src/phigrospp";
 import {
   decodeReplay,
   encodeReplay,
@@ -13,15 +15,19 @@ import {
 } from "../src/pigeon";
 import { linePose, parseChart, type RawChart } from "../src/player/chart";
 import { decodePhc } from "../src/player/phc";
+import { buildSave } from "../src/save";
+import { KEYS, openPref, PREFS, setKey, unlock } from "../src/unlocks";
 import { GAME_DIR, loadGame } from "./game";
 import { setLook, setName } from "./players";
 import { addPlays } from "./profiles";
 import { queueVerify } from "./queue";
 import { importRecords } from "./records";
 import { addReplay, REPLAY_DIR } from "./replays";
+import { storeSave } from "./saves";
 
 // fills a local database with players, their records and plays, and replays for the worker to judge: a bot plays
-// each one on the chart, and a quarter of them claim a better result than its touches give. bun run seed [players]
+// each one on the chart, and a quarter of them claim a better result than its touches give. it ends with ggmolly, a
+// maxed save to sign in to with the recovery phrase it prints. bun run seed [players]
 loadGame();
 const PLAYERS = Number(process.argv[2] ?? 300);
 const W = 1920;
@@ -259,5 +265,49 @@ for (let n = 0; n < PLAYERS; n++) {
   }
   await addPlays(key, plays.join("\n"));
 }
+// every chart phi, every key, every gate open and the top challenge rank, uploaded like the game uploads a save
+const phrase = crypto.getRandomValues(new Uint8Array(16));
+const me = await seedSigner(phrase);
+const { id } = await setName(me.public, "ggmolly");
+const maxed = blankDocument();
+maxed.songs = catalogSongs.map((song) => ({
+  rawSongId: `${song.id}.0`,
+  songId: song.id,
+  fc: song.constants.reduce<number>((fc, c, level) => (c === null ? fc : fc | (1 << level)), 0),
+  levels: song.constants.map((c) =>
+    c === null ? null : { score: 1_000_000, accuracy: 100 },
+  ) as SongRecord["levels"],
+}));
+KEYS.forEach((names, kind) => {
+  for (const name in names) setKey(maxed.gameKey, kind, name, true);
+});
+for (const pref in PREFS) openPref(maxed, pref);
+Object.assign(maxed.gameProgress, {
+  isFirstRun: false,
+  legacyChapterFinished: true,
+  alreadyShowCollectionTip: true,
+  alreadyShowAutoUnlockINTip: true,
+  challengeModeRank: 548,
+  money: [1023, 1023, 1023, 1023, 1023],
+});
+maxed.profile!.avatar = pick(Object.keys(game().avatars));
+await storeSave(id, pack(await buildSave(unlock(maxed))));
+await setLook(me.public, {
+  intro: "",
+  avatar: maxed.profile!.avatar,
+  background: "",
+  unlisted: false,
+});
+await importRecords(
+  me.public,
+  maxed.songs
+    .flatMap((song) =>
+      song.levels.flatMap((record, i) =>
+        record ? [`${song.rawSongId}\t${LEVELS[i]}\t1000000\t100\t1`] : [],
+      ),
+    )
+    .join("\n"),
+);
 console.log(`seeded ${PLAYERS} players and ${replays} replays`);
+console.log(`ggmolly's recovery phrase: ${Array.from(phrase, (byte) => words[byte]).join(" ")}`);
 process.exit(0);

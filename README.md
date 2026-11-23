@@ -119,7 +119,8 @@ bun run dev
 
 For replays to be judged, `bun run queue` (RabbitMQ in Docker) and `bun run worker` beside it. `bun run seed [players]`
 adds 300 made-up players (or as many as asked) with records, plays and replays a bot played, a quarter of them claiming
-a better result than their touches give: the worker verifies the others and leaves those unverified.
+a better result than their touches give: the worker verifies the others and leaves those unverified. It also makes
+ggmolly, a save with every chart φ and everything unlocked, and prints the recovery phrase that signs in to it.
 
 The tables are declared in `server/schema.ts` (Drizzle). After changing them, `bun run generate` writes the change to
 `drizzle/` as SQL, which the server and the worker apply when they start.
