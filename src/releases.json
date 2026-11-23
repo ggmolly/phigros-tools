@@ -1,5 +1,36 @@
 [
  {
+  "slug": "replay-uploads",
+  "title": "Every replay reaches your profile",
+  "date": "2026-11-23",
+  "phigrospp": "0.3.0-beta.15",
+  "summary": "When many replays were waiting to upload, the game sent them all at once and some of them never reached phigros.tools. Uploads now leave one after another, so each replay, play and save arrives.",
+  "shown": {
+   "poster": "4bdca7732671.jpg",
+   "width": 1280,
+   "height": 720,
+   "kind": "media",
+   "src": "cover.svg"
+  },
+  "blocks": [
+   {
+    "kind": "text",
+    "spans": [
+     {
+      "text": "When many replays were waiting to upload, the game sent them all at once and some of them never reached phigros.tools. Uploads now leave one after another, so each replay, play and save arrives."
+     }
+    ]
+   },
+   {
+    "poster": "4bdca7732671.jpg",
+    "width": 1280,
+    "height": 720,
+    "kind": "media",
+    "src": "cover.svg"
+   }
+  ]
+ },
+ {
   "slug": "friends-and-queues",
   "title": "See what your friends are playing",
   "date": "2026-11-23",

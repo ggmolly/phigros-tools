@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Saira">
+<defs>
+<linearGradient id="shade" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a0d1c" stop-opacity="0.5"/><stop offset="1" stop-color="#05070d" stop-opacity="0.8"/></linearGradient>
+<linearGradient id="line" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".2" stop-color="#fff"/><stop offset=".8" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<filter id="blur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="34"/></filter>
+<filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14"/></filter>
+</defs>
+<image href="data/game/covers/AboutTheUniverse.SOTUIMIssionary.avif" x="-80" y="-45" width="1760" height="990" preserveAspectRatio="xMidYMid slice" filter="url(#blur)"/>
+<rect width="1600" height="900" fill="url(#shade)"/>
+<g transform="rotate(-6 800 660)"><rect x="-200" y="654" width="2000" height="12" fill="url(#line)" opacity=".45" filter="url(#soft)"/><rect x="-200" y="658" width="2000" height="4" fill="url(#line)" opacity=".7"/></g>
+<image href="public/player/tap.png" x="150" y="778.4" width="230" height="23.3" transform="rotate(-6 265.0 790)"/>
+<image href="public/player/drag.png" x="1180" y="93.3" width="220" height="13.3" transform="rotate(-6 1290.0 100)"/>
+<text x="300.0" y="300.0" font-size="104" font-weight="400" fill="#fff" text-anchor="start" >Replays</text>
+<text x="296.0" y="368.0" font-size="40" font-weight="300" fill="#fff" text-anchor="start" fill-opacity=".85">sent one after another</text>
+<polygon points="864.0,200.0 1464.0,200.0 1440.0,296.0 840.0,296.0" fill="#000" opacity=".8"/>
+<clipPath id="cut1"><polygon points="879.0,214.0 999.0,214.0 982.0,282.0 862.0,282.0" /></clipPath><image href="data/game/covers/Chronomia.Lime.thumb.avif" x="862.0" y="214.0" width="137.0" height="68.0" preserveAspectRatio="xMidYMid slice" clip-path="url(#cut1)" />
+<text x="1018.0" y="246.0" font-size="30" font-weight="500" fill="#fff" text-anchor="start" >Chronomia</text>
+<text x="1012.0" y="278.0" font-size="22" font-weight="400" fill="#fff" text-anchor="start" fill-opacity=".6">0996412</text>
+<polygon points="1329.0,226.0 1425.0,226.0 1414.0,270.0 1318.0,270.0" fill="#fff" opacity="1"/>
+<polyline points="1353.0,248 1363.0,258 1381.0,238" fill="none" stroke="#0b0613" stroke-width="4"/>
+<polygon points="834.5,318.0 1434.5,318.0 1410.5,414.0 810.5,414.0" fill="#000" opacity=".8"/>
+<clipPath id="cut2"><polygon points="849.5,332.0 969.5,332.0 952.5,400.0 832.5,400.0" /></clipPath><image href="data/game/covers/Rrharil.TeamGrimoire.thumb.avif" x="832.5" y="332.0" width="137.0" height="68.0" preserveAspectRatio="xMidYMid slice" clip-path="url(#cut2)" />
+<text x="988.5" y="364.0" font-size="30" font-weight="500" fill="#fff" text-anchor="start" >Rrhar'il</text>
+<text x="982.5" y="396.0" font-size="22" font-weight="400" fill="#fff" text-anchor="start" fill-opacity=".6">0981207</text>
+<polygon points="1299.5,344.0 1395.5,344.0 1384.5,388.0 1288.5,388.0" fill="#fff" opacity="1"/>
+<polyline points="1323.5,366 1333.5,376 1351.5,356" fill="none" stroke="#0b0613" stroke-width="4"/>
+<polygon points="805.0,436.0 1405.0,436.0 1381.0,532.0 781.0,532.0" fill="#000" opacity=".8"/>
+<clipPath id="cut3"><polygon points="820.0,450.0 940.0,450.0 923.0,518.0 803.0,518.0" /></clipPath><image href="data/game/covers/Adastraperaspera.RabbitHouse.thumb.avif" x="803.0" y="450.0" width="137.0" height="68.0" preserveAspectRatio="xMidYMid slice" clip-path="url(#cut3)" />
+<text x="959.0" y="482.0" font-size="30" font-weight="500" fill="#fff" text-anchor="start" >Adastra per aspera</text>
+<text x="953.0" y="514.0" font-size="22" font-weight="400" fill="#fff" text-anchor="start" fill-opacity=".6">1000000</text>
+<polygon points="1270.0,462.0 1366.0,462.0 1355.0,506.0 1259.0,506.0" fill="#fff" opacity="1"/>
+<polyline points="1294.0,484 1304.0,494 1322.0,474" fill="none" stroke="#0b0613" stroke-width="4"/>
+<polygon points="775.5,554.0 1375.5,554.0 1351.5,650.0 751.5,650.0" fill="#000" opacity=".8"/>
+<clipPath id="cut4"><polygon points="790.5,568.0 910.5,568.0 893.5,636.0 773.5,636.0" /></clipPath><image href="data/game/covers/996.李化禹.thumb.avif" x="773.5" y="568.0" width="137.0" height="68.0" preserveAspectRatio="xMidYMid slice" clip-path="url(#cut4)" />
+<text x="929.5" y="600.0" font-size="30" font-weight="500" fill="#fff" text-anchor="start" >996</text>
+<text x="923.5" y="632.0" font-size="22" font-weight="400" fill="#fff" text-anchor="start" fill-opacity=".6">0974530</text>
+<polygon points="1240.5,580.0 1336.5,580.0 1325.5,624.0 1229.5,624.0" fill="#000" opacity=".5"/>
+<rect x="1243.5" y="600" width="68" height="4" fill="#fff" opacity=".3"/><rect x="1243.5" y="600" width="40" height="4" fill="#8fdcff"/>
+</svg>
