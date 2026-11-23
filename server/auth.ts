@@ -1,8 +1,9 @@
 import { createPublicKey, verify } from "node:crypto";
 import { assertBodySize, type H3Event, HTTPError } from "nitro/h3";
 import * as v from "valibot";
+import type { PlayerName } from "../src/plays";
 import { sqlite } from "./db";
-import { markSeen } from "./players";
+import { markSeen, player } from "./players";
 
 // spki der header of a raw ed25519 public key
 const SPKI = Buffer.from("302a300506032b6570032100", "hex");
@@ -46,6 +47,25 @@ export function verifySignature(
     type: "spki",
   });
   return verify(null, message, publicKey, signature);
+}
+
+/**
+ * Who holds a socket: the game signs the nonce the server greeted it with, after `domain` so the signature is good for
+ * nothing else, with its profile's key or a device's. The code of the refusal when it isn't a profile's.
+ */
+export function socketPlayer(
+  domain: string,
+  nonce: string,
+  m: { key: string; sig: string },
+): { player: PlayerName; key: Uint8Array } | "auth" | "no-profile" {
+  const key = Buffer.from(m.key, "hex");
+  if (!verifySignature(key, Buffer.from(domain + nonce), Buffer.from(m.sig, "hex"))) return "auth";
+  const device = deviceOf.get(key);
+  const owner = device?.owner ?? key;
+  const found = !device?.removed && player(owner);
+  if (!found) return "no-profile";
+  markSeen(owner);
+  return { player: found, key: owner };
 }
 
 /**

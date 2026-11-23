@@ -20,9 +20,9 @@ import {
   type Standing,
 } from "../src/rooms";
 import { topics } from "../src/topics";
-import { deviceOf, verifySignature } from "./auth";
+import { socketPlayer } from "./auth";
 import { sqlite } from "./db";
-import { clean, markSeen, player } from "./players";
+import { clean } from "./players";
 import { announce } from "./queue";
 
 /*
@@ -77,7 +77,8 @@ sqlite.run(`
 const DOMAIN = "phigros.tools rooms v1\0"; // the key signs requests and replays too
 const MAX_ROOMS = 500;
 const MAX_MESSAGE = 16_384; // frames are the longest
-const STREAM = 4_000_000; // what a match keeps of a player's frames, a long song takes about a tenth
+/** What is kept of a play's frames while it's played, a long song takes about a tenth. */
+export const STREAM = 4_000_000;
 const GUESS_PAUSE = 1000; // a wrong password, and the room takes no other for this long
 const AWAY = 30_000; // how long a player whose connection dropped keeps their place
 const MATCH_LIMIT = 20 * 60_000; // a match nobody ends is over after this
@@ -152,8 +153,10 @@ const seated = new Map<string, Seat>(); // by player id: a player sits in one ro
 const sessions = new Map<Peer, Session>();
 const watching = new Map<Peer, Watcher>();
 
-const send = (peer: Peer | undefined, message: object) => peer?.send(JSON.stringify(message));
-const fail = (peer: Peer, code: string) => send(peer, { t: "error", code });
+// what the game's sockets share (server/friends.ts is the other one)
+export const send = (peer: Peer | undefined, message: object) =>
+  peer?.send(JSON.stringify(message));
+export const fail = (peer: Peer, code: string) => send(peer, { t: "error", code });
 
 function view(room: Room): RoomView {
   return {
@@ -337,16 +340,22 @@ function sit(room: Room, session: Session, peer: Peer, spectating: boolean) {
   push(room);
 }
 
-const text = (max: number) => v.pipe(v.string(), v.maxLength(max));
+export const text = (max: number) => v.pipe(v.string(), v.maxLength(max));
 const hex = (bytes: number) => v.pipe(v.string(), v.regex(/^[0-9a-f]*$/), v.length(bytes * 2));
-const count = (max: number) => v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(max));
+export const count = (max: number) =>
+  v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(max));
+export const Auth = v.object({ t: v.literal("auth"), key: hex(32), sig: hex(64) });
 const Score = count(1_000_000);
 const Notes = count(100_000);
 const Accuracy = v.pipe(v.number(), v.minValue(0), v.maxValue(100));
-const Base64 = v.pipe(v.string(), v.regex(/^[A-Za-z0-9+/]*={0,2}$/), v.maxLength(MAX_MESSAGE));
+export const Base64 = v.pipe(
+  v.string(),
+  v.regex(/^[A-Za-z0-9+/]*={0,2}$/),
+  v.maxLength(MAX_MESSAGE),
+);
 
 const Message = v.variant("t", [
-  v.object({ t: v.literal("auth"), key: hex(32), sig: hex(64) }),
+  Auth,
   v.object({ t: v.literal("create"), name: text(256), password: text(64) }),
   v.object({ t: v.literal("join"), room: text(16), password: text(64) }),
   v.object({ t: v.literal("leave") }),
@@ -379,16 +388,11 @@ type Message = v.InferOutput<typeof Message>;
 
 // the game proves it holds a profile's key, and gets back the room it was in if its connection dropped
 function auth(peer: Peer, session: Session, m: Extract<Message, { t: "auth" }>) {
-  const key = Buffer.from(m.key, "hex");
-  if (!verifySignature(key, Buffer.from(DOMAIN + session.nonce), Buffer.from(m.sig, "hex")))
-    return fail(peer, "auth");
-  const device = deviceOf.get(key);
-  const owner = device?.owner ?? key;
-  const found = !device?.removed && player(owner);
-  if (!found) return fail(peer, "no-profile");
-  markSeen(owner);
+  const who = socketPlayer(DOMAIN, session.nonce, m);
+  if (typeof who === "string") return fail(peer, who);
+  const found = who.player;
   session.player = found;
-  session.key = owner;
+  session.key = who.key;
   send(peer, { t: "welcome", player: found });
   const seat = seated.get(found.id);
   // a game that was in a room hears there whether it still is
@@ -610,22 +614,31 @@ function act(seat: Seat, m: Message) {
   }
 }
 
-export function open(peer: Peer) {
+/** Greets a socket with the nonce its game signs. */
+export function greet(peer: Peer): string {
   const nonce = randomBytes(16).toString("hex");
-  sessions.set(peer, { nonce });
   send(peer, { t: "hello", nonce });
+  return nonce;
+}
+
+/** What a socket said as its schema reads it. One saying anything else is closed. */
+export function heard<Schema extends v.GenericSchema>(peer: Peer, schema: Schema, raw: string) {
+  try {
+    if (raw.length > MAX_MESSAGE) throw new Error("too long");
+    return v.parse(schema, JSON.parse(raw));
+  } catch {
+    peer.close(1003, "Not a message");
+  }
+}
+
+export function open(peer: Peer) {
+  sessions.set(peer, { nonce: greet(peer) });
 }
 
 export function message(peer: Peer, raw: string) {
   const session = sessions.get(peer);
-  if (!session) return;
-  let m: Message;
-  try {
-    if (raw.length > MAX_MESSAGE) throw new Error("too long");
-    m = v.parse(Message, JSON.parse(raw));
-  } catch {
-    return peer.close(1003, "Not a room message");
-  }
+  const m = session && heard(peer, Message, raw);
+  if (!m) return;
   if (m.t === "auth") return auth(peer, session, m);
   // a browser that watches never signs in, and says nothing but who it follows
   if (m.t === "watch" && !session.player) return watch(peer, m);
@@ -648,6 +661,9 @@ export function closed(peer: Peer) {
   seat.peer = undefined;
   seat.away = setTimeout(() => leave(seat), AWAY);
 }
+
+/** The room a player sits in, for an invitation to it (server/friends.ts). */
+export const roomOf = (player: string) => seated.get(player)?.room;
 
 /** The open rooms, the fullest first. */
 export const openRooms = (): RoomSummary[] =>
