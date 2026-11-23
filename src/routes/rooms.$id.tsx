@@ -91,6 +91,13 @@ function Share() {
   );
 }
 
+// the room's chart as a player plays it: at the level and with the modifiers they picked
+const played = (chart: RoomChart, seat: { level: string; mods: number }): RoomChart => ({
+  ...chart,
+  level: seat.level,
+  mods: seat.mods,
+});
+
 function RoomPage() {
   const page = Route.useLoaderData();
   const t = useT();
@@ -116,7 +123,7 @@ function RoomPage() {
   const follow = (id: string) => {
     const seat = live?.players.find((each) => each.player.id === id);
     if (live?.chart && seat)
-      setFollowed({ player: seat.player, chart: live.chart, at: Date.now() });
+      setFollowed({ player: seat.player, chart: played(live.chart, seat), at: Date.now() });
   };
   // each match starts by following its first player
   const [was, setWas] = useState(false);
@@ -124,7 +131,7 @@ function RoomPage() {
     setWas(live.playing);
     const first = live.players.find((seat) => seat.playing);
     if (live.playing && live.chart && first)
-      setFollowed({ player: first.player, chart: live.chart, at: Date.now() });
+      setFollowed({ player: first.player, chart: played(live.chart, first), at: Date.now() });
   }
   const { follow: hear } = watching;
   useEffect(() => {

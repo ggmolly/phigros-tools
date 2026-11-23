@@ -8,6 +8,8 @@ import { ChartName } from "./player";
 import { Place, PlayerTag } from "./plays";
 import { DATE_TIME, Difficulty, Rank, score7 } from "./primitives";
 
+type Chart = { level: string; mods: number };
+
 // lucide's lock and crown
 const LOCK =
   "M5 11h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2M7 11V7a5 5 0 0 1 10 0v4";
@@ -111,7 +113,6 @@ export function Lobby({
 }) {
   const t = useT();
   const picks = room.playing && onFollow;
-  const mods = room.chart?.mods ?? 0;
   const players = room.playing ? room.players.toSorted((a, b) => b.score - a.score) : room.players;
   return (
     <section className="panel room-live">
@@ -154,7 +155,7 @@ export function Lobby({
                 {room.playing ? (
                   scored ? (
                     <>
-                      <Num>{score7(totalOf(seat.score, mods))}</Num>
+                      <Num>{score7(totalOf(seat.score, seat.mods))}</Num>
                       <Num>{seat.accuracy.toFixed(2)}%</Num>
                     </>
                   ) : (
@@ -164,6 +165,7 @@ export function Lobby({
                   )
                 ) : (
                   <td className="meta end">
+                    {room.chart && !seat.watching && <Picked play={seat} chart={room.chart} />}{" "}
                     {seat.watching
                       ? t.rooms.spectating
                       : seat.able
@@ -195,6 +197,17 @@ export function Lobby({
         </tbody>
       </Scroll>
     </section>
+  );
+}
+
+/** The level and modifiers a player picked, when they aren't the ones the chart was added with. */
+function Picked({ play, chart }: { play: Chart; chart: Chart }) {
+  if (play.level === chart.level && play.mods === chart.mods) return null;
+  return (
+    <span className="profile-chart">
+      <Difficulty level={play.level} />
+      <Modifiers mods={play.mods} />
+    </span>
   );
 }
 
@@ -264,8 +277,8 @@ export function Matches({ matches }: { matches: Match[] }) {
                 <tr key={play.player.id}>
                   <Place rank={play.rank} />
                   <Player player={play.player} />
-                  <Num title={match.mods ? score7(play.score) : undefined}>
-                    {score7(play.total)}
+                  <Num title={play.mods ? score7(play.score) : undefined}>
+                    <Picked play={play} chart={match} /> {score7(play.total)}
                   </Num>
                   <Num>{play.accuracy.toFixed(2)}%</Num>
                   <Num>{play.maxcombo}</Num>

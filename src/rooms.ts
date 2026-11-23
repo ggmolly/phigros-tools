@@ -8,20 +8,29 @@ import type { PlayerName } from "./plays";
  * `GET /api/rooms` lists the open ones, `GET /api/rooms/<id>` is a room with the matches it played.
  */
 
-/** What a room's name, players and chat messages are held to. */
+/** What a room's name, players, queue and chat messages are held to. */
 export const ROOM_NAME = 24;
+/** The charts a room queues after the one it's on, and how many of a room's charts may be one player's. */
+export const ROOM_QUEUE = 20;
+export const ROOM_QUEUE_EACH = 3;
 export const ROOM_PLAYERS = 8;
 /** How many may spectate a room from their game, and watch it from a browser. */
 export const ROOM_SPECTATORS = 8;
 export const ROOM_WATCHERS = 64;
 export const ROOM_CHAT = 200;
 
-/** The chart a room plays next: the catalog's song id, the game's own (`id`), and the modifiers' bits. */
+/**
+ * A chart a room plays: the catalog's song id, the game's own (`id`), and the level and modifiers (their bits) it was
+ * added with, which each player plays it with until they pick their own. `entry` tells the room's charts apart, `by`
+ * is the id of the player who added it.
+ */
 export interface RoomChart {
   song: string;
   id: string;
   level: string;
   mods: number;
+  entry: number;
+  by: string;
 }
 
 /** What a play gave once its song ended. */
@@ -35,11 +44,16 @@ export interface RoomResult {
   miss: number;
 }
 
-/** A play's place in its match, by score then accuracy, and the total its modifiers give the score. */
+/**
+ * A play's place in its match, by the total its modifiers give the score then by accuracy, and the level and
+ * modifiers its player picked.
+ */
 export interface MatchPlay extends RoomResult {
   player: PlayerName;
   rank: number;
   total: number;
+  level: string;
+  mods: number;
 }
 
 /** A chart a room played, with every player who finished it, best first. */
@@ -56,7 +70,10 @@ export interface Match {
 export interface RoomPlayer {
   player: PlayerName;
   ready: boolean;
-  /** Whether their game has the room's chart unlocked: one who doesn't sits the match out. */
+  /** The level and modifiers they play the room's chart with. */
+  level: string;
+  mods: number;
+  /** Whether their game has the room's chart unlocked at that level: one who doesn't sits the match out. */
   able: boolean;
   /** Spectating: they don't play, nor count among the room's players. */
   watching: boolean;
@@ -75,7 +92,9 @@ export interface RoomView {
   /** The id of the player who picks the chart and starts. */
   host: string;
   playing: boolean;
+  /** The chart it's on, and the ones its players queued after it. */
   chart: RoomChart | null;
+  queue: RoomChart[];
   players: RoomPlayer[];
   /** How many browsers watch it. */
   watchers: number;

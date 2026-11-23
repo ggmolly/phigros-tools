@@ -7,9 +7,12 @@ import { LEVELS } from "../src/modules";
 import type { PlayerName } from "../src/plays";
 import {
   type Match,
+  type MatchPlay,
   ROOM_CHAT,
   ROOM_NAME,
   ROOM_PLAYERS,
+  ROOM_QUEUE,
+  ROOM_QUEUE_EACH,
   ROOM_SPECTATORS,
   ROOM_WATCHERS,
   type RoomChart,
@@ -31,11 +34,13 @@ import { announce } from "./queue";
  * sig }, both hex), then the player makes or joins a room. Every change of a room goes to its players whole
  * ({ t: "room", room }, null once they're out of it), a refusal is { t: "error", code }.
  *
- * In a room, its host picks the chart and its modifiers, the others say when they're ready and whether their game has
- * the chart, and the host starts once everyone who has it is ready ({ t: "start", seed } to those who play). Players
+ * In a room, anyone adds charts ({ t: "queue" }): the room is on the first, the others wait after it, and the one who
+ * added a chart or the host takes it back ({ t: "unqueue" }), and the host orders the queue ({ t: "move" }). Each player plays the chart with the level and
+ * modifiers it was added with, or their own ({ t: "pick" }), and says whether their game has it at that level and when
+ * they're ready. The host starts once everyone who has it is ready ({ t: "start", seed } to those who play). Players
  * send their score as they play, which the room hears about once a second, and their result at the end: the match is
- * over when nobody plays any more. Chat lines go to the room's players and nowhere else. The host may rename the room
- * or hand it to another player.
+ * over when nobody plays any more, and the room goes to the next chart queued. Chat lines go to the room's players and
+ * nowhere else. The host may rename the room or hand it to another player.
  *
  * A player may spectate instead ({ t: "spectate" }), and a browser may watch a room without signing in ({ t: "watch",
  * room, password }), unlisted and never told the chat. Players stream what they play as they play it ({ t: "frames",
@@ -73,6 +78,16 @@ sqlite.run(`
     PRIMARY KEY (match, key)
   )
 `);
+// what each player picked, added after the table: the plays before it were on the match's level and modifiers
+if (
+  !sqlite
+    .query<{ name: string }, []>("PRAGMA table_info(match_plays)")
+    .all()
+    .some((c) => c.name === "level")
+) {
+  sqlite.run("ALTER TABLE match_plays ADD COLUMN level TEXT");
+  sqlite.run("ALTER TABLE match_plays ADD COLUMN mods INTEGER");
+}
 
 const DOMAIN = "phigros.tools rooms v1\0"; // the key signs requests and replays too
 const MAX_ROOMS = 500;
@@ -99,6 +114,9 @@ interface Seat {
   peer?: Peer;
   away?: Timer;
   ready: boolean;
+  /** What they play the room's chart with: as it was added, until they pick. */
+  level: string;
+  mods: number;
   able: boolean;
   watching: boolean;
   /** The player whose frames they hear, when watching. */
@@ -126,11 +144,15 @@ interface Room {
   /** In the order they joined: the first one left becomes the host. */
   seats: Seat[];
   banned: Set<string>;
+  /** The chart it's on, whether a match played it already, the ones waiting after it, and how many were added. */
   chart: RoomChart | null;
+  played: boolean;
+  queue: RoomChart[];
+  entries: number;
   last: Match | null;
   playing: boolean;
   /** The match being played: its results as they come, and what ends it when it takes too long. */
-  results: { seat: Seat; result: RoomResult }[];
+  results: { seat: Seat; result: Omit<MatchPlay, "player" | "rank"> }[];
   /** The frames of the match being played by player id, for whoever follows one late. */
   streams: Map<string, { chunks: string[]; size: number }>;
   watchers: Set<Watcher>;
@@ -166,9 +188,12 @@ function view(room: Room): RoomView {
     host: room.host,
     playing: room.playing,
     chart: room.chart,
+    queue: room.queue,
     players: room.seats.map((seat) => ({
       player: seat.player,
       ready: seat.ready,
+      level: seat.level,
+      mods: seat.mods,
       able: seat.able,
       watching: seat.watching,
       playing: seat.playing,
@@ -220,23 +245,39 @@ const insertMatch = sqlite.prepare<
 );
 const insertPlay = sqlite.prepare<
   unknown,
-  [number, Uint8Array, number, number, number, number, number, number, number]
+  [number, Uint8Array, number, number, number, number, number, number, number, string, number]
 >(
-  `INSERT INTO match_plays (match, key, score, accuracy, maxcombo, perfect, good, bad, miss)
-   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+  `INSERT INTO match_plays (match, key, score, accuracy, maxcombo, perfect, good, bad, miss, level, mods)
+   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 );
 
-// the match is over: its plays are ranked, and kept when the room has no password and the site knows the chart
+// the room is on another chart, none once its queue is empty: everyone plays it as it was added until they pick
+// otherwise. a game says again whether it has it, an older one only when the song or the level changed
+function turn(room: Room, chart: RoomChart | null) {
+  const same = room.chart?.id === chart?.id && room.chart?.level === chart?.level;
+  room.chart = chart;
+  room.played = false;
+  for (const seat of room.seats) {
+    seat.ready = false;
+    seat.able ||= !same;
+    if (chart) Object.assign(seat, { level: chart.level, mods: chart.mods });
+  }
+}
+
+// the match is over: its plays are ranked, and kept when the room has no password and the site knows the chart. the
+// room goes to the next chart queued, and stays on this one for another match when there's none
 function finish(room: Room) {
   clearTimeout(room.limit);
   room.playing = false;
   for (const seat of room.seats) seat.ready = seat.playing = false;
   room.streams.clear();
   const results = room.results.sort(
-    (a, b) => b.result.score - a.result.score || b.result.accuracy - a.result.accuracy,
+    (a, b) => b.result.total - a.result.total || b.result.accuracy - a.result.accuracy,
   );
   room.results = [];
   const chart = room.chart!;
+  room.played = true;
+  if (room.queue.length) turn(room, room.queue.shift()!);
   if (!results.length) return;
   const match: Match = {
     id: 0,
@@ -248,7 +289,6 @@ function finish(room: Room) {
       ...result,
       player: seat.player,
       rank: index + 1,
-      total: totalOf(result.score, chart.mods),
     })),
   };
   room.last = match;
@@ -273,6 +313,8 @@ function finish(room: Room) {
         r.good,
         r.bad,
         r.miss,
+        r.level,
+        r.mods,
       );
   })();
   void announce(topics.room(room.id));
@@ -326,6 +368,8 @@ function sit(room: Room, session: Session, peer: Peer, spectating: boolean) {
     room,
     peer,
     ready: false,
+    level: room.chart?.level ?? "",
+    mods: room.chart?.mods ?? 0,
     able: true,
     watching: spectating,
     follows: "",
@@ -360,6 +404,10 @@ const Message = v.variant("t", [
   v.object({ t: v.literal("join"), room: text(16), password: text(64) }),
   v.object({ t: v.literal("leave") }),
   v.object({ t: v.literal("chart"), song: text(128), level: v.picklist(LEVELS), mods: v.number() }),
+  v.object({ t: v.literal("queue"), song: text(128), level: v.picklist(LEVELS), mods: v.number() }),
+  v.object({ t: v.literal("unqueue"), entry: count(1_000_000) }),
+  v.object({ t: v.literal("move"), entry: count(1_000_000), to: count(ROOM_QUEUE) }),
+  v.object({ t: v.literal("pick"), level: v.picklist(LEVELS), mods: v.number() }),
   v.object({ t: v.literal("ready"), ready: v.boolean() }),
   v.object({ t: v.literal("able"), able: v.boolean() }),
   v.object({ t: v.literal("start") }),
@@ -422,6 +470,9 @@ function create(peer: Peer, session: Session, m: Extract<Message, { t: "create" 
     seats: [],
     banned: new Set(),
     chart: null,
+    played: false,
+    queue: [],
+    entries: 0,
     last: null,
     playing: false,
     results: [],
@@ -489,8 +540,7 @@ function follow(viewer: Seat | Watcher, { player, from }: { player: string; from
 function start(room: Room, host: Seat) {
   const waits = (seat: Seat) => seat !== host && !seat.watching && seat.able && !seat.ready;
   // those who have the chart play, but one whose connection is down wouldn't hear of it
-  const plays = (seat: Seat) =>
-    !seat.watching && (seat === host || seat.able) && seat.peer !== undefined;
+  const plays = (seat: Seat) => !seat.watching && seat.able && seat.peer !== undefined;
   if (!room.chart || room.seats.some(waits) || !room.seats.some(plays)) return;
   room.playing = true;
   room.results = [];
@@ -509,6 +559,20 @@ function start(room: Room, host: Seat) {
   push(room);
 }
 
+// a chart as a player adds it to their room
+function added(seat: Seat, m: { song: string; level: string; mods: number }): RoomChart {
+  const id = clean(m.song, 128);
+  seat.room.entries += 1;
+  return {
+    song: canonicalSongId(id.replace(/\.0$/, "")),
+    id,
+    level: m.level,
+    mods: m.mods,
+    entry: seat.room.entries,
+    by: seat.player.id,
+  };
+}
+
 // what a player in a room asks for
 function act(seat: Seat, m: Message) {
   const room = seat.room;
@@ -516,23 +580,44 @@ function act(seat: Seat, m: Message) {
   switch (m.t) {
     case "leave":
       return leave(seat);
-    case "chart": {
+    // from a game older than the queue, whose host picks the chart the room is on
+    case "chart":
       if (!host || room.playing || !validMods(m.mods, 0)) return;
-      const id = clean(m.song, 128);
-      const same = room.chart?.id === id && room.chart.level === m.level;
-      room.chart = {
-        song: canonicalSongId(id.replace(/\.0$/, "")),
-        id,
-        level: m.level,
-        mods: m.mods,
-      };
-      // every game says again whether it has a new chart
-      for (const each of room.seats) {
-        each.ready = false;
-        each.able ||= !same;
-      }
+      turn(room, added(seat, m));
+      return push(room);
+    case "queue": {
+      if (!validMods(m.mods, 0)) return;
+      const charts = room.chart ? [room.chart, ...room.queue] : [];
+      const full =
+        room.queue.length >= ROOM_QUEUE ||
+        charts.filter((chart) => chart.by === seat.player.id).length >= ROOM_QUEUE_EACH;
+      // a chart already played leaves its place to the next one added
+      if (room.chart && (room.playing || !room.played)) {
+        if (full) return fail(seat.peer!, "queue");
+        room.queue.push(added(seat, m));
+      } else turn(room, added(seat, m));
       return push(room);
     }
+    case "unqueue": {
+      const taken = (chart: RoomChart) =>
+        chart.entry === m.entry && (host || chart.by === seat.player.id);
+      if (room.chart && taken(room.chart)) {
+        if (room.playing) return;
+        turn(room, room.queue.shift() ?? null);
+      } else room.queue = room.queue.filter((chart) => !taken(chart));
+      return push(room);
+    }
+    // the host puts a queued chart at another place of the queue
+    case "move": {
+      const at = room.queue.findIndex((chart) => chart.entry === m.entry);
+      if (!host || at < 0) return;
+      room.queue.splice(m.to, 0, ...room.queue.splice(at, 1));
+      return push(room);
+    }
+    case "pick":
+      if (room.playing || !validMods(m.mods, 0)) return;
+      Object.assign(seat, { level: m.level, mods: m.mods, ready: false });
+      return push(room);
     case "ready":
       if (room.playing || !seat.able || seat.watching) return;
       seat.ready = m.ready;
@@ -553,7 +638,12 @@ function act(seat: Seat, m: Message) {
     case "result": {
       if (!seat.playing) return;
       const { score, accuracy, maxcombo, perfect, good, bad, miss } = m;
-      room.results.push({ seat, result: { score, accuracy, maxcombo, perfect, good, bad, miss } });
+      const { level, mods } = seat;
+      const total = totalOf(score, mods);
+      room.results.push({
+        seat,
+        result: { score, accuracy, maxcombo, perfect, good, bad, miss, level, mods, total },
+      });
       Object.assign(seat, { playing: false, score, accuracy });
       return settle(room);
     }
@@ -681,14 +771,17 @@ const played = sqlite.prepare<
     player: string;
     number: number;
     avatar: string;
+    picked: string;
+    with: number;
   } & RoomResult,
   [string, number]
 >(
   `SELECT m.id AS match, m.name, m.song, m.level, m.mods, m.played, p.id, p.name AS player, p.number, p.avatar,
-     mp.score, mp.accuracy, mp.maxcombo, mp.perfect, mp.good, mp.bad, mp.miss
+     mp.score, mp.accuracy, mp.maxcombo, mp.perfect, mp.good, mp.bad, mp.miss,
+     COALESCE(mp.level, m.level) AS picked, COALESCE(mp.mods, m.mods) AS "with"
    FROM matches m JOIN match_plays mp ON mp.match = m.id JOIN players p ON p.key = mp.key
    WHERE m.id IN (SELECT id FROM matches WHERE room = ?1 ORDER BY id DESC LIMIT ?2)
-   ORDER BY m.id DESC, mp.score DESC, mp.accuracy DESC, mp.rowid`,
+   ORDER BY m.id DESC, mp.rowid`,
 );
 
 /** A room and the matches it played, latest first, undefined when there's no such room and never was. */
@@ -713,12 +806,14 @@ export function roomPage(id: string): RoomPage | undefined {
     }
     const { score, accuracy, maxcombo, perfect, good, bad, miss } = row;
     const who = { id: row.id, name: row.player, number: row.number, avatar: row.avatar };
-    const total = totalOf(score, row.mods);
+    const total = totalOf(score, row.with);
     const rank = match.plays.length + 1;
     match.plays.push({
       player: who,
       rank,
       total,
+      level: row.picked,
+      mods: row.with,
       score,
       accuracy,
       maxcombo,
