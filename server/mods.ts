@@ -1,9 +1,10 @@
 import { createHash, createPublicKey, verify } from "node:crypto";
-import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { strFromU8, unzipSync } from "fflate";
 import type { Block, Media, Mod } from "../src/mods";
 import { config } from "./config";
 import { log } from "./log";
+import { shown } from "./media";
 import { parse } from "./readme";
 
 // the Phigros++ mod catalog. registry.txt (mod/scripts/registry.sh puts it here, signed for the game) lists the mods
@@ -22,16 +23,6 @@ const TEXT_MAX = 12000; // characters of a README
 // where a README's media may come from: its own repo and what GitHub hosts for it, so the server fetches nothing else
 const HOSTS =
   /^https:\/\/(raw\.githubusercontent\.com|user-images\.githubusercontent\.com|github\.com\/user-attachments\/assets|github\.com\/[\w.-]+\/[\w.-]+\/raw)\//;
-// what ffmpeg reads each type as. naming it stops ffmpeg from guessing a playlist that opens other files
-const FORMATS: Record<string, string> = {
-  "video/mp4": "mov",
-  "video/quicktime": "mov",
-  "video/webm": "matroska",
-  "image/gif": "gif",
-  "image/png": "png_pipe",
-  "image/jpeg": "jpeg_pipe",
-  "image/webp": "webp_pipe",
-};
 
 interface Release {
   tag_name: string;
@@ -145,83 +136,17 @@ async function release(repo: string, key: Buffer, { tag_name: tag, assets }: Rel
 /** A poster of something a README shows, and a short muted clip of a video or a GIF. Nothing without ffmpeg. */
 async function media(repo: string, src: string): Promise<Media | undefined> {
   const { data, type, etag } = await download(src, MEDIA_CAP);
-  const format = FORMATS[type];
-  if (!format || !Bun.which("ffmpeg")) return undefined;
-  // named after what it holds: a file that changed gets new names, which nothing has cached
-  const name = `${repo}/${createHash("sha256").update(data).digest("hex").slice(0, 12)}`;
-  const source = `${MODS_DIR}/${name}.source`;
-  const poster = `${MODS_DIR}/${name}.jpg`;
-  mkdirSync(`${MODS_DIR}/${repo}`, { recursive: true });
-  writeFileSync(source, data);
-  // given a file, never a url, and only allowed to read files
-  const ffmpeg = async (...output: string[]) => {
-    const run = Bun.spawn(
-      [
-        "ffmpeg",
-        "-v",
-        "error",
-        "-y",
-        "-protocol_whitelist",
-        "file",
-        "-f",
-        format,
-        "-i",
-        source,
-        ...output,
-      ],
-      { stderr: "inherit" },
-    );
-    if ((await run.exited) !== 0) throw new Error(`ffmpeg couldn't read ${src}`);
-  };
-  // h.264 wants even sizes
-  const scale = `scale='trunc(min(${WIDTH},iw)/2)*2':-2`;
-  const moving = type.startsWith("video/") || type === "image/gif";
-  if (moving)
-    await ffmpeg(
-      "-an",
-      "-t",
-      "12",
-      "-vf",
-      `${scale},fps=30`,
-      "-c:v",
-      "libx264",
-      "-profile:v",
-      "baseline",
-      "-pix_fmt",
-      "yuv420p",
-      "-crf",
-      "30",
-      "-movflags",
-      "+faststart",
-      `${MODS_DIR}/${name}.mp4`,
-    );
-  await ffmpeg("-frames:v", "1", "-vf", scale, poster);
-  rmSync(source);
-  const probe = Bun.spawn(
-    [
-      "ffprobe",
-      "-v",
-      "error",
-      "-select_streams",
-      "v:0",
-      "-show_entries",
-      "stream=width,height",
-      "-of",
-      "csv=p=0",
-      poster,
-    ],
-    { stderr: "inherit" },
+  const made = await shown(`${MODS_DIR}/${repo}`, data, type, WIDTH);
+  return (
+    made && {
+      ...made,
+      kind: "media",
+      src,
+      etag,
+      poster: `${repo}/${made.poster}`,
+      clip: made.clip && `${repo}/${made.clip}`,
+    }
   );
-  const [width, height] = (await new Response(probe.stdout).text()).trim().split(",").map(Number);
-  return {
-    kind: "media",
-    src,
-    etag,
-    poster: `${name}.jpg`,
-    clip: moving ? `${name}.mp4` : undefined,
-    width: width!,
-    height: height!,
-  };
 }
 
 // whether a medium is still what its address serves. the address is only asked for its tag, and one that doesn't

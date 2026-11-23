@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Saira">
+<defs>
+<linearGradient id="shade" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a0d1c" stop-opacity="0.7"/><stop offset="1" stop-color="#05070d" stop-opacity="0.88"/></linearGradient>
+<linearGradient id="line" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".2" stop-color="#fff"/><stop offset=".8" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<filter id="blur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="34"/></filter>
+<filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14"/></filter>
+</defs>
+<image href="data/game/covers/DistortedFate.Sakuzyo.avif" x="-80" y="-45" width="1760" height="990" preserveAspectRatio="xMidYMid slice" filter="url(#blur)"/>
+<rect width="1600" height="900" fill="url(#shade)"/>
+<g transform="rotate(-6 800 690)"><rect x="-200" y="684" width="2000" height="12" fill="url(#line)" opacity=".45" filter="url(#soft)"/><rect x="-200" y="688" width="2000" height="4" fill="url(#line)" opacity=".7"/></g>
+<image href="public/player/tap.png" x="640" y="57.9" width="240" height="24.3" transform="rotate(-6 760.0 70)"/>
+<image href="public/player/drag.png" x="1180" y="829.3" width="220" height="13.3" transform="rotate(-6 1290.0 836)"/>
+<text x="300.0" y="170.0" font-size="60" font-weight="300" fill="#fff" text-anchor="start" >Late night charts</text>
+<polygon points="290.0,214.0 930.0,214.0 908.0,302.0 268.0,302.0" fill="#000" opacity=".8"/>
+<polygon points="290.0,214.0 905.8,214.0 883.8,302.0 268.0,302.0" fill="#8fdcff" opacity=".16"/>
+<polygon points="298.0,272 294.0,248 306.0,258 315.0,242 324.0,258 336.0,248 332.0,272" fill="#f5c94a"/>
+<clipPath id="cut1"><polygon points="369.0,228.0 429.0,228.0 414.0,288.0 354.0,288.0" /></clipPath><image href="data/game/avatars/云女孩.avif" x="354.0" y="228.0" width="75.0" height="60.0" preserveAspectRatio="xMidYMid slice" clip-path="url(#cut1)" />
+<text x="450.0" y="271.0" font-size="33" font-weight="500" fill="#fff" text-anchor="start" >Lumi<tspan dx="5" font-size="21" fill-opacity=".5">#0042</tspan></text>
+<polygon points="648.5,241.0 710.5,241.0 702.0,275.0 640.0,275.0" fill="#c43a33"/>
+<text x="675.5" y="265.0" font-size="19" font-weight="500" fill="#fff" text-anchor="middle" >IN</text>
+<text x="884.0" y="262.0" font-size="33" font-weight="500" fill="#fff" text-anchor="end" >0962184</text>
+<text x="878.0" y="288.0" font-size="19" font-weight="400" fill="#fff" text-anchor="end" fill-opacity=".6">98.41%</text>
+<polygon points="263.5,320.0 903.5,320.0 881.5,408.0 241.5,408.0" fill="#000" opacity=".8"/>
+<polygon points="263.5,320.0 870.2,320.0 848.2,408.0 241.5,408.0" fill="#8fdcff" opacity=".16"/>
+<clipPath id="cut2"><polygon points="342.5,334.0 402.5,334.0 387.5,394.0 327.5,394.0" /></clipPath><image href="data/game/avatars/青芽.avif" x="327.5" y="334.0" width="75.0" height="60.0" preserveAspectRatio="xMidYMid slice" clip-path="url(#cut2)" />
+<text x="423.5" y="377.0" font-size="33" font-weight="500" fill="#fff" text-anchor="start" >Kessa<tspan dx="5" font-size="21" fill-opacity=".5">#2204</tspan></text>
+<polygon points="622.0,347.0 684.0,347.0 675.5,381.0 613.5,381.0" fill="#c43a33"/>
+<text x="649.0" y="371.0" font-size="19" font-weight="500" fill="#fff" text-anchor="middle" >IN</text>
+<text x="857.5" y="368.0" font-size="33" font-weight="500" fill="#fff" text-anchor="end" >0948020</text>
+<text x="851.5" y="394.0" font-size="19" font-weight="400" fill="#fff" text-anchor="end" fill-opacity=".6">97.66%</text>
+<polygon points="237.0,426.0 877.0,426.0 855.0,514.0 215.0,514.0" fill="#000" opacity=".8"/>
+<polygon points="237.0,426.0 794.7,426.0 772.7,514.0 215.0,514.0" fill="#8fdcff" opacity=".16"/>
+<clipPath id="cut3"><polygon points="316.0,440.0 376.0,440.0 361.0,500.0 301.0,500.0" /></clipPath><image href="data/game/avatars/Dash.avif" x="301.0" y="440.0" width="75.0" height="60.0" preserveAspectRatio="xMidYMid slice" clip-path="url(#cut3)" />
+<text x="397.0" y="483.0" font-size="33" font-weight="500" fill="#fff" text-anchor="start" >Juno<tspan dx="5" font-size="21" fill-opacity=".5">#0921</tspan></text>
+<polygon points="595.5,453.0 657.5,453.0 649.0,487.0 587.0,487.0" fill="#3a78c0"/>
+<text x="622.5" y="477.0" font-size="19" font-weight="500" fill="#fff" text-anchor="middle" >HD</text>
+<text x="831.0" y="474.0" font-size="33" font-weight="500" fill="#fff" text-anchor="end" >0871455</text>
+<text x="825.0" y="500.0" font-size="19" font-weight="400" fill="#fff" text-anchor="end" fill-opacity=".6">94.02%</text>
+<polygon points="210.5,532.0 850.5,532.0 828.5,620.0 188.5,620.0" fill="#000" opacity=".8"/>
+<polygon points="210.5,532.0 756.6,532.0 734.6,620.0 188.5,620.0" fill="#8fdcff" opacity=".16"/>
+<clipPath id="cut4"><polygon points="289.5,546.0 349.5,546.0 334.5,606.0 274.5,606.0" /></clipPath><image href="data/game/avatars/Sein.avif" x="274.5" y="546.0" width="75.0" height="60.0" preserveAspectRatio="xMidYMid slice" clip-path="url(#cut4)" />
+<text x="370.5" y="589.0" font-size="33" font-weight="500" fill="#fff" text-anchor="start" >Nacre<tspan dx="5" font-size="21" fill-opacity=".5">#1337</tspan></text>
+<polygon points="569.0,559.0 631.0,559.0 622.5,593.0 560.5,593.0" fill="#4a4a52"/>
+<text x="596.0" y="583.0" font-size="19" font-weight="500" fill="#fff" text-anchor="middle" >AT</text>
+<text x="804.5" y="580.0" font-size="33" font-weight="500" fill="#fff" text-anchor="end" >0853310</text>
+<text x="798.5" y="606.0" font-size="19" font-weight="400" fill="#fff" text-anchor="end" fill-opacity=".6">93.18%</text>
+<text x="176.0" y="672.0" font-size="25" font-weight="400" fill="#fff" text-anchor="start" fill-opacity=".85">Kessa: Chronomia next, I need that FC</text>
+<text x="176.0" y="708.0" font-size="25" font-weight="400" fill="#fff" text-anchor="start" fill-opacity=".85">Juno: gl hf</text>
+<polygon points="1066.0,210.0 1518.0,210.0 1456.0,458.0 1004.0,458.0" fill="#000" opacity=".5" filter="url(#soft)"/>
+<clipPath id="cut5"><polygon points="1072.0,200.0 1512.0,200.0 1450.0,448.0 1010.0,448.0" /></clipPath><image href="data/game/covers/DistortedFate.Sakuzyo.avif" x="1010.0" y="200.0" width="502.0" height="248.0" preserveAspectRatio="xMidYMid slice" clip-path="url(#cut5)" />
+<polygon points="1005.0,410.0 1305.0,410.0 1288.0,478.0 988.0,478.0" fill="#fff"/>
+<text x="1022.0" y="456.0" font-size="34" font-weight="500" fill="#0b0613" text-anchor="start" >Distorted Fate</text>
+<polygon points="1305.0,410.0 1409.0,410.0 1392.0,478.0 1288.0,478.0" fill="#c43a33"/>
+<text x="1348.5" y="450.0" font-size="36" font-weight="500" fill="#fff" text-anchor="middle" >16</text>
+<text x="1348.5" y="469.0" font-size="15" font-weight="500" fill="#fff" text-anchor="middle" fill-opacity=".85">IN</text>
+<polygon points="940.5,534.0 1090.5,534.0 1076.5,590.0 926.5,590.0" fill="#000" opacity=".72"/>
+<text x="1008.5" y="572.0" font-size="27" font-weight="500" fill="#fff" text-anchor="middle" >4 / 8</text>
+<polygon points="1104.5,534.0 1300.5,534.0 1286.5,590.0 1090.5,590.0" fill="#8fdcff"/>
+<text x="1195.5" y="572.0" font-size="27" font-weight="600" fill="#06202b" text-anchor="middle" >Playing</text>
+</svg>

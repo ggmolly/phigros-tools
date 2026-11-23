@@ -606,6 +606,11 @@ export const id = {
     empty: "Belum ada mod yang terdaftar.",
     publish: "Terbitkan mod Anda",
   },
+  releasesPage: {
+    title: "Catatan rilis",
+    description: "Yang dibawa setiap versi Phigros++ dan setiap pembaruan phigros.tools.",
+    contents: "Daftar isi",
+  },
   pppPage: {
     description:
       "Phigros dengan replay, room untuk memainkan chart bersama pemain lain, HUD, dan mod Lua, terpasang sebagai aplikasi tersendiri di samping game. Save, rekor, dan replay kamu disimpan di phigros.tools, tempat permainanmu dihitung di papan peringkat.",

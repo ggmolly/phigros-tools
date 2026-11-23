@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { type CSSProperties, Fragment, useEffect, useRef } from "react";
 import { useFormat, useT } from "../i18n";
 import type { Block, Media, Mod, Span } from "../mods";
+import { SITE } from "../seo";
 
 const VERIFIED =
   "M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Zm12.15.38-5.5 5.5L8 12";
@@ -45,8 +46,9 @@ export function ModFacts({ mod }: { mod: Mod }) {
 }
 
 /**
- * What a mod shows, cut on the game's slant like a song's cover in its song list. A clip only plays while it's on
- * screen, and not at all for a reader who asked for less motion: they keep its first frame.
+ * What a mod shows (or a release note, from its own `folder`), cut on the game's slant like a song's cover in its
+ * song list. A clip only plays while it's on screen, and not at all for a reader who asked for less motion: they
+ * keep its first frame. The one a page opens on is `eager`, the others wait to be scrolled to.
  */
 export function ModMedia({
   poster,
@@ -54,12 +56,16 @@ export function ModMedia({
   width,
   height,
   slanted,
+  eager,
+  folder = "/catalog/",
 }: {
   poster: string;
   clip?: string;
   width: number;
   height: number;
   slanted?: boolean;
+  eager?: boolean;
+  folder?: string;
 }) {
   const video = useRef<HTMLVideoElement>(null);
   useEffect(() => {
@@ -87,15 +93,21 @@ export function ModMedia({
     <video
       ref={video}
       {...shared}
-      src={`/catalog/${clip}`}
-      poster={`/catalog/${poster}`}
+      src={folder + clip}
+      poster={folder + poster}
       muted
       loop
       playsInline
       preload="none"
     />
   ) : (
-    <img {...shared} src={`/catalog/${poster}`} alt="" loading="lazy" />
+    <img
+      {...shared}
+      src={folder + poster}
+      alt=""
+      loading={eager ? undefined : "lazy"}
+      fetchPriority={eager ? "high" : undefined}
+    />
   );
 }
 
@@ -117,6 +129,13 @@ function Spans({ spans }: { spans: Span[] }) {
           {node}
         </Link>
       );
+    // a release note links to the site's own pages
+    else if (span.link?.startsWith(`${SITE}/`))
+      node = (
+        <a className="text-link" href={span.link.slice(SITE.length)}>
+          {node}
+        </a>
+      );
     else if (span.link?.startsWith("http"))
       node = (
         <a
@@ -135,11 +154,28 @@ function Spans({ spans }: { spans: Span[] }) {
 
 const HEADINGS = ["h2", "h2", "h3", "h4"] as const;
 
+/** The id a heading has in its page, for a link to it: its text in lowercase, a dash for what isn't a letter or a digit. */
+export const anchorOf = (spans: Span[]) =>
+  spans
+    .map((span) => span.text)
+    .join("")
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, "-")
+    .replace(/^-|-$/g, "");
+
 /**
- * A mod's README as the server cut it into blocks (server/readme.ts), like the game draws it. Its title and what the
- * page already shows above (`shown`) aren't repeated.
+ * A mod's README as the server cut it into blocks (server/readme.ts), like the game draws it, or a release note.
+ * Its title and what the page already shows above (`shown`) aren't repeated. Its media are under `folder`.
  */
-export function Readme({ blocks, shown }: { blocks: Block[]; shown?: Media }) {
+export function Readme({
+  blocks,
+  shown,
+  folder,
+}: {
+  blocks: Block[];
+  shown?: Media;
+  folder?: string;
+}) {
   return (
     <div className="readme">
       {blocks.map((block, index) => {
@@ -148,7 +184,8 @@ export function Readme({ blocks, shown }: { blocks: Block[]; shown?: Media }) {
           if (index === 0 && block.level === 1) return null;
           const Heading = HEADINGS[block.level]!;
           return (
-            <Heading key={key}>
+            // it takes the focus when a link jumps to it
+            <Heading key={key} id={anchorOf(block.spans)} tabIndex={-1}>
               <Spans spans={block.spans} />
             </Heading>
           );
@@ -181,7 +218,7 @@ export function Readme({ blocks, shown }: { blocks: Block[]; shown?: Media }) {
         if (block.kind === "code") return <pre key={key}>{block.text}</pre>;
         if (block.kind === "rule") return <hr key={key} />;
         if (block.poster === shown?.poster) return null;
-        return <ModMedia key={key} {...block} />;
+        return <ModMedia key={key} {...block} folder={folder} />;
       })}
     </div>
   );

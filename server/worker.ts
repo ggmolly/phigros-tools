@@ -7,7 +7,7 @@ import { decodeReplay, type ReplayFrame } from "../src/pigeon";
 import { decodePhc } from "../src/player/phc";
 import { topics } from "../src/topics";
 import { db, lock } from "./db";
-import { announceRank } from "./discord";
+import { announceRank, announceReleases } from "./discord";
 import { expireEvents } from "./events";
 import { followGame, GAME_DIR, loadGame } from "./game";
 import { refreshIos } from "./ios";
@@ -104,10 +104,11 @@ void hourly();
 setInterval(hourly, HOUR);
 
 // the mod catalog follows its mods' releases and READMEs on GitHub, and what patches the ios game the releases of
-// Phigros++
+// Phigros++, whose notes are posted to Discord as they come out
 for (const [what, refresh] of [
   ["mods", refreshMods],
   ["phigrospp.ios", refreshIos],
+  ["releases", announceReleases],
 ] as const) {
   const follow = () => refresh().catch((error) => log.warn("refresh.failed", { what, error }));
   void follow();

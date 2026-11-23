@@ -72,7 +72,12 @@ function PhigrosppPage() {
           <h1 className="ppp-title">
             Phigros<span>++</span>
           </h1>
-          <p className="ppp-lead">{p.description}</p>
+          <p className="ppp-lead">
+            {p.description}{" "}
+            <Link className="text-link" to="/releases">
+              {t.releasesPage.title}
+            </Link>
+          </p>
           <div className="start-flow">
             <Question
               to="/phigrospp"

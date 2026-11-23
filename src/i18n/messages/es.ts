@@ -606,6 +606,11 @@ export const es = {
     empty: "Aún no hay ningún mod en la lista.",
     publish: "Publica tu mod",
   },
+  releasesPage: {
+    title: "Notas de versión",
+    description: "Lo que trae cada versión de Phigros++ y cada actualización de phigros.tools.",
+    contents: "Contenido",
+  },
   pppPage: {
     description:
       "Phigros con repeticiones, salas para jugar un chart con otros jugadores, un HUD y mods en Lua, instalado como una app propia junto al juego. Guarda tu partida, tus récords y tus repeticiones en phigros.tools, donde tus jugadas cuentan en la clasificación.",

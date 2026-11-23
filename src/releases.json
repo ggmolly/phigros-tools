@@ -1,0 +1,1238 @@
+[
+ {
+  "slug": "friends-and-queues",
+  "title": "See what your friends are playing",
+  "date": "2026-11-23",
+  "phigrospp": "0.3.0-beta.14",
+  "summary": "Your friends now show in the game with the chart they are on, and a tap watches their play live. Rooms also keep a queue of charts that anyone can add to.",
+  "shown": {
+   "poster": "c789cedba9bb.jpg",
+   "width": 1280,
+   "height": 720,
+   "kind": "media",
+   "src": "cover.svg"
+  },
+  "blocks": [
+   {
+    "kind": "text",
+    "spans": [
+     {
+      "text": "Your friends now show in the game with the chart they are on, and a tap watches their play live. Rooms also keep a queue of charts that anyone can add to."
+     }
+    ]
+   },
+   {
+    "poster": "c789cedba9bb.jpg",
+    "width": 1280,
+    "height": 720,
+    "kind": "media",
+    "src": "cover.svg"
+   },
+   {
+    "kind": "heading",
+    "level": 2,
+    "spans": [
+     {
+      "text": "Friends"
+     }
+    ]
+   },
+   {
+    "poster": "0295fc4dccc3.jpg",
+    "width": 1280,
+    "height": 854,
+    "kind": "media",
+    "src": "friends.webp"
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "Add a friend with their name and number, like "
+     },
+     {
+      "code": true,
+      "text": "Name#0042"
+     },
+     {
+      "text": ", or by tapping a player's row in a room."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "Friends who are playing show first with their chart, and tapping one watches their play live."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "A friend can invite you into their room. Tapping the toast joins it."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "bold": true,
+      "text": "Appear invisible"
+     },
+     {
+      "text": " shows you offline to everyone, and "
+     },
+     {
+      "bold": true,
+      "text": "Allow spectating"
+     },
+     {
+      "text": " decides whether friends can watch you."
+     }
+    ]
+   },
+   {
+    "kind": "text",
+    "spans": [
+     {
+      "text": "Your friends are also on "
+     },
+     {
+      "link": "https://phigros.tools/friends",
+      "text": "phigros.tools"
+     },
+     {
+      "text": " once your browser is signed in to your profile."
+     }
+    ]
+   },
+   {
+    "poster": "738490272f45.jpg",
+    "width": 1280,
+    "height": 854,
+    "kind": "media",
+    "src": "toast.webp"
+   },
+   {
+    "kind": "heading",
+    "level": 2,
+    "spans": [
+     {
+      "text": "A queue for every room"
+     }
+    ]
+   },
+   {
+    "poster": "69153c777a23.jpg",
+    "width": 1280,
+    "height": 854,
+    "kind": "media",
+    "src": "queue.webp"
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "In a room, starting a song adds it to the queue, up to 20 charts and 3 from one player."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "The host orders the queue by holding a chart and dragging it to its place."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "Everyone plays the room's chart at their own level and with their own modifiers."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "The host can rename the room, or hand it over to another player."
+     }
+    ]
+   },
+   {
+    "kind": "heading",
+    "level": 2,
+    "spans": [
+     {
+      "text": "Fixes"
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "Moving a paused song no longer lets it run ahead of its music."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "The friend requests that came while the game was closed are told together at launch."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "Toasts are drawn like the game's own bars, at the bottom left."
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "ios",
+  "title": "Phigros++ on iPhone and iPad",
+  "date": "2026-11-22",
+  "phigrospp": "0.3.0-beta.8",
+  "installer": true,
+  "summary": "Phigros++ now runs on iOS, with everything it has on Android. phigros.tools patches your copy of the game in your browser, and nothing is uploaded.",
+  "shown": {
+   "poster": "9ad890d7b276.jpg",
+   "width": 1280,
+   "height": 720,
+   "kind": "media",
+   "src": "cover.svg"
+  },
+  "blocks": [
+   {
+    "kind": "text",
+    "spans": [
+     {
+      "text": "Phigros++ now runs on iOS, with everything it has on Android. phigros.tools patches your copy of the game in your browser, and nothing is uploaded."
+     }
+    ]
+   },
+   {
+    "poster": "9ad890d7b276.jpg",
+    "width": 1280,
+    "height": 720,
+    "kind": "media",
+    "src": "cover.svg"
+   },
+   {
+    "kind": "heading",
+    "level": 2,
+    "spans": [
+     {
+      "text": "Patched in your browser"
+     }
+    ]
+   },
+   {
+    "poster": "ca2904898931.jpg",
+    "width": 1280,
+    "height": 1040,
+    "kind": "media",
+    "src": "patcher.webp"
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "Choose your decrypted copy of Phigros on the "
+     },
+     {
+      "link": "https://phigros.tools/phigrospp?device=ios",
+      "text": "Phigros++ page"
+     },
+     {
+      "text": ": your browser turns it into "
+     },
+     {
+      "code": true,
+      "text": "Phigros++.ipa"
+     },
+     {
+      "text": " on your device."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "SideStore or AltStore installs it next to the game, signed with a free Apple ID."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "What it patches the game with is signed by the release key of Phigros++, and checked before anything is patched."
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "rooms",
+  "title": "Rooms for up to 8 players",
+  "date": "2026-11-22",
+  "phigrospp": "0.3.0-beta.7",
+  "summary": "Everyone in a room plays the same chart at the same time, with each other's scores on screen as the song goes.",
+  "shown": {
+   "poster": "c2939a3b4d51.jpg",
+   "width": 1280,
+   "height": 720,
+   "kind": "media",
+   "src": "cover.svg"
+  },
+  "blocks": [
+   {
+    "kind": "text",
+    "spans": [
+     {
+      "text": "Everyone in a room plays the same chart at the same time, with each other's scores on screen as the song goes."
+     }
+    ]
+   },
+   {
+    "poster": "c2939a3b4d51.jpg",
+    "width": 1280,
+    "height": 720,
+    "kind": "media",
+    "src": "cover.svg"
+   },
+   {
+    "kind": "heading",
+    "level": 2,
+    "spans": [
+     {
+      "text": "Open rooms"
+     }
+    ]
+   },
+   {
+    "poster": "006bdb2b773e.jpg",
+    "width": 1280,
+    "height": 854,
+    "kind": "media",
+    "src": "rooms.webp"
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "The tab with two people on the chapter screen lists the open rooms, with the chart each one plays."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "bold": true,
+      "text": "Create a room"
+     },
+     {
+      "text": " makes yours. With a password only the players who type it join, and nothing it plays shows on phigros.tools."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "A room without a password shows live on "
+     },
+     {
+      "link": "https://phigros.tools/rooms",
+      "text": "phigros.tools"
+     },
+     {
+      "text": " and keeps its matches there."
+     }
+    ]
+   },
+   {
+    "kind": "heading",
+    "level": 2,
+    "spans": [
+     {
+      "text": "In a room"
+     }
+    ]
+   },
+   {
+    "poster": "69153c777a23.jpg",
+    "width": 1280,
+    "height": 854,
+    "kind": "media",
+    "src": "room.webp"
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "The first player is the host, under a golden crown, and starts the match once everyone is ready."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "Everyone plays at the same time, with each other's scores on screen as the song goes."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "Up to 8 more players can spectate, and watch any player's play live."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "Chat lines only go to the players in the room: they are never kept."
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "modifiers",
+  "title": "Play any chart with modifiers",
+  "date": "2026-11-22",
+  "phigrospp": "0.3.0-beta.6",
+  "summary": "Play any chart easier, harder, faster or in the dark. A Modifiers switch on the song list opens nine of them, each with what it gives the score.",
+  "shown": {
+   "poster": "e3eb338f8e74.jpg",
+   "width": 1280,
+   "height": 720,
+   "kind": "media",
+   "src": "cover.svg"
+  },
+  "blocks": [
+   {
+    "kind": "text",
+    "spans": [
+     {
+      "text": "Play any chart easier, harder, faster or in the dark. A Modifiers switch on the song list opens nine of them, each with what it gives the score."
+     }
+    ]
+   },
+   {
+    "poster": "e3eb338f8e74.jpg",
+    "width": 1280,
+    "height": 720,
+    "kind": "media",
+    "src": "cover.svg"
+   },
+   {
+    "kind": "heading",
+    "level": 2,
+    "spans": [
+     {
+      "text": "Nine ways to play a chart"
+     }
+    ]
+   },
+   {
+    "poster": "95b7bd001fda.jpg",
+    "width": 1280,
+    "height": 854,
+    "kind": "media",
+    "src": "modifiers.webp"
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "bold": true,
+      "text": "Easy"
+     },
+     {
+      "text": " and "
+     },
+     {
+      "bold": true,
+      "text": "Hard Rock"
+     },
+     {
+      "text": " widen or narrow the timing windows."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "bold": true,
+      "text": "Half Time"
+     },
+     {
+      "text": " and "
+     },
+     {
+      "bold": true,
+      "text": "Nightcore"
+     },
+     {
+      "text": " play the song at 0.75× or 1.25×."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "bold": true,
+      "text": "Hidden"
+     },
+     {
+      "text": " fades the notes out before their line, and "
+     },
+     {
+      "bold": true,
+      "text": "Flashlight"
+     },
+     {
+      "text": " only shows them near it."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "bold": true,
+      "text": "Sudden Death"
+     },
+     {
+      "text": " ends the song when the combo breaks, and "
+     },
+     {
+      "bold": true,
+      "text": "Perfect"
+     },
+     {
+      "text": " starts it again at anything but a perfect."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "bold": true,
+      "text": "Random"
+     },
+     {
+      "text": " moves the notes to other lanes."
+     }
+    ]
+   },
+   {
+    "kind": "heading",
+    "level": 2,
+    "spans": [
+     {
+      "text": "What a play with modifiers counts for"
+     }
+    ]
+   },
+   {
+    "poster": "f1f1ff4e29ac.jpg",
+    "width": 1280,
+    "height": 854,
+    "kind": "media",
+    "src": "song-list.webp"
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "Nothing in the game: your save and records stay what the game itself gives."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "Its replay is kept, and your best with each set of modifiers goes to the chart's Modifiers leaderboard on phigros.tools."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "The total is the score times each modifier's multiplier."
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "hud-and-comforts",
+  "title": "Restart a song without loading",
+  "date": "2026-11-21",
+  "phigrospp": "0.3.0-beta.5",
+  "summary": "Restarting a song no longer goes through a loading screen: it starts again where you are. The HUD also counts your judgements under the combo.",
+  "shown": {
+   "poster": "5866454b69e3.jpg",
+   "width": 1280,
+   "height": 720,
+   "kind": "media",
+   "src": "cover.svg"
+  },
+  "blocks": [
+   {
+    "kind": "text",
+    "spans": [
+     {
+      "text": "Restarting a song no longer goes through a loading screen: it starts again where you are. The HUD also counts your judgements under the combo."
+     }
+    ]
+   },
+   {
+    "poster": "5866454b69e3.jpg",
+    "width": 1280,
+    "height": 720,
+    "kind": "media",
+    "src": "cover.svg"
+   },
+   {
+    "kind": "heading",
+    "level": 2,
+    "spans": [
+     {
+      "text": "While you play"
+     }
+    ]
+   },
+   {
+    "poster": "09de0449db3f.jpg",
+    "width": 1280,
+    "height": 854,
+    "kind": "media",
+    "src": "hud.webp"
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "The grade and accuracy the play is heading for show under the score."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "A timing bar shows how early or late each hit was."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "Your perfects, goods, bads and misses count under the combo."
+     }
+    ]
+   },
+   {
+    "kind": "heading",
+    "level": 2,
+    "spans": [
+     {
+      "text": "Between plays"
+     }
+    ]
+   },
+   {
+    "poster": "ac881aade6d3.jpg",
+    "width": 1280,
+    "height": 854,
+    "kind": "media",
+    "src": "settings.webp"
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "bold": true,
+      "text": "Instant restart"
+     },
+     {
+      "text": " starts the song again from the pause menu, or by holding pause, without loading."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "The "
+     },
+     {
+      "bold": true,
+      "text": "SKIP button"
+     },
+     {
+      "text": " jumps over a song's intro or ending."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "The result screen shows the RKS the play gave you."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "Every one of these is a switch in the Phigros++ settings."
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "mods",
+  "title": "Install mods from the settings",
+  "date": "2026-11-21",
+  "phigrospp": "0.1.0-beta.14",
+  "installer": true,
+  "summary": "The settings have a Mods tab: the mods players published, each with what it shows and what it does, installed and updated with one tap.",
+  "shown": {
+   "poster": "95e15781d247.jpg",
+   "width": 1280,
+   "height": 720,
+   "kind": "media",
+   "src": "cover.svg"
+  },
+  "blocks": [
+   {
+    "kind": "text",
+    "spans": [
+     {
+      "text": "The settings have a Mods tab: the mods players published, each with what it shows and what it does, installed and updated with one tap."
+     }
+    ]
+   },
+   {
+    "poster": "95e15781d247.jpg",
+    "width": 1280,
+    "height": 720,
+    "kind": "media",
+    "src": "cover.svg"
+   },
+   {
+    "kind": "heading",
+    "level": 2,
+    "spans": [
+     {
+      "text": "The catalog"
+     }
+    ]
+   },
+   {
+    "poster": "389a44d479d3.jpg",
+    "width": 1280,
+    "height": 854,
+    "kind": "media",
+    "src": "mods.webp"
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "Every mod of the "
+     },
+     {
+      "link": "https://phigros.tools/mods",
+      "text": "catalog"
+     },
+     {
+      "text": " is listed with its author, version and size."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "A switch turns an installed mod on or off, and "
+     },
+     {
+      "bold": true,
+      "text": "Update all"
+     },
+     {
+      "text": " brings the new releases in."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "bold": true,
+      "text": "Install from GitHub"
+     },
+     {
+      "text": " installs any other mod from the link of its repository, behind a warning."
+     }
+    ]
+   },
+   {
+    "kind": "heading",
+    "level": 2,
+    "spans": [
+     {
+      "text": "A page for each mod"
+     }
+    ]
+   },
+   {
+    "poster": "144b549abac9.jpg",
+    "width": 1280,
+    "height": 854,
+    "kind": "media",
+    "src": "mod-page.webp"
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "A mod's page shows its clip and its README, with links you can tap."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "Each release is signed by its author, and the game checks the signature before installing it."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "A mod with settings gets a tab of its own next to the game's."
+     }
+    ]
+   },
+   {
+    "kind": "text",
+    "spans": [
+     {
+      "text": "Writing one takes a few lines of Lua: the "
+     },
+     {
+      "link": "https://github.com/ggmolly/PhigrosPlusPlus/wiki",
+      "text": "wiki"
+     },
+     {
+      "text": " says how."
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "replays-and-leaderboard",
+  "title": "Watch any play again",
+  "date": "2026-11-14",
+  "phigrospp": "0.1.0-beta.7",
+  "summary": "Every play is recorded and can be watched again, yours and the 50 best of each chart on phigros.tools. A trophy on the chapter screen opens the players ranked by RKS.",
+  "shown": {
+   "poster": "b2970aed2971.jpg",
+   "width": 1280,
+   "height": 720,
+   "kind": "media",
+   "src": "cover.svg"
+  },
+  "blocks": [
+   {
+    "kind": "text",
+    "spans": [
+     {
+      "text": "Every play is recorded and can be watched again, yours and the 50 best of each chart on phigros.tools. A trophy on the chapter screen opens the players ranked by RKS."
+     }
+    ]
+   },
+   {
+    "poster": "b2970aed2971.jpg",
+    "width": 1280,
+    "height": 720,
+    "kind": "media",
+    "src": "cover.svg"
+   },
+   {
+    "kind": "heading",
+    "level": 2,
+    "spans": [
+     {
+      "text": "Replays"
+     }
+    ]
+   },
+   {
+    "poster": "624bb0e464ec.jpg",
+    "width": 1280,
+    "height": 854,
+    "kind": "media",
+    "src": "replays.webp"
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "The clock next to Play lists the chart's replays, laid out like the song list."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "A tap while watching shows a player: seek, pause, 5 seconds back or forward, and a speed from 0.25× to 16×."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "The seek bar marks every good, bad and miss where it happened."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "The game judges a replay exactly as it judged the play, so what you watch is what was played."
+     }
+    ]
+   },
+   {
+    "kind": "heading",
+    "level": 2,
+    "spans": [
+     {
+      "text": "Leaderboard"
+     }
+    ]
+   },
+   {
+    "poster": "a946112acb9c.jpg",
+    "width": 1280,
+    "height": 854,
+    "kind": "media",
+    "src": "leaderboard.webp"
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "The trophy lists the players of phigros.tools by RKS."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "bold": true,
+      "text": "Verified only"
+     },
+     {
+      "text": " counts the plays whose replay the site judged again."
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "slug": "sync-and-profile",
+  "title": "Your profile on phigros.tools",
+  "date": "2026-11-12",
+  "phigrospp": "0.1.0-beta.4",
+  "summary": "Turn on Sync to phigros.tools in the game's Profile settings and your save, records and replays follow you to phigros.tools, under your Phigros name and a number of your own.",
+  "shown": {
+   "poster": "b6c8a50b148e.jpg",
+   "width": 1280,
+   "height": 720,
+   "kind": "media",
+   "src": "cover.svg"
+  },
+  "blocks": [
+   {
+    "kind": "text",
+    "spans": [
+     {
+      "text": "Turn on "
+     },
+     {
+      "bold": true,
+      "text": "Sync to phigros.tools"
+     },
+     {
+      "text": " in the game's Profile settings and your save, records and replays follow you to "
+     },
+     {
+      "link": "https://phigros.tools/",
+      "text": "phigros.tools"
+     },
+     {
+      "text": ", under your Phigros name and a number of your own."
+     }
+    ]
+   },
+   {
+    "poster": "b6c8a50b148e.jpg",
+    "width": 1280,
+    "height": 720,
+    "kind": "media",
+    "src": "cover.svg"
+   },
+   {
+    "kind": "heading",
+    "level": 2,
+    "spans": [
+     {
+      "text": "A profile that is yours"
+     }
+    ]
+   },
+   {
+    "poster": "1bbbd5e28546.jpg",
+    "width": 1280,
+    "height": 854,
+    "kind": "media",
+    "src": "profile.webp"
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "Your name gets a number, like "
+     },
+     {
+      "code": true,
+      "text": "Name#0042"
+     },
+     {
+      "text": ", and a page on phigros.tools to share."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "Your save goes after each song, the replay of each play that beats a record, and a summary of every song you finish."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "Each of these has its own switch, and "
+     },
+     {
+      "bold": true,
+      "text": "Unlisted profile"
+     },
+     {
+      "text": " keeps you out of the leaderboards."
+     }
+    ]
+   },
+   {
+    "kind": "heading",
+    "level": 2,
+    "spans": [
+     {
+      "text": "16 words and a code"
+     }
+    ]
+   },
+   {
+    "poster": "fac8ea2118c5.jpg",
+    "width": 1280,
+    "height": 854,
+    "kind": "media",
+    "src": "code.webp"
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "Turning sync on shows 16 words: they are the password of your profile, and bring it back on any device."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "bold": true,
+      "text": "Sign in another device"
+     },
+     {
+      "text": " shows a code that works once, for 10 minutes. Type it on the other device, or on phigros.tools to sign your browser in."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "bold": true,
+      "text": "Sign out"
+     },
+     {
+      "text": " forgets this device, and the Devices list on phigros.tools removes any other."
+     }
+    ]
+   }
+  ]
+ }
+]

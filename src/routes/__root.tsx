@@ -9,11 +9,12 @@ import {
 import type { CSSProperties } from "react";
 import { useEffect } from "react";
 import { Backdrop, SiteFooter, SiteHeader } from "../components/chrome";
+import { game } from "../game";
 import { getHome } from "../home";
 import { I18nProvider, useT } from "../i18n";
 import type { Locale } from "../i18n/locales";
-import { game } from "../game";
 import { fogStyle } from "../palettes";
+import { getVersion } from "../releases";
 import { watchErrors } from "../report";
 import { SaveProvider } from "../save-context";
 import { headT, pageMeta, SITE_NAME } from "../seo";
@@ -63,6 +64,7 @@ export const Route = createRootRouteWithContext<{ i18n: { locale: Locale } }>()(
     stars: await getStars().catch(() => null),
     locale: context.i18n.locale,
     home: await getHome().catch(() => null),
+    phigrospp: await getVersion().catch(() => null),
   }),
   staleTime: Number.POSITIVE_INFINITY,
   head: ({ match }) => ({

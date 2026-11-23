@@ -577,6 +577,11 @@ export const zh = {
     empty: "暂时还没有模组。",
     publish: "发布你的模组",
   },
+  releasesPage: {
+    title: "更新日志",
+    description: "Phigros++ 每个版本和 phigros.tools 每次更新带来的内容。",
+    contents: "目录",
+  },
   pppPage: {
     description:
       "带有回放、与其他玩家同玩一张谱面的房间、HUD 和 Lua 模组的 Phigros，作为独立应用安装在游戏旁边。它把你的存档、成绩和回放保存在 phigros.tools 上，你的成绩会计入排行榜。",

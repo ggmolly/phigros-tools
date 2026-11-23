@@ -39,7 +39,7 @@ body {
 .site-footer a {
   color: var(--dim);
 }
-.footer-end {
+.footer-group {
   display: flex;
   flex-wrap: wrap;
   align-items: center;

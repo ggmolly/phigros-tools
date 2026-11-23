@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Saira">
+<defs>
+<linearGradient id="shade" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a0d1c" stop-opacity="0.66"/><stop offset="1" stop-color="#05070d" stop-opacity="0.88"/></linearGradient>
+<linearGradient id="line" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".2" stop-color="#fff"/><stop offset=".8" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<filter id="blur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="34"/></filter>
+<filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14"/></filter>
+</defs>
+<image href="data/game/covers/Luminescence.米虾Fomiki初云CLoudie.avif" x="-80" y="-45" width="1760" height="990" preserveAspectRatio="xMidYMid slice" filter="url(#blur)"/>
+<rect width="1600" height="900" fill="url(#shade)"/>
+<g transform="rotate(-6 800 700)"><rect x="-200" y="694" width="2000" height="12" fill="url(#line)" opacity=".45" filter="url(#soft)"/><rect x="-200" y="698" width="2000" height="4" fill="url(#line)" opacity=".7"/></g>
+<image href="public/player/tap.png" x="150" y="788.4" width="230" height="23.3" transform="rotate(-6 265.0 800)"/>
+<text x="300.0" y="300.0" font-size="132" font-weight="500" fill="#fff" text-anchor="start" >Phigros</text>
+<text x="742.0" y="250.0" font-size="70" font-weight="600" fill="#ff9ad5" text-anchor="start" >++</text>
+<text x="306.0" y="372.0" font-size="46" font-weight="300" fill="#fff" text-anchor="start" fill-opacity=".9">on iPhone and iPad</text>
+<rect x="856" y="170" width="590" height="430" rx="34" fill="#05060a"/>
+<clipPath id="pad"><rect x="874" y="188" width="554" height="394" rx="18"/></clipPath><g clip-path="url(#pad)"><image href="data/game/covers/Luminescence.米虾Fomiki初云CLoudie.avif" x="856" y="170" width="590" height="430" preserveAspectRatio="xMidYMid slice" opacity=".5"/><clipPath id="cut2"><polygon points="1088.5,240.0 1378.5,240.0 1306.0,530.0 1016.0,530.0" /></clipPath><image href="data/game/covers/Luminescence.米虾Fomiki初云CLoudie.avif" x="1016.0" y="240.0" width="362.5" height="290.0" preserveAspectRatio="xMidYMid slice" clip-path="url(#cut2)" /><polygon points="984.5,240.0 1054.5,240.0 982.0,530.0 912.0,530.0" fill="#fff" opacity=".14"/><polygon points="1428.5,240.0 1498.5,240.0 1426.0,530.0 1356.0,530.0" fill="#fff" opacity=".14"/><polygon points="1160.0,474.0 1350.0,474.0 1336.0,530.0 1146.0,530.0" fill="#fff"/><text x="1249.0" y="512.0" font-size="30" font-weight="500" fill="#0b0613" text-anchor="middle" letter-spacing="3">PLAY</text></g>
+<rect x="856" y="170" width="590" height="430" rx="34" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="5"/>
+<rect x="590" y="500" width="460" height="216" rx="36" fill="#05060a"/>
+<clipPath id="phone"><rect x="602" y="512" width="436" height="192" rx="26"/></clipPath><g clip-path="url(#phone)"><image href="data/game/covers/Chronomia.Lime.avif" x="590" y="500" width="460" height="216" preserveAspectRatio="xMidYMid slice" opacity=".32"/><rect x="590" y="650" width="460" height="3" fill="#fff"/><image href="public/player/tap.png" x="660" y="592" width="120" height="12.1"/><image href="public/player/drag.png" x="840" y="552" width="120" height="7.3"/><image href="public/player/flick.png" x="880" y="610" width="120" height="24.3"/><text x="820.0" y="548.0" font-size="34" font-weight="500" fill="#fff" text-anchor="middle" >64</text><text x="1016.0" y="544.0" font-size="24" font-weight="500" fill="#fff" text-anchor="end" >0281930</text></g>
+<rect x="590" y="500" width="460" height="216" rx="36" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="5"/>
+</svg>

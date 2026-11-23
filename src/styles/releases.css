@@ -1,0 +1,109 @@
+/* ---------- Release notes ---------- */
+/* the feed and a note's page are laid out like the mod catalog and a mod's page (mods.css). what differs is here:
+ * the newest note leads the feed across its width, and a note says what it's of */
+.releases > li {
+  display: grid;
+}
+.releases > li:first-child {
+  grid-column: 1 / -1;
+}
+.releases > li:first-child .mod-name {
+  font-size: clamp(1.9375rem, 1.25rem + 2.4cqi, 2.75rem);
+  font-weight: 300;
+  text-wrap: balance;
+}
+/* a summary cut to three lines keeps that height in a taller card, or the line after the cut would show */
+.releases .mod-text {
+  align-self: start;
+}
+.releases > li:first-child .mod-text {
+  display: block;
+  font-size: 1.0625rem;
+}
+/* a title and a summary need more room beside what's shown than a mod's name does */
+@container (min-width: 42rem) {
+  .releases .release:has(> .mod-media) {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  }
+  .releases > li:first-child .release:has(> .mod-media) {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    padding-block: 1.875rem;
+  }
+}
+/* a note's title wraps where a mod's name is a word or two */
+.release.mod-hero .mod-name {
+  font-size: 2.125rem;
+  text-wrap: balance;
+}
+/* its sections are a note's biggest headings: they get the line a README's title has */
+.release-note .readme h3 {
+  padding-bottom: 0.375rem;
+  border-bottom: 1px solid var(--hairline);
+  font-size: 1.5625rem;
+  font-weight: 400;
+}
+.release-note .readme h4 {
+  font-size: 1.25rem;
+}
+/* a note's sections under its title, each a link to where it's read. the page scrolls to it, and the line down
+ * their side lights up beside the one being read */
+.release-toc ul {
+  display: grid;
+  margin-top: 0.625rem;
+  border-left: 1px solid var(--hairline);
+}
+.release-toc a {
+  display: block;
+  margin-left: -1px;
+  padding: 0.1875rem 0 0.1875rem 0.875rem;
+  border-left: 2px solid transparent;
+  color: var(--dim);
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+.release-toc a:hover {
+  color: var(--glow);
+}
+.release-toc a[aria-current] {
+  border-color: var(--glow);
+  color: var(--text);
+}
+html:has(.release-toc) {
+  scroll-behavior: smooth;
+}
+/* a heading jumped to stops under the top bar, which stays over the page */
+.release-note .readme :is(h3, h4) {
+  scroll-margin-top: 7.5rem;
+}
+.release .status {
+  cursor: inherit;
+}
+/* the latest release of Phigros++ wears gold, like a phi */
+.status-latest {
+  color: #2b1d00;
+}
+.status-latest::before {
+  background: #f5c94a;
+}
+
+/* the notes around the one read, under what leads it: the newer one's arrow points back */
+.release-around {
+  display: grid;
+  gap: 0.625rem;
+  margin-top: 1.125rem;
+  padding-inline: 0.625rem;
+}
+.release-around a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--dim);
+}
+.release-around a:hover {
+  color: var(--glow);
+}
+.release-around .newer .button-arrow {
+  order: -1;
+  transform: scaleX(-1);
+}

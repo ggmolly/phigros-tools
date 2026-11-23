@@ -611,6 +611,11 @@ export const de = {
     empty: "Noch ist keine Mod gelistet.",
     publish: "Eigene Mod veröffentlichen",
   },
+  releasesPage: {
+    title: "Versionshinweise",
+    description: "Was jede Version von Phigros++ und jedes Update von phigros.tools mitbringt.",
+    contents: "Inhalt",
+  },
   pppPage: {
     description:
       "Phigros mit Replays, Räumen, um einen Chart mit anderen zu spielen, einem HUD und Lua-Mods, installiert als eigene App neben dem Spiel. Es bewahrt deinen Spielstand, deine Rekorde und Replays auf phigros.tools auf, wo deine Runs in der Rangliste zählen.",

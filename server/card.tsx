@@ -20,6 +20,8 @@ import {
   type PlayerProfile,
   type ReplayInfo,
 } from "../src/plays";
+import { releaseTag } from "../src/release";
+import type { Release } from "../src/releases";
 import type { RoomPage } from "../src/rooms";
 import { songPalette } from "../src/song-palettes";
 
@@ -795,30 +797,56 @@ function ModFrame({
 const POSTER_W = 480;
 const POSTER_H = 270;
 
-/** A mod's card: its name, who made it and what it does, beside what its README shows first. */
-function ModCard({ mod, poster, backdrop }: { mod: Mod; poster?: string; backdrop?: string }) {
-  // three lines of it at most
-  const text =
-    mod.description.length > 150 ? `${mod.description.slice(0, 150).trimEnd()}…` : mod.description;
+/**
+ * What a mod's card and a release note's show: a title, a line about it and a text, over chips and beside a picture.
+ * A title that `wraps` is smaller and takes two lines.
+ */
+function Lead({
+  title,
+  wraps,
+  about,
+  text,
+  chips = [],
+  date,
+  poster,
+  backdrop,
+}: {
+  title: string;
+  wraps?: boolean;
+  about: React.ReactNode;
+  text: string;
+  chips?: string[];
+  date: Date;
+  poster?: string;
+  backdrop?: string;
+}) {
+  // three lines of it at most, ending on a whole word
+  const cut = text.length > 150 ? `${text.slice(0, 150).replace(/\s+\S*$/, "")}…` : text;
   return (
-    <ModFrame date={new Date(mod.updated)} backdrop={backdrop}>
+    <ModFrame date={date} backdrop={backdrop}>
       <div style={{ display: "flex", marginTop: 48, paddingLeft: 64, paddingRight: 48, gap: 36 }}>
         <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0 }}>
-          <span style={{ ...ellipsis, fontSize: 68, fontWeight: 500, lineHeight: 1.15 }}>
-            {mod.name}
+          <span
+            style={{
+              ...(wraps
+                ? { display: "block", lineClamp: 2, fontSize: 48 }
+                : { ...ellipsis, fontSize: 68 }),
+              fontWeight: 500,
+              lineHeight: 1.15,
+            }}
+          >
+            {title}
           </span>
-          <div style={{ ...row, gap: 10, marginTop: 10 }}>
-            <Icon d={VERIFIED} size={30} colour="#8fdcff" />
-            <span style={{ fontSize: 28, color: DIM }}>{mod.author}</span>
-          </div>
+          <div style={{ ...row, gap: 10, marginTop: 10, fontSize: 28, color: DIM }}>{about}</div>
           <span
             style={{ marginTop: 26, fontSize: 25, lineHeight: 1.4, color: "rgba(255,255,255,.88)" }}
           >
-            {text}
+            {cut}
           </span>
           <div style={{ ...row, gap: 18, marginTop: 30, marginLeft: 6 }}>
-            <Chip>{mod.version}</Chip>
-            <Chip>{bytes(mod.size)}</Chip>
+            {chips.map((chip) => (
+              <Chip key={chip}>{chip}</Chip>
+            ))}
           </div>
         </div>
         {poster && (
@@ -1055,21 +1083,45 @@ export async function renderRoomCard(origin: string, page: RoomPage) {
 const posterOf = (origin: string, mod: Mod, edit: (image: Sharp) => Sharp) =>
   mod.poster ? png(origin, `/catalog/${mod.poster}`, edit) : undefined;
 
-/** A mod's card as a JPEG, behind it what its README shows first, blurred. */
+// a picture as the cards show it beside their text, and behind it, blurred
+const beside = (image: Sharp) => image.resize(POSTER_W * 2, POSTER_H * 2, { fit: "cover" });
+const behind = (image: Sharp) =>
+  image.resize(RW, RH, { fit: "cover" }).blur(28).modulate({ brightness: 0.4 });
+
+/** A mod's card as a JPEG: its name, who made it and what it does, beside what its README shows first. */
 export async function renderModCard(origin: string, mod: Mod) {
   const card = (
-    <ModCard
-      mod={mod}
-      poster={
-        await posterOf(origin, mod, (image) =>
-          image.resize(POSTER_W * 2, POSTER_H * 2, { fit: "cover" }),
-        )
+    <Lead
+      title={mod.name}
+      about={
+        <>
+          <Icon d={VERIFIED} size={30} colour="#8fdcff" />
+          <span>{mod.author}</span>
+        </>
       }
-      backdrop={
-        await posterOf(origin, mod, (image) =>
-          image.resize(RW, RH, { fit: "cover" }).blur(28).modulate({ brightness: 0.4 }),
-        )
-      }
+      text={mod.description}
+      chips={[mod.version, bytes(mod.size)]}
+      date={new Date(mod.updated)}
+      poster={await posterOf(origin, mod, beside)}
+      backdrop={await posterOf(origin, mod, behind)}
+    />
+  );
+  return render(origin, card, CARDS.replay);
+}
+
+/** A release note's card as a JPEG: its title, what it's of and how it starts, beside what it shows first. */
+export async function renderReleaseCard(origin: string, release: Release) {
+  const picture = (edit: (image: Sharp) => Sharp) =>
+    release.shown ? png(origin, `/releases/${release.shown.poster}`, edit) : undefined;
+  const card = (
+    <Lead
+      title={release.title}
+      wraps
+      about={releaseTag(release)}
+      text={release.summary}
+      date={new Date(release.date)}
+      poster={await picture(beside)}
+      backdrop={await picture(behind)}
     />
   );
   return render(origin, card, CARDS.replay);

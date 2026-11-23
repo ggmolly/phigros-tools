@@ -116,9 +116,10 @@
     grid-template-columns: minmax(0, 26rem) minmax(0, 1fr);
     align-items: start;
   }
+  /* under the top bar, which stays over the page */
   .mod-side {
     position: sticky;
-    top: 1.125rem;
+    top: 7.5rem;
   }
 }
 

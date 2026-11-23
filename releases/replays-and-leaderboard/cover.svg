@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Saira">
+<defs>
+<linearGradient id="shade" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a0d1c" stop-opacity="0.62"/><stop offset="1" stop-color="#05070d" stop-opacity="0.82"/></linearGradient>
+<linearGradient id="line" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".2" stop-color="#fff"/><stop offset=".8" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<filter id="blur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="34"/></filter>
+<filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14"/></filter>
+</defs>
+<image href="data/game/covers/Cthugha.USAO.avif" x="-80" y="-45" width="1760" height="990" preserveAspectRatio="xMidYMid slice" filter="url(#blur)"/>
+<rect width="1600" height="900" fill="url(#shade)"/>
+<g transform="rotate(-5 800 640)"><rect x="-200" y="634" width="2000" height="12" fill="url(#line)" opacity=".45" filter="url(#soft)"/><rect x="-200" y="638" width="2000" height="4" fill="url(#line)" opacity=".7"/></g>
+<image href="public/player/flick.png" x="520" y="61.7" width="240" height="48.5" transform="rotate(-5 640.0 86)"/>
+<image href="public/player/tap.png" x="1150" y="808.4" width="230" height="23.3" transform="rotate(-5 1265.0 820)"/>
+<text x="300.0" y="170.0" font-size="60" font-weight="300" fill="#fff" text-anchor="start" >Leaderboard</text>
+<polygon points="289.5,214.0 849.5,214.0 828.0,300.0 268.0,300.0" fill="#000" opacity=".8"/>
+<text x="328.0" y="271.0" font-size="36" font-weight="500" fill="#f5f25b" text-anchor="middle" >1</text>
+<clipPath id="cut1"><polygon points="379.0,227.0 439.0,227.0 424.0,287.0 364.0,287.0" /></clipPath><image href="data/game/avatars/Credits.avif" x="364.0" y="227.0" width="75.0" height="60.0" preserveAspectRatio="xMidYMid slice" clip-path="url(#cut1)" />
+<text x="464.0" y="270.0" font-size="34" font-weight="500" fill="#fff" text-anchor="start" >Ilex<tspan dx="5" font-size="21" fill-opacity=".5">#0300</tspan></text>
+<text x="800.0" y="271.0" font-size="34" font-weight="500" fill="#fff" text-anchor="end" >16.45</text>
+<polygon points="263.5,318.0 823.5,318.0 802.0,404.0 242.0,404.0" fill="#000" opacity=".8"/>
+<text x="302.0" y="375.0" font-size="36" font-weight="500" fill="#fff" text-anchor="middle" >2</text>
+<clipPath id="cut2"><polygon points="353.0,331.0 413.0,331.0 398.0,391.0 338.0,391.0" /></clipPath><image href="data/game/avatars/Glaciaxion.avif" x="338.0" y="331.0" width="75.0" height="60.0" preserveAspectRatio="xMidYMid slice" clip-path="url(#cut2)" />
+<text x="438.0" y="374.0" font-size="34" font-weight="500" fill="#fff" text-anchor="start" >Rune<tspan dx="5" font-size="21" fill-opacity=".5">#1208</tspan></text>
+<text x="774.0" y="375.0" font-size="34" font-weight="500" fill="#fff" text-anchor="end" >16.38</text>
+<polygon points="237.5,422.0 797.5,422.0 776.0,508.0 216.0,508.0" fill="#000" opacity=".8"/>
+<text x="276.0" y="479.0" font-size="36" font-weight="500" fill="#fff" text-anchor="middle" >3</text>
+<clipPath id="cut3"><polygon points="327.0,435.0 387.0,435.0 372.0,495.0 312.0,495.0" /></clipPath><image href="data/game/avatars/云女孩.avif" x="312.0" y="435.0" width="75.0" height="60.0" preserveAspectRatio="xMidYMid slice" clip-path="url(#cut3)" />
+<text x="412.0" y="478.0" font-size="34" font-weight="500" fill="#fff" text-anchor="start" >Lumi<tspan dx="5" font-size="21" fill-opacity=".5">#0042</tspan></text>
+<text x="748.0" y="479.0" font-size="34" font-weight="500" fill="#fff" text-anchor="end" >16.21</text>
+<polygon points="211.5,526.0 771.5,526.0 750.0,612.0 190.0,612.0" fill="#000" opacity=".8"/>
+<text x="250.0" y="583.0" font-size="36" font-weight="500" fill="#fff" text-anchor="middle" >4</text>
+<clipPath id="cut4"><polygon points="301.0,539.0 361.0,539.0 346.0,599.0 286.0,599.0" /></clipPath><image href="data/game/avatars/Sein.avif" x="286.0" y="539.0" width="75.0" height="60.0" preserveAspectRatio="xMidYMid slice" clip-path="url(#cut4)" />
+<text x="386.0" y="582.0" font-size="34" font-weight="500" fill="#fff" text-anchor="start" >Nacre<tspan dx="5" font-size="21" fill-opacity=".5">#1337</tspan></text>
+<text x="722.0" y="583.0" font-size="34" font-weight="500" fill="#fff" text-anchor="end" >16.04</text>
+<polygon points="185.5,630.0 745.5,630.0 724.0,716.0 164.0,716.0" fill="#000" opacity=".8"/>
+<text x="224.0" y="687.0" font-size="36" font-weight="500" fill="#fff" text-anchor="middle" >5</text>
+<clipPath id="cut5"><polygon points="275.0,643.0 335.0,643.0 320.0,703.0 260.0,703.0" /></clipPath><image href="data/game/avatars/praw.avif" x="260.0" y="643.0" width="75.0" height="60.0" preserveAspectRatio="xMidYMid slice" clip-path="url(#cut5)" />
+<text x="360.0" y="686.0" font-size="34" font-weight="500" fill="#fff" text-anchor="start" >Quill<tspan dx="5" font-size="21" fill-opacity=".5">#0077</tspan></text>
+<text x="696.0" y="687.0" font-size="34" font-weight="500" fill="#fff" text-anchor="end" >15.91</text>
+<polygon points="1020.0,142.0 1502.0,142.0 1436.0,406.0 954.0,406.0" fill="#000" opacity=".5" filter="url(#soft)"/>
+<clipPath id="cut6"><polygon points="1026.0,132.0 1496.0,132.0 1430.0,396.0 960.0,396.0" /></clipPath><image href="data/game/covers/Cthugha.USAO.avif" x="960.0" y="132.0" width="536.0" height="264.0" preserveAspectRatio="xMidYMid slice" clip-path="url(#cut6)" />
+<polygon points="951.0,360.0 1307.0,360.0 1290.0,428.0 934.0,428.0" fill="#fff"/>
+<text x="968.0" y="406.0" font-size="40" font-weight="500" fill="#0b0613" text-anchor="start" >0998204</text>
+<text x="1156.0" y="404.0" font-size="22" font-weight="500" fill="#0b0613" text-anchor="start" >99.61%</text>
+<text x="1340.0" y="418.0" font-size="76" font-weight="500" fill="#fff" text-anchor="start" >V</text>
+<polygon points="880.0,466.0 1390.0,466.0 1358.0,594.0 848.0,594.0" fill="#000" opacity=".72"/>
+<rect x="892.0" y="500" width="430" height="6" fill="#fff" opacity=".3"/><rect x="892.0" y="500" width="266.6" height="6" fill="#fff"/>
+<rect x="943.6" y="491" width="4" height="24" fill="#8fdcff"/>
+<rect x="1025.3" y="491" width="4" height="24" fill="#8fdcff"/>
+<rect x="1046.8" y="491" width="4" height="24" fill="#ff5a5a"/>
+<rect x="1128.5" y="491" width="4" height="24" fill="#8fdcff"/>
+<rect x="1210.2" y="491" width="4" height="24" fill="#8fdcff"/>
+<rect x="1240.3" y="491" width="4" height="24" fill="#ff5a5a"/>
+<rect x="1279.0" y="491" width="4" height="24" fill="#8fdcff"/>
+<circle cx="1158.6" cy="503" r="11" fill="#fff"/>
+<text x="916.0" y="564.0" font-size="26" font-weight="500" fill="#fff" text-anchor="middle" >-5s</text>
+<text x="1250.0" y="564.0" font-size="26" font-weight="500" fill="#fff" text-anchor="middle" >+5s</text>
+<rect x="1074.0" y="538" width="9" height="32" fill="#fff"/><rect x="1092.0" y="538" width="9" height="32" fill="#fff"/>
+<polygon points="1300.0,534.0 1378.0,534.0 1368.0,574.0 1290.0,574.0" fill="#fff"/>
+<text x="1334.0" y="563.0" font-size="25" font-weight="600" fill="#0b0613" text-anchor="middle" >2×</text>
+</svg>

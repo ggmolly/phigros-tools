@@ -608,6 +608,11 @@ export const ja = {
     empty: "まだ Mod は掲載されていません。",
     publish: "自分の Mod を公開する",
   },
+  releasesPage: {
+    title: "リリースノート",
+    description: "Phigros++ の各バージョンと phigros.tools の各アップデートの内容です。",
+    contents: "目次",
+  },
   pppPage: {
     description:
       "リプレイ、ほかのプレイヤーと同じ譜面を遊べるルーム、HUD、Lua Mod を備えた Phigros で、ゲームとは別のアプリとしてインストールされます。セーブ、記録、リプレイを phigros.tools に保存し、プレイはランキングに反映されます。",

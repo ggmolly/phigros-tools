@@ -578,6 +578,11 @@ export const zhHant = {
     empty: "目前還沒有模組。",
     publish: "發布你的模組",
   },
+  releasesPage: {
+    title: "更新日誌",
+    description: "Phigros++ 每個版本和 phigros.tools 每次更新帶來的內容。",
+    contents: "目錄",
+  },
   pppPage: {
     description:
       "帶有回放、與其他玩家同玩一張譜面的房間、HUD 和 Lua 模組的 Phigros，作為獨立應用程式安裝在遊戲旁邊。它把你的存檔、成績和回放保存在 phigros.tools 上，你的成績會計入排行榜。",

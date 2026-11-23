@@ -594,6 +594,11 @@ export const en = {
     empty: "No mod is listed yet.",
     publish: "Publish your own mod",
   },
+  releasesPage: {
+    title: "Release notes",
+    description: "What each release of Phigros++ and each update of phigros.tools brings.",
+    contents: "Contents",
+  },
   pppPage: {
     description:
       "Phigros with replays, rooms to play a chart with other players, a HUD and Lua mods, installed as its own app next to the game. It keeps your save, records and replays on phigros.tools, where your plays count on the leaderboard.",

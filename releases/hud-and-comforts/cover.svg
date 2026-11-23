@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Saira">
+<defs>
+<linearGradient id="shade" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a0d1c" stop-opacity="0.5"/><stop offset="1" stop-color="#05070d" stop-opacity="0.8"/></linearGradient>
+<linearGradient id="line" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".2" stop-color="#fff"/><stop offset=".8" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<filter id="blur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="34"/></filter>
+<filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14"/></filter>
+</defs>
+<image href="data/game/covers/Stasis.Maozon.avif" x="-80" y="-45" width="1760" height="990" preserveAspectRatio="xMidYMid slice" filter="url(#blur)"/>
+<rect width="1600" height="900" fill="url(#shade)"/>
+<rect x="0" y="606" width="1600" height="12" fill="url(#line)" opacity=".5" filter="url(#soft)"/><rect x="0" y="610" width="1600" height="4" fill="#fff" opacity=".9"/>
+<image href="public/player/tap.png" x="300" y="457.4" width="250" height="25.3" transform="rotate(0 425.0 470)"/>
+<image href="public/player/tap.png" x="1010" y="237.4" width="250" height="25.3" transform="rotate(0 1135.0 250)"/>
+<image href="public/player/drag.png" x="660" y="352.4" width="250" height="15.2" transform="rotate(0 785.0 360)"/>
+<image href="public/player/flick.png" x="1090" y="486.7" width="250" height="50.6" transform="rotate(0 1215.0 512)"/>
+<image href="public/player/drag.png" x="420" y="182.4" width="250" height="15.2" transform="rotate(0 545.0 190)"/>
+<rect x="268" y="52" width="10" height="38" fill="#fff"/><rect x="290" y="52" width="10" height="38" fill="#fff"/>
+<polygon points="341.5,48.0 461.5,48.0 450.0,94.0 330.0,94.0" fill="#000" opacity=".6"/>
+<text x="396.0" y="81.0" font-size="25" font-weight="600" fill="#fff" text-anchor="middle" >SKIP</text>
+<text x="800.0" y="96.0" font-size="78" font-weight="500" fill="#fff" text-anchor="middle" >128</text>
+<text x="800.0" y="126.0" font-size="21" font-weight="500" fill="#fff" text-anchor="middle" >COMBO</text>
+<text x="689.0" y="166.0" font-size="27" font-weight="500" fill="#f5f25b" text-anchor="middle" >126</text>
+<text x="763.0" y="166.0" font-size="27" font-weight="500" fill="#8fdcff" text-anchor="middle" >2</text>
+<text x="837.0" y="166.0" font-size="27" font-weight="500" fill="#ff5a5a" text-anchor="middle" >0</text>
+<text x="911.0" y="166.0" font-size="27" font-weight="500" fill="#fff" text-anchor="middle" >0</text>
+<text x="1500.0" y="92.0" font-size="62" font-weight="500" fill="#fff" text-anchor="end" >0514267</text>
+<text x="1500.0" y="136.0" font-size="30" font-weight="500" fill="#fff" text-anchor="end" ><tspan fill="#8fdcff" font-weight="600">V</tspan>  99.82%</text>
+<rect x="500" y="772" width="600" height="6" fill="#fff" opacity=".28"/><rect x="798" y="756" width="4" height="38" fill="#fff"/>
+<rect x="756" y="762" width="4" height="26" fill="#f5f25b" opacity=".9"/>
+<rect x="816" y="762" width="4" height="26" fill="#f5f25b" opacity=".9"/>
+<rect x="786" y="762" width="4" height="26" fill="#f5f25b" opacity=".9"/>
+<rect x="855" y="762" width="4" height="26" fill="#f5f25b" opacity=".9"/>
+<rect x="717" y="762" width="4" height="26" fill="#f5f25b" opacity=".9"/>
+<rect x="831" y="762" width="4" height="26" fill="#f5f25b" opacity=".9"/>
+<rect x="990" y="762" width="4" height="26" fill="#8fdcff" opacity=".9"/>
+<rect x="585" y="762" width="4" height="26" fill="#8fdcff" opacity=".9"/>
+<rect x="804" y="762" width="4" height="26" fill="#f5f25b" opacity=".9"/>
+<text x="120.0" y="850.0" font-size="34" font-weight="400" fill="#fff" text-anchor="start" >Stasis</text>
+<text x="1360.0" y="850.0" font-size="34" font-weight="400" fill="#fff" text-anchor="end" >IN  Lv.15</text>
+</svg>

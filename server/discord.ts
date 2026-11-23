@@ -1,7 +1,12 @@
+import { appendFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
 import { catalogSong } from "../src/catalog";
+import type { Media } from "../src/mods";
 import { LEVEL_COLORS, LEVELS } from "../src/modules";
+import { releaseTag } from "../src/release";
+import type { Note } from "../src/releases";
 import { SITE } from "../src/seo";
 import { config } from "./config";
+import { notes } from "./releases";
 import { chartPlays } from "./replays";
 
 const TOP = 10; // the places worth a post
@@ -42,6 +47,84 @@ export async function announceRank(sha256: string, song: string, level: string, 
     }),
   );
   form.append("files[0]", await card.blob(), "podium.jpg");
-  const response = await fetch(config.discord_webhook, { method: "POST", body: form });
+  await post(config.discord_webhook, form);
+}
+
+async function post(webhook: string, form: FormData) {
+  const response = await fetch(webhook, { method: "POST", body: form });
   if (!response.ok) throw new Error(`discord: HTTP ${response.status} ${await response.text()}`);
+}
+
+const ANNOUNCED = "./data/releases"; // its announced.txt names the notes already posted, a line each
+const GALLERY = 4; // the images Discord lays out as one embed's
+const GLOW = 0x8fdcff;
+const GOLD = 0xf5c94a; // a release of Phigros++, as its tag on the site
+
+// how players get a release, said under its note
+const IN_GAME = {
+  name: "Updates in the game",
+  value:
+    "Open Phigros++ and tap the toast on the chapter screen, or Update in the Phigros++ settings.",
+};
+const INSTALLER = {
+  name: "Needs the installer",
+  value: `On Android, open the Phigros++ Installer and tap Update. On iPhone and iPad, patch the game again on [phigros.tools](${SITE}/phigrospp?device=ios).`,
+};
+
+/**
+ * Posts a note as one message that tells everyone: its title, how it starts, its sections and how the release
+ * reaches players, over its first images. Embeds of the same url are shown as one, their images side by side. The
+ * images are sent with it: the site may not be up yet.
+ */
+export async function announceRelease(webhook: string, note: Note) {
+  const url = `${SITE}/releases/${note.slug}`;
+  const images = note.blocks.filter((block): block is Media => block.kind === "media");
+  const sections = note.blocks.flatMap((block) =>
+    block.kind === "heading" && block.level === 2
+      ? [`- ${block.spans.map((span) => span.text).join("")}`]
+      : [],
+  );
+  const form = new FormData();
+  const [first, ...others] = images.slice(0, GALLERY).map(({ poster }, index) => {
+    form.append(`files[${index}]`, Bun.file(`./public/releases/${poster}`), poster);
+    return { url, image: { url: `attachment://${poster}` } };
+  });
+  form.append(
+    "payload_json",
+    JSON.stringify({
+      content: note.phigrospp
+        ? `@everyone — version ${note.phigrospp} released!`
+        : "@everyone — phigros.tools was updated!",
+      allowed_mentions: { parse: ["everyone"] },
+      embeds: [
+        {
+          ...first,
+          url,
+          title: note.title,
+          description: [note.summary, sections.join("\n")].filter(Boolean).join("\n\n"),
+          color: note.phigrospp ? GOLD : GLOW,
+          author: { name: releaseTag(note) },
+          fields: note.phigrospp ? [note.installer ? INSTALLER : IN_GAME] : [],
+        },
+        ...others,
+      ],
+    }),
+  );
+  await post(webhook, form);
+}
+
+/**
+ * Posts the newest release note Discord hasn't seen yet, once: what was posted is kept in data/, which a deploy
+ * leaves alone. The older ones it hasn't seen are taken as told, so a first run or several notes at once make one
+ * message. A post that fails is tried again the next time.
+ */
+export async function announceReleases() {
+  if (!config.discord_releases) return;
+  const file = `${ANNOUNCED}/announced.txt`;
+  const done = existsSync(file) ? readFileSync(file, "utf8").split("\n") : [];
+  const fresh = (await notes()).filter((note) => !done.includes(note.slug));
+  if (!fresh[0]) return;
+  await announceRelease(config.discord_releases, fresh[0]);
+  mkdirSync(ANNOUNCED, { recursive: true });
+  appendFileSync(file, fresh.map((note) => `${note.slug}\n`).join(""));
 }

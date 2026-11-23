@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Saira">
+<defs>
+<linearGradient id="shade" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a0d1c" stop-opacity="0.42"/><stop offset="1" stop-color="#05070d" stop-opacity="0.72"/></linearGradient>
+<linearGradient id="line" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".2" stop-color="#fff"/><stop offset=".8" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<filter id="blur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="34"/></filter>
+<filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14"/></filter>
+</defs>
+<image href="data/game/covers/Aleph0.LeaF.avif" x="-80" y="-45" width="1760" height="990" preserveAspectRatio="xMidYMid slice" filter="url(#blur)"/>
+<rect width="1600" height="900" fill="url(#shade)"/>
+<g transform="rotate(-7 800 600)"><rect x="-200" y="594" width="2000" height="12" fill="url(#line)" opacity=".45" filter="url(#soft)"/><rect x="-200" y="598" width="2000" height="4" fill="url(#line)" opacity=".7"/></g>
+<image href="public/player/tap.png" x="1180" y="83.9" width="240" height="24.3" transform="rotate(-7 1300.0 96)"/>
+<image href="public/player/drag.png" x="120" y="763.3" width="220" height="13.3" transform="rotate(-7 230.0 770)"/>
+<text x="318.0" y="168.0" font-size="60" font-weight="300" fill="#fff" text-anchor="start" >My Profile</text>
+<polygon points="319.5,206.0 939.5,206.0 902.0,356.0 282.0,356.0" fill="#000" opacity=".86"/>
+<clipPath id="cut1"><polygon points="319.5,206.0 469.5,206.0 432.0,356.0 282.0,356.0" /></clipPath><image href="data/game/avatars/云女孩.avif" x="282.0" y="206.0" width="187.5" height="150.0" preserveAspectRatio="xMidYMid slice" clip-path="url(#cut1)" />
+<text x="494.0" y="278.0" font-size="54" font-weight="500" fill="#fff" text-anchor="start" >Lumi<tspan dx="8" font-size="28" fill-opacity=".5">#0042</tspan></text>
+<text x="484.0" y="322.0" font-size="21" font-weight="400" fill="#8fdcff" text-anchor="start" >phigros.tools/players/9c41d0e27ab3</text>
+<polygon points="787.0,326.0 905.0,326.0 892.0,378.0 774.0,378.0" fill="#fff"/>
+<text x="839.5" y="363.0" font-size="29" font-weight="500" fill="#0b0613" text-anchor="middle" >15.82</text>
+<polygon points="246.5,418.0 846.5,418.0 829.0,488.0 229.0,488.0" fill="#000" opacity=".5"/>
+<text x="275.0" y="464.0" font-size="31" font-weight="400" fill="#fff" text-anchor="start" >Upload my save</text>
+<polygon points="690.0,431.0 802.0,431.0 791.0,475.0 679.0,475.0" fill="#000" opacity=".55"/><polygon points="746.0,431.0 802.0,431.0 791.0,475.0 735.0,475.0" fill="#fff"/><polyline points="701.0,454 710.0,462 725.0,445" fill="none" stroke="#fff" stroke-width="3"/>
+<polygon points="223.5,510.0 823.5,510.0 806.0,580.0 206.0,580.0" fill="#000" opacity=".5"/>
+<text x="252.0" y="556.0" font-size="31" font-weight="400" fill="#fff" text-anchor="start" >Upload replays</text>
+<polygon points="667.0,523.0 779.0,523.0 768.0,567.0 656.0,567.0" fill="#000" opacity=".55"/><polygon points="723.0,523.0 779.0,523.0 768.0,567.0 712.0,567.0" fill="#fff"/><polyline points="678.0,546 687.0,554 702.0,537" fill="none" stroke="#fff" stroke-width="3"/>
+<polygon points="200.5,602.0 800.5,602.0 783.0,672.0 183.0,672.0" fill="#000" opacity=".5"/>
+<text x="229.0" y="648.0" font-size="31" font-weight="400" fill="#fff" text-anchor="start" >Upload play stats</text>
+<polygon points="644.0,615.0 756.0,615.0 745.0,659.0 633.0,659.0" fill="#000" opacity=".55"/><polygon points="700.0,615.0 756.0,615.0 745.0,659.0 689.0,659.0" fill="#fff"/><polyline points="655.0,638 664.0,646 679.0,629" fill="none" stroke="#fff" stroke-width="3"/>
+<text x="1032.0" y="180.0" font-size="26" font-weight="400" fill="#fff" text-anchor="start" fill-opacity=".85">Sign in another device</text>
+<polygon points="1036.0,196.0 1436.0,196.0 1410.0,300.0 1010.0,300.0" fill="#fff"/>
+<text x="1223.0" y="268.0" font-size="56" font-weight="600" fill="#0b0613" text-anchor="middle" letter-spacing="2">K7QD 2MXP</text>
+<text x="983.0" y="376.0" font-size="26" font-weight="400" fill="#fff" text-anchor="start" fill-opacity=".85">Your 16 words</text>
+<polygon points="972.5,392.0 1076.5,392.0 1065.0,438.0 961.0,438.0" fill="#000" opacity=".72"/>
+<text x="1018.5" y="423.0" font-size="21" font-weight="400" fill="#fff" text-anchor="middle" >easing</text>
+<polygon points="1084.5,392.0 1188.5,392.0 1177.0,438.0 1073.0,438.0" fill="#000" opacity=".72"/>
+<text x="1130.5" y="423.0" font-size="21" font-weight="400" fill="#fff" text-anchor="middle" >hold</text>
+<polygon points="1196.5,392.0 1300.5,392.0 1289.0,438.0 1185.0,438.0" fill="#000" opacity=".72"/>
+<text x="1242.5" y="423.0" font-size="21" font-weight="400" fill="#fff" text-anchor="middle" >golden</text>
+<polygon points="1308.5,392.0 1412.5,392.0 1401.0,438.0 1297.0,438.0" fill="#000" opacity=".72"/>
+<text x="1354.5" y="423.0" font-size="21" font-weight="400" fill="#fff" text-anchor="middle" >entrance</text>
+<polygon points="958.0,450.0 1062.0,450.0 1050.5,496.0 946.5,496.0" fill="#000" opacity=".72"/>
+<text x="1004.0" y="481.0" font-size="21" font-weight="400" fill="#fff" text-anchor="middle" >dance</text>
+<polygon points="1070.0,450.0 1174.0,450.0 1162.5,496.0 1058.5,496.0" fill="#000" opacity=".72"/>
+<text x="1116.0" y="481.0" font-size="21" font-weight="400" fill="#fff" text-anchor="middle" >boss</text>
+<polygon points="1182.0,450.0 1286.0,450.0 1274.5,496.0 1170.5,496.0" fill="#000" opacity=".72"/>
+<text x="1228.0" y="481.0" font-size="21" font-weight="400" fill="#fff" text-anchor="middle" >lane</text>
+<polygon points="1294.0,450.0 1398.0,450.0 1386.5,496.0 1282.5,496.0" fill="#000" opacity=".72"/>
+<text x="1340.0" y="481.0" font-size="21" font-weight="400" fill="#fff" text-anchor="middle" >insane</text>
+<polygon points="943.5,508.0 1047.5,508.0 1036.0,554.0 932.0,554.0" fill="#000" opacity=".72"/>
+<text x="989.5" y="539.0" font-size="21" font-weight="400" fill="#fff" text-anchor="middle" >scarlette</text>
+<polygon points="1055.5,508.0 1159.5,508.0 1148.0,554.0 1044.0,554.0" fill="#000" opacity=".72"/>
+<text x="1101.5" y="539.0" font-size="21" font-weight="400" fill="#fff" text-anchor="middle" >good</text>
+<polygon points="1167.5,508.0 1271.5,508.0 1260.0,554.0 1156.0,554.0" fill="#000" opacity=".72"/>
+<text x="1213.5" y="539.0" font-size="21" font-weight="400" fill="#fff" text-anchor="middle" >perfect</text>
+<polygon points="1279.5,508.0 1383.5,508.0 1372.0,554.0 1268.0,554.0" fill="#000" opacity=".72"/>
+<text x="1325.5" y="539.0" font-size="21" font-weight="400" fill="#fff" text-anchor="middle" >record</text>
+<polygon points="929.0,566.0 1033.0,566.0 1021.5,612.0 917.5,612.0" fill="#000" opacity=".72"/>
+<text x="975.0" y="597.0" font-size="21" font-weight="400" fill="#fff" text-anchor="middle" >cube</text>
+<polygon points="1041.0,566.0 1145.0,566.0 1133.5,612.0 1029.5,612.0" fill="#000" opacity=".72"/>
+<text x="1087.0" y="597.0" font-size="21" font-weight="400" fill="#fff" text-anchor="middle" >dolphin</text>
+<polygon points="1153.0,566.0 1257.0,566.0 1245.5,612.0 1141.5,612.0" fill="#000" opacity=".72"/>
+<text x="1199.0" y="597.0" font-size="21" font-weight="400" fill="#fff" text-anchor="middle" >flick</text>
+<polygon points="1265.0,566.0 1369.0,566.0 1357.5,612.0 1253.5,612.0" fill="#000" opacity=".72"/>
+<text x="1311.0" y="597.0" font-size="21" font-weight="400" fill="#fff" text-anchor="middle" >chaos</text>
+</svg>

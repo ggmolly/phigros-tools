@@ -148,7 +148,9 @@ export function SiteHeader({ children }: { children?: React.ReactNode }) {
             ? "/rooms"
             : pathname === "/start" || pathname === "/rebuild"
               ? "/phigrospp"
-              : (tabIds.find((id) => id === pathname) ?? (pathname === "/admin" ? undefined : "/"));
+              : (tabIds.find((id) => id === pathname) ??
+                // no tab leads to the admin's page or to the release notes
+                (/^\/(admin|releases)\b/.test(pathname) ? undefined : "/"));
   return (
     <header className="topbar">
       <Link className="corner brand" to="/" aria-label={t.header.home}>
@@ -208,29 +210,36 @@ export function PageError({ error }: { error: unknown }) {
   );
 }
 
-/** On every page (rendered by the root route): credit on the left, disclaimer and language switcher on the right. */
+/**
+ * On every page (rendered by the root route): credit and the latest Phigros++, which opens the release notes, on the
+ * left, disclaimer and language switcher on the right.
+ */
 export function SiteFooter() {
   const t = useT();
+  const { phigrospp } = useLoaderData({ from: "__root__" });
   return (
     <footer className="site-footer">
-      <span>
-        {t.footer
-          .credit("\0")
-          .split("\0")
-          .map((part, index) =>
-            index ? (
-              <Fragment key={part}>
-                <a href="https://github.com/ggmolly" target="_blank" rel="noopener noreferrer">
-                  ggmolly
-                </a>
-                {part}
-              </Fragment>
-            ) : (
-              part
-            ),
-          )}
+      <span className="footer-group">
+        <span>
+          {t.footer
+            .credit("\0")
+            .split("\0")
+            .map((part, index) =>
+              index ? (
+                <Fragment key={part}>
+                  <a href="https://github.com/ggmolly" target="_blank" rel="noopener noreferrer">
+                    ggmolly
+                  </a>
+                  {part}
+                </Fragment>
+              ) : (
+                part
+              ),
+            )}
+        </span>
+        <Link to="/releases">{phigrospp ? `Phigros++ ${phigrospp}` : t.releasesPage.title}</Link>
       </span>
-      <span className="footer-end">
+      <span className="footer-group">
         <span className="disclaimer">{t.footer.disclaimer}</span>
         <LanguageSwitch />
       </span>

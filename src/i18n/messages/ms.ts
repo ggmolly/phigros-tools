@@ -607,6 +607,11 @@ export const ms = {
     empty: "Belum ada mod yang disenaraikan.",
     publish: "Terbitkan mod anda",
   },
+  releasesPage: {
+    title: "Nota keluaran",
+    description: "Apa yang dibawa oleh setiap versi Phigros++ dan setiap kemas kini phigros.tools.",
+    contents: "Kandungan",
+  },
   pppPage: {
     description:
       "Phigros dengan main semula, bilik untuk memainkan carta bersama pemain lain, HUD dan mod Lua, dipasang sebagai aplikasi tersendiri di sebelah permainan. Ia menyimpan save, rekod dan main semula anda di phigros.tools, tempat permainan anda dikira di papan pendahulu.",

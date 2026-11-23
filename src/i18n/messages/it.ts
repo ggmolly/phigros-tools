@@ -607,6 +607,12 @@ export const it = {
     empty: "Nessun mod è ancora in elenco.",
     publish: "Pubblica il tuo mod",
   },
+  releasesPage: {
+    title: "Note di rilascio",
+    description:
+      "Le novità di ogni versione di Phigros++ e di ogni aggiornamento di phigros.tools.",
+    contents: "Contenuto",
+  },
   pppPage: {
     description:
       "Phigros con replay, stanze per giocare un chart con altri giocatori, un HUD e mod in Lua, installato come app a sé accanto al gioco. Conserva il tuo salvataggio, i record e i replay su phigros.tools, dove le tue partite contano in classifica.",

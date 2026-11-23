@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Saira">
+<defs>
+<linearGradient id="shade" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a0d1c" stop-opacity="0.6"/><stop offset="1" stop-color="#05070d" stop-opacity="0.84"/></linearGradient>
+<linearGradient id="line" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".2" stop-color="#fff"/><stop offset=".8" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<filter id="blur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="34"/></filter>
+<filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14"/></filter>
+</defs>
+<image href="data/game/covers/Igallta.SeURa.avif" x="-80" y="-45" width="1760" height="990" preserveAspectRatio="xMidYMid slice" filter="url(#blur)"/>
+<rect width="1600" height="900" fill="url(#shade)"/>
+<g transform="rotate(-6 800 650)"><rect x="-200" y="644" width="2000" height="12" fill="url(#line)" opacity=".45" filter="url(#soft)"/><rect x="-200" y="648" width="2000" height="4" fill="url(#line)" opacity=".7"/></g>
+<image href="public/player/flick.png" x="1150" y="71.7" width="240" height="48.5" transform="rotate(-6 1270.0 96)"/>
+<image href="public/player/tap.png" x="110" y="778.4" width="230" height="23.3" transform="rotate(-6 225.0 790)"/>
+<text x="300.0" y="170.0" font-size="60" font-weight="300" fill="#fff" text-anchor="start" >Modifiers</text>
+<polygon points="304.0,220.0 494.0,220.0 452.0,388.0 262.0,388.0" fill="#000" opacity=".82"/>
+<text x="378.0" y="296.0" font-size="62" font-weight="600" fill="#9dff7a" text-anchor="middle" >EZ</text>
+<text x="369.0" y="336.0" font-size="23" font-weight="500" fill="#fff" text-anchor="middle" >Easy</text>
+<text x="364.0" y="366.0" font-size="20" font-weight="400" fill="#fff" text-anchor="middle" fill-opacity=".6">×0.50</text>
+<polygon points="510.0,220.0 700.0,220.0 658.0,388.0 468.0,388.0" fill="#000" opacity=".82"/>
+<text x="584.0" y="296.0" font-size="62" font-weight="600" fill="#9dff7a" text-anchor="middle" >HT</text>
+<text x="575.0" y="336.0" font-size="23" font-weight="500" fill="#fff" text-anchor="middle" >Half Time</text>
+<text x="570.0" y="366.0" font-size="20" font-weight="400" fill="#fff" text-anchor="middle" fill-opacity=".6">×0.30</text>
+<polygon points="716.0,220.0 906.0,220.0 864.0,388.0 674.0,388.0" fill="#000" opacity=".82"/>
+<text x="790.0" y="296.0" font-size="62" font-weight="600" fill="#ff7a6b" text-anchor="middle" >SD</text>
+<text x="781.0" y="336.0" font-size="23" font-weight="500" fill="#fff" text-anchor="middle" >Sudden Death</text>
+<text x="776.0" y="366.0" font-size="20" font-weight="400" fill="#fff" text-anchor="middle" fill-opacity=".6"></text>
+<polygon points="918.0,212.0 1124.0,212.0 1078.0,396.0 872.0,396.0" fill="#8fdcff" opacity=".55" filter="url(#soft)"/>
+<polygon points="922.0,220.0 1112.0,220.0 1070.0,388.0 880.0,388.0" fill="#000" opacity=".82"/>
+<polygon points="922.0,220.0 1112.0,220.0 1070.0,388.0 880.0,388.0" fill="none" stroke="#8fdcff" stroke-width="3"/>
+<text x="996.0" y="296.0" font-size="62" font-weight="600" fill="#ff7a6b" text-anchor="middle" >HD</text>
+<text x="987.0" y="336.0" font-size="23" font-weight="500" fill="#fff" text-anchor="middle" >Hidden</text>
+<text x="982.0" y="366.0" font-size="20" font-weight="400" fill="#fff" text-anchor="middle" fill-opacity=".6">×1.06</text>
+<polygon points="1128.0,220.0 1318.0,220.0 1276.0,388.0 1086.0,388.0" fill="#000" opacity=".82"/>
+<text x="1202.0" y="296.0" font-size="62" font-weight="600" fill="#a58bff" text-anchor="middle" >RD</text>
+<text x="1193.0" y="336.0" font-size="23" font-weight="500" fill="#fff" text-anchor="middle" >Random</text>
+<text x="1188.0" y="366.0" font-size="20" font-weight="400" fill="#fff" text-anchor="middle" fill-opacity=".6"></text>
+<polygon points="257.5,406.0 447.5,406.0 405.5,574.0 215.5,574.0" fill="#000" opacity=".82"/>
+<text x="331.5" y="482.0" font-size="62" font-weight="600" fill="#ff7a6b" text-anchor="middle" >HR</text>
+<text x="322.5" y="522.0" font-size="23" font-weight="500" fill="#fff" text-anchor="middle" >Hard Rock</text>
+<text x="317.5" y="552.0" font-size="20" font-weight="400" fill="#fff" text-anchor="middle" fill-opacity=".6">×1.06</text>
+<polygon points="459.5,398.0 665.5,398.0 619.5,582.0 413.5,582.0" fill="#8fdcff" opacity=".55" filter="url(#soft)"/>
+<polygon points="463.5,406.0 653.5,406.0 611.5,574.0 421.5,574.0" fill="#000" opacity=".82"/>
+<polygon points="463.5,406.0 653.5,406.0 611.5,574.0 421.5,574.0" fill="none" stroke="#8fdcff" stroke-width="3"/>
+<text x="537.5" y="482.0" font-size="62" font-weight="600" fill="#ff7a6b" text-anchor="middle" >NC</text>
+<text x="528.5" y="522.0" font-size="23" font-weight="500" fill="#fff" text-anchor="middle" >Nightcore</text>
+<text x="523.5" y="552.0" font-size="20" font-weight="400" fill="#fff" text-anchor="middle" fill-opacity=".6">×1.12</text>
+<polygon points="669.5,406.0 859.5,406.0 817.5,574.0 627.5,574.0" fill="#000" opacity=".82"/>
+<text x="743.5" y="482.0" font-size="62" font-weight="600" fill="#ff7a6b" text-anchor="middle" >PF</text>
+<text x="734.5" y="522.0" font-size="23" font-weight="500" fill="#fff" text-anchor="middle" >Perfect</text>
+<text x="729.5" y="552.0" font-size="20" font-weight="400" fill="#fff" text-anchor="middle" fill-opacity=".6"></text>
+<polygon points="875.5,406.0 1065.5,406.0 1023.5,574.0 833.5,574.0" fill="#000" opacity=".82"/>
+<text x="949.5" y="482.0" font-size="62" font-weight="600" fill="#ff7a6b" text-anchor="middle" >FL</text>
+<text x="940.5" y="522.0" font-size="23" font-weight="500" fill="#fff" text-anchor="middle" >Flashlight</text>
+<text x="935.5" y="552.0" font-size="20" font-weight="400" fill="#fff" text-anchor="middle" fill-opacity=".6">×1.12</text>
+<text x="552.0" y="656.0" font-size="30" font-weight="400" fill="#fff" text-anchor="end" fill-opacity=".85">Nightcore and Hidden</text>
+<polygon points="598.0,604.0 808.0,604.0 788.0,684.0 578.0,684.0" fill="#fff"/>
+<text x="693.0" y="661.0" font-size="46" font-weight="600" fill="#0b0613" text-anchor="middle" >×1.19</text>
+</svg>

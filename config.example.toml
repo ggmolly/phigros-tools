@@ -3,3 +3,6 @@ hash_secret = "replace-with-a-long-random-value"
 # admins = ["0123..."]
 # optional: a GitHub token (no scope needed) for the mod catalog, which is limited to 60 requests an hour without
 # github_token = "github_pat_..."
+# optional: Discord webhooks, one for the new top 10 chart places and one for the release notes
+# discord_webhook = "https://discord.com/api/webhooks/..."
+# discord_releases = "https://discord.com/api/webhooks/..."

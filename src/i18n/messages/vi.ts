@@ -602,6 +602,11 @@ export const vi = {
     empty: "Chưa có mod nào được liệt kê.",
     publish: "Đăng mod của bạn",
   },
+  releasesPage: {
+    title: "Ghi chú phát hành",
+    description: "Những gì mỗi phiên bản Phigros++ và mỗi bản cập nhật của phigros.tools mang lại.",
+    contents: "Mục lục",
+  },
   pppPage: {
     description:
       "Phigros với replay, phòng để chơi một chart cùng người chơi khác, HUD và mod Lua, được cài như một ứng dụng riêng bên cạnh game. Nó giữ save, kỷ lục và replay của bạn trên phigros.tools, nơi lượt chơi của bạn được tính trên bảng xếp hạng.",

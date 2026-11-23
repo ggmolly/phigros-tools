@@ -613,6 +613,12 @@ export const fr = {
     empty: "Aucun mod n’est encore listé.",
     publish: "Publier votre mod",
   },
+  releasesPage: {
+    title: "Notes de version",
+    description:
+      "Ce qu’apporte chaque version de Phigros++ et chaque mise à jour de phigros.tools.",
+    contents: "Sommaire",
+  },
   pppPage: {
     description:
       "Phigros avec des replays, des salons pour jouer un chart avec d’autres joueurs, un HUD et des mods Lua, installé comme une app à part à côté du jeu. Il garde votre save, vos records et vos replays sur phigros.tools, où vos parties comptent au classement.",

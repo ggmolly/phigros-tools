@@ -130,6 +130,37 @@ player by their public id at most, never an address, a request's body, a key, a 
 `LOGS_URL` naming a [VictoriaLogs](https://docs.victoriametrics.com/victorialogs/), the lines are kept there, 90 days
 on phigros.tools, and `/admin` shows them with the pages seen to the players `admins` names in `data/config.toml`.
 
+## Release notes
+
+`/releases` shows what each release of Phigros++ and each update of the site brought. A note is `releases/<slug>.md`
+(the slug in `a-z`, `0-9` and `-`) with what it shows beside it in `releases/<slug>/`: small images, or a short video
+or GIF. It starts with its date and, for a release of Phigros++, that version, then its title:
+
+```md
+---
+date: 2026-11-23
+phigrospp: 0.3.0
+---
+# Its title
+
+How it starts, which the feed, link previews and Discord show.
+
+![](cover.svg)
+
+## A section
+
+![](a-screenshot.webp)
+```
+
+It's read like a mod's README (`server/readme.ts`): headings, paragraphs, lists, quotes, code and media. Its first
+image is what the feed, link previews and Discord show, so it's an illustration and not a screenshot: an SVG whose
+images name files of the game by their path here (`data/game/covers/...`, `data/game/avatars/...`,
+`public/player/...`) and whose text is drawn in the game's lettering.
+`bun scripts/build-releases.ts` builds every note into `src/releases.json` and `public/releases/`. A note written ahead
+for a release of Phigros++ only shows once that release is out. The worker then posts the newest note Discord hasn't
+seen to the webhook `discord_releases` of `data/config.toml`, once: what it posted is kept in `data/releases/`, so a
+deploy without a new note posts nothing.
+
 ## Data
 
 Songs, constants, charters, chapters, covers, music, charts and avatars all come from the game's APK and aren't in

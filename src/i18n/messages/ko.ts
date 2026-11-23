@@ -598,6 +598,11 @@ export const ko = {
     empty: "아직 등록된 모드가 없습니다.",
     publish: "내 모드 공개하기",
   },
+  releasesPage: {
+    title: "릴리스 노트",
+    description: "Phigros++의 각 버전과 phigros.tools의 각 업데이트에서 달라진 점입니다.",
+    contents: "목차",
+  },
   pppPage: {
     description:
       "리플레이, 다른 플레이어와 같은 채보를 플레이하는 방, HUD, Lua 모드를 갖춘 Phigros로, 게임 옆에 별도의 앱으로 설치됩니다. 세이브, 기록, 리플레이를 phigros.tools에 보관하며, 플레이가 리더보드에 반영됩니다.",
