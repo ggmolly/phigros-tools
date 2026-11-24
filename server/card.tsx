@@ -1093,12 +1093,10 @@ export async function renderModCard(origin: string, mod: Mod) {
   const card = (
     <Lead
       title={mod.name}
-      about={
-        <>
-          <Icon d={VERIFIED} size={30} colour="#8fdcff" />
-          <span>{mod.author}</span>
-        </>
-      }
+      about={[
+        <Icon key="badge" d={VERIFIED} size={30} colour="#8fdcff" />,
+        <span key="author">{mod.author}</span>,
+      ]}
       text={mod.description}
       chips={[mod.version, bytes(mod.size)]}
       date={new Date(mod.updated)}
