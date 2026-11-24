@@ -15,7 +15,7 @@ import { parse } from "./readme";
 export const MODS_DIR = "./data/catalog";
 const ASSET_CAP = 32 * 1024 * 1024; // as the game refuses bigger ones
 const MEDIA_CAP = 64 * 1024 * 1024;
-const DOMAIN = "phigros++ mod v1\0"; // what mod/scripts/sign-mod.mjs signs under
+const DOMAIN = "phigros++ mod v1\0"; // what mod/scripts/mod.mjs signs under
 const SPKI = Buffer.from("302a300506032b6570032100", "hex"); // a raw ed25519 public key's der prefix
 const WIDTH = 854;
 const MEDIA_MAX = 8; // media of a README, the others aren't shown
