@@ -76,7 +76,8 @@ export const vi = {
     siteTitle: "Mod Phigros++, chơi nhiều người, bảng xếp hạng và hằng số chart",
     siteDescription:
       "Phigros++ thêm replay, phòng chơi nhiều người, HUD và mod Lua vào Phigros, và giữ save của bạn trên phigros.tools khi cloud của TapTap đã ngừng hoạt động. Kèm bảng xếp hạng RKS, hằng số độ khó của mọi chart và công cụ phân tích save.",
-    siteImageAlt: "Phigros Tools: mod Phigros++, phòng chơi nhiều người, bảng xếp hạng RKS và hằng số của mọi chart",
+    siteImageAlt:
+      "Phigros Tools: mod Phigros++, phòng chơi nhiều người, bảng xếp hạng RKS và hằng số của mọi chart",
     chartsImageAlt: "Phigros Tools: hằng số độ khó của mọi chart",
     chartsTitle: "Danh sách chart và độ khó",
     chartsDescription: (charts: number, songs: number, chapters: number, version: string) =>
@@ -649,6 +650,14 @@ export const vi = {
     iosBuild: "Trang **Development** của wiki hướng dẫn cách tự build Phigros++.",
     bring: "Chuyển save của bạn sang",
     source: "Mã nguồn",
+  },
+  cloudSave: {
+    title: "Save đám mây Phigros khi không còn TapTap",
+    description:
+      "Đám mây của TapTap không còn đồng bộ save Phigros. Xem save của bạn hiện ở đâu, Phigros++ giữ nó trên phigros.tools như thế nào, và cách mang nó sang từ Android, iPhone hoặc thiết bị bạn không còn giữ.",
+    lost: "Từ tháng 11 năm 2026, đám mây của TapTap không còn phản hồi Phigros: **Sync** không còn tải save của bạn lên, và cũng không thể lấy lại nó trên thiết bị khác.",
+    kept: "Save của bạn giờ chỉ còn trong game, trên thiết bị bạn chơi, nơi Android và iOS giữ nó ở chế độ riêng tư. Gỡ game hoặc mất thiết bị là mất save. Phigros++ giữ một bản sao trên phigros.tools, dùng chung cho mọi thiết bị đăng nhập vào hồ sơ của bạn.",
+    rooted: "Trên thiết bị Android đã root",
   },
   start: {
     description:

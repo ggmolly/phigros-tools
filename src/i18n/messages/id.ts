@@ -76,7 +76,8 @@ export const id = {
     siteTitle: "Mod Phigros++, multiplayer, papan peringkat, dan konstanta chart",
     siteDescription:
       "Phigros++ menambahkan replay, room multiplayer, HUD, dan mod Lua ke Phigros, dan menyimpan save kamu di phigros.tools sekarang setelah cloud TapTap tidak ada lagi. Plus papan peringkat RKS, konstanta kesulitan setiap chart, dan penganalisis save.",
-    siteImageAlt: "Phigros Tools: mod Phigros++, room multiplayer, papan peringkat RKS, dan konstanta setiap chart",
+    siteImageAlt:
+      "Phigros Tools: mod Phigros++, room multiplayer, papan peringkat RKS, dan konstanta setiap chart",
     chartsImageAlt: "Phigros Tools: konstanta kesulitan setiap chart",
     chartsTitle: "Daftar Chart & Kesulitan",
     chartsDescription: (charts: number, songs: number, chapters: number, version: string) =>
@@ -653,6 +654,14 @@ export const id = {
     iosBuild: "Halaman **Development** di wiki menjelaskan cara mem-build Phigros++ sendiri.",
     bring: "Pindahkan Save Kamu",
     source: "Kode sumber",
+  },
+  cloudSave: {
+    title: "Save cloud Phigros tanpa TapTap",
+    description:
+      "Cloud TapTap tidak lagi menyinkronkan save Phigros. Lihat di mana save kamu sekarang, bagaimana Phigros++ menyimpannya di phigros.tools, dan cara membawanya dari Android, iPhone, atau perangkat yang sudah tidak kamu punya.",
+    lost: "Sejak November 2026, cloud TapTap tidak lagi menjawab Phigros: **Sync** tidak lagi mengunggah save kamu, dan tidak bisa mengambilnya kembali di perangkat lain.",
+    kept: "Save kamu sekarang hanya ada di dalam game, di perangkat tempat kamu bermain, tempat Android dan iOS menyimpannya secara privat. Hapus game atau kehilangan perangkat, dan save itu hilang. Phigros++ menyimpan salinannya di phigros.tools, dipakai bersama oleh semua perangkat yang masuk ke profilmu.",
+    rooted: "Di perangkat Android yang di-root",
   },
   start: {
     description:

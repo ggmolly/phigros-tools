@@ -77,7 +77,8 @@ export const es = {
     siteTitle: "Mods de Phigros++, multijugador, clasificación y constantes de los charts",
     siteDescription:
       "Phigros++ añade a Phigros repeticiones, salas multijugador, un HUD y mods en Lua, y guarda tu partida en phigros.tools ahora que la nube de TapTap ya no existe. Además, la clasificación por RKS, la constante de dificultad de cada chart y un analizador de partidas.",
-    siteImageAlt: "Phigros Tools: mods de Phigros++, salas multijugador, clasificación por RKS y la constante de cada chart",
+    siteImageAlt:
+      "Phigros Tools: mods de Phigros++, salas multijugador, clasificación por RKS y la constante de cada chart",
     chartsImageAlt: "Phigros Tools: la constante de dificultad de cada chart",
     chartsTitle: "Lista de charts y dificultades",
     chartsDescription: (charts: number, songs: number, chapters: number, version: string) =>
@@ -653,6 +654,14 @@ export const es = {
     iosBuild: "La página **Development** de la wiki explica cómo compilar Phigros++ por tu cuenta.",
     bring: "Trae tu partida",
     source: "Código fuente",
+  },
+  cloudSave: {
+    title: "Partida en la nube de Phigros sin TapTap",
+    description:
+      "La nube de TapTap ya no sincroniza las partidas de Phigros. Descubre dónde está tu partida ahora, cómo Phigros++ la guarda en phigros.tools y cómo traerla desde Android, un iPhone o un dispositivo que ya no tienes.",
+    lost: "Desde noviembre de 2026, la nube de TapTap ya no responde a Phigros: **Sync** ya no sube tu partida ni puede recuperarla en otro dispositivo.",
+    kept: "Tu partida ahora solo existe en el juego, en el dispositivo donde juegas, donde Android e iOS la mantienen privada. Si desinstalas el juego o pierdes el dispositivo, se pierde. Phigros++ guarda una copia en phigros.tools, compartida por todos los dispositivos conectados a tu perfil.",
+    rooted: "En un dispositivo Android con root",
   },
   start: {
     description:

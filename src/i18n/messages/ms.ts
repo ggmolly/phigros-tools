@@ -76,7 +76,8 @@ export const ms = {
     siteTitle: "Mod Phigros++, berbilang pemain, papan pendahulu dan pemalar carta",
     siteDescription:
       "Phigros++ menambah main semula, bilik berbilang pemain, HUD dan mod Lua kepada Phigros, dan menyimpan save anda di phigros.tools kini setelah awan TapTap tiada lagi. Serta papan pendahulu RKS, pemalar kesukaran setiap carta dan penganalisis save.",
-    siteImageAlt: "Phigros Tools: mod Phigros++, bilik berbilang pemain, papan pendahulu RKS dan pemalar setiap carta",
+    siteImageAlt:
+      "Phigros Tools: mod Phigros++, bilik berbilang pemain, papan pendahulu RKS dan pemalar setiap carta",
     chartsImageAlt: "Phigros Tools: pemalar kesukaran setiap chart",
     chartsTitle: "Senarai Chart & Kesukaran",
     chartsDescription: (charts: number, songs: number, chapters: number, version: string) =>
@@ -655,6 +656,14 @@ export const ms = {
     iosBuild: "Halaman **Development** dalam wiki menerangkan cara membina Phigros++ sendiri.",
     bring: "Bawa Save Anda",
     source: "Kod sumber",
+  },
+  cloudSave: {
+    title: "Save awan Phigros tanpa TapTap",
+    description:
+      "Awan TapTap tidak lagi menyegerakkan save Phigros. Lihat di mana save anda sekarang, cara Phigros++ menyimpannya di phigros.tools, dan cara membawanya dari Android, iPhone atau peranti yang anda tiada lagi.",
+    lost: "Sejak November 2026, awan TapTap tidak lagi menjawab Phigros: **Sync** tidak lagi memuat naik save anda, dan tidak boleh mendapatkannya semula pada peranti lain.",
+    kept: "Save anda kini hanya ada dalam permainan, pada peranti tempat anda bermain, di mana Android dan iOS menyimpannya secara peribadi. Nyahpasang permainan atau hilang peranti, dan save itu hilang. Phigros++ menyimpan salinannya di phigros.tools, dikongsi oleh setiap peranti yang log masuk ke profil anda.",
+    rooted: "Pada peranti Android yang di-root",
   },
   start: {
     description:

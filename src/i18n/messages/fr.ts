@@ -76,7 +76,8 @@ export const fr = {
     siteTitle: "Mods Phigros++, multijoueur, classement et constantes des charts",
     siteDescription:
       "Phigros++ ajoute à Phigros des replays, des salons multijoueur, un HUD et des mods Lua, et garde votre save sur phigros.tools maintenant que le cloud de TapTap n’existe plus. Avec le classement RKS, la constante de difficulté de chaque chart et un analyseur de save.",
-    siteImageAlt: "Phigros Tools : mods Phigros++, salons multijoueur, classement RKS et constante de chaque chart",
+    siteImageAlt:
+      "Phigros Tools : mods Phigros++, salons multijoueur, classement RKS et constante de chaque chart",
     chartsImageAlt: "Phigros Tools : la constante de difficulté de chaque chart",
     chartsTitle: "Liste des charts et difficultés",
     chartsDescription: (charts: number, songs: number, chapters: number, version: string) =>
@@ -662,6 +663,14 @@ export const fr = {
     iosBuild: "La page **Development** du wiki explique comment compiler Phigros++ vous-même.",
     bring: "Récupérer votre save",
     source: "Code source",
+  },
+  cloudSave: {
+    title: "Save cloud de Phigros sans TapTap",
+    description:
+      "Le cloud de TapTap ne synchronise plus les saves de Phigros. Où se trouve votre save maintenant, comment Phigros++ la garde sur phigros.tools, et comment la récupérer depuis Android, un iPhone ou un appareil que vous n’avez plus.",
+    lost: "Depuis novembre 2026, le cloud de TapTap ne répond plus à Phigros : **Sync** n’envoie plus votre save, et ne peut plus la récupérer sur un autre appareil.",
+    kept: "Votre save n’existe plus que dans le jeu, sur l’appareil où vous jouez, là où Android et iOS la gardent privée. Si vous désinstallez le jeu ou perdez l’appareil, elle disparaît. Phigros++ en garde une copie sur phigros.tools, partagée par tous les appareils connectés à votre profil.",
+    rooted: "Sur un appareil Android rooté",
   },
   start: {
     description:

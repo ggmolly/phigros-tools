@@ -147,7 +147,7 @@ export function SiteHeader({ children }: { children?: React.ReactNode }) {
           ? "/mods"
           : pathname.startsWith("/rooms")
             ? "/rooms"
-            : pathname === "/start" || pathname === "/rebuild"
+            : ["/start", "/rebuild", "/cloud-save"].includes(pathname)
               ? "/phigrospp"
               : (tabIds.find((id) => id === pathname) ??
                 // no tab leads to the admin's page or to the release notes

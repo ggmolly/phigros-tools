@@ -12,7 +12,7 @@ export default defineHandler(async () => {
   const day = statSync(`${GAME_DIR}/catalog.json`).mtime.toISOString().slice(0, 10);
   const released = await notes();
   const entries = [
-    ...["/", "/start", "/phigrospp", "/charts", "/leaderboard", "/rooms"].map((path) =>
+    ...["/", "/start", "/cloud-save", "/phigrospp", "/charts", "/leaderboard", "/rooms"].map((path) =>
       sitemapEntry(path, day),
     ),
     ...catalogSongs.map((song) =>

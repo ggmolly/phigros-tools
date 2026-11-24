@@ -645,6 +645,14 @@ export const ko = {
     bring: "세이브 옮기기",
     source: "소스 코드",
   },
+  cloudSave: {
+    title: "TapTap 없는 Phigros 클라우드 세이브",
+    description:
+      "TapTap 클라우드가 더 이상 Phigros 세이브를 동기화하지 않습니다. 지금 세이브가 어디에 있는지, Phigros++가 phigros.tools에 어떻게 보관하는지, Android, iPhone 또는 더 이상 없는 기기에서 어떻게 가져오는지 알아보세요.",
+    lost: "2026년 11월부터 TapTap 클라우드가 Phigros에 응답하지 않습니다. **동기화**는 세이브를 업로드하지 않고, 다른 기기에서 되찾을 수도 없습니다.",
+    kept: "이제 세이브는 플레이하는 기기의 게임 안에만 있고, Android와 iOS는 이를 비공개로 보관합니다. 게임을 삭제하거나 기기를 잃어버리면 사라집니다. Phigros++는 phigros.tools에 사본을 보관하고, 프로필에 로그인한 모든 기기가 이를 공유합니다.",
+    rooted: "루팅된 Android 기기에서",
+  },
   start: {
     description:
       "TapTap 클라우드가 더 이상 응답하지 않아 Phigros 세이브는 게임 안에만 남아 있습니다. 세이브가 어디에 있는지 알려 주면 phigros.tools가 Phigros++로 옮기는 방법을 볼 수 있습니다.",

@@ -76,7 +76,8 @@ export const it = {
     siteTitle: "Mod di Phigros++, multigiocatore, classifica e costanti dei chart",
     siteDescription:
       "Phigros++ aggiunge a Phigros replay, stanze multigiocatore, un HUD e mod in Lua, e conserva il tuo salvataggio su phigros.tools ora che il cloud di TapTap non c’è più. In più, la classifica per RKS, la costante di difficoltà di ogni chart e un analizzatore di salvataggi.",
-    siteImageAlt: "Phigros Tools: mod di Phigros++, stanze multigiocatore, classifica per RKS e la costante di ogni chart",
+    siteImageAlt:
+      "Phigros Tools: mod di Phigros++, stanze multigiocatore, classifica per RKS e la costante di ogni chart",
     chartsImageAlt: "Phigros Tools: la costante di difficoltà di ogni chart",
     chartsTitle: "Elenco di chart e difficoltà",
     chartsDescription: (charts: number, songs: number, chapters: number, version: string) =>
@@ -655,6 +656,14 @@ export const it = {
     iosBuild: "La pagina **Development** della wiki spiega come compilare Phigros++ da te.",
     bring: "Porta con te il salvataggio",
     source: "Codice sorgente",
+  },
+  cloudSave: {
+    title: "Salvataggio cloud di Phigros senza TapTap",
+    description:
+      "Il cloud di TapTap non sincronizza più i salvataggi di Phigros. Scopri dov’è ora il tuo salvataggio, come Phigros++ lo conserva su phigros.tools e come recuperarlo da Android, da un iPhone o da un dispositivo che non hai più.",
+    lost: "Da novembre 2026 il cloud di TapTap non risponde più a Phigros: **Sync** non carica più il tuo salvataggio e non può recuperarlo su un altro dispositivo.",
+    kept: "Il tuo salvataggio ora esiste solo nel gioco, sul dispositivo su cui giochi, dove Android e iOS lo tengono privato. Se disinstalli il gioco o perdi il dispositivo, va perso. Phigros++ ne conserva una copia su phigros.tools, condivisa da tutti i dispositivi collegati al tuo profilo.",
+    rooted: "Su un dispositivo Android con root",
   },
   start: {
     description:

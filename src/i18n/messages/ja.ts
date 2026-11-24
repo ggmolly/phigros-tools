@@ -76,7 +76,8 @@ export const ja = {
     siteTitle: "Phigros++ の Mod・マルチプレイ・ランキング・譜面定数",
     siteDescription:
       "Phigros++ は Phigros にリプレイ、マルチプレイのルーム、HUD、Lua Mod を追加し、TapTap のクラウドが終了した今、セーブを phigros.tools に保存します。RKS ランキング、全譜面の難易度定数、セーブ分析もあります。",
-    siteImageAlt: "Phigros Tools：Phigros++ の Mod、マルチプレイのルーム、RKS ランキング、全譜面の定数",
+    siteImageAlt:
+      "Phigros Tools：Phigros++ の Mod、マルチプレイのルーム、RKS ランキング、全譜面の定数",
     chartsImageAlt: "Phigros Tools：全譜面の難易度定数",
     chartsTitle: "譜面・難易度一覧",
     chartsDescription: (charts: number, songs: number, chapters: number, version: string) =>
@@ -656,6 +657,14 @@ export const ja = {
     iosBuild: "Phigros++ を自分でビルドする方法は、wiki の **Development** ページにあります。",
     bring: "セーブを引き継ぐ",
     source: "ソースコード",
+  },
+  cloudSave: {
+    title: "TapTap なしの Phigros クラウドセーブ",
+    description:
+      "TapTap のクラウドは Phigros のセーブを同期しなくなりました。セーブが今どこにあるか、Phigros++ がそれを phigros.tools にどう保存するか、Android、iPhone、手元にない端末からどう引き継ぐかを説明します。",
+    lost: "2026 年 11 月から TapTap のクラウドは Phigros に応答しません。**同期**はセーブをアップロードせず、別の端末で取り戻すこともできません。",
+    kept: "セーブは今、プレイしている端末のゲームの中にしかなく、Android も iOS もそれを非公開にしています。ゲームをアンインストールしたり端末をなくしたりすると消えてしまいます。Phigros++ は phigros.tools にコピーを保存し、プロフィールにサインインしたすべての端末で共有します。",
+    rooted: "root 化した Android 端末の場合",
   },
   start: {
     description:

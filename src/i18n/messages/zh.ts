@@ -622,6 +622,14 @@ export const zh = {
     bring: "迁移你的存档",
     source: "源代码",
   },
+  cloudSave: {
+    title: "没有 TapTap 的 Phigros 云存档",
+    description:
+      "TapTap 云已不再同步 Phigros 存档。了解你的存档现在在哪里、Phigros++ 如何把它保存在 phigros.tools 上，以及如何从 Android、iPhone 或已不在手边的设备把它带过来。",
+    lost: "自 2026 年 11 月起，TapTap 云不再响应 Phigros：**同步**既不会上传你的存档，也无法在其他设备上取回它。",
+    kept: "你的存档现在只存在于游戏中，也就是你玩的那台设备上，Android 和 iOS 都把它设为私有。卸载游戏或丢失设备，存档就没了。Phigros++ 会在 phigros.tools 上保留一份副本，登录你资料的所有设备共享这份存档。",
+    rooted: "在已 root 的 Android 设备上",
+  },
   start: {
     description:
       "TapTap 云已不再响应，你的 Phigros 存档现在只留在游戏里。选择你的存档所在的位置，即可了解 phigros.tools 如何把它转入 Phigros++。",

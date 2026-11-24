@@ -74,7 +74,8 @@ export const en = {
     siteTitle: "Phigros++ Mods, Multiplayer, Leaderboard and Chart Constants",
     siteDescription:
       "Phigros++ adds replays, multiplayer rooms, a HUD and Lua mods to Phigros, and keeps your save on phigros.tools now that TapTap's cloud is gone. Plus the RKS leaderboard, every chart's difficulty constant and a save analyzer.",
-    siteImageAlt: "Phigros Tools: Phigros++ mods, multiplayer rooms, the RKS leaderboard and every chart constant",
+    siteImageAlt:
+      "Phigros Tools: Phigros++ mods, multiplayer rooms, the RKS leaderboard and every chart constant",
     chartsImageAlt: "Phigros Tools: every chart's difficulty constant",
     chartsTitle: "Chart & Difficulty List",
     chartsDescription: (charts: number, songs: number, chapters: number, version: string) =>
@@ -640,6 +641,14 @@ export const en = {
     iosBuild: "The wiki’s **Development** page explains how to build Phigros++ yourself.",
     bring: "Bring Your Save Over",
     source: "Source code",
+  },
+  cloudSave: {
+    title: "Phigros Cloud Save Without TapTap",
+    description:
+      "TapTap’s cloud no longer syncs Phigros saves. See where your save is now, how Phigros++ keeps it on phigros.tools, and how to bring it over from Android, an iPhone or a device you no longer have.",
+    lost: "Since November 2026, TapTap’s cloud no longer answers Phigros: **Sync** doesn’t upload your save anymore, and can’t bring it back on another device.",
+    kept: "Your save now lives only in the game, on the device you play on, where Android and iOS keep it private. Uninstall the game or lose the device and it’s gone. Phigros++ keeps a copy on phigros.tools instead, shared by every device signed in to your profile.",
+    rooted: "On a rooted Android device",
   },
   start: {
     description:

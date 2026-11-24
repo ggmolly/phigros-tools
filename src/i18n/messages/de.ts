@@ -76,7 +76,8 @@ export const de = {
     siteTitle: "Phigros++ Mods, Multiplayer, Rangliste und Chart-Konstanten",
     siteDescription:
       "Phigros++ bringt Replays, Multiplayer-Räume, ein HUD und Lua-Mods zu Phigros und bewahrt deinen Spielstand auf phigros.tools auf, jetzt wo TapTaps Cloud weg ist. Dazu die RKS-Rangliste, die Schwierigkeitskonstante jedes Charts und eine Spielstand-Analyse.",
-    siteImageAlt: "Phigros Tools: Phigros++ Mods, Multiplayer-Räume, RKS-Rangliste und die Konstante jedes Charts",
+    siteImageAlt:
+      "Phigros Tools: Phigros++ Mods, Multiplayer-Räume, RKS-Rangliste und die Konstante jedes Charts",
     chartsImageAlt: "Phigros Tools: die Schwierigkeitskonstante jedes Charts",
     chartsTitle: "Chart- und Schwierigkeitsliste",
     chartsDescription: (charts: number, songs: number, chapters: number, version: string) =>
@@ -659,6 +660,14 @@ export const de = {
     iosBuild: "Die Seite **Development** im Wiki erklärt, wie du Phigros++ selbst baust.",
     bring: "Spielstand mitnehmen",
     source: "Quellcode",
+  },
+  cloudSave: {
+    title: "Phigros-Cloud-Spielstand ohne TapTap",
+    description:
+      "TapTaps Cloud synchronisiert keine Phigros-Spielstände mehr. Wo dein Spielstand jetzt ist, wie Phigros++ ihn auf phigros.tools aufbewahrt und wie du ihn von Android, einem iPhone oder einem Gerät, das du nicht mehr hast, mitnimmst.",
+    lost: "Seit November 2026 antwortet TapTaps Cloud Phigros nicht mehr: **Sync** lädt deinen Spielstand nicht mehr hoch und kann ihn auf einem anderen Gerät nicht mehr zurückholen.",
+    kept: "Dein Spielstand liegt jetzt nur noch im Spiel, auf dem Gerät, auf dem du spielst, wo Android und iOS ihn privat halten. Deinstallierst du das Spiel oder verlierst das Gerät, ist er weg. Phigros++ bewahrt eine Kopie auf phigros.tools auf, die alle mit deinem Profil angemeldeten Geräte teilen.",
+    rooted: "Auf einem gerooteten Android-Gerät",
   },
   start: {
     description:

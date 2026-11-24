@@ -59,7 +59,12 @@ function StartPage() {
       <main className="app-shell ppp-page">
         <section className="panel start" ref={form}>
           <h1 className="panel-title">{t.pppPage.bring}</h1>
-          <p className="meta">{s.description}</p>
+          <p className="meta">
+            {s.description}{" "}
+            <Link to="/cloud-save" className="text-link">
+              {t.cloudSave.title}
+            </Link>
+          </p>
           <div className="start-flow">
             <Question
               to="/start"

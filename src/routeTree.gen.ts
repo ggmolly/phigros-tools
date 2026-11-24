@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ToolRouteImport } from './routes/_tool'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as CloudSaveRouteImport } from './routes/cloud-save'
 import { Route as DocsRouteImport } from './routes/docs'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as PhigrosppRouteImport } from './routes/phigrospp'
@@ -44,6 +45,11 @@ const ToolRoute = ToolRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CloudSaveRoute = CloudSaveRouteImport.update({
+  id: '/cloud-save',
+  path: '/cloud-save',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DocsRoute = DocsRouteImport.update({
@@ -175,6 +181,7 @@ const ChartsIdPlaysLevelRoute = ChartsIdPlaysLevelRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof ToolIndexRoute
   '/admin': typeof AdminRoute
+  '/cloud-save': typeof CloudSaveRoute
   '/docs': typeof DocsRouteWithChildren
   '/leaderboard': typeof LeaderboardRouteWithChildren
   '/phigrospp': typeof PhigrosppRoute
@@ -202,6 +209,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
+  '/cloud-save': typeof CloudSaveRoute
   '/phigrospp': typeof PhigrosppRoute
   '/rebuild': typeof RebuildRoute
   '/start': typeof StartRoute
@@ -230,6 +238,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_tool': typeof ToolRouteWithChildren
   '/admin': typeof AdminRoute
+  '/cloud-save': typeof CloudSaveRoute
   '/docs': typeof DocsRouteWithChildren
   '/leaderboard': typeof LeaderboardRouteWithChildren
   '/phigrospp': typeof PhigrosppRoute
@@ -261,6 +270,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/cloud-save'
     | '/docs'
     | '/leaderboard'
     | '/phigrospp'
@@ -288,6 +298,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/admin'
+    | '/cloud-save'
     | '/phigrospp'
     | '/rebuild'
     | '/start'
@@ -315,6 +326,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_tool'
     | '/admin'
+    | '/cloud-save'
     | '/docs'
     | '/leaderboard'
     | '/phigrospp'
@@ -345,6 +357,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   ToolRoute: typeof ToolRouteWithChildren
   AdminRoute: typeof AdminRoute
+  CloudSaveRoute: typeof CloudSaveRoute
   DocsRoute: typeof DocsRouteWithChildren
   LeaderboardRoute: typeof LeaderboardRouteWithChildren
   PhigrosppRoute: typeof PhigrosppRoute
@@ -378,6 +391,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cloud-save': {
+      id: '/cloud-save'
+      path: '/cloud-save'
+      fullPath: '/cloud-save'
+      preLoaderRoute: typeof CloudSaveRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/docs': {
@@ -603,6 +623,7 @@ const LeaderboardRouteWithChildren = LeaderboardRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   ToolRoute: ToolRouteWithChildren,
   AdminRoute: AdminRoute,
+  CloudSaveRoute: CloudSaveRoute,
   DocsRoute: DocsRouteWithChildren,
   LeaderboardRoute: LeaderboardRouteWithChildren,
   PhigrosppRoute: PhigrosppRoute,

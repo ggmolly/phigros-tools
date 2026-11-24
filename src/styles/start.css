@@ -21,6 +21,9 @@
 .start-question > .meta {
   max-width: 46rem;
 }
+.start-question > .meta + .meta {
+  margin-top: 0.625rem;
+}
 /* tiles lean like the main menu's entries, so their row keeps the slant's travel free on both sides */
 .start-tiles {
   --tile-h: clamp(11rem, 34svh, 16rem);
