@@ -108,6 +108,7 @@ export const es = {
     playFallbackDescription: "Mira cómo se desarrolla un chart de Phigros.",
   },
   footer: {
+    docs: "Docs de mods",
     credit: (author: string) => `Hecho con ♥ por ${author}`,
     disclaimer: "Herramienta no oficial de terceros · Sin afiliación con Pigeon Games.",
   },

@@ -192,6 +192,27 @@
   line-height: 1.5;
   tab-size: 2;
 }
+/* lua in the site's colours (components/code.tsx), in docs and READMEs: what's around the coloured parts is the text's white */
+.readme pre:has(> span) {
+  color: var(--text);
+}
+.lua-keyword {
+  color: var(--glow);
+}
+.lua-string {
+  color: #ffd9a0;
+}
+.lua-number {
+  color: var(--phi);
+}
+.lua-call {
+  color: #c9b8ff;
+}
+.lua-comment {
+  color: var(--faint);
+  font-style: italic;
+}
+
 .readme blockquote {
   position: relative;
   padding-left: 1.25rem;

@@ -108,6 +108,7 @@ export const ms = {
     playFallbackDescription: "Tonton chart Phigros dimainkan.",
   },
   footer: {
+    docs: "Dokumentasi mod",
     credit: (author: string) => `Dibuat dengan ♥ oleh ${author}`,
     disclaimer: "Alat pihak ketiga tidak rasmi · Tidak bergabung dengan Pigeon Games.",
   },

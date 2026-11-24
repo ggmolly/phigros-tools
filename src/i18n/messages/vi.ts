@@ -107,6 +107,7 @@ export const vi = {
     playFallbackDescription: "Xem một chart Phigros chạy.",
   },
   footer: {
+    docs: "Tài liệu mod",
     credit: (author: string) => `Làm bằng ♥ bởi ${author}`,
     disclaimer: "Công cụ bên thứ ba không chính thức · Không liên kết với Pigeon Games.",
   },

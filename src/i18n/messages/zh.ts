@@ -107,6 +107,7 @@ export const zh = {
     playFallbackDescription: "观看 Phigros 谱面演示。",
   },
   footer: {
+    docs: "模组文档",
     credit: (author: string) => `由 ${author} 用 ♥ 制作`,
     disclaimer: "非官方第三方工具 · 与 Pigeon Games 无关。",
   },

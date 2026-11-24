@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ToolRouteImport } from './routes/_tool'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as DocsRouteImport } from './routes/docs'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as PhigrosppRouteImport } from './routes/phigrospp'
 import { Route as RebuildRouteImport } from './routes/rebuild'
@@ -22,6 +23,8 @@ import { Route as ToolInRouteImport } from './routes/_tool.in'
 import { Route as ToolRecordsRouteImport } from './routes/_tool.records'
 import { Route as ChartsIndexRouteImport } from './routes/charts.index'
 import { Route as ChartsIdRouteImport } from './routes/charts.$id'
+import { Route as DocsIndexRouteImport } from './routes/docs.index'
+import { Route as DocsSplatRouteImport } from './routes/docs.$'
 import { Route as LeaderboardIndexRouteImport } from './routes/leaderboard.index'
 import { Route as ModsIndexRouteImport } from './routes/mods.index'
 import { Route as PlayersIdRouteImport } from './routes/players.$id'
@@ -41,6 +44,11 @@ const ToolRoute = ToolRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DocsRoute = DocsRouteImport.update({
+  id: '/docs',
+  path: '/docs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LeaderboardRoute = LeaderboardRouteImport.update({
@@ -97,6 +105,16 @@ const ChartsIdRoute = ChartsIdRouteImport.update({
   id: '/charts/$id',
   path: '/charts/$id',
   getParentRoute: () => rootRouteImport,
+} as any)
+const DocsIndexRoute = DocsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsSplatRoute = DocsSplatRouteImport.update({
+  id: '/$',
+  path: '/$',
+  getParentRoute: () => DocsRoute,
 } as any)
 const LeaderboardIndexRoute = LeaderboardIndexRouteImport.update({
   id: '/',
@@ -157,6 +175,7 @@ const ChartsIdPlaysLevelRoute = ChartsIdPlaysLevelRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof ToolIndexRoute
   '/admin': typeof AdminRoute
+  '/docs': typeof DocsRouteWithChildren
   '/leaderboard': typeof LeaderboardRouteWithChildren
   '/phigrospp': typeof PhigrosppRoute
   '/rebuild': typeof RebuildRoute
@@ -166,11 +185,13 @@ export interface FileRoutesByFullPath {
   '/in': typeof ToolInRoute
   '/records': typeof ToolRecordsRoute
   '/charts/$id': typeof ChartsIdRoute
+  '/docs/$': typeof DocsSplatRoute
   '/players/$id': typeof PlayersIdRoute
   '/releases/$slug': typeof ReleasesSlugRoute
   '/replays/$id': typeof ReplaysIdRoute
   '/rooms/$id': typeof RoomsIdRoute
   '/charts/': typeof ChartsIndexRoute
+  '/docs/': typeof DocsIndexRoute
   '/leaderboard/': typeof LeaderboardIndexRoute
   '/mods/': typeof ModsIndexRoute
   '/releases/': typeof ReleasesIndexRoute
@@ -189,12 +210,14 @@ export interface FileRoutesByTo {
   '/in': typeof ToolInRoute
   '/records': typeof ToolRecordsRoute
   '/charts/$id': typeof ChartsIdRoute
+  '/docs/$': typeof DocsSplatRoute
   '/players/$id': typeof PlayersIdRoute
   '/releases/$slug': typeof ReleasesSlugRoute
   '/replays/$id': typeof ReplaysIdRoute
   '/rooms/$id': typeof RoomsIdRoute
   '/': typeof ToolIndexRoute
   '/charts': typeof ChartsIndexRoute
+  '/docs': typeof DocsIndexRoute
   '/leaderboard': typeof LeaderboardIndexRoute
   '/mods': typeof ModsIndexRoute
   '/releases': typeof ReleasesIndexRoute
@@ -207,6 +230,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_tool': typeof ToolRouteWithChildren
   '/admin': typeof AdminRoute
+  '/docs': typeof DocsRouteWithChildren
   '/leaderboard': typeof LeaderboardRouteWithChildren
   '/phigrospp': typeof PhigrosppRoute
   '/rebuild': typeof RebuildRoute
@@ -216,12 +240,14 @@ export interface FileRoutesById {
   '/_tool/in': typeof ToolInRoute
   '/_tool/records': typeof ToolRecordsRoute
   '/charts/$id': typeof ChartsIdRoute
+  '/docs/$': typeof DocsSplatRoute
   '/players/$id': typeof PlayersIdRoute
   '/releases/$slug': typeof ReleasesSlugRoute
   '/replays/$id': typeof ReplaysIdRoute
   '/rooms/$id': typeof RoomsIdRoute
   '/_tool/': typeof ToolIndexRoute
   '/charts/': typeof ChartsIndexRoute
+  '/docs/': typeof DocsIndexRoute
   '/leaderboard/': typeof LeaderboardIndexRoute
   '/mods/': typeof ModsIndexRoute
   '/releases/': typeof ReleasesIndexRoute
@@ -235,6 +261,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/docs'
     | '/leaderboard'
     | '/phigrospp'
     | '/rebuild'
@@ -244,11 +271,13 @@ export interface FileRouteTypes {
     | '/in'
     | '/records'
     | '/charts/$id'
+    | '/docs/$'
     | '/players/$id'
     | '/releases/$slug'
     | '/replays/$id'
     | '/rooms/$id'
     | '/charts/'
+    | '/docs/'
     | '/leaderboard/'
     | '/mods/'
     | '/releases/'
@@ -267,12 +296,14 @@ export interface FileRouteTypes {
     | '/in'
     | '/records'
     | '/charts/$id'
+    | '/docs/$'
     | '/players/$id'
     | '/releases/$slug'
     | '/replays/$id'
     | '/rooms/$id'
     | '/'
     | '/charts'
+    | '/docs'
     | '/leaderboard'
     | '/mods'
     | '/releases'
@@ -284,6 +315,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_tool'
     | '/admin'
+    | '/docs'
     | '/leaderboard'
     | '/phigrospp'
     | '/rebuild'
@@ -293,12 +325,14 @@ export interface FileRouteTypes {
     | '/_tool/in'
     | '/_tool/records'
     | '/charts/$id'
+    | '/docs/$'
     | '/players/$id'
     | '/releases/$slug'
     | '/replays/$id'
     | '/rooms/$id'
     | '/_tool/'
     | '/charts/'
+    | '/docs/'
     | '/leaderboard/'
     | '/mods/'
     | '/releases/'
@@ -311,6 +345,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   ToolRoute: typeof ToolRouteWithChildren
   AdminRoute: typeof AdminRoute
+  DocsRoute: typeof DocsRouteWithChildren
   LeaderboardRoute: typeof LeaderboardRouteWithChildren
   PhigrosppRoute: typeof PhigrosppRoute
   RebuildRoute: typeof RebuildRoute
@@ -343,6 +378,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/docs': {
+      id: '/docs'
+      path: '/docs'
+      fullPath: '/docs'
+      preLoaderRoute: typeof DocsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/leaderboard': {
@@ -421,6 +463,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/charts/$id'
       preLoaderRoute: typeof ChartsIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/docs/': {
+      id: '/docs/'
+      path: '/'
+      fullPath: '/docs/'
+      preLoaderRoute: typeof DocsIndexRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/$': {
+      id: '/docs/$'
+      path: '/$'
+      fullPath: '/docs/$'
+      preLoaderRoute: typeof DocsSplatRouteImport
+      parentRoute: typeof DocsRoute
     }
     '/leaderboard/': {
       id: '/leaderboard/'
@@ -520,6 +576,18 @@ const ToolRouteChildren: ToolRouteChildren = {
 
 const ToolRouteWithChildren = ToolRoute._addFileChildren(ToolRouteChildren)
 
+interface DocsRouteChildren {
+  DocsSplatRoute: typeof DocsSplatRoute
+  DocsIndexRoute: typeof DocsIndexRoute
+}
+
+const DocsRouteChildren: DocsRouteChildren = {
+  DocsSplatRoute: DocsSplatRoute,
+  DocsIndexRoute: DocsIndexRoute,
+}
+
+const DocsRouteWithChildren = DocsRoute._addFileChildren(DocsRouteChildren)
+
 interface LeaderboardRouteChildren {
   LeaderboardIndexRoute: typeof LeaderboardIndexRoute
 }
@@ -535,6 +603,7 @@ const LeaderboardRouteWithChildren = LeaderboardRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   ToolRoute: ToolRouteWithChildren,
   AdminRoute: AdminRoute,
+  DocsRoute: DocsRouteWithChildren,
   LeaderboardRoute: LeaderboardRouteWithChildren,
   PhigrosppRoute: PhigrosppRoute,
   RebuildRoute: RebuildRoute,

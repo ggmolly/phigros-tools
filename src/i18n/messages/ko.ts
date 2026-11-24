@@ -107,6 +107,7 @@ export const ko = {
     playFallbackDescription: "Phigros 채보 플레이 보기.",
   },
   footer: {
+    docs: "모드 문서",
     credit: (author: string) => `${author}이(가) ♥을 담아 만들었습니다`,
     disclaimer: "비공식 서드파티 도구 · Pigeon Games와 무관합니다.",
   },

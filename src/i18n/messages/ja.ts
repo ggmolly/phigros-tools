@@ -106,6 +106,7 @@ export const ja = {
     playFallbackDescription: "Phigros の譜面のプレイを見る。",
   },
   footer: {
+    docs: "Mod ドキュメント",
     credit: (author: string) => `${author} が ♥ を込めて制作`,
     disclaimer: "非公式のサードパーティツール · Pigeon Games とは無関係です。",
   },

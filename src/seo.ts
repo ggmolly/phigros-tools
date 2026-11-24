@@ -2,6 +2,8 @@ import { LOCALES, type Locale, withLocale } from "./i18n/locales";
 import { MESSAGES } from "./i18n/messages";
 
 export const SITE = "https://phigros.tools";
+/** Where the Phigros++ docs are read: the app's /docs pages on their own host (router.tsx). */
+export const DOCS = "https://docs.phigros.tools";
 export const SITE_NAME = "Phigros Tools";
 
 /** A page's absolute URL in a given language. */

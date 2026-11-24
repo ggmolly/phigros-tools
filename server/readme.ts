@@ -62,9 +62,15 @@ const spansOf = (text: string, resolve: Resolve, style?: Omit<Span, "text">) =>
 
 /**
  * A README's blocks. Media are kept when `allowed` matches their address, relative ones being under `base`. Links
- * are kept to the web and into the game, relative ones being under `page`.
+ * are kept to the web and into the game, relative ones being under `page`. The docs keep their tables as tables.
  */
-export function parse(readme: string, base: string, page: string, allowed: RegExp): Draft[] {
+export function parse(
+  readme: string,
+  base: string,
+  page: string,
+  allowed: RegExp,
+  { tables = false } = {},
+): Draft[] {
   const blocks: Draft[] = [];
   const resolve: Resolve = (href) => {
     const url = URL.canParse(href, page) ? new URL(href, page) : undefined;
@@ -99,7 +105,7 @@ export function parse(readme: string, base: string, page: string, allowed: RegEx
     .split("\n");
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]!;
-    const fence = /^\s*(```|~~~)/.exec(line);
+    const fence = /^\s*(```|~~~)\s*(\w*)/.exec(line);
     const heading = /^\s{0,3}(#{1,6})\s+(.*?)\s*#*\s*$/.exec(line);
     const row = /^\s*\|(.+)\|\s*$/.exec(line);
     const item = /^(\s*)([-*+]|\d+[.)])\s+(.*)$/.exec(line);
@@ -108,7 +114,7 @@ export function parse(readme: string, base: string, page: string, allowed: RegEx
       const code: string[] = [];
       while (++i < lines.length && !lines[i]!.trimStart().startsWith(fence[1]!))
         code.push(lines[i]!);
-      blocks.push({ kind: "code", text: code.join("\n") });
+      blocks.push({ kind: "code", text: code.join("\n"), ...(fence[2] && { lang: fence[2] }) });
     } else if (!line.trim()) {
       flush();
     } else if (heading) {
@@ -121,6 +127,21 @@ export function parse(readme: string, base: string, page: string, allowed: RegEx
     } else if (/^\s{0,3}([-*_])(\s*\1){2,}\s*$/.test(line)) {
       flush();
       blocks.push({ kind: "rule" });
+    } else if (row && tables) {
+      flush();
+      // its rows up to the first line that isn't one, the line under the header left out
+      const rows: Span[][][] = [];
+      for (; i < lines.length && /^\s*\|.*\|\s*$/.test(lines[i]!); i++)
+        if (!/^[\s|:-]+$/.test(lines[i]!))
+          rows.push(
+            lines[i]!.trim()
+              .slice(1, -1)
+              // a \| is a | of the cell's text
+              .split(/(?<!\\)\|/)
+              .map((cell) => spansOf(cell.replaceAll("\\|", "|"), resolve)),
+          );
+      i--;
+      blocks.push({ kind: "table", rows });
     } else if (row) {
       flush();
       // a table's body rows, each "first cell: the others". its header says what the cells are, which the cells show

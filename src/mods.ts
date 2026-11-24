@@ -31,8 +31,11 @@ export type Block =
   | { kind: "text"; spans: Span[] }
   | { kind: "quote"; spans: Span[] }
   | { kind: "item"; mark: string; depth: number; spans: Span[] }
-  | { kind: "code"; text: string }
+  /** A block of code, its language as the fence named it ("lua"), none when it didn't. */
+  | { kind: "code"; text: string; lang?: string }
   | { kind: "rule" }
+  /** A table of the docs, its first row the header: a README's are lines of text, as the game draws them. */
+  | { kind: "table"; rows: Span[][][] }
   | Media;
 
 /** A mod of the Phigros++ catalog as the game and the Mods page read it from /catalog/index.json (server/mods.ts). */

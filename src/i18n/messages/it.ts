@@ -106,6 +106,7 @@ export const it = {
     playFallbackDescription: "Guarda un chart di Phigros in azione.",
   },
   footer: {
+    docs: "Docs dei mod",
     credit: (author: string) => `Fatto con ♥ da ${author}`,
     disclaimer: "Strumento non ufficiale di terze parti · Non affiliato a Pigeon Games.",
   },

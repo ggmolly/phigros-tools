@@ -4,6 +4,7 @@ import { setLocale, useFormat, useLocale, useT } from "../i18n";
 import { isLocale, LOCALE_NAME, LOCALES } from "../i18n/locales";
 import { report } from "../report";
 import { useSave } from "../save-context";
+import { DOCS } from "../seo";
 
 /** Positions (x%, y%, size) for the drifting bokeh dots, shared by the dashboard and the static reference pages. */
 const BOKEH: [number, number, number][] = [
@@ -37,7 +38,7 @@ export function Backdrop() {
 }
 
 /** Links to the Discord server and the repo, with the star count the root loader fetched while rendering on the server (see src/stars.ts). */
-function HeaderLinks() {
+export function HeaderLinks() {
   const { stars } = useLoaderData({ from: "__root__" });
   const t = useT();
   const format = useFormat();
@@ -238,6 +239,7 @@ export function SiteFooter() {
             )}
         </span>
         <Link to="/releases">{phigrospp ? `Phigros++ ${phigrospp}` : t.releasesPage.title}</Link>
+        <a href={DOCS}>{t.footer.docs}</a>
       </span>
       <span className="footer-group">
         <span className="disclaimer">{t.footer.disclaimer}</span>

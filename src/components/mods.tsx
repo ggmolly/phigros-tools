@@ -2,7 +2,8 @@ import { Link } from "@tanstack/react-router";
 import { type CSSProperties, Fragment, useEffect, useRef } from "react";
 import { useFormat, useT } from "../i18n";
 import type { Block, Media, Mod, Span } from "../mods";
-import { SITE } from "../seo";
+import { DOCS, SITE } from "../seo";
+import { Lua } from "./code";
 
 const VERIFIED =
   "M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Zm12.15.38-5.5 5.5L8 12";
@@ -129,6 +130,15 @@ function Spans({ spans }: { spans: Span[] }) {
           {node}
         </Link>
       );
+    // the docs link to their own pages, wherever they're read (router.tsx)
+    else if (span.link?.startsWith(`${DOCS}/`)) {
+      const [path, hash] = span.link.slice(DOCS.length + 1).split("#");
+      node = (
+        <Link className="text-link" to="/docs/$" params={{ _splat: path }} hash={hash}>
+          {node}
+        </Link>
+      );
+    }
     // a release note links to the site's own pages
     else if (span.link?.startsWith(`${SITE}/`))
       node = (
@@ -215,8 +225,41 @@ export function Readme({
               <Spans spans={block.spans} />
             </blockquote>
           );
-        if (block.kind === "code") return <pre key={key}>{block.text}</pre>;
+        if (block.kind === "code")
+          return (
+            <pre key={key}>{block.lang === "lua" ? <Lua code={block.text} /> : block.text}</pre>
+          );
         if (block.kind === "rule") return <hr key={key} />;
+        if (block.kind === "table")
+          return (
+            <div key={key} className="readme-table">
+              <table>
+                <thead>
+                  <tr>
+                    {block.rows[0]!.map((cell, column) => (
+                      // biome-ignore lint/suspicious/noArrayIndexKey: the cells never reorder.
+                      <th key={column}>
+                        <Spans spans={cell} />
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {block.rows.slice(1).map((row, line) => (
+                    // biome-ignore lint/suspicious/noArrayIndexKey: the rows never reorder.
+                    <tr key={line}>
+                      {row.map((cell, column) => (
+                        // biome-ignore lint/suspicious/noArrayIndexKey: the cells never reorder.
+                        <td key={column}>
+                          <Spans spans={cell} />
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          );
         if (block.poster === shown?.poster) return null;
         return <ModMedia key={key} {...block} folder={folder} />;
       })}
