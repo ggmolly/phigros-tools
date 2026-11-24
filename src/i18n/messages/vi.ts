@@ -421,7 +421,6 @@ export const vi = {
     localSave: "Save cục bộ",
     data: "Data",
     completionDifficulty: "Độ khó cho thống kê hoàn thành",
-    countsDiffer: "Số chart đọc được khác với bản tóm tắt của máy chủ.",
     catalogDiffers:
       "Phiên bản game của danh mục khác với save này; RKS tính ra chỉ mang tính tham khảo.",
     unknownIdOne: (n: number, ids: string) => `${n} ID danh mục không xác định: ${ids}`,

@@ -423,7 +423,6 @@ export const es = {
     localSave: "Partida local",
     data: "Data",
     completionDifficulty: "Dificultad de las estadísticas de progreso",
-    countsDiffer: "El número de charts leídos no coincide con el resumen del servidor.",
     catalogDiffers:
       "La versión del juego del catálogo no coincide con esta partida; el RKS calculado no es fiable.",
     unknownIdOne: (n: number, ids: string) => `${n} ID desconocido en el catálogo: ${ids}`,

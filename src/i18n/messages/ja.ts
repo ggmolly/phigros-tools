@@ -420,7 +420,6 @@ export const ja = {
     localSave: "ローカルのセーブ",
     data: "Data",
     completionDifficulty: "達成状況を表示する難易度",
-    countsDiffer: "読み取った譜面数がサーバーの概要と一致しません。",
     catalogDiffers:
       "カタログのゲームバージョンがこのセーブと異なるため、算出した RKS は参考値です。",
     unknownIdOne: (n: number, ids: string) => `不明なカタログ ID ${n} 件：${ids}`,

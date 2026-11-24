@@ -411,7 +411,6 @@ export const zhHant = {
     localSave: "本機存檔",
     data: "Data",
     completionDifficulty: "完成度統計的難度",
-    countsDiffer: "解析出的譜面數量與伺服器摘要不一致。",
     catalogDiffers: "曲庫的遊戲版本與此存檔不同，計算出的 RKS 僅供參考。",
     unknownIdOne: (n: number, ids: string) => `${n} 個未知曲庫 ID：${ids}`,
     unknownIdMany: (n: number, ids: string) => `${n} 個未知曲庫 ID：${ids}`,

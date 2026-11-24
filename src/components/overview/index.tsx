@@ -50,7 +50,6 @@ export function Overview({
 }) {
   const t = useT();
   const ranking = calculateRanking(document);
-  const counts = countLevels(document.songs);
   const unknown = unknownSongIds(document.songs.map((song) => song.songId));
   const { chartKey, setChartKey, home, loaded } = useSave();
   const [accuracy, setAccuracy] = useState("100.00");
@@ -64,9 +63,6 @@ export function Overview({
 
   return (
     <>
-      {document.summary && JSON.stringify(counts) !== JSON.stringify(document.summary.counts) && (
-        <p className="warning">{t.overview.countsDiffer}</p>
-      )}
       {!catalogCompatible(document.summary?.gameVersion) && (
         <p className="warning">{t.overview.catalogDiffers}</p>
       )}

@@ -425,7 +425,6 @@ export const fr = {
     localSave: "Save locale",
     data: "Data",
     completionDifficulty: "Difficulté des statistiques de progression",
-    countsDiffer: "Le nombre de charts lus diffère du résumé du serveur.",
     catalogDiffers:
       "La version du jeu du catalogue diffère de cette save ; le RKS calculé n’est pas garanti.",
     unknownIdOne: (n: number, ids: string) => `${n} ID inconnu du catalogue : ${ids}`,

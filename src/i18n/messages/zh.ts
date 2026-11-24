@@ -411,7 +411,6 @@ export const zh = {
     localSave: "本地存档",
     data: "Data",
     completionDifficulty: "完成度统计的难度",
-    countsDiffer: "解析出的谱面数量与服务器摘要不一致。",
     catalogDiffers: "曲库的游戏版本与此存档不同，计算出的 RKS 仅供参考。",
     unknownIdOne: (n: number, ids: string) => `${n} 个未知曲库 ID：${ids}`,
     unknownIdMany: (n: number, ids: string) => `${n} 个未知曲库 ID：${ids}`,

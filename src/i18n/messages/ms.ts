@@ -424,7 +424,6 @@ export const ms = {
     localSave: "Save setempat",
     data: "Data",
     completionDifficulty: "Tahap kesukaran untuk statistik penyelesaian",
-    countsDiffer: "Bilangan chart yang dibaca berbeza daripada ringkasan pelayan.",
     catalogDiffers:
       "Versi permainan katalog berbeza daripada save ini; RKS yang dikira tidak muktamad.",
     unknownIdOne: (n: number, ids: string) => `${n} ID katalog tidak diketahui: ${ids}`,

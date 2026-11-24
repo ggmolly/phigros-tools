@@ -423,7 +423,6 @@ export const id = {
     localSave: "Save lokal",
     data: "Data",
     completionDifficulty: "Tingkat kesulitan untuk statistik penyelesaian",
-    countsDiffer: "Jumlah chart yang dibaca berbeda dari ringkasan server.",
     catalogDiffers:
       "Versi game katalog berbeda dari save ini; RKS yang dihitung belum tentu akurat.",
     unknownIdOne: (n: number, ids: string) => `${n} ID katalog tidak dikenal: ${ids}`,

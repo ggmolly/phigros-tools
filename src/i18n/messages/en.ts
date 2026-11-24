@@ -418,7 +418,6 @@ export const en = {
     localSave: "Local save",
     data: "Data",
     completionDifficulty: "Difficulty for completion stats",
-    countsDiffer: "Parsed chart counts differ from the server summary.",
     catalogDiffers:
       "Catalog game version differs from this save; derived RKS is not authoritative.",
     unknownIdOne: (n: number, ids: string) => `${n} unknown catalog ID: ${ids}`,

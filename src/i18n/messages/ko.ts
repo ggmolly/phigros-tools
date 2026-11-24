@@ -418,7 +418,6 @@ export const ko = {
     localSave: "로컬 세이브",
     data: "Data",
     completionDifficulty: "달성 통계 난이도",
-    countsDiffer: "읽어 들인 채보 수가 서버 요약과 다릅니다.",
     catalogDiffers: "카탈로그의 게임 버전이 이 세이브와 달라 계산된 RKS는 참고용입니다.",
     unknownIdOne: (n: number, ids: string) => `알 수 없는 카탈로그 ID ${n}개: ${ids}`,
     unknownIdMany: (n: number, ids: string) => `알 수 없는 카탈로그 ID ${n}개: ${ids}`,

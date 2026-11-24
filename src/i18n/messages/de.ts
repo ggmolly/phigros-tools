@@ -424,7 +424,6 @@ export const de = {
     localSave: "Lokaler Save",
     data: "Data",
     completionDifficulty: "Schwierigkeit für die Fortschrittswerte",
-    countsDiffer: "Die gelesene Chart-Anzahl weicht von der Server-Zusammenfassung ab.",
     catalogDiffers:
       "Die Spielversion des Katalogs weicht von diesem Save ab; der berechnete RKS ist nicht verbindlich.",
     unknownIdOne: (n: number, ids: string) => `${n} unbekannte Katalog-ID: ${ids}`,

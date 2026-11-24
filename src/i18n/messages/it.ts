@@ -424,7 +424,6 @@ export const it = {
     localSave: "Salvataggio locale",
     data: "Data",
     completionDifficulty: "Difficoltà per le statistiche di completamento",
-    countsDiffer: "Il numero di chart letti è diverso dal riepilogo del server.",
     catalogDiffers:
       "La versione di gioco del catalogo è diversa da questo salvataggio; l’RKS calcolato non è garantito.",
     unknownIdOne: (n: number, ids: string) => `${n} ID sconosciuto nel catalogo: ${ids}`,
