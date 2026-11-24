@@ -73,9 +73,10 @@ export const zhHant = {
     openTapTap: "開啟 TapTap",
   },
   seo: {
+    siteTitle: "Phigros++ 模組、多人遊戲、排行榜與譜面定數",
     siteDescription:
-      "在瀏覽器中私密地分析你的 Phigros 存檔：RKS、Best 譜面、成績記錄與進度。另附每張譜面的定數。",
-    siteImageAlt: "Phigros Tools：RKS、Best 譜面與全部譜面定數",
+      "Phigros++ 為 Phigros 加入回放、多人房間、HUD 和 Lua 模組，並在 TapTap 雲端存檔停止服務後把你的存檔保存在 phigros.tools 上。另有 RKS 排行榜、每張譜面的定數和存檔分析。",
+    siteImageAlt: "Phigros Tools：Phigros++ 模組、多人房間、RKS 排行榜與全部譜面定數",
     chartsImageAlt: "Phigros Tools：全部譜面定數",
     chartsTitle: "譜面與定數列表",
     chartsDescription: (charts: number, songs: number, chapters: number, version: string) =>

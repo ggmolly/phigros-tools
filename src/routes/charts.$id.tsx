@@ -19,7 +19,16 @@ import { calculateRanking } from "../metrics";
 import { LEVELS, type LevelName } from "../modules";
 import { getChartPlays, type Play } from "../plays";
 import { useSave } from "../save-context";
-import { breadcrumbs, headT, jsonLd, localeUrl, pageLinks, pageMeta, SITE } from "../seo";
+import {
+  breadcrumbs,
+  englishOnlyMeta,
+  headT,
+  jsonLd,
+  localeUrl,
+  pageLinks,
+  pageMeta,
+  SITE,
+} from "../seo";
 
 function mmss(totalSeconds: number) {
   const m = Math.floor(totalSeconds / 60);
@@ -159,23 +168,26 @@ export const Route = createFileRoute("/charts/$id")({
     const image = `${SITE}/covers/${encodeURIComponent(song.id)}.og.jpg`;
     const description = describe(song, loaderData?.stats ?? null, locale);
     return {
-      meta: pageMeta({
-        title,
-        description,
-        path: songPath(song),
-        locale,
-        type: "music.song",
-        themeColor: loaderData?.themeColor,
-        image: {
-          url: image,
-          width: 1024,
-          height: 540,
-          alt: song.illustrator
-            ? t.seo.coverAltBy(song.title, song.illustrator)
-            : t.seo.coverAlt(song.title),
-        },
-      }),
-      links: pageLinks(songPath(song), locale),
+      meta: [
+        ...pageMeta({
+          title,
+          description,
+          path: songPath(song),
+          locale,
+          type: "music.song",
+          themeColor: loaderData?.themeColor,
+          image: {
+            url: image,
+            width: 1024,
+            height: 540,
+            alt: song.illustrator
+              ? t.seo.coverAltBy(song.title, song.illustrator)
+              : t.seo.coverAlt(song.title),
+          },
+        }),
+        ...englishOnlyMeta(locale),
+      ],
+      links: pageLinks(songPath(song), locale, true),
       scripts: [
         jsonLd({
           "@graph": [

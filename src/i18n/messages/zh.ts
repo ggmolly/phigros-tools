@@ -73,9 +73,10 @@ export const zh = {
     openTapTap: "打开 TapTap",
   },
   seo: {
+    siteTitle: "Phigros++ 模组、多人游戏、排行榜与谱面定数",
     siteDescription:
-      "在浏览器中私密地分析你的 Phigros 存档：RKS、Best 谱面、成绩记录与进度。另附每张谱面的定数。",
-    siteImageAlt: "Phigros Tools：RKS、Best 谱面与全部谱面定数",
+      "Phigros++ 为 Phigros 加入回放、多人房间、HUD 和 Lua 模组，并在 TapTap 云存档停止服务后把你的存档保存在 phigros.tools 上。另有 RKS 排行榜、每张谱面的定数和存档分析。",
+    siteImageAlt: "Phigros Tools：Phigros++ 模组、多人房间、RKS 排行榜与全部谱面定数",
     chartsImageAlt: "Phigros Tools：全部谱面定数",
     chartsTitle: "谱面与定数列表",
     chartsDescription: (charts: number, songs: number, chapters: number, version: string) =>

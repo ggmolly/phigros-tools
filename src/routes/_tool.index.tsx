@@ -6,13 +6,19 @@ import { PhigrosppBar } from "../components/phigrospp";
 import { useLiveReload } from "../live";
 import { getProfile, type PlayerProfile } from "../plays";
 import { useSave } from "../save-context";
-import { headT, jsonLd, localeUrl, SITE_NAME } from "../seo";
+import { headT, jsonLd, localeUrl, pageMeta, SITE_NAME } from "../seo";
 import { topics } from "../topics";
 
 export const Route = createFileRoute("/_tool/")({
   head: ({ match }) => {
     const { locale, t } = headT(match);
     return {
+      meta: pageMeta({
+        title: t.seo.siteTitle,
+        description: t.seo.siteDescription,
+        path: "/",
+        locale,
+      }),
       scripts: [
         jsonLd({
           "@type": "WebSite",

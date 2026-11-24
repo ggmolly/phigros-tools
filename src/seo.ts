@@ -18,27 +18,40 @@ export const headT = (match: { context: { i18n: { locale: Locale } } }) => ({
 /**
  * Canonical link for this language's version, plus one alternate per language and x-default (English, whose
  * bare URL also redirects readers to their own language). Search engines index each language separately.
+ * A page made mostly of catalog data is only offered in English (`englishOnly`), see `englishOnlyMeta`.
  */
-export function pageLinks(path: string, locale: Locale) {
+export function pageLinks(path: string, locale: Locale, englishOnly = false) {
+  const canonical = { rel: "canonical", href: localeUrl(path, locale) };
+  if (englishOnly) return [canonical];
   return [
-    { rel: "canonical", href: localeUrl(path, locale) },
+    canonical,
     ...LOCALES.map((code) => ({ rel: "alternate", hrefLang: code, href: localeUrl(path, code) })),
     { rel: "alternate", hrefLang: "x-default", href: localeUrl(path, "en") },
   ];
 }
 
 /**
+ * Keeps a translated page out of search results. Song pages are the same numbers in every language: 12 copies of
+ * ~330 of them left Google crawling almost none, so only the English ones are indexed.
+ */
+export const englishOnlyMeta = (locale: Locale) =>
+  locale === "en" ? [] : [{ name: "robots", content: "noindex" }];
+
+/**
  * A page's entry in a sitemap: listed once, in English, with every language version as an hreflang alternate (listing
  * them all made Google leave most of the site uncrawled, the alternates still let it find each language).
  */
-export function sitemapEntry(path: string, lastmod: string) {
-  const alternates = [
-    ...LOCALES.map((locale) => [locale, localeUrl(path, locale)]),
-    ["x-default", localeUrl(path, "en")],
-  ]
-    .map(([lang, href]) => `    <xhtml:link rel="alternate" hreflang="${lang}" href="${href}"/>`)
-    .join("\n");
-  return `  <url>\n    <loc>${localeUrl(path, "en")}</loc>\n    <lastmod>${lastmod}</lastmod>\n${alternates}\n  </url>`;
+export function sitemapEntry(path: string, lastmod: string, englishOnly = false) {
+  const alternates = englishOnly
+    ? []
+    : [
+        ...LOCALES.map((locale) => [locale, localeUrl(path, locale)]),
+        ["x-default", localeUrl(path, "en")],
+      ];
+  const links = alternates.map(
+    ([lang, href]) => `\n    <xhtml:link rel="alternate" hreflang="${lang}" href="${href}"/>`,
+  );
+  return `  <url>\n    <loc>${localeUrl(path, "en")}</loc>\n    <lastmod>${lastmod}</lastmod>${links.join("")}\n  </url>`;
 }
 
 /** A sitemap of entries. */

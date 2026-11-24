@@ -73,9 +73,10 @@ export const ko = {
     openTapTap: "TapTap 열기",
   },
   seo: {
+    siteTitle: "Phigros++ 모드, 멀티플레이, 리더보드와 채보 상수",
     siteDescription:
-      "브라우저에서 비공개로 Phigros 세이브 분석: 랭킹 스코어, Best 채보, 기록과 진행도. 모든 채보의 난이도 상수도 제공합니다.",
-    siteImageAlt: "Phigros Tools: 랭킹 스코어, Best 채보, 모든 채보 상수",
+      "Phigros++는 Phigros에 리플레이, 멀티플레이 방, HUD, Lua 모드를 더하고, TapTap 클라우드가 사라진 지금 세이브를 phigros.tools에 보관합니다. RKS 리더보드, 모든 채보의 난이도 상수, 세이브 분석도 제공합니다.",
+    siteImageAlt: "Phigros Tools: Phigros++ 모드, 멀티플레이 방, RKS 리더보드, 모든 채보 상수",
     chartsImageAlt: "Phigros Tools: 모든 채보의 난이도 상수",
     chartsTitle: "채보 및 난이도 목록",
     chartsDescription: (charts: number, songs: number, chapters: number, version: string) =>

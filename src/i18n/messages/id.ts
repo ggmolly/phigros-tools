@@ -73,9 +73,10 @@ export const id = {
     openTapTap: "Buka TapTap",
   },
   seo: {
+    siteTitle: "Mod Phigros++, multiplayer, papan peringkat, dan konstanta chart",
     siteDescription:
-      "Analisis save Phigros kamu: ranking score, chart terbaik, rekor, dan progres, secara privat di browsermu. Plus konstanta kesulitan setiap chart.",
-    siteImageAlt: "Phigros Tools: ranking score, chart terbaik, dan konstanta setiap chart",
+      "Phigros++ menambahkan replay, room multiplayer, HUD, dan mod Lua ke Phigros, dan menyimpan save kamu di phigros.tools sekarang setelah cloud TapTap tidak ada lagi. Plus papan peringkat RKS, konstanta kesulitan setiap chart, dan penganalisis save.",
+    siteImageAlt: "Phigros Tools: mod Phigros++, room multiplayer, papan peringkat RKS, dan konstanta setiap chart",
     chartsImageAlt: "Phigros Tools: konstanta kesulitan setiap chart",
     chartsTitle: "Daftar Chart & Kesulitan",
     chartsDescription: (charts: number, songs: number, chapters: number, version: string) =>

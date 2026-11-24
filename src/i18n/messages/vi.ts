@@ -73,9 +73,10 @@ export const vi = {
     openTapTap: "Mở TapTap",
   },
   seo: {
+    siteTitle: "Mod Phigros++, chơi nhiều người, bảng xếp hạng và hằng số chart",
     siteDescription:
-      "Phân tích save Phigros của bạn: ranking score, chart tốt nhất, kỷ lục và tiến độ, riêng tư ngay trong trình duyệt. Kèm hằng số độ khó của mọi chart.",
-    siteImageAlt: "Phigros Tools: ranking score, chart tốt nhất và hằng số của mọi chart",
+      "Phigros++ thêm replay, phòng chơi nhiều người, HUD và mod Lua vào Phigros, và giữ save của bạn trên phigros.tools khi cloud của TapTap đã ngừng hoạt động. Kèm bảng xếp hạng RKS, hằng số độ khó của mọi chart và công cụ phân tích save.",
+    siteImageAlt: "Phigros Tools: mod Phigros++, phòng chơi nhiều người, bảng xếp hạng RKS và hằng số của mọi chart",
     chartsImageAlt: "Phigros Tools: hằng số độ khó của mọi chart",
     chartsTitle: "Danh sách chart và độ khó",
     chartsDescription: (charts: number, songs: number, chapters: number, version: string) =>

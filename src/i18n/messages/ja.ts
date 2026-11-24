@@ -73,9 +73,10 @@ export const ja = {
     openTapTap: "TapTap を開く",
   },
   seo: {
+    siteTitle: "Phigros++ の Mod・マルチプレイ・ランキング・譜面定数",
     siteDescription:
-      "Phigros のセーブをブラウザ内で非公開に分析：ランキングスコア、Best 譜面、記録、進捗。全譜面の難易度定数も掲載。",
-    siteImageAlt: "Phigros Tools：ランキングスコア、Best 譜面、全譜面の定数",
+      "Phigros++ は Phigros にリプレイ、マルチプレイのルーム、HUD、Lua Mod を追加し、TapTap のクラウドが終了した今、セーブを phigros.tools に保存します。RKS ランキング、全譜面の難易度定数、セーブ分析もあります。",
+    siteImageAlt: "Phigros Tools：Phigros++ の Mod、マルチプレイのルーム、RKS ランキング、全譜面の定数",
     chartsImageAlt: "Phigros Tools：全譜面の難易度定数",
     chartsTitle: "譜面・難易度一覧",
     chartsDescription: (charts: number, songs: number, chapters: number, version: string) =>

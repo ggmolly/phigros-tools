@@ -73,9 +73,10 @@ export const de = {
     openTapTap: "TapTap öffnen",
   },
   seo: {
+    siteTitle: "Phigros++ Mods, Multiplayer, Rangliste und Chart-Konstanten",
     siteDescription:
-      "Analysiere deinen Phigros-Spielstand: Ranking Score, beste Charts, Rekorde und Fortschritt, privat in deinem Browser. Dazu die Schwierigkeitskonstante jedes Charts.",
-    siteImageAlt: "Phigros Tools: Ranking Score, beste Charts und die Konstante jedes Charts",
+      "Phigros++ bringt Replays, Multiplayer-Räume, ein HUD und Lua-Mods zu Phigros und bewahrt deinen Spielstand auf phigros.tools auf, jetzt wo TapTaps Cloud weg ist. Dazu die RKS-Rangliste, die Schwierigkeitskonstante jedes Charts und eine Spielstand-Analyse.",
+    siteImageAlt: "Phigros Tools: Phigros++ Mods, Multiplayer-Räume, RKS-Rangliste und die Konstante jedes Charts",
     chartsImageAlt: "Phigros Tools: die Schwierigkeitskonstante jedes Charts",
     chartsTitle: "Chart- und Schwierigkeitsliste",
     chartsDescription: (charts: number, songs: number, chapters: number, version: string) =>

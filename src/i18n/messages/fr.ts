@@ -73,9 +73,10 @@ export const fr = {
     openTapTap: "Ouvrir TapTap",
   },
   seo: {
+    siteTitle: "Mods Phigros++, multijoueur, classement et constantes des charts",
     siteDescription:
-      "Analysez votre save Phigros : ranking score, meilleurs charts, scores et progression, en privé dans votre navigateur. Avec la constante de difficulté de chaque chart.",
-    siteImageAlt: "Phigros Tools : ranking score, meilleurs charts et constante de chaque chart",
+      "Phigros++ ajoute à Phigros des replays, des salons multijoueur, un HUD et des mods Lua, et garde votre save sur phigros.tools maintenant que le cloud de TapTap n’existe plus. Avec le classement RKS, la constante de difficulté de chaque chart et un analyseur de save.",
+    siteImageAlt: "Phigros Tools : mods Phigros++, salons multijoueur, classement RKS et constante de chaque chart",
     chartsImageAlt: "Phigros Tools : la constante de difficulté de chaque chart",
     chartsTitle: "Liste des charts et difficultés",
     chartsDescription: (charts: number, songs: number, chapters: number, version: string) =>

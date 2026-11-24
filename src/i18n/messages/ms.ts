@@ -73,9 +73,10 @@ export const ms = {
     openTapTap: "Buka TapTap",
   },
   seo: {
+    siteTitle: "Mod Phigros++, berbilang pemain, papan pendahulu dan pemalar carta",
     siteDescription:
-      "Analisis save Phigros anda: ranking score, chart terbaik, rekod dan kemajuan, secara peribadi dalam pelayar anda. Serta pemalar kesukaran setiap chart.",
-    siteImageAlt: "Phigros Tools: ranking score, chart terbaik dan pemalar setiap chart",
+      "Phigros++ menambah main semula, bilik berbilang pemain, HUD dan mod Lua kepada Phigros, dan menyimpan save anda di phigros.tools kini setelah awan TapTap tiada lagi. Serta papan pendahulu RKS, pemalar kesukaran setiap carta dan penganalisis save.",
+    siteImageAlt: "Phigros Tools: mod Phigros++, bilik berbilang pemain, papan pendahulu RKS dan pemalar setiap carta",
     chartsImageAlt: "Phigros Tools: pemalar kesukaran setiap chart",
     chartsTitle: "Senarai Chart & Kesukaran",
     chartsDescription: (charts: number, songs: number, chapters: number, version: string) =>
