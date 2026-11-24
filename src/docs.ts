@@ -34,7 +34,7 @@ export const getDoc = createServerFn({ method: "GET" })
   .validator((path: string) => path)
   .handler(async ({ data: path }) => {
     const response = await serverFetch(`/api/docs?page=${encodeURIComponent(path)}`);
-    return (await response.json()) as Doc | null;
+    return response.ok ? ((await response.json()) as Doc) : null;
   });
 
 /** A docs page's head: its title, and its address on the docs' own host. */

@@ -15,11 +15,12 @@ const NOT_PAGES =
  * Pages in English live at bare paths, other languages under a prefix (see src/router.tsx). A bare page URL
  * redirects to the reader's language: the switcher's cookie if set, else Accept-Language. Crawlers send
  * neither, so they get English there and find the other languages through hreflang and the sitemap. The
- * answer depends on both headers, so caches are told so.
+ * answer depends on both headers, so caches are told so. The docs' host is only in English.
  */
 export default defineHandler((event) => {
-  const { pathname, search } = new URL(event.req.url);
-  if (event.req.method !== "GET" || NOT_PAGES.test(pathname)) return;
+  const { hostname, pathname, search } = new URL(event.req.url);
+  if (event.req.method !== "GET" || NOT_PAGES.test(pathname) || hostname.startsWith("docs."))
+    return;
   if (splitLocale(pathname).locale !== "en") return;
   event.res.headers.append("vary", "Accept-Language, Cookie");
   const chosen = getCookie(event, LOCALE_COOKIE);

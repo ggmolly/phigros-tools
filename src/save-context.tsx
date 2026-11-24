@@ -141,12 +141,14 @@ export function SaveProvider({ children, home }: { children: React.ReactNode; ho
       .catch((error) => say(`✗ ${t.save.storageUnavailable(message(error))}`))
       .finally(() => setStorageReady(true));
     // a Phigros++ player signed in before the cookie existed gets it, their save comes from the profile's stream
-    void listCredentials().then(async (list) => {
-      const signedIn = list.find((c) => c.signer);
-      // a cookie whose key this browser no longer has is forgotten too
-      if (!signedIn && home) await fetch("/api/session", { method: "DELETE" });
-      if (signedIn && home?.id !== signedIn.playerId) await startSession(signedIn);
-    });
+    void listCredentials()
+      .then(async (list) => {
+        const signedIn = list.find((c) => c.signer);
+        // a cookie whose key this browser no longer has is forgotten too
+        if (!signedIn && home) await fetch("/api/session", { method: "DELETE" });
+        if (signedIn && home?.id !== signedIn.playerId) await startSession(signedIn);
+      })
+      .catch(() => undefined);
     return () => {
       clearTimeout(usbCloseTimer.current);
       usbController.current?.abort();

@@ -1,4 +1,4 @@
-import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, notFound, redirect, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { SiteHeader } from "../components/chrome";
 import { FriendBar } from "../components/friends";
@@ -14,7 +14,11 @@ import { topics } from "../topics";
 // players' pages change with every upload and unlisted ones must stay out of search results, so none are indexed. their
 // link previews show the player's card (server/card.tsx)
 export const Route = createFileRoute("/players/$id")({
-  loader: async ({ params }) => {
+  loader: async ({ params, parentMatchPromise }) => {
+    // a player opening their own page is sent to their Overview before it renders, as the effect below would do
+    // while the page is still hydrating
+    if (import.meta.env.SSR && (await parentMatchPromise).loaderData?.home?.id === params.id)
+      throw redirect({ to: "/", replace: true });
     const profile = await getProfile({ data: params.id });
     if (!profile) throw notFound();
     return profile;
