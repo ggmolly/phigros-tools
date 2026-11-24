@@ -15,7 +15,7 @@ import { flush, log } from "./log";
 import { refreshMods } from "./mods";
 import { playerId } from "./players";
 import { addAchievement, snapshotHistory } from "./profiles";
-import { announce, openQueue, VERIFY_QUEUE } from "./queue";
+import { announce, CATALOG_QUEUE, openQueue, VERIFY_QUEUE } from "./queue";
 import { chartPlace, countReplay, REPLAY_DIR } from "./replays";
 import { replays } from "./schema";
 
@@ -105,14 +105,33 @@ setInterval(hourly, HOUR);
 
 // the mod catalog follows its mods' releases and READMEs on GitHub, and what patches the ios game the releases of
 // Phigros++, whose notes are posted to Discord as they come out
-for (const [what, refresh] of [
-  ["mods", refreshMods],
-  ["phigrospp.ios", refreshIos],
-  ["releases", announceReleases],
-] as const) {
-  const follow = () => refresh().catch((error) => log.warn("refresh.failed", { what, error }));
-  void follow();
-  setInterval(follow, 900_000);
+const follow = (what: string, refresh: () => Promise<unknown>) => () =>
+  refresh().catch((error) => log.warn("refresh.failed", { what, error }));
+let reading: Promise<unknown> | undefined;
+const mods = () => (reading ??= follow("mods", refreshMods)().finally(() => (reading = undefined)));
+for (const run of [
+  mods,
+  follow("phigrospp.ios", refreshIos),
+  follow("releases", announceReleases),
+]) {
+  void run();
+  setInterval(run, 900_000);
+}
+
+// the catalog is also read when asked (POST /api/catalog, once a mod's release is out), at most once a minute: an
+// ask within the minute is answered at its end
+let asked = 0;
+let soon: ReturnType<typeof setTimeout> | undefined;
+function ask() {
+  if (soon) return;
+  soon = setTimeout(
+    () => {
+      soon = undefined;
+      asked = Date.now();
+      void mods();
+    },
+    Math.max(0, asked + 60_000 - Date.now()),
+  );
 }
 
 const channel = await openQueue();
@@ -123,6 +142,11 @@ channel.on("close", async () => {
   process.exit(1);
 });
 await channel.prefetch(1);
+await channel.consume(CATALOG_QUEUE, (message) => {
+  if (!message) return;
+  channel.ack(message);
+  ask();
+});
 // what was uploaded while no worker ran, then what comes
 const pending = await db
   .select({ sha256: replays.sha256 })

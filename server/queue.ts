@@ -4,6 +4,8 @@ import { log } from "./log";
 
 /** The queue of uploaded replays waiting to be judged (server/worker.ts), by their sha256. */
 export const VERIFY_QUEUE = "replays.verify";
+/** Asks for the mod catalog to be read again now (server/mods.ts), as a mod's release came out. */
+export const CATALOG_QUEUE = "catalog.refresh";
 /** What changed, from the server or the worker, for the pages following it (server/live.ts). */
 export const EVENTS = "events";
 const URL = process.env.AMQP_URL ?? "amqp://localhost";
@@ -20,6 +22,7 @@ export function openQueue(): Promise<ConfirmChannel> {
     })
     .then(async (opened) => {
       await opened.assertQueue(VERIFY_QUEUE, { durable: true });
+      await opened.assertQueue(CATALOG_QUEUE);
       await opened.assertExchange(EVENTS, "fanout", { durable: false });
       opened.on("close", () => {
         channel = undefined;
@@ -43,6 +46,15 @@ export async function queueVerify(sha256: string) {
     await opened.waitForConfirms();
   } catch (error) {
     log.error("queue.verify.failed", { sha256, error });
+  }
+}
+
+/** Asks the worker to read the mod catalog again. A lost ask only waits for its next quarter hour. */
+export async function queueCatalog() {
+  try {
+    (await openQueue()).sendToQueue(CATALOG_QUEUE, Buffer.from(""));
+  } catch (error) {
+    log.error("queue.catalog.failed", { error });
   }
 }
 
