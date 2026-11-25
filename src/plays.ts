@@ -1,5 +1,4 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getRequestHeader } from "@tanstack/react-start/server";
 import { serverFetch } from "nitro/app";
 import { game } from "./game";
 import type { Role } from "./roles";
@@ -171,10 +170,8 @@ export const PLAYS_PAGE = 50;
 export const CARDS = { player: { width: 1600, height: 900 }, replay: { width: 1200, height: 630 } };
 
 // the API read inside the server, during the server render too, so link previews show what the page does
-async function api<T>(path: string): Promise<T | null> {
-  const response = await serverFetch(path, {
-    headers: { cookie: getRequestHeader("cookie") ?? "" },
-  });
+async function api<T>(path: string, init?: RequestInit): Promise<T | null> {
+  const response = await serverFetch(path, init);
   return response.ok ? response.json() : null;
 }
 
@@ -207,20 +204,19 @@ export const boardOf = (search: { verified?: boolean; mods?: boolean }): Board =
   search.mods ? 2 : search.verified ? 1 : 0;
 
 // a ranking always answers, nothing back is the server failing. q searches the players
-async function ranking<T>(path: string, page: number, board: Board, q = ""): Promise<T> {
+export async function ranking<T>(
+  path: string,
+  page: number,
+  board: Board,
+  q = "",
+  init?: RequestInit,
+): Promise<T> {
   const query = new URLSearchParams({ page: String(page), q });
   if (board) query.set(board === 2 ? "mods" : "verified", "1");
-  const data = await api<T>(`${path}?${query}`);
+  const data = await api<T>(`${path}?${query}`, init);
   if (!data) throw new Error(`${path} failed`);
   return data;
 }
-
-/** One page of the players by RKS, searched by name or name#0042. */
-export const getPlayerRanking = createServerFn({ method: "GET" })
-  .validator((search: { page: number; q: string; verified: boolean }) => search)
-  .handler(({ data }) =>
-    ranking<PlayerRanking>("/api/players", data.page, data.verified ? 1 : 0, data.q),
-  );
 
 /** Every chart with plays, most players first. */
 export const getChartCounts = createServerFn({ method: "GET" })

@@ -3,8 +3,9 @@ import { Arrow } from "../components/arrow";
 import { Pager, Place, PlayerTag } from "../components/plays";
 import { Avatar } from "../components/primitives";
 import { useT } from "../i18n";
+import { getPlayerRanking } from "../leaderboard";
 import { useLiveReload } from "../live";
-import { getPlayerRanking, PLAYS_PAGE } from "../plays";
+import { PLAYS_PAGE } from "../plays";
 import { topics } from "../topics";
 
 export const Route = createFileRoute("/leaderboard/")({
