@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { getRequestHeader } from "@tanstack/react-start/server";
 import { serverFetch } from "nitro/app";
 import { game } from "./game";
 import type { Role } from "./roles";
@@ -81,6 +82,8 @@ export interface PlayerRank {
   rank: number;
   player: PlayerName;
   rks: number;
+  /** Set for admins only, who see the players hidden from the leaderboards. */
+  unlisted?: true;
 }
 
 export interface PlayerRanking {
@@ -169,7 +172,9 @@ export const CARDS = { player: { width: 1600, height: 900 }, replay: { width: 12
 
 // the API read inside the server, during the server render too, so link previews show what the page does
 async function api<T>(path: string): Promise<T | null> {
-  const response = await serverFetch(path);
+  const response = await serverFetch(path, {
+    headers: { cookie: getRequestHeader("cookie") ?? "" },
+  });
   return response.ok ? response.json() : null;
 }
 

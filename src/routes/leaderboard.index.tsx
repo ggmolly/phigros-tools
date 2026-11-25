@@ -52,9 +52,13 @@ function Players() {
       </div>
       {podium.length > 0 && (
         <ol className="podium">
-          {podium.map(({ rank, player, rks }) => (
+          {podium.map(({ rank, player, rks, unlisted }) => (
             <li key={player.id}>
-              <Link to="/players/$id" params={{ id: player.id }} className="podium-card arrow-link">
+              <Link
+                to="/players/$id"
+                params={{ id: player.id }}
+                className={`podium-card arrow-link${unlisted ? " unlisted" : ""}`}
+              >
                 <span className="podium-place">
                   <b>{rank}</b>
                 </span>
@@ -63,6 +67,7 @@ function Players() {
                   {player.name}
                   <span className="meta">#{String(player.number).padStart(4, "0")}</span>
                 </span>
+                {unlisted && <Unlisted />}
                 <span className="podium-rks">{rks.toFixed(2)}</span>
                 <Arrow />
               </Link>
@@ -84,10 +89,10 @@ function Players() {
             </thead>
             <tbody>
               {rest.map((player) => (
-                <tr key={player.player.id}>
+                <tr key={player.player.id} className={player.unlisted && "unlisted"}>
                   <Place rank={player.rank} />
                   <td>
-                    <PlayerTag player={player.player} />
+                    <PlayerTag player={player.player}>{player.unlisted && <Unlisted />}</PlayerTag>
                   </td>
                   <td className="num">{player.rks.toFixed(2)}</td>
                 </tr>
@@ -103,3 +108,6 @@ function Players() {
     </section>
   );
 }
+
+// only admins see unlisted players, and the admin pages are in English only
+const Unlisted = () => <span className="status">Unlisted</span>;

@@ -17,10 +17,16 @@ import { SESSION, sessionPlayer } from "./session";
  * there were nothing here.
  */
 
+/** Whether the signed-in player has the role. */
+export async function holds(event: H3Event, role: Role = "admin") {
+  const who = await sessionPlayer(getCookie(event, SESSION));
+  return who && rolesOf(who.key).includes(role) ? who : undefined;
+}
+
 /** The signed-in player when they have the role, a 404 otherwise. */
 export async function allowed(event: H3Event, role: Role = "admin") {
-  const who = await sessionPlayer(getCookie(event, SESSION));
-  if (!who || !rolesOf(who.key).includes(role)) throw HTTPError.status(404);
+  const who = await holds(event, role);
+  if (!who) throw HTTPError.status(404);
   return who;
 }
 

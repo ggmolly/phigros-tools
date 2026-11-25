@@ -306,32 +306,37 @@ const RKS = [
   { rks: players.rks_verified, at: players.rks_verified_at },
 ];
 
-/** The listed players with their rank by the scope's RKS, the earliest to reach it first on a tie. */
-export function ranked(scope: Scope) {
+/** The listed players (or everyone) with their rank by the scope's RKS, the earliest to reach it first on a tie. */
+export function ranked(scope: Scope, everyone = false) {
   const { rks, at } = RKS[scope]!;
   return db
     .select({
       key: players.key,
       fold: players.fold,
       ...NAME,
+      unlisted: players.unlisted,
       rks: sql<number>`${rks}`.as("rks"),
       rank: sql<number>`(row_number() over (order by ${rks} desc, ${at}))::int`.as("rank"),
     })
     .from(players)
-    .where(and(gt(rks, 0), listed))
+    .where(and(gt(rks, 0), everyone ? undefined : listed))
     .as("ranked");
 }
 
-/** Players by RKS, those matching a search if there's one: part of the name, then "#0042" for a number. */
+/**
+ * Players by RKS, those matching a search if there's one: part of the name, then "#0042" for a number. Admins see
+ * everyone, the unlisted said so.
+ */
 export async function playerRanking(
   scope: Scope,
   limit: number,
   offset: number,
   search = "",
+  everyone = false,
 ): Promise<PlayerRanking> {
   const [name = "", number = ""] = search.trim().split("#");
   const wanted = Number.parseInt(number, 10) || 0;
-  const all = ranked(scope);
+  const all = ranked(scope, everyone);
   const found = and(
     like(all.fold, `%${fold(name).replace(/[\\%_]/g, "\\$&")}%`),
     wanted ? eq(all.number, wanted) : undefined,
@@ -344,10 +349,11 @@ export async function playerRanking(
     .limit(limit)
     .offset(offset);
   const [total] = await db.select({ count: count() }).from(all).where(found);
-  const listing = rows.map(({ rank, rks, id, name, number, avatar }) => ({
+  const listing = rows.map(({ rank, rks, id, name, number, avatar, unlisted }) => ({
     rank,
     player: { id, name, number, avatar },
     rks,
+    ...(unlisted && { unlisted }),
   }));
   return { count: total!.count, players: listing };
 }

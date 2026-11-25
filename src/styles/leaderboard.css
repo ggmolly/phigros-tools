@@ -221,6 +221,10 @@ main > .seg {
   height: 1.75rem;
   flex: none;
 }
+/* players hidden from the leaderboards, only admins see them */
+.unlisted {
+  opacity: 0.55;
+}
 
 /* the song a page is about: its cover sits left of the heading's lines, inside the title's link */
 .song-heading {
