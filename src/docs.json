@@ -16679,7 +16679,14 @@
      "kind": "text",
      "spans": [
       {
-       "text": "Puts the song being played back at its start in place, every note unjudged and nothing scored, the music waiting like a fresh start."
+       "text": "Puts the song being played back at its start in place, every note unjudged and nothing scored, the music waiting like a fresh start. In Challenge Mode the run starts again from its first song instead. Returns whether it could: not while "
+      },
+      {
+       "code": true,
+       "text": "phigrospp.pausing()"
+      },
+      {
+       "text": " is false nor in the chapter 9 secret challenge, which the game never retries."
       }
      ]
     },
@@ -16687,6 +16694,18 @@
      "kind": "code",
      "text": "button(\"Restart\", phigrospp.restart)\non(\"restart\", function() print(\"again\") end)",
      "lang": "lua"
+    },
+    {
+     "kind": "text",
+     "spans": [
+      {
+       "text": "Returns "
+      },
+      {
+       "code": true,
+       "text": "boolean"
+      }
+     ]
     },
     {
      "kind": "heading",
