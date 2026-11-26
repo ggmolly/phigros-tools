@@ -1949,7 +1949,7 @@
      "depth": 0,
      "spans": [
       {
-       "text": "The title, the artist, the illustrator, and every level's difficulty and charter are required: a song without them is an error. So is a key the chapter doesn't take, a typo is reported at load instead of ignored."
+       "text": "The title, the artist, the illustrator, and every level's difficulty (except SP's) and charter are required: a song without them is an error. So is a key the chapter doesn't take, a typo is reported at load instead of ignored."
       }
      ]
     },
@@ -2037,6 +2037,23 @@
      "spans": [
       {
        "text": "A song has any of EZ, HD, IN and AT: an AT-only song shows a single AT level."
+      }
+     ]
+    },
+    {
+     "kind": "item",
+     "mark": "•",
+     "depth": 0,
+     "spans": [
+      {
+       "text": "SP is for April Fools charts like the game's own: it needs no difficulty and shows \"?\" as its level ("
+      },
+      {
+       "code": true,
+       "text": "SP = { charter = \"Me\" }"
+      },
+      {
+       "text": "). Give it as the song's only level, as the game did."
       }
      ]
     },
