@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef } from "react";
 import { catalogSong } from "../catalog";
 import { useFormat, useT } from "../i18n";
 import { totalOf } from "../modifiers";
@@ -98,9 +99,35 @@ function Player({ player, host }: { player: PlayerName; host?: boolean }) {
   );
 }
 
+const SLIDE = { duration: 500, easing: "cubic-bezier(0.85, 0, 0.15, 1)" }; // --circ of motion.css
+
+/**
+ * A table body whose rows slide to their new place when `order` changes, the ones going up lit on their way. Each
+ * row is told apart by its data-key.
+ */
+function useSlide(order: string) {
+  const body = useRef<HTMLTableSectionElement>(null);
+  const tops = useRef(new Map<string, number>());
+  // biome-ignore lint/correctness/useExhaustiveDependencies: the rows are measured again when their order changes
+  useLayoutEffect(() => {
+    const before = tops.current;
+    tops.current = new Map();
+    const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    for (const row of body.current?.rows ?? []) {
+      const key = row.dataset.key ?? "";
+      tops.current.set(key, row.offsetTop);
+      const moved = (before.get(key) ?? row.offsetTop) - row.offsetTop;
+      if (!moved || still) continue;
+      const lit = moved > 0 ? [{ background: "rgb(255 255 255 / 0.12)" }] : [];
+      row.animate([{ translate: `0 ${moved}px` }, ...lit, { translate: "0 0" }], SLIDE);
+    }
+  }, [order]);
+  return body;
+}
+
 /**
  * An open room: the chart its host picked, then its players, spectators grayed. In the lobby they say whether they're
- * ready, during a match they're ranked by the score they have so far, and one watching the room picks whose play shows.
+ * ready, during a match they're ranked by the total they have so far, and one watching the room picks whose play shows.
  */
 export function Lobby({
   room,
@@ -113,7 +140,10 @@ export function Lobby({
 }) {
   const t = useT();
   const picks = room.playing && onFollow;
-  const players = room.playing ? room.players.toSorted((a, b) => b.score - a.score) : room.players;
+  const players = room.playing
+    ? room.players.toSorted((a, b) => totalOf(b.score, b.mods) - totalOf(a.score, a.mods))
+    : room.players;
+  const rows = useSlide(players.map((seat) => seat.player.id).join());
   return (
     <section className="panel room-live">
       <div className="panel-head">
@@ -138,7 +168,7 @@ export function Lobby({
         ) : (
           <Headings names={[t.song.player, ""]} text={1} />
         )}
-        <tbody>
+        <tbody ref={rows}>
           {players.map((seat, index) => {
             const host = seat.player.id === room.host;
             // in the match, or out of it with the score they left it with
@@ -149,7 +179,11 @@ export function Lobby({
                 ? t.rooms.waiting
                 : t.rooms.missing;
             return (
-              <tr key={seat.player.id} className={seat.watching ? "room-spectator" : undefined}>
+              <tr
+                key={seat.player.id}
+                data-key={seat.player.id}
+                className={seat.watching ? "room-spectator" : undefined}
+              >
                 {room.playing && <Place rank={index + 1} />}
                 <Player player={seat.player} host={host} />
                 {room.playing ? (

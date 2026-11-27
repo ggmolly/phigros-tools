@@ -130,8 +130,9 @@
 .room-spectator {
   opacity: 0.5;
 }
-/* rows change places as scores come, and a row that moved would slide in again (motion.css) */
-.room-live tbody tr {
+/* rows change places as scores come, sliding there (useSlide in components/rooms.tsx): one that moved would
+ * otherwise enter again, so this outweighs the entrance's own selector (motion.css) */
+.room-page .room-live tbody tr:nth-child(n) {
   animation: none;
 }
 .room-page .end {
