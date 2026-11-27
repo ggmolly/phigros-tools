@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Saira">
+<defs>
+<linearGradient id="shade" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a0d1c" stop-opacity="0.62"/><stop offset="1" stop-color="#05070d" stop-opacity="0.86"/></linearGradient>
+<linearGradient id="line" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".2" stop-color="#fff"/><stop offset=".8" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<filter id="blur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="34"/></filter>
+<filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14"/></filter>
+</defs>
+<image href="data/game/covers/Ark.kanoryo.avif" x="-80" y="-45" width="1760" height="990" preserveAspectRatio="xMidYMid slice" filter="url(#blur)"/>
+<rect width="1600" height="900" fill="url(#shade)"/>
+<g transform="rotate(-6 800 660)"><rect x="-200" y="654" width="2000" height="12" fill="url(#line)" opacity=".45" filter="url(#soft)"/><rect x="-200" y="658" width="2000" height="4" fill="url(#line)" opacity=".7"/></g>
+<image href="public/player/tap.png" x="1160" y="97.9" width="240" height="24.3" transform="rotate(-6 1280.0 110)"/>
+<image href="public/player/drag.png" x="120" y="793.3" width="220" height="13.3" transform="rotate(-6 230.0 800)"/>
+<text x="300.0" y="220.0" font-size="120" font-weight="500" fill="#fff" text-anchor="start" >Phigros</text>
+<text x="672.0" y="170.0" font-size="64" font-weight="600" fill="#ff9ad5" text-anchor="start" >++</text>
+<text x="306.0" y="290.0" font-size="44" font-weight="300" fill="#fff" text-anchor="start" fill-opacity=".9">runs on the latest game</text>
+<polygon points="355.0,380.0 715.0,380.0 690.0,480.0 330.0,480.0" fill="#000" opacity=".8"/>
+<text x="370.0" y="443.0" font-size="38" font-weight="400" fill="#fff" text-anchor="start" >Google Play</text>
+<polygon points="715.0,380.0 1015.0,380.0 990.0,480.0 690.0,480.0" fill="#fff"/>
+<text x="852.0" y="448.0" font-size="52" font-weight="600" fill="#0b0613" text-anchor="middle" >4.1.0.1</text>
+<polygon points="322.5,510.0 682.5,510.0 657.5,610.0 297.5,610.0" fill="#000" opacity=".8"/>
+<text x="337.5" y="573.0" font-size="38" font-weight="400" fill="#fff" text-anchor="start" >App Store</text>
+<polygon points="682.5,510.0 982.5,510.0 957.5,610.0 657.5,610.0" fill="#fff"/>
+<text x="819.5" y="578.0" font-size="52" font-weight="600" fill="#0b0613" text-anchor="middle" >4.0.5</text>
+</svg>

@@ -1,5 +1,115 @@
 [
  {
+  "slug": "phigros-4-1-0-1",
+  "title": "Phigros++ runs on Phigros 4.1.0.1",
+  "date": "2026-11-27",
+  "phigrospp": "0.5.0-beta.2",
+  "summary": "Phigros++ runs on the newest Phigros from both stores: 4.1.0.1 on Google Play and 4.0.5 on the App Store, which is the same game.",
+  "shown": {
+   "poster": "3979c9ef8d05.jpg",
+   "width": 1280,
+   "height": 720,
+   "kind": "media",
+   "src": "cover.svg"
+  },
+  "blocks": [
+   {
+    "kind": "text",
+    "spans": [
+     {
+      "text": "Phigros++ runs on the newest Phigros from both stores: 4.1.0.1 on Google Play and 4.0.5 on the App Store, which is the same game."
+     }
+    ]
+   },
+   {
+    "poster": "3979c9ef8d05.jpg",
+    "width": 1280,
+    "height": 720,
+    "kind": "media",
+    "src": "cover.svg"
+   },
+   {
+    "kind": "heading",
+    "level": 2,
+    "spans": [
+     {
+      "text": "On Android"
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "Update Phigros to 4.1.0.1 from the Play Store, then open the Phigros++ installer and tap "
+     },
+     {
+      "bold": true,
+      "text": "Update"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "Phigros 4.0.1.2 and 4.1.0 keep running Phigros++ if you haven't updated the game yet."
+     }
+    ]
+   },
+   {
+    "kind": "heading",
+    "level": 2,
+    "spans": [
+     {
+      "text": "On iPhone and iPad"
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "Patch your decrypted copy of Phigros 4.0.5 on the "
+     },
+     {
+      "link": "https://phigros.tools/phigrospp?device=ios",
+      "text": "Phigros++ page"
+     },
+     {
+      "text": ", then install the new "
+     },
+     {
+      "code": true,
+      "text": "Phigros++.ipa"
+     },
+     {
+      "text": " with SideStore or AltStore as before."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "Phigros 4.0.3 and 4.0.4 keep running Phigros++ if you haven't updated the game yet."
+     }
+    ]
+   }
+  ]
+ },
+ {
   "slug": "sp-levels",
   "title": "SP levels, and a new patch for iPhone and iPad",
   "date": "2026-11-27",
