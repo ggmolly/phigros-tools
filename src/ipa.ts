@@ -613,6 +613,16 @@ function prepatch(data: Bytes, { segments, symbols }: Macho, methods: [number, s
   };
 }
 
+/** The game's methods (Class$$Method) the sources of a pack may hook in an IPA, as patch() finds them. */
+export async function hookable(ipa: Blob, packed: Bytes) {
+  const entries = await directory(ipa);
+  const file = (name: string) => read(ipa, entries.find((entry) => entry.name === name)!);
+  const unity = await file(UNITY);
+  const { methods } = il2cpp(unity, macho(unity), await file(METADATA));
+  const { found } = hooked(methods(), JSON.parse(text.decode(unpack(packed).files.get("hooks"))));
+  return found.map(([, name]) => name);
+}
+
 /** The parts of the patched IPA, to make a Blob of: what's new, and slices of the IPA for the rest. */
 export async function patch(ipa: Blob, packed: Bytes, icon: Icon, tell: Tell): Promise<BlobPart[]> {
   const { version, games, files } = unpack(packed);
