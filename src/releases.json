@@ -1,5 +1,122 @@
 [
  {
+  "slug": "sp-levels",
+  "title": "SP levels, and a new patch for iPhone and iPad",
+  "date": "2026-11-27",
+  "phigrospp": "0.4.0-beta.1",
+  "summary": "On iPhone and iPad, this update needs the game patched again: if you updated in the game, Phigros++ is gone until you patch it on the Phigros++ page. On Android, it updates in the game as usual.",
+  "shown": {
+   "poster": "b25069e0fad1.jpg",
+   "width": 1280,
+   "height": 720,
+   "kind": "media",
+   "src": "cover.svg"
+  },
+  "blocks": [
+   {
+    "kind": "text",
+    "spans": [
+     {
+      "text": "On iPhone and iPad, this update needs the game patched again: if you updated in the game, Phigros++ is gone until you patch it on the "
+     },
+     {
+      "link": "https://phigros.tools/phigrospp?device=ios",
+      "text": "Phigros++ page"
+     },
+     {
+      "text": ". On Android, it updates in the game as usual."
+     }
+    ]
+   },
+   {
+    "poster": "b25069e0fad1.jpg",
+    "width": 1280,
+    "height": 720,
+    "kind": "media",
+    "src": "cover.svg"
+   },
+   {
+    "kind": "heading",
+    "level": 2,
+    "spans": [
+     {
+      "text": "On iPhone and iPad"
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "Patch your copy of Phigros again on the "
+     },
+     {
+      "link": "https://phigros.tools/phigrospp?device=ios",
+      "text": "Phigros++ page"
+     },
+     {
+      "text": ", then install the new "
+     },
+     {
+      "code": true,
+      "text": "Phigros++.ipa"
+     },
+     {
+      "text": " with SideStore or AltStore as before."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "If you haven't updated in the game yet, skip the update and patch the game instead."
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "This release hooks parts of the game your current patch doesn't cover, so the update alone left the game without Phigros++."
+     }
+    ]
+   },
+   {
+    "kind": "heading",
+    "level": 2,
+    "spans": [
+     {
+      "text": "SP levels"
+     }
+    ]
+   },
+   {
+    "kind": "item",
+    "mark": "•",
+    "depth": 0,
+    "spans": [
+     {
+      "text": "A custom song can have an SP level, shown as "
+     },
+     {
+      "bold": true,
+      "text": "?"
+     },
+     {
+      "text": " on the song list and the level bar, like the game's April Fools charts."
+     }
+    ]
+   }
+  ]
+ },
+ {
   "slug": "friends-and-queues",
   "title": "See what your friends are playing",
   "date": "2026-11-23",
