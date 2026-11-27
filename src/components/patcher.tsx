@@ -101,11 +101,12 @@ function Table({ name, rows }: { name: string; rows: (string | number)[][] }) {
 function Found({ run: { file, log, report: r } }: { run: Run }) {
   const { number } = useFormat();
   const stubbed = r.hooks?.filter(({ stub }) => stub) ?? [];
+  const fit = r.stubs?.reduce((sum, [start, , end]) => sum + Math.floor((end - start) / 24), 0) ?? 0;
   // what Phigros++ adds to a segment, at its start and at its end
   const added: Record<string, [start?: string | false, end?: string | false]> = {
     __TEXT: [
       r.load !== undefined && `LC_LOAD_DYLIB at ${hex(r.load)}`,
-      r.stubs && `stubs from ${hex(r.stubs[0])}`,
+      r.stubs && `stubs from ${hex(r.stubs[0][0])}`,
     ],
     __DATA: [false, r.slots && `slots from ${hex(r.slots[0])}`],
   };
@@ -242,13 +243,16 @@ function Found({ run: { file, log, report: r } }: { run: Run }) {
               ],
               [
                 "stubs",
-                `${hex(r.stubs[0])} to ${hex(r.stubs[1])}, ${stubbed.length} of the ${Math.floor((r.stubs[2] - r.stubs[0]) / 24)} that fit`,
+                `${r.stubs
+                  .filter(([start, used]) => used > start)
+                  .map(([start, used]) => `${hex(start)} to ${hex(used)}`)
+                  .join(" and ")}, ${stubbed.length} of the ${fit} that fit`,
               ],
               ["slots", `${hex(r.slots[0])} to ${hex(r.slots[1])}`],
             ]}
           />
           <div className="patcher-stubs" aria-hidden="true">
-            {Array.from({ length: Math.floor((r.stubs[2] - r.stubs[0]) / 24) }, (_, i) => i).map(
+            {Array.from({ length: fit }, (_, i) => i).map(
               (i) => (
                 <i
                   key={i}

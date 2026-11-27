@@ -47,8 +47,8 @@ export interface Report {
   modules: Module[];
   methods: number;
   hooks: Hook[];
-  /** Where the stubs and the slots may go, and where the last one ends. */
-  stubs: [start: number, used: number, end: number];
+  /** Where the stubs (in two places) and the slots may go, and where the last one ends. */
+  stubs: [start: number, used: number, end: number][];
   slots: [start: number, used: number, end: number];
   dropped: string[];
   size: number;
@@ -580,10 +580,17 @@ function prepatch(data: Bytes, { segments, symbols }: Macho, methods: [number, s
     return { ...segment, used: end, end: segment.vmaddr + segment.vmsize };
   });
   if (code.vmaddr || code.fileoff) throw new Error("__TEXT doesn't start the file");
-  // the free end of __TEXT, zeros in the file, and of __DATA, zeros in memory
-  let [stub, slot] = [Math.ceil(code.used / 16) * 16, Math.ceil(rw.used / 8) * 8];
-  const [stubs, slots] = [stub, slot];
-  if (data.subarray(stub, code.end).some(Boolean)) throw new Error("the end of __TEXT isn't free");
+  // stubs go in the zeros at the end of __TEXT, then in those after the load commands, past room for the ones a
+  // signing tool may add. slots go in the free end of __DATA, zeros in memory
+  const first = Math.min(...code.sections.map(({ addr }) => addr));
+  const stubs = [
+    [code.used, code.end],
+    [32 + d.getUint32(20, true) + 1024, first],
+  ].map(([start, end]) => [Math.ceil(start / 16) * 16, Math.ceil(start / 16) * 16, end]);
+  for (const [start, , end] of stubs)
+    if (data.subarray(start, end).some(Boolean)) throw new Error(`${hex(start)} to ${hex(end)} isn't free`);
+  let slot = Math.ceil(rw.used / 8) * 8;
+  const slots = slot;
   const [symoff, nsyms, stroff] = [8, 12, 16].map((field) => d.getUint32(symbols + field, true));
   const init = Array.from({ length: nsyms }, (_, i) => symoff + 16 * i).find(
     (symbol) => cstring(data, stroff + d.getUint32(symbol, true)) === "_il2cpp_init",
@@ -591,24 +598,26 @@ function prepatch(data: Bytes, { segments, symbols }: Macho, methods: [number, s
   const hooks: Hook[] = [];
   for (const [at, name] of [[u64(d, init + 8), "il2cpp_init"] as const, ...methods]) {
     if (at >= code.used) throw new Error(`${hex(at)} isn't code`);
+    const free = stubs.find(([, used, end]) => used + 24 <= end);
+    if (!free || slot + 8 > rw.end) throw new Error("no room for more hooks in UnityFramework (about 900)");
+    const stub = free[1];
     const moved = relocated(d.getUint32(at, true), at, stub + 16);
     if (moved === undefined) {
       hooks.push({ name, at, stub: 0, slot: 0 });
       continue;
     }
-    if (stub + 24 > code.end || slot + 8 > rw.end)
-      throw new Error("no room for more hooks at the end of UnityFramework's __TEXT (about 630)");
     // adrp x16, slot / ldr x16, [x16, slot] / cbz x16, +8 / br x16 / the method's first instruction / b back
     const load = 0xf9400210 | (((slot & 0xfff) >> 3) << 10);
     const back = B | (((at + 4 - stub - 20) >> 2) & 0x3ffffff);
     data.set(pack("IIIIII", adrp(16, stub, slot), load, 0xb4000050, 0xd61f0200, moved, back), stub);
     d.setUint32(at, B | (((stub - at) >> 2) & 0x3ffffff), true);
     hooks.push({ name, at, stub, slot });
-    [stub, slot] = [stub + 24, slot + 8];
+    free[1] += 24;
+    slot += 8;
   }
   return {
     hooks,
-    stubs: [stubs, stub, code.end] as Report["stubs"],
+    stubs: stubs as Report["stubs"],
     slots: [slots, slot, rw.end] as Report["slots"],
   };
 }
