@@ -111,8 +111,8 @@ let reading: Promise<unknown> | undefined;
 const mods = () => (reading ??= follow("mods", refreshMods)().finally(() => (reading = undefined)));
 for (const run of [
   mods,
-  follow("phigrospp.ios", refreshIos),
-  follow("releases", announceReleases),
+  // a note waits for its release, read in the pack, so a new pack is kept before its note is posted
+  () => follow("phigrospp.ios", refreshIos)().then(follow("releases", announceReleases)),
 ]) {
   void run();
   setInterval(run, 900_000);
