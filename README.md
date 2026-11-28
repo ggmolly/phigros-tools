@@ -135,7 +135,7 @@ Both write one JSON line per event to stdout (`server/log.ts`): each request wit
 happens in rooms and between friends, the replays judged, and the errors pages report. A line names a signed-in
 player by their public id at most, never an address, a request's body, a key, a password or a chat line. With
 `LOGS_URL` naming a [VictoriaLogs](https://docs.victoriametrics.com/victorialogs/), the lines are kept there, 90 days
-on phigros.tools, and `/admin` shows them with the pages seen to the players `admins` names in `data/config.toml`.
+on phigros.tools.
 
 ## Release notes
 
