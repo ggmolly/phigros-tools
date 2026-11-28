@@ -1,9 +1,9 @@
-import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { useState } from "react";
 import * as v from "valibot";
 import { catalogSong, searchFold } from "../catalog";
 import { SiteHeader } from "../components/chrome";
-import { ChartLink, RankingSearch, ScopeSwitch } from "../components/plays";
+import { ChartLink, PlaysFrom, RankingSearch, ScopeSwitch } from "../components/plays";
 import { Difficulty } from "../components/primitives";
 import { useFormat, useT } from "../i18n";
 import { getChartCounts } from "../plays";
@@ -104,12 +104,7 @@ function LeaderboardPage() {
         <div className="leaderboard-head">
           <div>
             <h1>{t.tabs.leaderboard}</h1>
-            <p className="ppp-cta">
-              {t.ppp.leaderboardCta}{" "}
-              <Link to="/phigrospp" className="text-link">
-                {t.ppp.leaderboardJoin}
-              </Link>
-            </p>
+            <PlaysFrom />
           </div>
           <ScopeSwitch board={verified ? 1 : 0} />
         </div>

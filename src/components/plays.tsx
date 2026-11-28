@@ -145,6 +145,19 @@ export function PlayCells({ play }: { play: Play }) {
 }
 
 /** The headings of PlayCells, between those of the table's own columns. */
+/** Where the plays come from, and the way to have one's own among them. */
+export function PlaysFrom() {
+  const t = useT();
+  return (
+    <p className="ppp-cta">
+      {t.ppp.leaderboardCta}{" "}
+      <Link to="/phigrospp" className="text-link">
+        {t.ppp.leaderboardJoin}
+      </Link>
+    </p>
+  );
+}
+
 export function PlayHeadings({ before = [], after = [] }: { before?: string[]; after?: string[] }) {
   const t = useT();
   const names = [

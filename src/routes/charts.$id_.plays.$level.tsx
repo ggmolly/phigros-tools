@@ -6,6 +6,7 @@ import {
   Pager,
   PlayCells,
   PlayHeadings,
+  PlaysFrom,
   RankingSearch,
   ScopeSwitch,
   SongHeading,
@@ -102,6 +103,7 @@ function PlaysPage() {
             <h2 className="panel-title">{t.song.plays}</h2>
             <ScopeSwitch board={board} modifiers />
           </div>
+          <PlaysFrom />
           <div className="chart-stats-scroll">
             <table className="song-diff-table">
               <PlayHeadings after={[t.song.played, ""]} />

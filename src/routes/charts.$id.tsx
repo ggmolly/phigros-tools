@@ -10,7 +10,7 @@ import {
 import { type ChartStats, getSongDetails } from "../chartStats";
 import { Arrow } from "../components/arrow";
 import { SiteHeader } from "../components/chrome";
-import { PlayCells, PlayHeadings } from "../components/plays";
+import { PlayCells, PlayHeadings, PlaysFrom } from "../components/plays";
 import { Difficulty, Rank, score7 } from "../components/primitives";
 import { useT } from "../i18n";
 import type { Locale } from "../i18n/locales";
@@ -364,12 +364,21 @@ function SongCharts({ song }: { song: CatalogSong }) {
 
 function TopPlays({ id, tops }: { id: string; tops: { level: LevelName; plays: Play[] }[] }) {
   const t = useT();
-  if (!tops.some(({ plays }) => plays.length)) return null;
+  // a song nobody played yet says so, with the way to be its first
+  if (!tops.some(({ plays }) => plays.length))
+    return (
+      <section className="panel">
+        <h2 className="panel-title">{t.tabs.leaderboard}</h2>
+        <p className="meta">{t.song.noPlays}</p>
+        <PlaysFrom />
+      </section>
+    );
   return (
     <section className="panel">
       <div className="panel-head">
         <h2 className="panel-title">{t.tabs.leaderboard}</h2>
       </div>
+      <PlaysFrom />
       <div className="chart-stats-scroll">
         <table className="song-diff-table">
           <PlayHeadings before={[t.song.difficulty]} />
