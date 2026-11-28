@@ -267,6 +267,7 @@
   font-size: 1.625rem;
 }
 /* said whole: there's no page behind a cut one here */
-.home-adds .mod-text {
-  display: block;
+.home-adds .mods .mod-text {
+  -webkit-line-clamp: none;
+  line-clamp: none;
 }
