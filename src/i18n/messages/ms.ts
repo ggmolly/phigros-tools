@@ -563,6 +563,7 @@ export const ms = {
     install1: "Pasang Phigros dari Play Store.",
     install2:
       "Muat turun **phigrospp-installer.apk** daripada keluaran terkini pemasang dan bukanya.",
+    scan: "Imbas kod ini untuk membuka halaman ini di telefon atau tablet anda.",
     install3:
       "Benarkan pelayar atau app Fail anda memasang app tidak diketahui apabila Android bertanya. Pemasang meminta perkara yang sama untuk dirinya apabila anda mengetik Install.",
     ios1: "Dapatkan Phigros yang telah dinyahsulit, kerana salinan App Store disulitkan dan tidak boleh ditampal. Hanya peranti yang dapat membaca app yang sedang berjalan boleh menyahsulitnya: iPhone atau iPad yang di-jailbreak, peranti dengan TrollStore (TrollDecrypt boleh melakukannya), atau Mac Apple Silicon dengan SIP dimatikan.",

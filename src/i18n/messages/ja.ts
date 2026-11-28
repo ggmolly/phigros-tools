@@ -561,6 +561,7 @@ export const ja = {
     install1: "Play ストアから Phigros をインストールします。",
     install2:
       "インストーラーの最新リリースから **phigrospp-installer.apk** をダウンロードして開きます。",
+    scan: "このコードを読み取ると、スマートフォンやタブレットでこのページを開けます。",
     install3:
       "Android に聞かれたら、ブラウザか「ファイル」アプリに不明なアプリのインストールを許可します。Install をタップすると、インストーラーも自身について同じことを求めます。",
     ios1: "復号済みの Phigros を用意します。App Store のコピーは暗号化されていてパッチを当てられません。復号できるのは実行中のアプリを読み取れるデバイスだけです。脱獄した iPhone や iPad、TrollStore の入ったデバイス（TrollDecrypt で行えます）、または SIP をオフにした Apple シリコンの Mac です。",

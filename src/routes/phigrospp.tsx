@@ -1,25 +1,45 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useRef } from "react";
+import { type ReactNode, useEffect, useRef } from "react";
+import { encode } from "uqr";
 import { Arrow } from "../components/arrow";
 import { SiteHeader } from "../components/chrome";
+import { ModMedia } from "../components/mods";
 import { Patcher } from "../components/patcher";
 import { Question } from "../components/question";
 import { Rich, useT } from "../i18n";
-import { headT, pageLinks, pageMeta } from "../seo";
+import type { Media } from "../mods";
+import { getRelease } from "../releases";
+import { headT, localeUrl, pageLinks, pageMeta } from "../seo";
 
 const INSTALLER = "https://github.com/ggmolly/PhigrosPlusPlus-Installer/releases/latest";
 const SOURCE = "https://github.com/ggmolly/PhigrosPlusPlus";
 const SIDESTORE = "https://docs.sidestore.io/docs/installation/prerequisites";
 const DEVICES = ["android", "ios"] as const;
 
-// a step's bold words link to its href, and the game's IPA is patched under the one with the patcher
-type Step = { text: string; href?: string; patcher?: boolean };
+// a step's bold words link to its href, and what helps doing it stands under it
+type Step = { text: string; href?: string; under?: ReactNode };
+
+/** The address as a QR code, crisp SVG squares dark on a white tile, which scanners need whatever the theme. */
+function QrCode({ text }: { text: string }) {
+  const { data, size } = encode(text, { border: 2 });
+  const path = data
+    .flatMap((row, y) => row.map((dark, x) => (dark ? `M${x} ${y}h1v1h-1z` : "")))
+    .join("");
+  return (
+    <svg viewBox={`0 0 ${size} ${size}`} shapeRendering="crispEdges" aria-hidden="true">
+      <rect width={size} height={size} fill="#fff" />
+      <path d={path} fill="#000" />
+    </svg>
+  );
+}
 
 export const Route = createFileRoute("/phigrospp")({
   // the answer is the address, so each platform's steps can be linked
   validateSearch: (search): { device?: (typeof DEVICES)[number] } => ({
     device: DEVICES.find((device) => device === search.device),
   }),
+  // the release note that shows the game's Profile settings, where the last step happens
+  loader: () => getRelease({ data: "sync-and-profile" }),
   head: ({ match }) => {
     const { locale, t } = headT(match);
     return {
@@ -40,21 +60,39 @@ function PhigrosppPage() {
   const t = useT();
   const p = t.pppPage;
   const { device } = Route.useSearch();
+  const { i18n } = Route.useRouteContext();
   const android = device === "android";
+  const profile = Route.useLoaderData()?.note.blocks.find(
+    (block): block is Media => block.kind === "media" && block.src === "profile.webp",
+  );
+  const sync: Step = {
+    text: p.sync,
+    under: profile && <ModMedia {...profile} folder="/releases/" />,
+  };
   const steps: Step[] = android
     ? [
         { text: p.install1 },
-        { text: p.install2, href: `${INSTALLER}/download/phigrospp-installer.apk` },
+        {
+          text: p.install2,
+          href: `${INSTALLER}/download/phigrospp-installer.apk`,
+          // the installer runs on the phone: a computer's screen gets this page's address to scan
+          under: (
+            <p className="ppp-scan meta">
+              <QrCode text={`${localeUrl("/phigrospp", i18n.locale)}?device=android`} />
+              {p.scan}
+            </p>
+          ),
+        },
         { text: p.install3 },
         { text: p.install4 },
-        { text: p.sync },
+        sync,
       ]
     : [
         { text: p.ios1 },
-        { text: p.ios2, patcher: true },
+        { text: p.ios2, under: <Patcher /> },
         { text: p.ios3, href: SIDESTORE },
         { text: p.ios4 },
-        { text: p.sync },
+        sync,
       ];
   // the steps take the focus the answered tile had
   const flow = useRef<HTMLElement>(null);
@@ -95,12 +133,12 @@ function PhigrosppPage() {
                 <h2 tabIndex={-1}>{android ? p.install : p.iosTitle}</h2>
                 {android && <p className="meta">{p.downloadNote}</p>}
                 <ol className="ppp-steps">
-                  {steps.map(({ text, href, patcher }) => (
+                  {steps.map(({ text, href, under }) => (
                     <li key={text}>
                       <p>
                         <Rich text={text} href={href} />
                       </p>
-                      {patcher && <Patcher />}
+                      {under}
                     </li>
                   ))}
                 </ol>

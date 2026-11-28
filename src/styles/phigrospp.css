@@ -290,6 +290,28 @@
 .ppp-steps p {
   max-width: 52rem;
 }
+/* what helps doing a step stands under its text */
+.ppp-steps > li > :not(:first-child) {
+  grid-column: 2;
+}
+.ppp-steps .mod-media {
+  max-width: 34rem;
+}
+/* a screen with a mouse isn't the phone the installer runs on: only it shows the code to scan */
+.ppp-scan {
+  display: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .ppp-scan {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .ppp-scan svg {
+    flex: none;
+    width: 7rem;
+  }
+}
 /* the ios steps patch the game's ipa in the page: a box to drop it on, then what the patcher finds in it as it goes */
 .patcher {
   --added: #ff4fa8;

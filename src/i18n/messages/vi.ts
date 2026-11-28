@@ -557,6 +557,7 @@ export const vi = {
     install1: "Cài Phigros từ Play Store.",
     install2:
       "Tải **phigrospp-installer.apk** từ bản phát hành mới nhất của trình cài đặt rồi mở nó.",
+    scan: "Quét mã này để mở trang này trên điện thoại hoặc máy tính bảng của bạn.",
     install3:
       "Cho phép trình duyệt hoặc ứng dụng Tệp cài ứng dụng không rõ nguồn gốc khi Android hỏi. Trình cài đặt cũng sẽ hỏi như vậy cho chính nó khi bạn chạm Install.",
     ios1: "Lấy bản Phigros đã giải mã, vì bản trên App Store được mã hóa nên không thể vá. Chỉ thiết bị đọc được một ứng dụng đang chạy mới giải mã được: iPhone hoặc iPad đã jailbreak, thiết bị có TrollStore (TrollDecrypt làm việc này), hoặc máy Mac Apple Silicon đã tắt SIP.",

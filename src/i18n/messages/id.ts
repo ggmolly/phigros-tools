@@ -561,6 +561,7 @@ export const id = {
     install: "Cara Memasang",
     install1: "Pasang Phigros dari Play Store.",
     install2: "Unduh **phigrospp-installer.apk** dari rilis terbaru installer, lalu buka.",
+    scan: "Pindai kode ini untuk membuka halaman ini di ponsel atau tabletmu.",
     install3:
       "Izinkan browser atau app File menginstal aplikasi tak dikenal saat Android bertanya. Installer meminta hal yang sama untuk dirinya saat kamu mengetuk Install.",
     ios1: "Siapkan Phigros yang sudah didekripsi, karena salinan App Store terenkripsi dan tidak bisa ditambal. Hanya perangkat yang dapat membaca app yang sedang berjalan yang bisa mendekripsinya: iPhone atau iPad yang di-jailbreak, perangkat dengan TrollStore (TrollDecrypt bisa melakukannya), atau Mac Apple Silicon dengan SIP dimatikan.",

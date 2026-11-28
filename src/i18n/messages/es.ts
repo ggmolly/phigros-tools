@@ -558,6 +558,7 @@ export const es = {
     install: "Instálalo",
     install1: "Instala Phigros desde la Play Store.",
     install2: "Descarga **phigrospp-installer.apk** de la última versión del instalador y ábrelo.",
+    scan: "Escanea este código para abrir esta página en tu teléfono o tableta.",
     install3:
       "Permite que tu navegador o la app Archivos instale apps desconocidas cuando Android lo pida. El instalador pide lo mismo para sí cuando tocas Install.",
     ios1: "Consigue Phigros descifrado, ya que la copia de la App Store está cifrada y no se puede parchear. Solo la descifra un dispositivo capaz de leer una app en ejecución: un iPhone o iPad con jailbreak, uno con TrollStore (TrollDecrypt lo hace ahí) o un Mac con Apple Silicon y SIP desactivado.",

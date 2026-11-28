@@ -538,6 +538,7 @@ export const zhHant = {
     install: "安裝",
     install1: "從 Play Store 安裝 Phigros。",
     install2: "從安裝程式的最新版本發布中下載 **phigrospp-installer.apk** 並開啟。",
+    scan: "掃描此 QR Code，在手機或平板上開啟本頁面。",
     install3:
       "當 Android 詢問時，允許你的瀏覽器或「檔案」App 安裝未知的 App。點選 Install 時，安裝程式也會為自己請求同樣的權限。",
     ios1: "取得解密後的 Phigros，因為 App Store 的副本是加密的，無法修補。只有能讀取執行中 App 的裝置才能解密：越獄的 iPhone 或 iPad、裝有 TrollStore 的裝置（用 TrollDecrypt 即可），或關閉了 SIP 的 Apple 晶片 Mac。",

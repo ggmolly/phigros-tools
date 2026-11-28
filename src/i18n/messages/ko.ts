@@ -553,6 +553,7 @@ export const ko = {
     install: "설치하기",
     install1: "Play 스토어에서 Phigros를 설치하세요.",
     install2: "설치 프로그램의 최신 릴리스에서 **phigrospp-installer.apk**를 다운로드해 여세요.",
+    scan: "이 코드를 스캔하면 휴대폰이나 태블릿에서 이 페이지를 엽니다.",
     install3:
       "Android가 물으면 브라우저나 파일 앱이 출처를 알 수 없는 앱을 설치하도록 허용하세요. Install을 탭하면 설치 프로그램도 자신에 대해 같은 허용을 요청합니다.",
     ios1: "복호화된 Phigros를 준비하세요. App Store의 사본은 암호화되어 있어 패치할 수 없습니다. 실행 중인 앱을 읽을 수 있는 기기만 복호화할 수 있습니다: 탈옥한 iPhone이나 iPad, TrollStore가 있는 기기(TrollDecrypt로 가능), 또는 SIP를 끈 Apple Silicon Mac입니다.",
