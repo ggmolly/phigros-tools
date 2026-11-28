@@ -31,6 +31,12 @@ export interface Traffic {
   browsers: Top[];
   devices: Top[];
   bots: Top[];
+  /** The pages on the way to Phigros++ in order, a page of questions once per answer. */
+  way: Top[];
+  /** The profiles made over those days. */
+  profiles: number;
+  /** The installer's downloads since its first release, null when GitHub doesn't say. */
+  downloads: number | null;
 }
 
 /** What /admin opens with, null for anyone the server doesn't name an admin: the page then isn't there. */

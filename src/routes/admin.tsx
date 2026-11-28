@@ -196,6 +196,17 @@ function TrafficTab() {
           </>
         )}
       </section>
+      <section className="panel">
+        <h2 className="panel-title">On the Way to Phigros++</h2>
+        <Table
+          head={["", "Views", "Visitors"]}
+          rows={[
+            ...(data?.way ?? []).map((row) => [row.name, row.views, row.visitors]),
+            data && ["Profiles made", "", data.profiles],
+            data?.downloads != null && ["Installer downloads, all time", "", data.downloads],
+          ].map((row) => row || undefined)}
+        />
+      </section>
       <div className="admin-tops">
         {tops.map(([title, top]) => (
           <section className="panel" key={title}>

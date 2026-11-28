@@ -9,6 +9,7 @@ import {
 import type { CSSProperties } from "react";
 import { useEffect } from "react";
 import { Backdrop, SiteFooter, SiteHeader } from "../components/chrome";
+import { ASKING } from "../components/question";
 import { game } from "../game";
 import { getHome } from "../home";
 import { getTimeZone, I18nProvider, useT } from "../i18n";
@@ -24,6 +25,10 @@ import stylesheet from "../style.css?url";
 // our goal is just to know if we have users, we don't want to track them
 function Analytics() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const answers = useRouterState({
+    select: (s) =>
+      ASKING.some((page) => page === s.location.pathname) ? s.location.searchStr : "",
+  });
   useEffect(watchErrors, []);
   useEffect(() => {
     const ref = document.referrer;
@@ -35,9 +40,9 @@ function Analytics() {
       method: "POST",
       headers: { "content-type": "application/json" },
       keepalive: true,
-      body: JSON.stringify({ path: pathname, referrer }),
+      body: JSON.stringify({ path: pathname + answers, referrer }),
     }).catch(() => {});
-  }, [pathname]);
+  }, [pathname, answers]);
   return null;
 }
 

@@ -42,7 +42,10 @@ interface Repo {
 // does without one)
 const answers = new Map<string, { etag: string; body: string }>();
 
-async function github(path: string, accept = "application/vnd.github+json"): Promise<string> {
+export async function github(
+  path: string,
+  accept = "application/vnd.github+json",
+): Promise<string> {
   const known = answers.get(path);
   const response = await fetch(`https://api.github.com/repos/${path}`, {
     headers: {

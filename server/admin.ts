@@ -1,4 +1,4 @@
-import { count, countDistinct, desc, eq, gte, sql } from "drizzle-orm";
+import { count, countDistinct, desc, eq, gte, inArray, sql } from "drizzle-orm";
 import type { AnyPgColumn } from "drizzle-orm/pg-core";
 import { getCookie, type H3Event, HTTPError } from "nitro/h3";
 import type { Role } from "../src/roles";
@@ -6,6 +6,7 @@ import { db } from "./db";
 import * as friends from "./friends";
 import * as live from "./live";
 import { build, logged } from "./log";
+import { github } from "./mods";
 import { rolesOf } from "./players";
 import * as rooms from "./rooms";
 import { event_days, events, matches, players, replays } from "./schema";
@@ -34,8 +35,22 @@ const DAY = 86_400_000;
 const day = (ago: number) => new Date(Date.now() - ago * DAY).toISOString().slice(0, 10);
 const human = eq(events.is_bot, false);
 const seen = { views: count(), visitors: countDistinct(events.visitor_hash) };
+// the pages gone through on the way to playing Phigros++, in order
+const WAY = ["/", "/phigrospp", "/start", "/rebuild"];
+const INSTALLER = "ggmolly/PhigrosPlusPlus-Installer";
 
-/** The pages seen over the last days: each day's totals, and what was seen most, by whom and from where. */
+/** How many times the installer was downloaded, all its releases together, as GitHub counts them. */
+async function downloads() {
+  const releases: { assets: { download_count: number }[] }[] = JSON.parse(
+    await github(`${INSTALLER}/releases?per_page=100`),
+  );
+  return releases.flatMap(({ assets }) => assets).reduce((sum, a) => sum + a.download_count, 0);
+}
+
+/**
+ * The pages seen over the last days: each day's totals, what was seen most, by whom and from where, and how far
+ * visitors went on the way to Phigros++, a page of questions counted once per answer (its address carries them).
+ */
 export async function traffic(days: number) {
   const since = gte(events.day, day(days - 1));
   // the most seen values of a column, among people or among bots
@@ -57,6 +72,18 @@ export async function traffic(days: number) {
     .select({ ...seen })
     .from(events)
     .where(sql`${eq(events.day, day(0))} and ${human}`);
+  const page = sql<string>`split_part(${events.path}, '?', 1)`;
+  const way = await db
+    .select({ name: events.path, ...seen })
+    .from(events)
+    .where(sql`${since} and ${human} and ${inArray(page, WAY)}`)
+    .groupBy(events.path)
+    .orderBy(events.path);
+  const at = (path: string) => WAY.indexOf(path.split("?")[0]!);
+  const [made] = await db
+    .select({ n: count() })
+    .from(players)
+    .where(gte(players.created, Date.parse(day(days - 1))));
   return {
     days: [...over, { day: day(0), ...today!, bot_views: 0 }],
     pages: await top(events.path),
@@ -65,6 +92,9 @@ export async function traffic(days: number) {
     browsers: await top(events.browser),
     devices: await top(events.device),
     bots: await top(events.bot_match, true),
+    way: way.sort((a, b) => at(a.name) - at(b.name)),
+    profiles: made!.n,
+    downloads: await downloads().catch(() => null),
   };
 }
 

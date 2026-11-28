@@ -12,6 +12,9 @@ const ICONS = {
   unrooted: `${PHONE}M26.5 23h11v9.5h-11zM28.5 23v-3.5a3.5 3.5 0 0 1 7 0V23`,
 };
 
+/** The pages made of questions: their answers are their address, so each is seen once per answer. */
+export const ASKING = ["/start", "/phigrospp"] as const;
+
 type Answers = Record<string, string | boolean | undefined>;
 export type Option = { icon: keyof typeof ICONS; label: string; search: Answers };
 
@@ -23,7 +26,7 @@ export function Question({
   options,
   back,
 }: {
-  to: "/start" | "/phigrospp";
+  to: (typeof ASKING)[number];
   title: string;
   answer?: string;
   options: Option[];
