@@ -198,6 +198,10 @@
   gap: 0.75rem;
   margin-left: auto;
 }
+/* a ghost button is as dark as the strip: lit enough to be seen as one */
+.menu-actions .btn-ghost:not(:hover)::before {
+  background: rgb(255 255 255 / 0.16);
+}
 .menu-text {
   flex: 1;
   max-width: 34rem;
