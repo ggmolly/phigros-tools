@@ -3,6 +3,7 @@ import type { Messages } from ".";
 export const de = {
   tabs: {
     overview: "Übersicht",
+    home: "Start",
     records: "Rekorde",
     charts: "Charts",
     leaderboard: "Rangliste",
@@ -35,42 +36,46 @@ export const de = {
     label: "Hauptmenü",
     import: "Importieren",
     songs: (n: number) => `${n} Songs`,
-    chartsText: "Schwierigkeitskonstante, Charter und Notenstatistiken jedes Charts.",
-    browse: "Durchsuchen",
-    anotherAccount: "Anderes Konto oder andere Datei",
-    yourProgress: "Dein Fortschritt",
     importSave: "Spielstand importieren",
-    mySave: "Mein Spielstand",
     welcomeBack: "Willkommen zurück",
     lastSync: (date: string) => `zuletzt synchronisiert am ${date}`,
     played: "Gespielt",
     fullCombo: "Full Combo",
     syncPrompt: "Spiele einen Song mit Phigros++ und dein Spielstand erscheint hier.",
   },
+  home: {
+    adds: "Was Phigros++ hinzufügt",
+    file: "Spielstand-Datei öffnen",
+    features: {
+      "replays-and-leaderboard": {
+        title: "Jeden Run noch einmal ansehen",
+        text: "Jeder Run wird aufgezeichnet und lässt sich wieder ansehen, deine eigenen und die 50 besten jedes Charts auf phigros.tools.",
+      },
+      rooms: {
+        title: "Räume für bis zu 8 Spieler",
+        text: "Alle im Raum spielen denselben Chart zur selben Zeit, mit den Punkten der anderen auf dem Bildschirm, während der Song läuft.",
+      },
+      modifiers: {
+        title: "Jeden Chart mit Modifikatoren spielen",
+        text: "Neun Modifikatoren machen einen Chart leichter, schwerer, schneller oder dunkler, jeder mit dem, was er für die Punktzahl bringt.",
+      },
+      mods: {
+        title: "Mods aus den Einstellungen installieren",
+        text: "Die Einstellungen listen die Mods, die Spieler veröffentlicht haben, mit einem Tipp installiert und aktualisiert.",
+      },
+      "friends-and-queues": {
+        title: "Sehen, was deine Freunde spielen",
+        text: "Freunde erscheinen im Spiel mit dem Chart, den sie gerade spielen, und ein Tipp zeigt ihren Run live.",
+      },
+      "sync-and-profile": {
+        title: "Dein Profil auf phigros.tools",
+        text: "Dein Spielstand, deine Rekorde und Replays folgen dir zu phigros.tools, wo deine Runs in der Rangliste zählen.",
+      },
+    },
+  },
   import: {
-    taptap: "TapTap-Login",
-    taptapDesc: "QR-Code scannen, auf jedem Gerät",
-    usb: "Android (USB)",
-    usbDesc: "Handy verbinden und Cloud-Spielstand laden",
-    token: "Session-Token",
-    tokenDesc: "Phigros-Session-Token einfügen",
     file: "Lokale Datei",
     fileDesc: "ZIP- oder JSON-Datei auswählen",
-    qrTitle: "Login-QR-Code",
-    loading: "Login-Code wird angefordert…",
-    waiting: "Warte auf deine Bestätigung in TapTap…",
-    scanned: "Gescannt. Bestätige den Login in TapTap.",
-    approved: "Bestätigt. Anmeldung bei Phigros…",
-    dialogTitle: "TapTap-Login",
-    close: "TapTap-Login schließen",
-    intro:
-      "Scanne den Code mit deinem Handy oder tippe auf dem Handy selbst auf **TapTap öffnen**, und bestätige mit dem TapTap-Konto, mit dem du Phigros spielst.",
-    gameVersion: "Spielversion",
-    global: "Global",
-    china: "China",
-    code: "Code",
-    newCode: "Neuer Code",
-    openTapTap: "TapTap öffnen",
   },
   seo: {
     siteTitle: "Phigros++ Mods, Multiplayer, Rangliste und Chart-Konstanten",
@@ -137,24 +142,6 @@ export const de = {
     importTagline: "Lade deinen Phigros-Fortschritt",
     closeImport: "Import-Dialog schließen",
     importDialogText: "Lade neueren Fortschritt oder den Spielstand eines anderen Spielers.",
-    usbTitle: "Android verbinden",
-    usbHelp:
-      "Wähle dein Handy in der Browser-Abfrage aus. Tippe auf deinem Android-Gerät auf **USB-Debugging zulassen**, wenn du gefragt wirst.",
-    usbProgress: "Verbindungsfortschritt",
-    closing: "Wird in 5 Sekunden geschlossen…",
-    cancelImport: "Import abbrechen",
-    close: "Schließen",
-    tokenTitle: "Session-Token",
-    closeToken: "Session-Token-Dialog schließen",
-    tokenNote:
-      "Dein Token wird direkt von diesem Browser an die TapTap-Cloud des Spiels gesendet (tapapis.com).",
-    remembered: "Gespeicherter Spieler",
-    reconnect: "Neu verbinden",
-    forgetConfirm:
-      "Gespeichertes Session-Token dieses Spielers vergessen? Deine lokalen Snapshots bleiben erhalten.",
-    forget: "Gespeichertes Token vergessen",
-    tokenPlaceholder: "Session-Token einfügen",
-    fetchSave: "Spielstand abrufen",
     unsupportedZip: "Dieses ZIP verwendet ein nicht unterstütztes Spielstandformat.",
     downloadZip: "Original-ZIP herunterladen",
   },
@@ -458,47 +445,9 @@ export const de = {
     parseStopped: (error: string) => `Auswertung des Spielstands abgebrochen: ${error}`,
     loadedSongs: (songs: number, fingerprint: string) =>
       `${songs} Songs aus ${fingerprint}… geladen und im lokalen Verlauf gespeichert.`,
-    accountMismatch: "Das Konto auf dem Gerät passt nicht zu diesem Token",
-    checking: "Cloud-Spielstände werden geprüft…",
-    noCloudSaves: "Dieses Konto hat noch keine Cloud-Spielstände",
-    fetching: (name: string, host: string) => `„${name}“ wird von ${host} abgerufen…`,
-    ready: "Spielstand geladen. Alles bereit.",
-    waitingPhone: "Warte auf dein Handy…",
     tooLarge: (size: string) => `Der Import überschreitet das Limit von ${size} MB`,
-    usb: {
-      unavailable:
-        "WebUSB ist nicht verfügbar. Nutze Chrome oder Edge am Desktop über https:// oder localhost.",
-      reusing: "Das bereits zugelassene Handy wird wiederverwendet…",
-      picking: "Warte darauf, dass du dein Handy in der USB-Abfrage des Browsers auswählst…",
-      noDevice: "Kein Gerät ausgewählt.",
-      selected: (device: string, serial: string) => `${device} ausgewählt (${serial}).`,
-      handshaking: "Verbindung wird aufgebaut: Bestätige „USB-Debugging zulassen?“ auf dem Handy.",
-      busy: "Ein anderes Programm belegt die USB-Schnittstelle des Handys. Meist ist es der ADB-Server (adb kill-server); auch Android Studio, scrcpy und Phone Link tun das. Schließe es, steck das Handy aus und wieder ein und versuche es erneut.",
-      connected: (serial: string) =>
-        `Mit ${serial} verbunden, Phigros-Anmeldedaten werden gelesen…`,
-      timeout:
-        "Das Lesen der Phigros-Anmeldedaten hat zu lange gedauert. Prüfe die USB-Verbindung und versuche es erneut.",
-      empty: (path: string) =>
-        `${path} ist leer oder fehlt. Öffne Phigros einmal und melde dich mit TapTap an, oder füge ein Token von Hand ein.`,
-      noToken: (path: string, size: string) =>
-        `${path} gefunden (${size} Bytes), aber ohne sessionToken. Melde dich im Spiel bei TapTap an, oder füge ein Token von Hand ein.`,
-      read: (path: string, size: string) => `${path} gelesen (${size} Bytes).`,
-      loggedIn: (account: string) => `Angemeldet als ${account}.`,
-      tokenLength: (count: number) => `sessionToken: ${count} Zeichen.`,
-    },
   },
   errors: {
-    noLoginCode: "TapTap hat keinen Login-Code geliefert. Versuche es erneut.",
-    loginDeclined: "Der Login wurde in TapTap abgelehnt.",
-    loginFailed: (reason: string) => `TapTap-Login fehlgeschlagen: ${reason}`,
-    loginUnexpected: "TapTap-Login fehlgeschlagen: unerwartete Antwort",
-    loginExpired: "Der Login-Code ist abgelaufen. Hol dir einen neuen und versuche es erneut.",
-    profileFailed: (status: string) => `TapTap-Profil konnte nicht geladen werden: HTTP ${status}`,
-    noSaveGlobal:
-      "Dieses TapTap-Konto hat keinen globalen Phigros-Spielstand. Prüfe die Region und synchronisiere einmal im Spiel.",
-    noSaveChina:
-      "Dieses TapTap-Konto hat keinen chinesischen Phigros-Spielstand. Prüfe die Region und synchronisiere einmal im Spiel.",
-    phigrosLoginFailed: (status: string) => `Phigros-Login fehlgeschlagen: HTTP ${status}`,
     decryptFailed: (file: string) => `${file}: Entschlüsselung fehlgeschlagen`,
     zipTooLarge: (mb: string) => `Das Spielstand-ZIP überschreitet das Limit von ${mb} MB`,
     notZip: "Keine ZIP-Datei",
@@ -510,13 +459,6 @@ export const de = {
     invalidZip: (reason: string) => `Ungültiges Spielstand-ZIP: ${reason}`,
     missingEntries: (names: string) => `Im Spielstand-ZIP fehlt: ${names}`,
     entryTooShort: (file: string) => `${file}: verschlüsselter Eintrag ist zu kurz`,
-    noPlayerId: "TapTap hat keine Spieler-ID geliefert",
-    verifyFailed: (status: string) =>
-      `Überprüfung des TapTap-Kontos fehlgeschlagen: HTTP ${status}`,
-    apiFailed: (status: string, body: string) => `TapTap-API: HTTP ${status} ${body}`,
-    invalidSaveList: "Die TapTap-API hat eine ungültige Spielstandliste geliefert",
-    notHttps: "Die Download-URL des Spielstands ist nicht HTTPS",
-    downloadFailed: (status: string) => `Spielstand-Download: HTTP ${status}`,
     jsonTooLarge: (mb: string) => `Das JSON überschreitet das Importlimit von ${mb} MB`,
     invalidJson: "Ungültiges JSON",
     pppRemoved:
@@ -544,12 +486,6 @@ export const de = {
   ppp: {
     profile: "Phigros++-Profil",
     profileDesc: "Melde dich über das Spiel an, um deinen Spielstand zu öffnen",
-    otherWays: "Andere Wege",
-    otherWaysDesc: "TapTap-Login, Android (USB), Session-Token",
-    taptapGone:
-      "Der Cloud-Spielstand von TapTap antwortet seit November 2026 nicht mehr, daher können diese Wege scheitern. Phigros++ speichert deinen Spielstand stattdessen auf phigros.tools.",
-    pitch:
-      "Phigros++ ergänzt das Spiel um Replays, ein HUD und Mods und bewahrt deinen Spielstand und deine Runs hier auf.",
     get: "Phigros++ holen",
     signInTitle: "Über Phigros++ anmelden",
     signInStep1:

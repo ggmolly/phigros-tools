@@ -1,6 +1,5 @@
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { createContext, type RefObject, use, useEffect, useRef, useState } from "react";
-import type { Account } from "./adb";
 import { catalogRevision } from "./catalog";
 import { MAX_JSON_SIZE, parseJsonDocument, type SaveDocumentV1 } from "./document";
 import type { Home } from "./home";
@@ -11,7 +10,7 @@ import { calculateRanking } from "./metrics";
 import { recordLines } from "./modules";
 import { applyPalette } from "./palettes";
 import type { Me, Signer } from "./phigrospp";
-import type { Region, SaveArchive } from "./save";
+import type { SaveArchive } from "./save";
 import {
   type Credential,
   deleteCredential,
@@ -36,37 +35,18 @@ interface SaveContextValue {
   setChartKey: (value: string) => void;
   snapshots: SnapshotV1[];
   credentials: Credential[];
-  selectedPlayer: string;
-  setSelectedPlayer: (value: string) => void;
   log: string;
-  token: string;
-  setToken: (value: string) => void;
   busy: boolean;
-  usbPhase: "connecting" | "done" | "error";
-  usbEvents: string[];
   unsupportedZip?: { name: string; bytes: Uint8Array };
   storageReady: boolean;
   /** The Phigros++ profile this browser is signed in to: the page's cookie until storage is read, then its key. */
   account?: string;
   /** That profile's public page as the server rendered it with the page. */
   home: Home | null;
-  dialog: RefObject<HTMLDialogElement | null>;
-  usbDialog: RefObject<HTMLDialogElement | null>;
-  /** Opens the TapTap QR login (set by <TapTapDialog>, which owns that flow's state). */
-  openTapTap: RefObject<(() => void) | undefined>;
-  /** The dialog of the imports that went through TapTap (<OtherWaysDialog>). */
-  openOtherWays: RefObject<HTMLDialogElement | null>;
   /** Opens the Phigros++ sign-in (set by <SignInDialog>). */
   openSignIn: RefObject<(() => void) | undefined>;
-  usbLog: RefObject<HTMLDivElement | null>;
   fileInput: RefObject<HTMLInputElement | null>;
   say: (text: string) => void;
-  refresh: () => Promise<void>;
-  cloudImport: (
-    getSession: () => Promise<{ token: string; account?: Account; region?: Region }>,
-    report?: (text: string) => void,
-    signal?: AbortSignal,
-  ) => Promise<boolean>;
   /** Signs this browser in to a Phigros++ profile with a code or the recovery phrase, then opens its save. */
   signIn: (how: { code: string } | { phrase: string }) => Promise<void>;
   signOut: (credential: Credential) => Promise<void>;
@@ -77,9 +57,6 @@ interface SaveContextValue {
    * it, or a new one made from a recovery phrase's seed, whose save it becomes.
    */
   publish: (document: SaveDocumentV1, create?: { name: string; seed: Uint8Array }) => Promise<void>;
-  closeUsb: () => void;
-  resetUsbDialog: () => void;
-  connectAndroid: () => Promise<void>;
   openFile: (file: File) => Promise<void>;
   openSnapshot: (snapshot: SnapshotV1) => Promise<void>;
 }
@@ -110,10 +87,7 @@ export function SaveProvider({ children, home }: { children: React.ReactNode; ho
   const [credentials, setCredentials] = useState<Credential[]>([]);
   const [selectedPlayer, setSelectedPlayer] = useState("");
   const [log, setLog] = useState("");
-  const [token, setToken] = useState("");
   const [busy, setBusy] = useState(false);
-  const [usbPhase, setUsbPhase] = useState<"connecting" | "done" | "error">("connecting");
-  const [usbEvents, setUsbEvents] = useState<string[]>([]);
   const [unsupportedZip, setUnsupportedZip] = useState<{ name: string; bytes: Uint8Array }>();
   const [storageReady, setStorageReady] = useState(false);
   const account = storageReady ? credentials.find((c) => c.signer)?.playerId : home?.id;
@@ -121,14 +95,7 @@ export function SaveProvider({ children, home }: { children: React.ReactNode; ho
   const pulled = useRef(Date.parse(home?.document?.source.cloudUpdatedAt ?? "") || 0);
   const pulling = useRef(false);
   const inPlace = useRef(false);
-  const dialog = useRef<HTMLDialogElement>(null);
-  const usbDialog = useRef<HTMLDialogElement>(null);
-  const openTapTap = useRef<() => void>(undefined);
   const openSignIn = useRef<() => void>(undefined);
-  const openOtherWays = useRef<HTMLDialogElement>(null);
-  const usbLog = useRef<HTMLDivElement>(null);
-  const usbCloseTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
-  const usbController = useRef<AbortController>(undefined);
   const fileInput = useRef<HTMLInputElement>(null);
   const say = (text: string) => setLog(text);
   const refresh = async () => {
@@ -149,10 +116,6 @@ export function SaveProvider({ children, home }: { children: React.ReactNode; ho
         if (signedIn && home?.id !== signedIn.playerId) await startSession(signedIn);
       })
       .catch(() => undefined);
-    return () => {
-      clearTimeout(usbCloseTimer.current);
-      usbController.current?.abort();
-    };
   }, []);
   useEffect(() => {
     if (!accentSong) {
@@ -167,10 +130,6 @@ export function SaveProvider({ children, home }: { children: React.ReactNode; ho
       current = false;
     };
   }, [accentSong]);
-  // biome-ignore lint/correctness/useExhaustiveDependencies: usbEvents isn't read here, but re-scrolling on each new log line is the point.
-  useEffect(() => {
-    if (usbLog.current) usbLog.current.scrollTop = usbLog.current.scrollHeight;
-  }, [usbEvents]);
 
   async function storeSave(next: Loaded) {
     if (!next.playerId) return false;
@@ -214,17 +173,15 @@ export function SaveProvider({ children, home }: { children: React.ReactNode; ho
   async function ingestZip(
     bytes: Uint8Array,
     options: {
-      kind: "cloud" | "zip" | "phigrospp";
+      kind: "zip" | "phigrospp";
       name?: string;
       cloudUpdatedAt?: string;
       summary?: string;
     },
     playerId?: string,
-    signal?: AbortSignal,
   ) {
     const { openArchive, parseArchive } = await import("./save");
     const archive = await openArchive(bytes);
-    signal?.throwIfAborted();
     let document: SaveDocumentV1;
     try {
       document = parseArchive(archive, options);
@@ -234,12 +191,11 @@ export function SaveProvider({ children, home }: { children: React.ReactNode; ho
       setUnsupportedZip({ name: options.name || "unsupported-save.zip", bytes: archive.rawZip });
       throw new Error(t.save.parseStopped(message(error)));
     }
-    signal?.throwIfAborted();
     const owner = playerId ?? (options.kind === "zip" ? localPlayer() : undefined);
     const stored = await imported({ document, archive, playerId: owner });
     if (stored) say(t.save.loadedSongs(document.songs.length, archive.fingerprint.slice(0, 12)));
   }
-  /** The save a Phigros++ profile's game uploaded, opened like a cloud save. */
+  /** The save a Phigros++ profile's game uploaded. */
   async function phigrosppImport(credential: Credential) {
     setBusy(true);
     pulling.current = true;
@@ -345,84 +301,6 @@ export function SaveProvider({ children, home }: { children: React.ReactNode; ho
       inPlace.current = false;
     });
   }
-  async function cloudImport(
-    getSession: () => Promise<{ token: string; account?: Account; region?: Region }>,
-    report = say,
-    signal?: AbortSignal,
-  ): Promise<boolean> {
-    setBusy(true);
-    try {
-      const session = await getSession();
-      signal?.throwIfAborted();
-      const api = await import("./save");
-      signal?.throwIfAborted();
-      const identity = await api.identifyPlayer(session.token, session.region, signal);
-      signal?.throwIfAborted();
-      if (session.account?.objectId && session.account.objectId !== identity.objectId)
-        throw new Error(t.save.accountMismatch);
-      await saveCredential({
-        playerId: identity.objectId,
-        nickname: identity.nickname ?? session.account?.nickname,
-        token: session.token,
-        region: identity.region,
-      });
-      await refresh();
-      report(t.save.checking);
-      const save = api.latestSave(
-        await api.listSaves(session.token, identity.region, signal),
-        identity.objectId,
-      );
-      if (!save) throw new Error(t.save.noCloudSaves);
-      report(t.save.fetching(save.name, new URL(save.gameFile.url).host));
-      await ingestZip(
-        await api.fetchSaveBytes(save, signal),
-        { kind: "cloud", name: save.name, cloudUpdatedAt: save.updatedAt, summary: save.summary },
-        identity.objectId,
-        signal,
-      );
-      report(`✓ ${t.save.ready}`);
-      return true;
-    } catch (error) {
-      if (!signal?.aborted) report(`✗ ${message(error)}`);
-      return false;
-    } finally {
-      if (!signal?.aborted) setBusy(false);
-    }
-  }
-  /** The fade-out is pure CSS (see #usbDialog in style.css). */
-  function closeUsb() {
-    usbDialog.current?.close();
-  }
-  /** The dialog's native "close" event (Escape, the button, or the auto-close timer): cancel the import and reset for next time. */
-  function resetUsbDialog() {
-    clearTimeout(usbCloseTimer.current);
-    usbController.current?.abort();
-    usbController.current = undefined;
-    setBusy(false);
-  }
-  async function connectAndroid() {
-    clearTimeout(usbCloseTimer.current);
-    const controller = new AbortController();
-    usbController.current = controller;
-    setUsbPhase("connecting");
-    setUsbEvents([t.save.waitingPhone]);
-    usbDialog.current?.showModal();
-    const report = (text: string) => {
-      if (controller.signal.aborted) return;
-      say(text);
-      setUsbEvents((events) => [...events, text]);
-    };
-    const success = await cloudImport(
-      async () => (await import("./adb")).readSessionToken(report, t.save.usb, controller.signal),
-      report,
-      controller.signal,
-    );
-    if (controller.signal.aborted) return;
-    if (success) {
-      setUsbPhase("done");
-      usbCloseTimer.current = setTimeout(closeUsb, 5000);
-    } else setUsbPhase("error");
-  }
   async function openFile(file: File) {
     setBusy(true);
     try {
@@ -468,35 +346,19 @@ export function SaveProvider({ children, home }: { children: React.ReactNode; ho
     setChartKey,
     snapshots,
     credentials,
-    selectedPlayer,
-    setSelectedPlayer,
     log,
-    token,
-    setToken,
     busy,
-    usbPhase,
-    usbEvents,
     unsupportedZip,
     storageReady,
     account,
     home,
-    dialog,
-    usbDialog,
-    openTapTap,
     openSignIn,
-    openOtherWays,
-    usbLog,
     fileInput,
     say,
-    refresh,
-    cloudImport,
     signIn,
     signOut,
     sendToPhigrospp,
     publish,
-    closeUsb,
-    resetUsbDialog,
-    connectAndroid,
     openFile,
     openSnapshot,
   };

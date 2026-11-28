@@ -134,12 +134,41 @@
 }
 .menu-title {
   min-width: 0;
+  /* reads on any cover, a white one too */
+  text-shadow:
+    0 2px 0.25rem rgb(0 0 0 / 0.5),
+    0 0 1.5rem rgb(0 0 0 / 0.7);
   margin-left: auto;
   overflow-wrap: anywhere;
   font-size: clamp(2rem, 4.2vw, 3.5rem);
   font-weight: 400;
   line-height: 1.1;
   text-align: right;
+}
+/* Phigros with its ++ on a tab, as the app's icon and the release covers draw it */
+.menu-brand {
+  font-size: 1.3em;
+  font-weight: 500;
+}
+.menu-brand span {
+  position: relative;
+  isolation: isolate;
+  display: inline-block;
+  margin-left: 0.3em;
+  padding: 0 0.42em;
+  color: var(--ink);
+  font-size: 0.4em;
+  font-weight: 700;
+  line-height: 1.5;
+  vertical-align: 0.95em;
+}
+.menu-brand span::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--white);
+  transform: skewX(var(--skew));
 }
 .menu-strip {
   position: relative;
@@ -158,14 +187,8 @@
   background: rgb(12 8 14 / 0.9);
   transform: skewX(var(--skew));
 }
-.menu-strip .stat-row,
-.menu-import {
+.menu-strip .stat-row {
   flex: 1;
-}
-.menu-import {
-  display: grid;
-  gap: 2px;
-  min-width: 0;
 }
 .menu-actions {
   display: flex;
@@ -177,7 +200,7 @@
 }
 .menu-text {
   flex: 1;
-  max-width: 27.5rem;
+  max-width: 34rem;
   color: var(--dim);
 }
 .menu-play {
@@ -201,7 +224,6 @@
     padding: 0.625rem 0.875rem;
   }
   .menu-strip .stat-row,
-  .menu-import,
   .menu-text {
     flex-basis: 100%;
   }
@@ -219,4 +241,32 @@
   .menu-strip .stat-label {
     font-size: 0.75rem;
   }
+}
+
+/* the ways to open a save without Phigros++, under the menu and quieter than it */
+.menu-more {
+  position: relative; /* over the room the menu keeps under itself for its shadows */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.25rem 1.75rem;
+  margin-top: -1.5rem;
+  padding-inline: 0.625rem;
+  color: var(--dim);
+}
+/* what Phigros++ adds, laid out like the mod catalog (mods.css) */
+.home-adds {
+  margin-top: 2.25rem;
+}
+.home-adds h2 {
+  font-size: 2.25rem;
+  font-weight: 300;
+  line-height: 1.1;
+}
+.home-adds .mod-name {
+  font-size: 1.625rem;
+}
+/* said whole: there's no page behind a cut one here */
+.home-adds .mod-text {
+  display: block;
 }

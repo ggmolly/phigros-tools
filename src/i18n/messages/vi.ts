@@ -3,6 +3,7 @@ import type { Messages } from ".";
 export const vi = {
   tabs: {
     overview: "Tổng quan",
+    home: "Trang chủ",
     records: "Kỷ lục",
     charts: "Chart",
     leaderboard: "Bảng xếp hạng",
@@ -35,42 +36,46 @@ export const vi = {
     label: "Menu chính",
     import: "Nhập",
     songs: (n: number) => `${n} bài`,
-    chartsText: "Hằng số độ khó, người làm chart và thống kê note của mọi chart.",
-    browse: "Xem",
-    anotherAccount: "Tài khoản hoặc tệp khác",
-    yourProgress: "Tiến độ của bạn",
     importSave: "Nhập save",
-    mySave: "Save của tôi",
     welcomeBack: "Chào mừng trở lại",
     lastSync: (date: string) => `đồng bộ lần cuối ${date}`,
     played: "Đã chơi",
     fullCombo: "Full Combo",
     syncPrompt: "Chơi một bài với Phigros++ và save của bạn sẽ hiện ở đây.",
   },
+  home: {
+    adds: "Phigros++ thêm những gì",
+    file: "Mở tệp save",
+    features: {
+      "replays-and-leaderboard": {
+        title: "Xem lại bất kỳ lượt chơi nào",
+        text: "Mọi lượt chơi đều được ghi lại và có thể xem lại, của bạn và 50 lượt tốt nhất của từng chart trên phigros.tools.",
+      },
+      rooms: {
+        title: "Phòng cho tối đa 8 người chơi",
+        text: "Mọi người trong phòng chơi cùng một chart cùng lúc, với điểm của nhau hiện trên màn hình khi bài hát diễn ra.",
+      },
+      modifiers: {
+        title: "Chơi bất kỳ chart nào với bộ điều chỉnh",
+        text: "Chín bộ điều chỉnh làm chart dễ hơn, khó hơn, nhanh hơn hoặc tối hơn, mỗi cái ghi rõ ảnh hưởng tới điểm.",
+      },
+      mods: {
+        title: "Cài mod từ phần cài đặt",
+        text: "Phần cài đặt liệt kê các mod người chơi đã đăng, cài và cập nhật chỉ với một lần chạm.",
+      },
+      "friends-and-queues": {
+        title: "Xem bạn bè đang chơi gì",
+        text: "Bạn bè hiện trong game cùng chart họ đang chơi, và một lần chạm là xem trực tiếp lượt chơi của họ.",
+      },
+      "sync-and-profile": {
+        title: "Hồ sơ của bạn trên phigros.tools",
+        text: "Save, kỷ lục và replay theo bạn tới phigros.tools, nơi lượt chơi của bạn được tính trên bảng xếp hạng.",
+      },
+    },
+  },
   import: {
-    taptap: "Đăng nhập TapTap",
-    taptapDesc: "Quét mã QR trên bất kỳ thiết bị nào",
-    usb: "Android (USB)",
-    usbDesc: "Kết nối điện thoại và tải save đám mây",
-    token: "Session token",
-    tokenDesc: "Dán session token Phigros",
     file: "Tệp trên máy",
     fileDesc: "Chọn tệp ZIP hoặc JSON",
-    qrTitle: "Mã QR đăng nhập",
-    loading: "Đang lấy mã đăng nhập…",
-    waiting: "Đang chờ bạn xác nhận trong TapTap…",
-    scanned: "Đã quét. Hãy xác nhận đăng nhập trong TapTap.",
-    approved: "Đã xác nhận. Đang đăng nhập Phigros…",
-    dialogTitle: "Đăng nhập TapTap",
-    close: "Đóng đăng nhập TapTap",
-    intro:
-      "Quét mã bằng điện thoại, hoặc nhấn **Mở TapTap** ngay trên điện thoại, rồi xác nhận bằng tài khoản TapTap bạn dùng để chơi Phigros.",
-    gameVersion: "Phiên bản game",
-    global: "Quốc tế",
-    china: "Trung Quốc",
-    code: "Mã",
-    newCode: "Mã mới",
-    openTapTap: "Mở TapTap",
   },
   seo: {
     siteTitle: "Mod Phigros++, chơi nhiều người, bảng xếp hạng và hằng số chart",
@@ -137,24 +142,6 @@ export const vi = {
     importTagline: "Tải tiến trình Phigros của bạn",
     closeImport: "Đóng hộp thoại nhập",
     importDialogText: "Tải tiến trình mới hơn, hoặc save của người chơi khác.",
-    usbTitle: "Kết nối Android",
-    usbHelp:
-      "Chọn điện thoại của bạn trong hộp thoại của trình duyệt. Trên thiết bị Android, chạm **Cho phép gỡ lỗi USB** khi được hỏi.",
-    usbProgress: "Tiến trình kết nối",
-    closing: "Sẽ đóng sau 5 giây…",
-    cancelImport: "Hủy nhập",
-    close: "Đóng",
-    tokenTitle: "Session token",
-    closeToken: "Đóng hộp thoại session token",
-    tokenNote:
-      "Token của bạn được gửi thẳng từ trình duyệt này đến đám mây TapTap của chính trò chơi (tapapis.com).",
-    remembered: "Người chơi đã ghi nhớ",
-    reconnect: "Kết nối lại",
-    forgetConfirm:
-      "Quên session token đã lưu của người chơi này? Các snapshot cục bộ của bạn vẫn được giữ lại.",
-    forget: "Quên token đã lưu",
-    tokenPlaceholder: "Dán session token",
-    fetchSave: "Lấy save",
     unsupportedZip: "Tệp ZIP này dùng định dạng save không được hỗ trợ.",
     downloadZip: "Tải xuống ZIP gốc",
   },
@@ -455,46 +442,9 @@ export const vi = {
     parseStopped: (error: string) => `Đã dừng phân tích save: ${error}`,
     loadedSongs: (songs: number, fingerprint: string) =>
       `Đã tải ${songs} bài hát từ ${fingerprint}… Đã lưu vào lịch sử cục bộ.`,
-    accountMismatch: "Tài khoản trên thiết bị không khớp với token này",
-    checking: "Đang kiểm tra save đám mây…",
-    noCloudSaves: "Tài khoản này chưa có save đám mây nào",
-    fetching: (name: string, host: string) => `Đang lấy “${name}” từ ${host}…`,
-    ready: "Đã tải save. Sẵn sàng.",
-    waitingPhone: "Đang chờ điện thoại của bạn…",
     tooLarge: (size: string) => `Tệp nhập vượt quá giới hạn ${size} MB`,
-    usb: {
-      unavailable:
-        "Không dùng được WebUSB. Hãy dùng Chrome/Edge trên máy tính qua https:// hoặc localhost.",
-      reusing: "Dùng lại điện thoại bạn đã cho phép…",
-      picking: "Đang chờ bạn chọn điện thoại trong hộp thoại USB của trình duyệt…",
-      noDevice: "Chưa chọn thiết bị nào.",
-      selected: (device: string, serial: string) => `Đã chọn ${device} (${serial}).`,
-      handshaking: "Đang bắt tay: hãy chấp nhận “Cho phép gỡ lỗi USB?” trên điện thoại.",
-      busy: "Một chương trình khác đang giữ giao diện USB của điện thoại. Thủ phạm thường là máy chủ ADB (adb kill-server); Android Studio, scrcpy và Phone Link cũng có thể gây ra. Hãy đóng nó, rút ra cắm lại điện thoại rồi thử lại.",
-      connected: (serial: string) =>
-        `Đã kết nối với ${serial}, đang đọc dữ liệu đăng nhập Phigros…`,
-      timeout: "Hết thời gian đọc dữ liệu đăng nhập Phigros. Hãy kiểm tra kết nối USB rồi thử lại.",
-      empty: (path: string) =>
-        `${path} trống hoặc không tồn tại. Hãy mở Phigros một lần và đăng nhập bằng TapTap, hoặc dán token thủ công.`,
-      noToken: (path: string, size: string) =>
-        `Đã tìm thấy ${path} (${size} byte) nhưng không có sessionToken. Hãy đăng nhập TapTap trong trò chơi, hoặc dán token thủ công.`,
-      read: (path: string, size: string) => `Đã đọc ${path} (${size} byte).`,
-      loggedIn: (account: string) => `Đã đăng nhập với tên ${account}.`,
-      tokenLength: (count: number) => `sessionToken: ${count} ký tự.`,
-    },
   },
   errors: {
-    noLoginCode: "TapTap không trả về mã đăng nhập. Hãy thử lại.",
-    loginDeclined: "Đăng nhập đã bị từ chối trong TapTap.",
-    loginFailed: (reason: string) => `Đăng nhập TapTap thất bại: ${reason}`,
-    loginUnexpected: "Đăng nhập TapTap thất bại: phản hồi không mong đợi",
-    loginExpired: "Mã đăng nhập đã hết hạn. Hãy lấy mã mới và thử lại.",
-    profileFailed: (status: string) => `Không lấy được hồ sơ TapTap: HTTP ${status}`,
-    noSaveGlobal:
-      "Tài khoản TapTap này không có save Phigros bản quốc tế. Hãy kiểm tra khu vực và đồng bộ một lần trong game.",
-    noSaveChina:
-      "Tài khoản TapTap này không có save Phigros bản Trung Quốc. Hãy kiểm tra khu vực và đồng bộ một lần trong game.",
-    phigrosLoginFailed: (status: string) => `Đăng nhập Phigros thất bại: HTTP ${status}`,
     decryptFailed: (file: string) => `${file}: giải mã thất bại`,
     zipTooLarge: (mb: string) => `Tệp ZIP save vượt quá giới hạn ${mb} MB`,
     notZip: "Không phải tệp ZIP",
@@ -505,12 +455,6 @@ export const vi = {
     invalidZip: (reason: string) => `Tệp ZIP save không hợp lệ: ${reason}`,
     missingEntries: (names: string) => `Tệp ZIP save thiếu: ${names}`,
     entryTooShort: (file: string) => `${file}: mục mã hóa quá ngắn`,
-    noPlayerId: "TapTap không trả về ID người chơi",
-    verifyFailed: (status: string) => `Xác minh tài khoản TapTap thất bại: HTTP ${status}`,
-    apiFailed: (status: string, body: string) => `API TapTap: HTTP ${status} ${body}`,
-    invalidSaveList: "API TapTap trả về danh sách save không hợp lệ",
-    notHttps: "URL tải save không phải HTTPS",
-    downloadFailed: (status: string) => `Tải save: HTTP ${status}`,
     jsonTooLarge: (mb: string) => `JSON vượt quá giới hạn nhập ${mb} MB`,
     invalidJson: "JSON không hợp lệ",
     pppRemoved: "Trình duyệt này đã bị gỡ khỏi hồ sơ. Hãy đăng nhập lại để mở.",
@@ -535,12 +479,6 @@ export const vi = {
   ppp: {
     profile: "Hồ sơ Phigros++",
     profileDesc: "Đăng nhập từ game để mở save của bạn",
-    otherWays: "Cách khác",
-    otherWaysDesc: "Đăng nhập TapTap, Android (USB), session token",
-    taptapGone:
-      "Save đám mây của TapTap đã ngừng phản hồi từ tháng 11 năm 2026, nên các cách này có thể thất bại. Thay vào đó, Phigros++ giữ save của bạn trên phigros.tools.",
-    pitch:
-      "Phigros++ thêm replay, HUD và mod vào game, đồng thời giữ save và lượt chơi của bạn tại đây.",
     get: "Tải Phigros++",
     signInTitle: "Đăng nhập từ Phigros++",
     signInStep1:

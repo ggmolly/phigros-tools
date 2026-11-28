@@ -170,8 +170,12 @@ export function SiteHeader({ children }: { children?: React.ReactNode }) {
             activeOptions={{ exact: true }}
             aria-current={activeTab === id ? "page" : undefined}
           >
-            {/* a Phigros++ save's Overview is its player's profile */}
-            {id === "/" && signedIn ? t.tabs.profile : t.tabs[TAB_KEY[id]]}
+            {/* a Phigros++ save's Overview is its player's profile, and with no save open it's the home page */}
+            {id !== "/" || (loaded && !signedIn)
+              ? t.tabs[TAB_KEY[id]]
+              : signedIn
+                ? t.tabs.profile
+                : t.tabs.home}
           </Link>
         ))}
         {/* only who data/config.toml names sees it (server/admin.ts) */}

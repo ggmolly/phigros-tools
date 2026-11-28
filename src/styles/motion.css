@@ -88,11 +88,11 @@
   animation: uncover 0.9s var(--circ) 0.1s backwards;
 }
 
-/* Dialogs come up over a backdrop that fades in (the USB one has its own way in and out, see dialogs.css). */
-dialog[open]:not(#usbDialog) {
+/* Dialogs come up over a backdrop that fades in. */
+dialog[open] {
   animation: rise 0.35s var(--ease);
 }
-dialog[open]:not(#usbDialog)::backdrop {
+dialog[open]::backdrop {
   animation: fade 0.3s ease;
 }
 

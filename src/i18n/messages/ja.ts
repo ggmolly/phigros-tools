@@ -3,6 +3,7 @@ import type { Messages } from ".";
 export const ja = {
   tabs: {
     overview: "概要",
+    home: "ホーム",
     records: "記録",
     charts: "譜面",
     leaderboard: "ランキング",
@@ -35,42 +36,46 @@ export const ja = {
     label: "メインメニュー",
     import: "インポート",
     songs: (n: number) => `${n} 曲`,
-    chartsText: "全譜面の難易度定数、譜面製作者、ノーツ統計。",
-    browse: "見る",
-    anotherAccount: "別のアカウントやファイル",
-    yourProgress: "あなたの進捗",
     importSave: "セーブをインポート",
-    mySave: "マイセーブ",
     welcomeBack: "おかえりなさい",
     lastSync: (date: string) => `最終同期 ${date}`,
     played: "プレイ済み",
     fullCombo: "Full Combo",
     syncPrompt: "Phigros++ で1曲プレイすると、セーブがここに表示されます。",
   },
+  home: {
+    adds: "Phigros++ で追加されるもの",
+    file: "セーブファイルを開く",
+    features: {
+      "replays-and-leaderboard": {
+        title: "どのプレイも見返せる",
+        text: "すべてのプレイが記録され、自分のプレイも、phigros.tools にある各譜面の上位 50 件も見返せます。",
+      },
+      rooms: {
+        title: "最大 8 人のルーム",
+        text: "ルームの全員が同じ譜面を同時にプレイし、曲の進行中はお互いのスコアが画面に表示されます。",
+      },
+      modifiers: {
+        title: "どの譜面もモディファイアで遊べる",
+        text: "9 種類のモディファイアで譜面をやさしく、難しく、速く、暗くでき、それぞれスコアへの影響が示されます。",
+      },
+      mods: {
+        title: "設定から Mod をインストール",
+        text: "設定にはプレイヤーが公開した Mod が並び、タップひとつでインストールと更新ができます。",
+      },
+      "friends-and-queues": {
+        title: "フレンドのプレイ中の譜面がわかる",
+        text: "フレンドはプレイ中の譜面とともにゲーム内に表示され、タップするとそのプレイをライブで観戦できます。",
+      },
+      "sync-and-profile": {
+        title: "phigros.tools 上のプロフィール",
+        text: "セーブ、記録、リプレイが phigros.tools に引き継がれ、プレイはランキングに反映されます。",
+      },
+    },
+  },
   import: {
-    taptap: "TapTap ログイン",
-    taptapDesc: "QR コードをスキャン（どの端末でも可）",
-    usb: "Android（USB）",
-    usbDesc: "スマホを接続してクラウドセーブを取得",
-    token: "セッショントークン",
-    tokenDesc: "Phigros のセッショントークンを貼り付け",
     file: "ローカルファイル",
     fileDesc: "ZIP または JSON ファイルを選択",
-    qrTitle: "ログイン用 QR コード",
-    loading: "ログインコードを取得中…",
-    waiting: "TapTap での承認を待っています…",
-    scanned: "スキャンしました。TapTap でログインを承認してください。",
-    approved: "承認されました。Phigros にログイン中…",
-    dialogTitle: "TapTap ログイン",
-    close: "TapTap ログインを閉じる",
-    intro:
-      "スマホでコードをスキャンするか、スマホ上で **TapTap を開く** をタップし、Phigros をプレイしている TapTap アカウントで承認してください。",
-    gameVersion: "ゲームのバージョン",
-    global: "グローバル版",
-    china: "中国版",
-    code: "コード",
-    newCode: "新しいコード",
-    openTapTap: "TapTap を開く",
   },
   seo: {
     siteTitle: "Phigros++ の Mod・マルチプレイ・ランキング・譜面定数",
@@ -136,24 +141,6 @@ export const ja = {
     importTagline: "Phigros の進捗を読み込みます",
     closeImport: "インポートダイアログを閉じる",
     importDialogText: "より新しい進捗や、別のプレイヤーのセーブを読み込めます。",
-    usbTitle: "Android を接続",
-    usbHelp:
-      "ブラウザのダイアログでスマホを選択してください。Android 端末で確認が表示されたら **USB デバッグを許可** をタップします。",
-    usbProgress: "接続の進行状況",
-    closing: "5 秒後に閉じます…",
-    cancelImport: "インポートをキャンセル",
-    close: "閉じる",
-    tokenTitle: "セッショントークン",
-    closeToken: "セッショントークンのダイアログを閉じる",
-    tokenNote:
-      "トークンはこのブラウザからゲーム自身の TapTap クラウド（tapapis.com）へ直接送信されます。",
-    remembered: "記憶済みのプレイヤー",
-    reconnect: "再接続",
-    forgetConfirm:
-      "このプレイヤーの保存済みセッショントークンを削除しますか？ローカルのスナップショットは残ります。",
-    forget: "保存済みトークンを削除",
-    tokenPlaceholder: "セッショントークンを貼り付け",
-    fetchSave: "セーブを取得",
     unsupportedZip: "この ZIP は対応していないセーブ形式です。",
     downloadZip: "元の ZIP をダウンロード",
   },
@@ -454,48 +441,9 @@ export const ja = {
     parseStopped: (error: string) => `セーブの解析を中断しました：${error}`,
     loadedSongs: (songs: number, fingerprint: string) =>
       `${fingerprint}… から ${songs} 曲を読み込み、ローカル履歴に保存しました。`,
-    accountMismatch: "端末のアカウントがこのトークンと一致しません",
-    checking: "クラウドセーブを確認しています…",
-    noCloudSaves: "このアカウントにはまだクラウドセーブがありません",
-    fetching: (name: string, host: string) => `${host} から「${name}」を取得しています…`,
-    ready: "セーブを読み込みました。準備完了です。",
-    waitingPhone: "スマホを待っています…",
     tooLarge: (size: string) => `インポートが上限の ${size} MB を超えています`,
-    usb: {
-      unavailable:
-        "WebUSB を利用できません。パソコンの Chrome/Edge で https:// または localhost から開いてください。",
-      reusing: "許可済みのスマホを使用します…",
-      picking: "ブラウザの USB ダイアログでスマホを選んでください…",
-      noDevice: "端末が選択されていません。",
-      selected: (device: string, serial: string) => `${device}（${serial}）を選択しました。`,
-      handshaking: "接続中：スマホで「USB デバッグを許可しますか？」を承認してください。",
-      busy: "別のプログラムがスマホの USB インターフェースを使用しています。多くの場合 ADB サーバー（adb kill-server）が原因で、Android Studio、scrcpy、Phone Link でも起こります。それを終了し、スマホを抜き差ししてから再試行してください。",
-      connected: (serial: string) =>
-        `${serial} に接続しました。Phigros のログインデータを読み取っています…`,
-      timeout:
-        "Phigros のログインデータの読み取りがタイムアウトしました。USB 接続を確認して再試行してください。",
-      empty: (path: string) =>
-        `${path} が空か、存在しません。一度 Phigros を開いて TapTap でログインするか、トークンを手動で貼り付けてください。`,
-      noToken: (path: string, size: string) =>
-        `${path}（${size} バイト）は見つかりましたが、sessionToken が含まれていません。ゲーム内で TapTap にログインするか、トークンを手動で貼り付けてください。`,
-      read: (path: string, size: string) => `${path}（${size} バイト）を読み取りました。`,
-      loggedIn: (account: string) => `${account} としてログインしています。`,
-      tokenLength: (count: number) => `sessionToken：${count} 文字。`,
-    },
   },
   errors: {
-    noLoginCode: "TapTap からログインコードが返されませんでした。もう一度お試しください。",
-    loginDeclined: "TapTap でログインが拒否されました。",
-    loginFailed: (reason: string) => `TapTap ログインに失敗しました：${reason}`,
-    loginUnexpected: "TapTap ログインに失敗しました：予期しない応答",
-    loginExpired:
-      "ログインコードの有効期限が切れました。新しいコードを取得して再度お試しください。",
-    profileFailed: (status: string) => `TapTap プロフィールの取得に失敗しました：HTTP ${status}`,
-    noSaveGlobal:
-      "この TapTap アカウントには Phigros グローバル版のセーブがありません。地域を確認し、ゲーム内で一度同期してください。",
-    noSaveChina:
-      "この TapTap アカウントには Phigros 中国版のセーブがありません。地域を確認し、ゲーム内で一度同期してください。",
-    phigrosLoginFailed: (status: string) => `Phigros へのログインに失敗しました：HTTP ${status}`,
     decryptFailed: (file: string) => `${file}：復号に失敗しました`,
     zipTooLarge: (mb: string) => `セーブ ZIP が ${mb} MB の上限を超えています`,
     notZip: "ZIP ファイルではありません",
@@ -507,12 +455,6 @@ export const ja = {
     invalidZip: (reason: string) => `無効なセーブ ZIP：${reason}`,
     missingEntries: (names: string) => `セーブ ZIP に不足しているもの：${names}`,
     entryTooShort: (file: string) => `${file}：暗号化エントリが短すぎます`,
-    noPlayerId: "TapTap からプレイヤー ID が返されませんでした",
-    verifyFailed: (status: string) => `TapTap アカウントの確認に失敗しました：HTTP ${status}`,
-    apiFailed: (status: string, body: string) => `TapTap API：HTTP ${status} ${body}`,
-    invalidSaveList: "TapTap API が無効なセーブ一覧を返しました",
-    notHttps: "セーブのダウンロード URL が HTTPS ではありません",
-    downloadFailed: (status: string) => `セーブのダウンロード：HTTP ${status}`,
     jsonTooLarge: (mb: string) => `JSON がインポート上限の ${mb} MB を超えています`,
     invalidJson: "無効な JSON",
     pppRemoved:
@@ -540,12 +482,6 @@ export const ja = {
   ppp: {
     profile: "Phigros++ プロフィール",
     profileDesc: "ゲームからサインインしてセーブを開く",
-    otherWays: "その他の方法",
-    otherWaysDesc: "TapTap ログイン、Android（USB）、セッショントークン",
-    taptapGone:
-      "TapTap のクラウドセーブは 2026 年 11 月に応答しなくなったため、これらの方法は失敗する可能性があります。代わりに Phigros++ がセーブを phigros.tools に保存します。",
-    pitch:
-      "Phigros++ はゲームにリプレイ、HUD、Mod を追加し、セーブとプレイをこのサイトに保存します。",
     get: "Phigros++ を入手",
     signInTitle: "Phigros++ からサインイン",
     signInStep1:

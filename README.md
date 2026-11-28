@@ -14,8 +14,10 @@ Sign in from [Phigros++](../mod) to open the save it uploads: the game shows a c
 already signed in), or type the profile's 16-word recovery phrase. The browser makes its own key for the profile,
 listed in **Devices** with every phone signed in, each removable. **Friends** lists the profile's friends as the
 game does, with who is online and what they play, and adds, accepts or removes them; another player's page offers the
-same. A ZIP or JSON save file opens too. The main menu
-remembers every player you've opened before, laid out as a carousel like the game's own.
+same. A ZIP or JSON save file opens too, from a link under the home page's menu.
+
+With no save open, the home page is Phigros++'s: a menu laid out like the game's own, with Phigros++ and the way to get
+it, every player this browser remembers and the chart list, then what Phigros++ adds, each with its release note.
 
 A save that only lives in this browser can be sent to Phigros++, which offers to load it at its next start.
 
@@ -25,7 +27,7 @@ with the RKS they make, the profile, and what was unlocked, never Data. The brow
 words, and Phigros++ loads the save once signed in to it. Typed scores are **Declared**: listed on the player's page
 and counted nowhere until a play from the game matches or beats them.
 
-![Main menu carousel with the import options open](docs/screenshots/01-start.png)
+![The home page: Phigros++, the chart list and what Phigros++ adds](docs/screenshots/01-start.png)
 
 ### Overview
 

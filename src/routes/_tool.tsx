@@ -1,15 +1,13 @@
 import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
-import { Arrow } from "../components/arrow";
 import { SiteHeader, type TabId, toolTabs } from "../components/chrome";
-import { ImportOptions, OtherWaysDialog, TapTapDialog } from "../components/import";
+import { ImportOptions } from "../components/import";
 import { SignInDialog } from "../components/phigrospp";
 import { Avatar } from "../components/primitives";
-import { Rich, useT } from "../i18n";
+import { useT } from "../i18n";
 import { calculateRanking } from "../metrics";
-import { message, useSave } from "../save-context";
+import { useSave } from "../save-context";
 import { headT, pageLinks } from "../seo";
-import { deleteCredential } from "../store";
 
 export const Route = createFileRoute("/_tool")({
   head: ({ match }) => ({ links: pageLinks("/", headT(match).locale) }),
@@ -27,31 +25,8 @@ function download(name: string, value: string | Uint8Array, type = "application/
 /** The four tabs share one layout (topbar, import band, dialogs); each tab's own content is a real child
  * route (see _tool.*.tsx). The loaded save lives in <SaveProvider> at the root, so it survives visiting /charts. */
 function ToolLayout() {
-  const {
-    loaded,
-    account,
-    credentials,
-    busy,
-    log,
-    token,
-    setToken,
-    usbPhase,
-    usbEvents,
-    unsupportedZip,
-    storageReady,
-    dialog,
-    usbDialog,
-    usbLog,
-    fileInput,
-    say,
-    refresh,
-    cloudImport,
-    closeUsb,
-    resetUsbDialog,
-    openFile,
-    selectedPlayer,
-    setSelectedPlayer,
-  } = useSave();
+  const { loaded, account, credentials, log, unsupportedZip, storageReady, fileInput, openFile } =
+    useSave();
   const t = useT();
   const navigate = useNavigate();
   const importDialog = useRef<HTMLDialogElement>(null);
@@ -63,11 +38,6 @@ function ToolLayout() {
   const playerName = loaded && (loadedCredential?.nickname ?? loaded.playerId);
   const tabIds = toolTabs(!!loaded, profileSave);
   const activeTab = tabIds.includes(pathname) ? pathname : "/";
-  // the token dialog only knows TapTap logins
-  const tokens = credentials.filter((c) => c.token);
-  const rememberedId = tokens.some((c) => c.playerId === selectedPlayer)
-    ? selectedPlayer
-    : tokens[0]?.playerId;
   // A tab that can't show anything yet (e.g. /records after a reload, before a save is opened) goes back to "/".
   // biome-ignore lint/correctness/useExhaustiveDependencies: navigate isn't wrapped in useCallback (the project relies on the React Compiler instead), so listing it would re-run this every render.
   useEffect(() => {
@@ -165,132 +135,7 @@ function ToolLayout() {
             if (file) void openFile(file);
           }}
         />
-        <dialog
-          ref={usbDialog}
-          id="usbDialog"
-          aria-labelledby="usb-heading"
-          aria-describedby="usb-help"
-          onClose={resetUsbDialog}
-        >
-          <h2 id="usb-heading">{t.tool.usbTitle}</h2>
-          <p id="usb-help" className="meta">
-            <Rich text={t.tool.usbHelp} />
-          </p>
-          <div
-            ref={usbLog}
-            className="usb-progress"
-            role="log"
-            aria-label={t.tool.usbProgress}
-            aria-live="polite"
-          >
-            {usbEvents.map((event, index) => (
-              // biome-ignore lint/suspicious/noArrayIndexKey: append-only log, entries are never reordered or removed.
-              <p key={index}>{event}</p>
-            ))}
-          </div>
-          {usbPhase === "done" && <p className="usb-done meta">{t.tool.closing}</p>}
-          <div className="dialog-actions">
-            <button type="button" className="btn" onClick={closeUsb}>
-              {usbPhase === "connecting" ? t.tool.cancelImport : t.tool.close}
-            </button>
-          </div>
-        </dialog>
-        <TapTapDialog />
         <SignInDialog />
-        <OtherWaysDialog />
-        <dialog ref={dialog} id="tokenDialog" closedby="any" aria-labelledby="token-heading">
-          <form method="dialog" className="dialog-head">
-            <h2 id="token-heading">{t.tool.tokenTitle}</h2>
-            {/* biome-ignore lint/a11y/useButtonType: the default submit type is intentional; submitting a method="dialog" form is how this button closes the dialog without JS. */}
-            <button className="dialog-close" aria-label={t.tool.closeToken}>
-              ×
-            </button>
-          </form>
-          <p className="meta">{t.tool.tokenNote}</p>
-          {tokens.length > 0 && (
-            <div className="dialog-field">
-              <label htmlFor="remembered" className="field-label">
-                {t.tool.remembered}
-              </label>
-              <div className="dialog-row">
-                <select
-                  id="remembered"
-                  className="select-field"
-                  value={rememberedId}
-                  onChange={(e) => setSelectedPlayer(e.target.value)}
-                >
-                  {tokens.map((c) => (
-                    <option key={c.playerId} value={c.playerId}>
-                      {c.nickname ? `${c.nickname} · ` : ""}
-                      {c.playerId}
-                    </option>
-                  ))}
-                </select>
-                <button
-                  type="button"
-                  className="btn"
-                  disabled={busy}
-                  onClick={() => {
-                    const c = tokens.find((item) => item.playerId === rememberedId);
-                    if (c) {
-                      dialog.current?.close();
-                      void cloudImport(async () => ({ ...c, token: c.token! }));
-                    }
-                  }}
-                >
-                  {t.tool.reconnect}
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-ghost btn-danger"
-                  onClick={() => {
-                    const id = rememberedId;
-                    if (id && confirm(t.tool.forgetConfirm))
-                      void deleteCredential(id)
-                        .then(refresh)
-                        .catch((e) => say(`✗ ${message(e)}`));
-                  }}
-                >
-                  {t.tool.forget}
-                </button>
-              </div>
-            </div>
-          )}
-          <div className="dialog-field">
-            <label htmlFor="token" className="field-label">
-              {t.import.token}
-            </label>
-            <div className="dialog-row">
-              <input
-                id="token"
-                required
-                className="field"
-                type="password"
-                autoComplete="off"
-                spellCheck={false}
-                placeholder={t.tool.tokenPlaceholder}
-                value={token}
-                onChange={(e) => setToken(e.target.value)}
-              />
-              <button
-                id="useToken"
-                type="button"
-                className="btn"
-                disabled={busy}
-                onClick={() => {
-                  const value = token.trim();
-                  setToken("");
-                  if (!value)
-                    return document.querySelector<HTMLInputElement>("#token")?.reportValidity();
-                  dialog.current?.close();
-                  void cloudImport(async () => ({ token: value }));
-                }}
-              >
-                {t.tool.fetchSave} <Arrow />
-              </button>
-            </div>
-          </div>
-        </dialog>
 
         <div id="results">
           {loaded?.document.warnings?.length ? (

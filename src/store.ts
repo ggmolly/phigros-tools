@@ -1,6 +1,6 @@
 import type { SaveDocumentV1 } from "./document";
 import type { Signer } from "./phigrospp";
-import type { Region, SaveArchive } from "./save";
+import type { SaveArchive } from "./save";
 
 export interface SnapshotV1 {
   schemaVersion: 1;
@@ -17,7 +17,6 @@ export interface Credential {
   playerId: string;
   nickname?: string;
   token?: string;
-  region?: Region; // absent on credentials saved before China support: those are global
   signer?: Signer;
 }
 

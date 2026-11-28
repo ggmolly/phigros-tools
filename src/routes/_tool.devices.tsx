@@ -8,7 +8,12 @@ export const Route = createFileRoute("/_tool/devices")({
     const { locale, t } = headT(match);
     return {
       meta: [
-        ...pageMeta({ title: t.tabs.devices, description: t.ppp.pitch, path: "/devices", locale }),
+        ...pageMeta({
+          title: t.tabs.devices,
+          description: t.pppPage.description,
+          path: "/devices",
+          locale,
+        }),
         { name: "robots", content: "noindex" },
       ],
     };

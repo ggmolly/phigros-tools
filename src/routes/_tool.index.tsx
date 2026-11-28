@@ -1,15 +1,18 @@
 import { createFileRoute, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { MainMenu } from "../components/main-menu";
+import { Features, MainMenu } from "../components/main-menu";
 import { Overview } from "../components/overview";
 import { PhigrosppBar } from "../components/phigrospp";
 import { useLiveReload } from "../live";
 import { getProfile, type PlayerProfile } from "../plays";
+import { getReleases } from "../releases";
 import { useSave } from "../save-context";
 import { headT, jsonLd, localeUrl, pageMeta, SITE_NAME } from "../seo";
 import { topics } from "../topics";
 
 export const Route = createFileRoute("/_tool/")({
+  // the release notes whose covers show what Phigros++ adds
+  loader: () => getReleases(),
   head: ({ match }) => {
     const { locale, t } = headT(match);
     return {
@@ -36,6 +39,7 @@ export const Route = createFileRoute("/_tool/")({
 
 function OverviewRoute() {
   const { loaded, credentials, account, home } = useSave();
+  const { notes } = Route.useLoaderData();
   const loadedCredential = loaded && credentials.find((c) => c.playerId === loaded.playerId);
   // a Phigros++ save is the player's public page too: the server rendered it with the page, or it's fetched once the
   // player signs in here, and again when it changes
@@ -76,7 +80,10 @@ function OverviewRoute() {
           profile={profile}
         />
       ) : (
-        <MainMenu />
+        <>
+          <MainMenu />
+          <Features notes={notes} />
+        </>
       )}
     </div>
   );

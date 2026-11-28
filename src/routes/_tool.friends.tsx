@@ -9,7 +9,12 @@ export const Route = createFileRoute("/_tool/friends")({
     const { locale, t } = headT(match);
     return {
       meta: [
-        ...pageMeta({ title: t.tabs.friends, description: t.ppp.pitch, path: "/friends", locale }),
+        ...pageMeta({
+          title: t.tabs.friends,
+          description: t.pppPage.description,
+          path: "/friends",
+          locale,
+        }),
         { name: "robots", content: "noindex" },
       ],
     };

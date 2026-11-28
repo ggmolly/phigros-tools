@@ -4,10 +4,11 @@ import { canonicalSongId, catalogSongs } from "../catalog";
 import { useFormat, useT } from "../i18n";
 import { calculateRanking, type RankingResult } from "../metrics";
 import { countLevels } from "../modules";
+import type { Release } from "../releases";
 import { useSave } from "../save-context";
 import type { Credential, SnapshotV1 } from "../store";
 import { Arrow } from "./arrow";
-import { ImportOptions } from "./import";
+import { ModMedia } from "./mods";
 import { Stat } from "./primitives";
 
 function MenuArt({ song }: { song?: string }) {
@@ -19,12 +20,13 @@ function MenuArt({ song }: { song?: string }) {
 }
 
 /**
- * The no-save state, laid out like the game's main menu: a carousel of Charts, one entry per remembered player
- * (most recently synced first) and Import. Only the open entry is expanded; the others are retracted to slanted
- * slivers. On phones the same entries stack vertically.
+ * The no-save state, laid out like the game's main menu: a carousel of Phigros++ and one entry per remembered player
+ * (most recently synced first), then Charts. Only the open entry is expanded; the others are retracted to slanted
+ * slivers, Charts' leading straight to the chart list. On phones the same entries stack vertically. The ways to open
+ * a save without Phigros++ are the links under it.
  */
 export function MainMenu() {
-  const { credentials, snapshots, setChartKey } = useSave();
+  const { credentials, snapshots, setChartKey, openSignIn, fileInput } = useSave();
   const t = useT();
   const [randomSongs, setRandomSongs] = useState<string[]>([]);
   // Picked after hydration so the server and client render the same markup.
@@ -39,17 +41,16 @@ export function MainMenu() {
       return { credential, latest, ranking: latest && calculateRanking(latest.document) };
     })
     .sort((a, b) => (b.latest?.capturedAt ?? "").localeCompare(a.latest?.capturedAt ?? ""));
-  const keys = ["charts", ...players.map((p) => p.credential.playerId), "import"];
+  const keys = ["phigrospp", ...players.map((p) => p.credential.playerId)];
   const [picked, setPicked] = useState<string>();
   const open =
-    picked && keys.includes(picked) ? picked : (players[0]?.credential.playerId ?? "import");
+    picked && keys.includes(picked) ? picked : (players[0]?.credential.playerId ?? keys[0]!);
   const userPicked = useRef(false);
   const openEntry = useRef<HTMLElement>(null);
 
   const art = (key: string) => {
-    if (key === "charts") return randomSongs[0];
     const best = players.find((p) => p.credential.playerId === key)?.ranking?.best[0];
-    return best ? canonicalSongId(best.songId) : randomSongs[1];
+    return best ? canonicalSongId(best.songId) : randomSongs[0];
   };
   const openArt = art(open);
   // The fog takes the open entry's colours, like it does for the selected chart once a save is open.
@@ -72,96 +73,146 @@ export function MainMenu() {
   }, [open]);
 
   return (
-    // biome-ignore lint/a11y/useSemanticElements: a fieldset's default styling would need a reset; role="group" labels the carousel.
-    <div
-      className="menu"
-      role="group"
-      aria-label={t.menu.label}
-      onKeyDown={(e) => {
-        const step = { ArrowLeft: -1, ArrowRight: 1 }[e.key];
-        const next = step && keys[keys.indexOf(open) + step];
-        if (next && !(e.target instanceof HTMLInputElement)) {
-          e.preventDefault();
-          choose(next);
-        }
-      }}
-    >
-      {keys.map((key) => {
-        const player = players.find((p) => p.credential.playerId === key);
-        const label =
-          key === "charts"
-            ? t.tabs.charts
-            : key === "import"
-              ? t.menu.import
-              : (player!.credential.nickname ?? key);
-        const sub =
-          key === "charts"
-            ? t.menu.songs(catalogSongs.length)
-            : player?.ranking && `RKS ${player.ranking.rankingScore.toFixed(2)}`;
-        if (key !== open)
+    <>
+      {/* biome-ignore lint/a11y/useSemanticElements: a fieldset's default styling would need a reset; role="group" labels the carousel. */}
+      <div
+        className="menu"
+        role="group"
+        aria-label={t.menu.label}
+        onKeyDown={(e) => {
+          const step = { ArrowLeft: -1, ArrowRight: 1 }[e.key];
+          const next = step && keys[keys.indexOf(open) + step];
+          if (next) {
+            e.preventDefault();
+            choose(next);
+          }
+        }}
+      >
+        {keys.map((key) => {
+          const player = players.find((p) => p.credential.playerId === key);
+          if (key !== open)
+            return (
+              <section key={key} className="menu-entry">
+                <MenuArt song={art(key)} />
+                <button type="button" className="menu-sliver" onClick={() => choose(key)}>
+                  <Sliver
+                    label={player ? (player.credential.nickname ?? key) : t.tabs.phigrospp}
+                    sub={player?.ranking && `RKS ${player.ranking.rankingScore.toFixed(2)}`}
+                  />
+                </button>
+              </section>
+            );
           return (
-            <section key={key} className="menu-entry">
+            <section
+              key={key}
+              ref={openEntry}
+              tabIndex={-1}
+              className="menu-entry is-open"
+              aria-labelledby="empty-heading"
+              onTransitionEnd={(e) => {
+                if (e.target === e.currentTarget && e.propertyName === "flex-basis") reveal();
+              }}
+            >
               <MenuArt song={art(key)} />
-              <button type="button" className="menu-sliver" onClick={() => choose(key)}>
-                <span className="menu-sliver-text">
-                  <span className="menu-sliver-label">{label}</span>
-                  {sub && <span className="menu-sliver-sub">{sub}</span>}
-                </span>
-              </button>
+              {player ? (
+                <PlayerCard player={player} />
+              ) : (
+                <>
+                  <MenuHead
+                    title={
+                      <span className="menu-brand">
+                        Phigros<span>++</span>
+                      </span>
+                    }
+                  />
+                  <div className="menu-strip">
+                    <p className="menu-text">{t.pppPage.description}</p>
+                    <div className="menu-actions">
+                      <button
+                        type="button"
+                        className="btn btn-ghost"
+                        onClick={() => openSignIn.current?.()}
+                      >
+                        {t.ppp.signIn}
+                      </button>
+                      <Link to="/phigrospp" className="btn menu-play">
+                        {t.ppp.get} <Arrow />
+                      </Link>
+                    </div>
+                  </div>
+                </>
+              )}
             </section>
           );
-        return (
-          <section
-            key={key}
-            ref={openEntry}
-            tabIndex={-1}
-            className="menu-entry is-open"
-            aria-labelledby="empty-heading"
-            onTransitionEnd={(e) => {
-              if (e.target === e.currentTarget && e.propertyName === "flex-basis") reveal();
-            }}
-          >
-            <MenuArt song={art(key)} />
-            {key === "charts" ? (
-              <>
-                <MenuHead kicker={sub} title={t.tabs.charts} />
-                <div className="menu-strip">
-                  <p className="menu-text">{t.menu.chartsText}</p>
-                  <Link to="/charts" className="btn menu-play">
-                    {t.menu.browse} <Arrow />
-                  </Link>
-                </div>
-              </>
-            ) : key === "import" ? (
-              <>
-                <MenuHead
-                  kicker={players.length ? t.menu.anotherAccount : t.menu.yourProgress}
-                  title={players.length ? t.menu.importSave : t.menu.mySave}
-                />
-                <div className="menu-strip">
-                  <div className="menu-import">
-                    <ImportOptions />
-                  </div>
-                  <p className="menu-text">{t.ppp.pitch}</p>
-                  <Link to="/phigrospp" className="btn menu-play">
-                    {t.ppp.get} <Arrow />
-                  </Link>
-                </div>
-              </>
-            ) : (
-              <PlayerCard player={player!} />
-            )}
-          </section>
-        );
-      })}
-    </div>
+        })}
+        <section className="menu-entry">
+          <MenuArt song={randomSongs[1]} />
+          <Link to="/charts" className="menu-sliver">
+            <Sliver label={t.tabs.charts} sub={t.menu.songs(catalogSongs.length)} />
+          </Link>
+        </section>
+      </div>
+      <p className="menu-more">
+        <Link to="/start" className="text-link">
+          {t.start.cta}
+        </Link>
+        <button type="button" className="text-link" onClick={() => fileInput.current?.click()}>
+          {t.home.file}
+        </button>
+      </p>
+    </>
   );
 }
 
-function MenuHead({ kicker, title }: { kicker?: string; title: string }) {
+function Sliver({ label, sub }: { label: string; sub?: string | false }) {
+  return (
+    <span className="menu-sliver-text">
+      <span className="menu-sliver-label">{label}</span>
+      {sub && <span className="menu-sliver-sub">{sub}</span>}
+    </span>
+  );
+}
+
+/**
+ * What Phigros++ adds to the game, each told by the release note that brought it: its cover, and a link to it.
+ * A note the site doesn't have yet leaves its text alone.
+ */
+export function Features({ notes }: { notes: Release[] }) {
+  const t = useT();
+  return (
+    <section className="mods-page home-adds" aria-labelledby="adds-heading">
+      <div className="leaderboard-head">
+        <h2 id="adds-heading">{t.home.adds}</h2>
+        <Link to="/releases" className="btn btn-ghost">
+          {t.releasesPage.title} <Arrow />
+        </Link>
+      </div>
+      <ul className="mods">
+        {Object.entries(t.home.features).map(([slug, { title, text }]) => {
+          const shown = notes.find((note) => note.slug === slug)?.shown;
+          return (
+            <li key={slug}>
+              <article className="panel mod">
+                {shown && <ModMedia {...shown} folder="/releases/" slanted />}
+                <h3 className="mod-name">
+                  <Link className="card-link" to="/releases/$slug" params={{ slug }}>
+                    {title}
+                  </Link>
+                </h3>
+                <p className="mod-text">{text}</p>
+              </article>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
+}
+
+function MenuHead({ kicker, title }: { kicker?: string; title: React.ReactNode }) {
   return (
     <div className="menu-head">
-      <p className="menu-kicker">{kicker}</p>
+      {kicker && <p className="menu-kicker">{kicker}</p>}
       <h1 id="empty-heading" className="menu-title">
         {title}
       </h1>

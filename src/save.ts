@@ -1,5 +1,4 @@
 import { unzipSync } from "fflate";
-import * as v from "valibot";
 import { ParseError } from "./binary";
 import { catalogManifest } from "./catalog";
 import { blankDocument, type SaveDocumentV1 } from "./document";
@@ -9,7 +8,6 @@ import {
   countLevels,
   decodeSummary,
   encodeSummary,
-  type GameKey,
   type GameProgress,
   MODULE_NAMES,
   type ModuleName,
@@ -26,25 +24,6 @@ import {
   writeSettings,
 } from "./modules";
 
-/** The game's LeanCloud apps: the global release and the China (TapTap CN) release keep separate accounts and saves. */
-export type Region = "global" | "china";
-export const CLOUD: Record<Region, { api: string; id: string; key: string }> = {
-  global: {
-    api: "https://kviehlel.cloud.ap-sg.tapapis.com/1.1",
-    id: "kviehleldgxsagpozb",
-    key: "tG9CTm0LDD736k9HMM9lBZrbeBGRmUkjSfNLDNib",
-  },
-  china: {
-    api: "https://rak3ffdi.cloud.tds1.tapapis.cn/1.1",
-    id: "rAK3FfdieFob2Nn8Am",
-    key: "Qr9AEqtuoSVS3zeD6iVbM4ZC0AtkJcQ89tywVyi0",
-  },
-};
-const lcHeaders = (region: Region, token: string) => ({
-  "X-LC-Id": CLOUD[region].id,
-  "X-LC-Key": CLOUD[region].key,
-  "X-LC-Session": token,
-});
 const SAVE_KEY = "6Jaa0qVAJZuXkZCLiOa/Ax5tIZVu+taKUN1V1nqwkks=";
 const SAVE_IV = "Kk/wisgNYwcAV8WVGMgyUw==";
 /** The save version of this key and layout, which a summary names for the game to pick them (CloudSaveSummary). */
@@ -53,35 +32,6 @@ const MB = 1_000_000;
 const MAX_ZIP_SIZE = 10 * MB;
 const MAX_ENTRY_SIZE = 10 * MB;
 const MAX_TOTAL_SIZE = 30 * MB;
-
-export interface GameFile {
-  objectId: string;
-  name: string;
-  url: string;
-  bucket?: string;
-  metaData?: { size?: number };
-}
-
-export interface CloudSave {
-  objectId: string;
-  name: string;
-  summary: string;
-  updatedAt: string;
-  modifiedAt?: { iso: string };
-  playedTime?: number;
-  progressValue?: number;
-  gameFile: GameFile;
-  user?: { objectId?: string };
-}
-
-/** The player's newest cloud save. Saves whose owner pointer names someone else are skipped: LeanCloud's _GameSave
- * class isn't guaranteed to be scoped to the session, so trusting the first result could load another account. */
-export function latestSave(saves: CloudSave[], playerId: string): CloudSave | undefined {
-  const time = (save: CloudSave) => Date.parse(save.modifiedAt?.iso ?? save.updatedAt) || 0;
-  return saves
-    .filter((save) => !save.user?.objectId || save.user.objectId === playerId)
-    .sort((a, b) => time(b) - time(a))[0];
-}
 
 export interface SaveArchiveEntry {
   name: ModuleName;
@@ -230,7 +180,7 @@ const EMPTY_PROGRESS: GameProgress = {
 export function parseArchive(
   archive: SaveArchive,
   options: {
-    kind?: "cloud" | "zip" | "phigrospp";
+    kind?: "zip" | "phigrospp";
     name?: string;
     cloudUpdatedAt?: string;
     summary?: string;
@@ -286,55 +236,4 @@ export function parseArchive(
         `${name} v${version(name)} is newer than this build parses (up to v${PARSEABLE_VERSIONS[name]}); its newest fields are unknown, so some info may be missing. Try updating phigros.tools.`,
       );
   return warnings.length ? { ...document, warnings } : document;
-}
-
-const player = v.object({
-  objectId: v.pipe(v.string(), v.minLength(1)),
-  nickname: v.fallback(v.optional(v.string()), undefined),
-});
-
-/** Who a session token belongs to. With no region given, tries the global app, then the China one. */
-export async function identifyPlayer(
-  token: string,
-  region?: Region,
-  signal?: AbortSignal,
-): Promise<{ objectId: string; nickname?: string; region: Region }> {
-  let status = 0;
-  for (const candidate of region ? [region] : (["global", "china"] as const)) {
-    const response = await fetch(`${CLOUD[candidate].api}/users/me`, {
-      signal,
-      headers: lcHeaders(candidate, token),
-    });
-    status = response.status;
-    if (!response.ok) continue;
-    const user = v.safeParse(player, await response.json());
-    if (!user.success) throw new AppError("noPlayerId");
-    return { ...user.output, region: candidate };
-  }
-  throw new AppError("verifyFailed", String(status));
-}
-
-export async function listSaves(
-  token: string,
-  region: Region,
-  signal?: AbortSignal,
-): Promise<CloudSave[]> {
-  const response = await fetch(`${CLOUD[region].api}/gamesaves?limit=100`, {
-    signal,
-    headers: lcHeaders(region, token),
-  });
-  if (!response.ok) throw new AppError("apiFailed", String(response.status), await response.text());
-  const body = (await response.json()) as { results?: unknown };
-  if (!Array.isArray(body.results)) throw new AppError("invalidSaveList");
-  return body.results as CloudSave[];
-}
-
-export async function fetchSaveBytes(save: CloudSave, signal?: AbortSignal): Promise<Uint8Array> {
-  const url = new URL(save.gameFile.url);
-  if (url.protocol !== "https:") throw new AppError("notHttps");
-  const response = await fetch(url, { signal });
-  if (!response.ok) throw new AppError("downloadFailed", String(response.status));
-  const length = Number(response.headers.get("content-length"));
-  if (length > MAX_ZIP_SIZE) throw new AppError("zipTooLarge", String(MAX_ZIP_SIZE / MB));
-  return new Uint8Array(await response.arrayBuffer());
 }
